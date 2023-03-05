@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "BannerlordImageTool.Win (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "BannerlordImageTool.Win (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

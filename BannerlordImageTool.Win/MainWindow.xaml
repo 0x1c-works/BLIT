@@ -1,0 +1,21 @@
+<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<Window
+    x:Class="BannerlordImageTool.Win.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BannerlordImageTool.Win"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel x:Name="RootContainer" Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top" DataContext="{x:Bind Model}">
+        <StackPanel x:Name="TopBar" Orientation="Horizontal" VerticalAlignment="Center" Spacing="4">
+            <TextBlock x:Name="textBLFolderHint" VerticalAlignment="Center">Bannerlord Directory:</TextBlock>
+            <TextBlock x:Name="textBLFolderPath"  VerticalAlignment="Center"
+                       Text="{x:Bind Model.RootFolder.Path, Mode=OneWay,FallbackValue='Select your game folder'}" />
+            <Button x:Name="btnSelectBLFolder" Click="btnSelectBLFolder_Click">Select...</Button>
+        </StackPanel>
+    </StackPanel>
+</Window>
