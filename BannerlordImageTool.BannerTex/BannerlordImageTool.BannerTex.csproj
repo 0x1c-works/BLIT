@@ -14,4 +14,8 @@
     <None Include="E:\gamework\mb2\BannerlordImageTool\BannerlordImageTool.BannerTex\.editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.3.0" />
+  </ItemGroup>
+
 </Project>
