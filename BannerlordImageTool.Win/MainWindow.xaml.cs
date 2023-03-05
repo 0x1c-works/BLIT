@@ -58,8 +58,8 @@ public sealed partial class MainWindow : Window
 
     public class ViewModel : INotifyPropertyChanged
     {
-        private StorageFolder? _rootFolder;
-        public StorageFolder? RootFolder
+        private StorageFolder _rootFolder;
+        public StorageFolder RootFolder
         {
             get => _rootFolder;
             set
@@ -70,9 +70,9 @@ public sealed partial class MainWindow : Window
             }
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        void OnPropertyChanged([CallerMemberName] string? prop = null)
+        void OnPropertyChanged([CallerMemberName] string prop = null)
         {
             PropertyChanged?.Invoke(this, new(prop));
         }
