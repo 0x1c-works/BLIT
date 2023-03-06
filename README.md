@@ -6,6 +6,7 @@ A tool for processing images for modding Mount &amp; Blade 2 Bannerlord
 
 ## Features
 - [x] Packing single images into banner textures
+- [x] Unpacking separated sprites from a spritesheet
 - [ ] Organizing banner icons into valid file structure
 - [ ] Generating banner_icons.xml
 - [ ] Adjusting and organizing culture images (selection sprite & parallex images).
