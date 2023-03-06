@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
+using BannerlordImageTool.Win.Theming;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -30,13 +31,14 @@ namespace BannerlordImageTool.Win;
 /// <summary>
 /// An empty window that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class MainWindow : Window
+public sealed partial class MainWindow : ThemedWindow
 {
     ViewModel Model { get; } = new ViewModel();
 
     public MainWindow()
     {
         this.InitializeComponent();
+        SetBackdrop(BackdropType.Mica);
     }
 
     private async void btnSelectBLFolder_Click(object sender, RoutedEventArgs e)
