@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
+using BannerlordImageTool.Win.Pages;
 using BannerlordImageTool.Win.Theming;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -14,8 +15,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Media;
@@ -38,6 +41,23 @@ public sealed partial class MainWindow : ThemedWindow
     public MainWindow()
     {
         InitializeComponent();
+        ExtendsContentIntoTitleBar = true;
+        SetTitleBar(AppTitleBar);
+
+        AppTitleText.Text = AppInfo.Current.DisplayInfo.DisplayName;
+        Activated += MainWindow_Activated;
+    }
+
+    private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+    {
+        if (args.WindowActivationState == WindowActivationState.Deactivated)
+        {
+            AppTitleText.Foreground = (SolidColorBrush)App.Current.Resources["WindowCaptionForegroundDisabled"];
+        }
+        else
+        {
+            AppTitleText.Foreground = (SolidColorBrush)App.Current.Resources["WindowCaptionForeground"];
+        }
     }
 
     private async void btnSelectBLFolder_Click(object sender, RoutedEventArgs e)
@@ -56,6 +76,26 @@ public sealed partial class MainWindow : ThemedWindow
         var hwnd = WindowNative.GetWindowHandle(this);
         InitializeWithWindow.Initialize(target, hwnd);
     }
+
+    private void AppNav_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+    {
+        if (args.IsSettingsInvoked)
+        {
+            AppContent.Navigate(typeof(SettingsPage));
+        }
+        else
+        {
+            var item = sender.MenuItems.OfType<NavigationViewItem>().First(i => i.Content == args.InvokedItem);
+            if (TAGGED_PAGES.TryGetValue(item.Tag.ToString(), out var pageType))
+            {
+                AppContent.Navigate(pageType);
+            }
+        }
+    }
+
+    static readonly Dictionary<string, Type> TAGGED_PAGES = new() {
+        {"BannerTexture",typeof(MergeBannerTexturePage) },
+    };
 
     public class ViewModel : INotifyPropertyChanged
     {

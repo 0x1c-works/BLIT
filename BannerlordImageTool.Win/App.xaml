@@ -13,6 +13,10 @@
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
+
+            <SolidColorBrush x:Key="WindowCaptionBackground">Transparent</SolidColorBrush>
+            <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled">Transparent</SolidColorBrush>
+            <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush">Transparent</SolidColorBrush>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -11,12 +11,33 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel x:Name="RootContainer" Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top" DataContext="{x:Bind Model}">
-        <StackPanel x:Name="TopBar" Orientation="Horizontal" VerticalAlignment="Center" Spacing="4">
-            <TextBlock x:Name="textBLFolderHint" VerticalAlignment="Center">Bannerlord Directory:</TextBlock>
-            <TextBlock x:Name="textBLFolderPath"  VerticalAlignment="Center"
-                       Text="{x:Bind Model.RootFolder.Path, Mode=OneWay,FallbackValue='Select your game folder'}" />
-            <Button x:Name="btnSelectBLFolder" Click="btnSelectBLFolder_Click">Select...</Button>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <StackPanel x:Name="AppTitleBar" Grid.Row="0" Orientation="Horizontal">
+            <Image Width="18" Source="ms-appx:///Assets/Square44x44Logo.scale-200.png"
+                   Margin="8,0"/>
+            <TextBlock x:Name="AppTitleText"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="XXXXX"
+                    />
+            <!--Text="{x:Bind AppTitleText}"-->
         </StackPanel>
-    </StackPanel>
+        <NavigationView x:Name="AppNav" 
+                        ItemInvoked="AppNav_ItemInvoked"
+                        Grid.Row="1"
+                        IsTabStop="False"
+                        IsBackButtonVisible="Collapsed"
+                        Header="Title">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Icon="Import" Content="Banner Texture" Tag="BannerTexture"/>
+            </NavigationView.MenuItems>
+            <Frame x:Name="AppContent" Padding="32,16">
+            </Frame>
+        </NavigationView>
+    </Grid>
 </theming:ThemedWindow>
