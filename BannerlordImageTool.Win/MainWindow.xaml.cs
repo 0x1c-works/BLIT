@@ -5,23 +5,12 @@ using BannerlordImageTool.Win.Pages;
 using BannerlordImageTool.Win.Theming;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
@@ -44,7 +33,6 @@ public sealed partial class MainWindow : ThemedWindow
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
 
-        AppTitleText.Text = AppInfo.Current.DisplayInfo.DisplayName;
         Activated += MainWindow_Activated;
     }
 
@@ -94,7 +82,7 @@ public sealed partial class MainWindow : ThemedWindow
     }
 
     static readonly Dictionary<string, Type> TAGGED_PAGES = new() {
-        {"BannerTexture",typeof(MergeBannerTexturePage) },
+        {"BannerTexture",typeof(BannerTexMergerPage) },
     };
 
     public class ViewModel : INotifyPropertyChanged

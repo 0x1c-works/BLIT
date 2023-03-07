@@ -1,4 +1,5 @@
 ﻿using BannerlordImageTool.Win.Common;
+using Microsoft.Windows.ApplicationModel.Resources;
 using System.Globalization;
 using Windows.Storage;
 
@@ -6,7 +7,12 @@ namespace BannerlordImageTool.Win.Settings;
 
 public class GlobalSettings : BindableBase
 {
+    public static GlobalSettings Current
+    {
+        get => (App.Current as App).Settings;
+    }
     private StorageFolder _gameRootFolder;
+
     public StorageFolder GameRootFolder
     {
         get => _gameRootFolder;
@@ -19,6 +25,7 @@ public class GlobalSettings : BindableBase
 
     public string GameRootFolderPath
     {
-        get => GameRootFolder?.Path ?? "(Please select the location of your installed game)";
+        get => GameRootFolder?.Path ?? I18n.Current.GetString("NeedGameRootFolder");
     }
+    public BannerTex.OutputResolution BannerTexOutputResolution { get; set; }
 }

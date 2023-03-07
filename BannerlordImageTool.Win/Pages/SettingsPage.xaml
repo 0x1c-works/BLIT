@@ -8,16 +8,17 @@
     xmlns:local="using:BannerlordImageTool.Win.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:settings="using:BannerlordImageTool.Win.Settings"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid Margin="32,32,32,32" Background="Transparent">
         <ScrollViewer>
-            <StackPanel>
-                <TextBlock >Game root folder:</TextBlock>
+            <StackPanel DataContext="{x:Bind settings:GlobalSettings.Current}">
+                <TextBlock x:Uid="LabelGameRootFolder">Game root folder:</TextBlock>
                 <StackPanel Orientation="Horizontal" Margin="0,8">
-                    <TextBlock Grid.Column="1" Text="testtesttest" VerticalAlignment="Center"/>
-                    <Button x:Name="btnPickGameFolder" Margin="8,0" Content="Browse..."/>
+                    <TextBlock Grid.Column="1" Text="{Binding GameRootFolderPath}" VerticalAlignment="Center"/>
+                    <Button x:Name="btnPickGameFolder" x:Uid="ButtonBrowse" Margin="8,0" Content="Browse..."/>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

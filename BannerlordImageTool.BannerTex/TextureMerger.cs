@@ -97,15 +97,9 @@ public class TextureMerger
     }
 }
 
-public class BadSourceException : Exception
-{
-    public BadSourceException(string filename, string reason) : base($"bad source image {filename}: {reason}")
-    {
-    }
-}
-
 public enum OutputResolution
 {
+    INVALID = -1,
     Res2K,
     Res4K,
 }

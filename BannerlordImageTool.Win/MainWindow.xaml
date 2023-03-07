@@ -20,12 +20,10 @@
         <StackPanel x:Name="AppTitleBar" Grid.Row="0" Orientation="Horizontal">
             <Image Width="18" Source="ms-appx:///Assets/Square44x44Logo.scale-200.png"
                    Margin="8,0"/>
-            <TextBlock x:Name="AppTitleText"
+            <TextBlock x:Name="AppTitleText" x:Uid="AppTitle"
                     VerticalAlignment="Center"
                     Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="XXXXX"
                     />
-            <!--Text="{x:Bind AppTitleText}"-->
         </StackPanel>
         <NavigationView x:Name="AppNav" 
                         ItemInvoked="AppNav_ItemInvoked"
@@ -34,7 +32,7 @@
                         IsBackButtonVisible="Collapsed"
                         Header="Title">
             <NavigationView.MenuItems>
-                <NavigationViewItem Icon="Import" Content="Banner Texture" Tag="BannerTexture"/>
+                <NavigationViewItem x:Uid="AppNavMenuBanner" Icon="Flag" Content="Banner Texture" Tag="BannerTexture"/>
             </NavigationView.MenuItems>
             <Frame x:Name="AppContent" Padding="32,16">
             </Frame>
