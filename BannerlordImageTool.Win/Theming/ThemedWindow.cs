@@ -1,12 +1,19 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Composition;
+using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Xaml;
 using WinRT;
 
 namespace BannerlordImageTool.Win.Theming;
 
-// Basically copied from the WinUI3 Gallery example
-public class ThemedWindow : Window
+/// <summary>
+/// The base class of all app windows to apply prettier Windows theme.
+/// In order to use this class, a WinUI window class should derive from this class,
+/// and set the root element as <c>&lt;ThemedWindow&gt;</c> in XAML.
+/// 
+/// This class is modified based on the example from WinUI3 Gallery.
+/// </summary>
+public abstract class ThemedWindow : Window
 {
-
     public enum BackdropType
     {
         Mica,
@@ -16,9 +23,9 @@ public class ThemedWindow : Window
     }
     WindowsSystemDispatcherQueueHelper m_wsdqHelper;
     BackdropType m_currentBackdrop;
-    Microsoft.UI.Composition.SystemBackdrops.MicaController m_micaController;
-    Microsoft.UI.Composition.SystemBackdrops.DesktopAcrylicController m_acrylicController;
-    Microsoft.UI.Composition.SystemBackdrops.SystemBackdropConfiguration m_configurationSource;
+    MicaController m_micaController;
+    DesktopAcrylicController m_acrylicController;
+    SystemBackdropConfiguration m_configurationSource;
 
     public ThemedWindow()
     {
@@ -27,7 +34,38 @@ public class ThemedWindow : Window
 
         m_wsdqHelper = new WindowsSystemDispatcherQueueHelper();
         m_wsdqHelper.EnsureWindowsSystemDispatcherQueueController();
+        Activated += ThemedWindow_Initialized;
+    }
 
+    private void ThemedWindow_Initialized(object sender, WindowActivatedEventArgs args)
+    {
+        SetBackdrop(Backdrop);
+        Activated -= ThemedWindow_Initialized;
+    }
+
+    public BackdropType Backdrop
+    {
+        get { return m_currentBackdrop; }
+        set
+        {
+            if (m_currentBackdrop != value)
+            {
+                if (Content != null)
+                {
+                    SetBackdrop(value);
+                }
+                else
+                {
+                    // wait for ThemeWindow_Initialized to execute
+                    // if the components are not initialized yet.
+                    m_currentBackdrop = value;
+                }
+            }
+        }
+    }
+    public ICompositionSupportsSystemBackdrop AsSystemBackdropTarget()
+    {
+        return this.As<ICompositionSupportsSystemBackdrop>();
     }
 
     public void SetBackdrop(BackdropType type)
@@ -94,10 +132,10 @@ public class ThemedWindow : Window
     }
     bool TrySetMicaBackdrop(bool useMicaAlt)
     {
-        if (Microsoft.UI.Composition.SystemBackdrops.MicaController.IsSupported())
+        if (MicaController.IsSupported())
         {
             // Hooking up the policy object
-            m_configurationSource = new Microsoft.UI.Composition.SystemBackdrops.SystemBackdropConfiguration();
+            m_configurationSource = new SystemBackdropConfiguration();
             this.Activated += Window_Activated;
             this.Closed += Window_Closed;
             ((FrameworkElement)this.Content).ActualThemeChanged += Window_ThemeChanged;
@@ -106,20 +144,20 @@ public class ThemedWindow : Window
             m_configurationSource.IsInputActive = true;
             SetConfigurationSourceTheme();
 
-            m_micaController = new Microsoft.UI.Composition.SystemBackdrops.MicaController();
+            m_micaController = new MicaController();
 
             if (useMicaAlt)
             {
-                m_micaController.Kind = Microsoft.UI.Composition.SystemBackdrops.MicaKind.BaseAlt;
+                m_micaController.Kind = MicaKind.BaseAlt;
             }
             else
             {
-                m_micaController.Kind = Microsoft.UI.Composition.SystemBackdrops.MicaKind.Base;
+                m_micaController.Kind = MicaKind.Base;
             }
 
             // Enable the system backdrop.
             // Note: Be sure to have "using WinRT;" to support the Window.As<...>() call.
-            m_micaController.AddSystemBackdropTarget(this.As<Microsoft.UI.Composition.ICompositionSupportsSystemBackdrop>());
+            m_micaController.AddSystemBackdropTarget(AsSystemBackdropTarget());
             m_micaController.SetSystemBackdropConfiguration(m_configurationSource);
             return true; // succeeded
         }
@@ -129,7 +167,7 @@ public class ThemedWindow : Window
 
     bool TrySetAcrylicBackdrop()
     {
-        if (Microsoft.UI.Composition.SystemBackdrops.DesktopAcrylicController.IsSupported())
+        if (DesktopAcrylicController.IsSupported())
         {
             // Hooking up the policy object
             m_configurationSource = new Microsoft.UI.Composition.SystemBackdrops.SystemBackdropConfiguration();
@@ -145,7 +183,7 @@ public class ThemedWindow : Window
 
             // Enable the system backdrop.
             // Note: Be sure to have "using WinRT;" to support the Window.As<...>() call.
-            m_acrylicController.AddSystemBackdropTarget(this.As<Microsoft.UI.Composition.ICompositionSupportsSystemBackdrop>());
+            m_acrylicController.AddSystemBackdropTarget(AsSystemBackdropTarget());
             m_acrylicController.SetSystemBackdropConfiguration(m_configurationSource);
             return true; // succeeded
         }
@@ -188,9 +226,9 @@ public class ThemedWindow : Window
     {
         switch (((FrameworkElement)this.Content).ActualTheme)
         {
-            case ElementTheme.Dark: m_configurationSource.Theme = Microsoft.UI.Composition.SystemBackdrops.SystemBackdropTheme.Dark; break;
-            case ElementTheme.Light: m_configurationSource.Theme = Microsoft.UI.Composition.SystemBackdrops.SystemBackdropTheme.Light; break;
-            case ElementTheme.Default: m_configurationSource.Theme = Microsoft.UI.Composition.SystemBackdrops.SystemBackdropTheme.Default; break;
+            case ElementTheme.Dark: m_configurationSource.Theme = SystemBackdropTheme.Dark; break;
+            case ElementTheme.Light: m_configurationSource.Theme = SystemBackdropTheme.Light; break;
+            case ElementTheme.Default: m_configurationSource.Theme = SystemBackdropTheme.Default; break;
         }
     }
 }

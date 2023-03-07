@@ -37,8 +37,7 @@ public sealed partial class MainWindow : ThemedWindow
 
     public MainWindow()
     {
-        this.InitializeComponent();
-        SetBackdrop(BackdropType.Mica);
+        InitializeComponent();
     }
 
     private async void btnSelectBLFolder_Click(object sender, RoutedEventArgs e)
