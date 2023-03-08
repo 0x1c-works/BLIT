@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AppButtonAddImages.Label" xml:space="preserve">
+    <value>Add Icon</value>
+  </data>
   <data name="AppButtonExport.Label" xml:space="preserve">
     <value>Export</value>
+  </data>
+  <data name="AppButtonImport.Label" xml:space="preserve">
+    <value>Import</value>
   </data>
   <data name="AppNavMenuBanner.Content" xml:space="preserve">
     <value>Banner Icons</value>

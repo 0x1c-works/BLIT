@@ -4,7 +4,7 @@ namespace BannerlordImageTool.Win.Common;
 
 public class I18n
 {
-    public static I18n Current { get => (App.Current as App).I18n; }
+    public static I18n Current { get => App.Current.I18n; }
 
 
     private ResourceLoader _resLoader;

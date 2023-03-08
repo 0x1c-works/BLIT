@@ -11,11 +11,22 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
-        <DataTemplate x:Key="TextureCellTemplate">
-            <Image Stretch="UniformToFill" />
+        <CollectionViewSource x:Name="textureCells" />
+        <DataTemplate x:Key="IconTextureTemplate" x:DataType="local:IconTexture">
+            <Grid>
+                <Image Stretch="Uniform" Source="{x:Bind FilePath,Mode=OneWay}" Width="256" Height="256"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                            Background="{ThemeResource AppBarBackgroundThemeBrush}">
+                    <TextBlock Text="{x:Bind AtlasIndex}"/>
+                </StackPanel>
+            </Grid>
         </DataTemplate>
     </Page.Resources>
-    <StackPanel Orientation="Vertical">
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <!--Top bar-->
         <StackPanel Orientation="Horizontal" Spacing="4">
             <TextBlock x:Uid="LabelBannerGroupID" VerticalAlignment="Center" Margin="8,0,0,0"/>
@@ -23,7 +34,6 @@
                        Minimum="7" Maximum="99999999" AcceptsExpression="True"  
                        SpinButtonPlacementMode="Compact"
                        VerticalAlignment="Center" Margin="8,0"/>
-
             <TextBlock x:Uid="LabelOutputResolution" VerticalAlignment="Center" Margin="8,0"/>
             <DropDownButton x:Name="dropdownOutputResolution" 
                             Content="{x:Bind ViewModel.OutputResolution,Mode=OneWay}" 
@@ -35,7 +45,27 @@
                     </MenuFlyout>
                 </DropDownButton.Flyout>
             </DropDownButton>
-            <AppBarButton x:Uid="AppButtonExport" x:Name="btnExport" Icon="XboxOneConsole"  VerticalAlignment="Center"/>
+            <AppBarSeparator Margin="8,0"/>
+            <AppBarButton x:Uid="AppButtonAddImages" x:Name="btnOpenImages" Icon="Add"  VerticalAlignment="Center"
+                          Click="btnOpenImages_Click"/>
+            <AppBarButton x:Uid="AppButtonImport" x:Name="btnImport" Icon="Import"  VerticalAlignment="Center"
+                          Click="btnImport_Click"/>
+            <AppBarButton x:Uid="AppButtonExport" x:Name="btnExport" Icon="BrowsePhotos"  VerticalAlignment="Center"
+                          Click="btnExport_Click"/>
         </StackPanel>
-    </StackPanel>
+
+        <!--Image grid-->
+        <GridView Grid.Row="1"
+                  ItemsSource="{Binding Source={StaticResource textureCells}}"
+                  ItemTemplate="{StaticResource IconTextureTemplate}" 
+                  IsItemClickEnabled="True" 
+                  CanDragItems="True" AllowDrop="True" CanReorderItems="True"
+                  >
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="4"/>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+        </GridView>
+    </Grid>
 </Page>

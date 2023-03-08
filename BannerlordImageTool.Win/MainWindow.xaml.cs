@@ -46,6 +46,7 @@ public sealed partial class MainWindow : ThemedWindow
         {
             AppTitleText.Foreground = (SolidColorBrush)App.Current.Resources["WindowCaptionForeground"];
         }
+        AppNav.SelectedItem = AppNav.MenuItems.First();
     }
 
     private async void btnSelectBLFolder_Click(object sender, RoutedEventArgs e)

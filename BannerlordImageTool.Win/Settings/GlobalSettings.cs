@@ -9,7 +9,7 @@ public class GlobalSettings : BindableBase
 {
     public static GlobalSettings Current
     {
-        get => (App.Current as App).Settings;
+        get => App.Current.Settings;
     }
     private StorageFolder _gameRootFolder;
 

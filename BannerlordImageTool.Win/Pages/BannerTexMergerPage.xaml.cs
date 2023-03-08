@@ -5,20 +5,13 @@ using BannerlordImageTool.Win.Common;
 using BannerlordImageTool.Win.Settings;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.Windows.ApplicationModel.Resources;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -30,28 +23,68 @@ namespace BannerlordImageTool.Win.Pages;
 /// </summary>
 public sealed partial class BannerTexMergerPage : Page
 {
-    public BannerTexMergerViewModel ViewModel { get; } = new();
+    public BannerTexMergerViewModel ViewModel { get; private set; }
     public BannerTexMergerPage()
     {
         this.InitializeComponent();
+        ViewModel = new BannerTexMergerViewModel(textureCells);
     }
 
-    
     void ResolutionOption_Click(object sender, RoutedEventArgs e)
     {
-        if(sender is not MenuFlyoutItem item)
+        if (sender is not MenuFlyoutItem item)
         {
             return;
         }
         ViewModel.OutputResolution = item.Tag as string;
     }
+
+    void btnExport_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    void btnImport_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    async void btnOpenImages_Click(object sender, RoutedEventArgs e)
+    {
+        var files = await FileHelper.PickMultipleFiles();
+
+        if (files.Count == 0) return;
+        ViewModel.AddCellTextures(files);
+    }
+}
+
+public class IconTexture : BindableBase
+{
+    private string _filePath;
+    private int _atlasIndex;
+
+    public string FilePath
+    {
+        get => _filePath;
+        set => SetProperty(ref _filePath, value);
+    }
+    public int AtlasIndex
+    {
+        get => _atlasIndex;
+        set => SetProperty(ref _atlasIndex, value);
+    }
+
+    public IconTexture(string filePath)
+    {
+        _filePath = filePath;
+    }
 }
 
 public class BannerTexMergerViewModel : BindableBase
 {
-    public record CellTexture(string filePath);
 
     private int _groupID;
+    private CollectionViewSource _collectionViewSource;
 
     public int GroupID
     {
@@ -71,7 +104,7 @@ public class BannerTexMergerViewModel : BindableBase
         }
         set
         {
-            if(Enum.TryParse<BannerTex.OutputResolution>(value,out var enumValue))
+            if (Enum.TryParse<BannerTex.OutputResolution>(value, out var enumValue))
             {
                 GlobalSettings.Current.BannerTexOutputResolution = enumValue;
             }
@@ -83,10 +116,41 @@ public class BannerTexMergerViewModel : BindableBase
         }
     }
 
-    public ObservableCollection<CellTexture> CellTextures { get; } = new();
+    private List<IconTexture> _icons = new();
 
-    internal BannerTexMergerViewModel()
+    internal BannerTexMergerViewModel(CollectionViewSource viewSource)
     {
+        _collectionViewSource = viewSource;
     }
 
+    private void cvs_VectorChanged(Windows.Foundation.Collections.IObservableVector<object> sender, Windows.Foundation.Collections.IVectorChangedEventArgs e)
+    {
+        var s = $"CHANGE:{e.CollectionChange}, INDEX:{e.Index}";
+        Console.WriteLine(s);
+        RefreshCellIndex();
+    }
+
+    public void AddCellTextures(IEnumerable<StorageFile> files)
+    {
+        var newCells = files.Where(file => !_icons.Any(icon => icon.FilePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)))
+            .Select(file => new IconTexture(file.Path));
+        _icons.AddRange(newCells);
+        UpdateCVS();
+    }
+    public void RefreshCellIndex()
+    {
+        for (int i = 0; i < _icons.Count; i++)
+        {
+            _icons[i].AtlasIndex = i % 16;
+        }
+
+        //_icons = new(_icons);
+        UpdateCVS();
+    }
+
+    void UpdateCVS()
+    {
+        _collectionViewSource.Source = new List<IconTexture>(_icons);
+        _collectionViewSource.View.VectorChanged += cvs_VectorChanged;
+    }
 }
