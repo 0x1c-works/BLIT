@@ -2,10 +2,6 @@
   "profiles": {
     "BannerlordImageTool.CLI": {
       "commandName": "Project"
-    },
-    "TestUnpackSprite": {
-      "commandName": "Project",
-      "commandLineArgs": "unpackSprite\r\nE:\\gamework\\mb2\\atlas\\native\\ui_group1_2.png\r\n3687,2272,251,64\r\nE:\\gamework\\mb2\\atlas\\native\\done_button_9.png"
     }
   }
 }

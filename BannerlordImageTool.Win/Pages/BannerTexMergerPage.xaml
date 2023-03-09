@@ -11,13 +11,17 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
-        <CollectionViewSource x:Name="textureCells" />
+        <CollectionViewSource x:Name="cvsTextureCells" />
         <DataTemplate x:Key="IconTextureTemplate" x:DataType="local:IconTexture">
             <Grid>
-                <Image Stretch="Uniform" Source="{x:Bind FilePath,Mode=OneWay}" Width="256" Height="256"/>
+                <Image Stretch="Uniform"  Width="128" Height="128">
+                    <Image.Source>
+                        <BitmapImage UriSource="{x:Bind FilePath,Mode=OneWay}" DecodePixelWidth="128"/>
+                    </Image.Source>
+                </Image>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                             Background="{ThemeResource AppBarBackgroundThemeBrush}">
-                    <TextBlock Text="{x:Bind AtlasIndex}"/>
+                    <TextBlock Text="{x:Bind AtlasName}"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -56,7 +60,7 @@
 
         <!--Image grid-->
         <GridView Grid.Row="1"
-                  ItemsSource="{Binding Source={StaticResource textureCells}}"
+                  ItemsSource="{Binding Source={StaticResource cvsTextureCells}}"
                   ItemTemplate="{StaticResource IconTextureTemplate}" 
                   IsItemClickEnabled="True" 
                   CanDragItems="True" AllowDrop="True" CanReorderItems="True"
