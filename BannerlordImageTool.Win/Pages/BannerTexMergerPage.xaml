@@ -21,7 +21,7 @@
                 </Image>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                             Background="{ThemeResource AppBarBackgroundThemeBrush}">
-                    <TextBlock Text="{x:Bind AtlasName}"/>
+                    <TextBlock Text="{x:Bind AtlasName,Mode=OneWay}"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -35,7 +35,7 @@
         <StackPanel Orientation="Horizontal" Spacing="4">
             <TextBlock x:Uid="LabelBannerGroupID" VerticalAlignment="Center" Margin="8,0,0,0"/>
             <NumberBox x:Name="BannerGroupId" Value="{x:Bind ViewModel.GroupID,Mode=TwoWay}" 
-                       Minimum="7" Maximum="99999999" AcceptsExpression="True"  
+                       Maximum="99999999" AcceptsExpression="True"  
                        SpinButtonPlacementMode="Compact"
                        VerticalAlignment="Center" Margin="8,0"/>
             <TextBlock x:Uid="LabelOutputResolution" VerticalAlignment="Center" Margin="8,0"/>

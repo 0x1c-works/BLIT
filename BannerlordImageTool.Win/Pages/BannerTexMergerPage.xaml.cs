@@ -7,14 +7,11 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using Windows.Networking.Connectivity;
 using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -108,8 +105,8 @@ public class IconTexture : BindableBase
 public class BannerTexMergerViewModel : BindableBase
 {
     private CollectionViewSource _cvs;
-    private RealObservableCollection<IconTexture> _icons = new();
-    private int _groupID;
+    private ObservableCollection<IconTexture> _icons = new();
+    private int _groupID = 7;
 
     public int GroupID
     {
@@ -155,8 +152,6 @@ public class BannerTexMergerViewModel : BindableBase
         _icons.CollectionChanged += _icons_CollectionChanged;
         _cvs = viewSource;
         _cvs.Source = _icons;
-
-
     }
 
     private void _icons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
