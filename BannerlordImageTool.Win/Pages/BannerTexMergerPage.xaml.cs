@@ -5,12 +5,12 @@ using BannerlordImageTool.Win.Common;
 using BannerlordImageTool.Win.Settings;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using Windows.Storage;
 
@@ -28,7 +28,7 @@ public sealed partial class BannerTexMergerPage : Page
     public BannerTexMergerPage()
     {
         this.InitializeComponent();
-        ViewModel = new BannerTexMergerViewModel(cvsTextureCells);
+        ViewModel = new BannerTexMergerViewModel();
     }
 
     void ResolutionOption_Click(object sender, RoutedEventArgs e)
@@ -56,6 +56,89 @@ public sealed partial class BannerTexMergerPage : Page
 
         if (files.Count == 0) return;
         ViewModel.AddCellTextures(files);
+    }
+
+    private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        Debug.WriteLine(e);
+    }
+}
+
+public class BannerTexMergerViewModel : BindableBase
+{
+    private ObservableCollection<IconTexture> _icons = new();
+    private int _groupID = 7;
+
+    public ObservableCollection<IconTexture> Icons { get => _icons; }
+
+    public int GroupID
+    {
+        get => _groupID;
+        set
+        {
+            SetProperty(ref _groupID, value);
+            OnPropertyChanged(nameof(GroupName));
+        }
+    }
+    public string GroupName
+    {
+        get => $"banners_{GroupID}";
+    }
+    public string OutputResolution
+    {
+        get
+        {
+            switch (GlobalSettings.Current.BannerTexOutputResolution)
+            {
+                case BannerTex.OutputResolution.Res2K: return "2K";
+                case BannerTex.OutputResolution.Res4K: return "4K";
+                default: return I18n.Current.GetString("PleaseSelect");
+            }
+        }
+        set
+        {
+            if (Enum.TryParse<BannerTex.OutputResolution>(value, out var enumValue))
+            {
+                GlobalSettings.Current.BannerTexOutputResolution = enumValue;
+            }
+            else
+            {
+                GlobalSettings.Current.BannerTexOutputResolution = BannerTex.OutputResolution.INVALID;
+            }
+            OnPropertyChanged();
+        }
+    }
+
+
+    internal BannerTexMergerViewModel()
+    {
+        _icons.CollectionChanged += _icons_CollectionChanged;
+    }
+
+    private void _icons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action != NotifyCollectionChangedAction.Reset)
+        {
+            RefreshCellIndex();
+        }
+        OnPropertyChanged(nameof(Icons));
+    }
+
+    public void AddCellTextures(IEnumerable<StorageFile> files)
+    {
+        var newCells = files.Where(file => !_icons.Any(icon => icon.FilePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)))
+            .Select(file => new IconTexture(this, file.Path));
+        foreach (var cell in newCells)
+        {
+            _icons.Add(cell);
+        }
+    }
+    public void RefreshCellIndex()
+    {
+        for (int i = 0; i < _icons.Count; i++)
+        {
+            _icons[i].AtlasIndex = i / 16;
+        }
     }
 }
 
@@ -101,82 +184,3 @@ public class IconTexture : BindableBase
         }
     }
 }
-
-public class BannerTexMergerViewModel : BindableBase
-{
-    private CollectionViewSource _cvs;
-    private ObservableCollection<IconTexture> _icons = new();
-    private int _groupID = 7;
-
-    public int GroupID
-    {
-        get => _groupID;
-        set
-        {
-            SetProperty(ref _groupID, value);
-            OnPropertyChanged(nameof(GroupName));
-        }
-    }
-    public string GroupName
-    {
-        get => $"banners_{GroupID}";
-    }
-    public string OutputResolution
-    {
-        get
-        {
-            switch (GlobalSettings.Current.BannerTexOutputResolution)
-            {
-                case BannerTex.OutputResolution.Res2K: return "2K";
-                case BannerTex.OutputResolution.Res4K: return "4K";
-                default: return I18n.Current.GetString("PleaseSelect");
-            }
-        }
-        set
-        {
-            if (Enum.TryParse<BannerTex.OutputResolution>(value, out var enumValue))
-            {
-                GlobalSettings.Current.BannerTexOutputResolution = enumValue;
-            }
-            else
-            {
-                GlobalSettings.Current.BannerTexOutputResolution = BannerTex.OutputResolution.INVALID;
-            }
-            OnPropertyChanged();
-        }
-    }
-
-
-    internal BannerTexMergerViewModel(CollectionViewSource viewSource)
-    {
-        _icons.CollectionChanged += _icons_CollectionChanged;
-        _cvs = viewSource;
-        _cvs.Source = _icons;
-    }
-
-    private void _icons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (e.Action != NotifyCollectionChangedAction.Reset)
-        {
-            RefreshCellIndex();
-        }
-    }
-
-    public void AddCellTextures(IEnumerable<StorageFile> files)
-    {
-        var newCells = files.Where(file => !_icons.Any(icon => icon.FilePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)))
-            .Select(file => new IconTexture(this, file.Path));
-        foreach (var cell in newCells)
-        {
-            _icons.Add(cell);
-        }
-    }
-    public void RefreshCellIndex()
-    {
-        for (int i = 0; i < _icons.Count; i++)
-        {
-            _icons[i].AtlasIndex = i / 16;
-        }
-    }
-}
-
