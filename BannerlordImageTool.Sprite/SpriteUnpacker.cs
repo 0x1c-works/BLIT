@@ -17,17 +17,18 @@ public class SpriteUnpacker
             sprite.Write(outputFile);
         }
     }
-    public void UnpackFromCSV(string csvFile, string sourceDir, string outputDir)
+    public void UnpackFromCSV(string csvFile, string sourceDir, string outputDir, string srcExt, string outExt)
     {
-        Directory.CreateDirectory(outputDir);
         var config = new CsvConfiguration(CultureInfo.InvariantCulture);
         using var reader = File.OpenText(csvFile);
         using var csv = new CsvReader(reader, config);
         var rows = csv.GetRecords<SpriteInfo>();
         foreach (var row in rows)
         {
-            var sourceFile = Path.Combine(sourceDir, row.Atlas);
-            var outputFile = Path.Combine(outputDir, row.Atlas, row.ID + ".png");
+            var sourceFile = Path.Combine(sourceDir, $"{row.Atlas}.{srcExt}");
+            var outputFile = Path.Combine(outputDir, row.Atlas, $"{row.ID}.{outExt}");
+            var dir = Path.GetDirectoryName(outputFile);
+            if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
             UnpackSingle(sourceFile, outputFile, row.Region);
         }
     }
