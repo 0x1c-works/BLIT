@@ -17,6 +17,11 @@
             <SolidColorBrush x:Key="WindowCaptionBackground">Transparent</SolidColorBrush>
             <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled">Transparent</SolidColorBrush>
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush">Transparent</SolidColorBrush>
+
+            <SolidColorBrush x:Key="Danger">#AA3232</SolidColorBrush>
+            <AcrylicBrush x:Key="DangerBackground" TintOpacity=".4" 
+                          TintLuminosityOpacity=".6"
+                          TintColor="Red" FallbackColor="DarkRed"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

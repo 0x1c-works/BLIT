@@ -50,18 +50,39 @@ public sealed partial class BannerTexMergerPage : Page
 
     }
 
+    private void btnConfirmDelete_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.DeleteIcons(ViewModel.Selection);
+        flyoutConfirmDelete.Hide();
+    }
+
     async void btnOpenImages_Click(object sender, RoutedEventArgs e)
     {
         var files = await FileHelper.PickMultipleFiles();
 
         if (files.Count == 0) return;
-        ViewModel.AddCellTextures(files);
+        ViewModel.AddIcons(files);
     }
 
     private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        Debug.WriteLine(e);
+        var changed = false;
+        foreach (var item in e.AddedItems.Where(item => item is IconTexture).Cast<IconTexture>())
+        {
+            item.IsSelected = true;
+            changed = true;
+        }
+        foreach (var item in e.RemovedItems.Where(item => item is IconTexture).Cast<IconTexture>())
+        {
+            item.IsSelected = false;
+            changed = true;
+        }
+        if (changed)
+        {
+            ViewModel.NotifySelectionChange();
+        }
     }
+
 }
 
 public class BannerTexMergerViewModel : BindableBase
@@ -109,6 +130,14 @@ public class BannerTexMergerViewModel : BindableBase
         }
     }
 
+    public IEnumerable<IconTexture> Selection
+    {
+        get => Icons.Where(icon => icon.IsSelected);
+    }
+    public bool HasSelection
+    {
+        get => Icons.Any(icon => icon.IsSelected);
+    }
 
     internal BannerTexMergerViewModel()
     {
@@ -124,7 +153,7 @@ public class BannerTexMergerViewModel : BindableBase
         OnPropertyChanged(nameof(Icons));
     }
 
-    public void AddCellTextures(IEnumerable<StorageFile> files)
+    public void AddIcons(IEnumerable<StorageFile> files)
     {
         var newCells = files.Where(file => !_icons.Any(icon => icon.FilePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)))
             .Select(file => new IconTexture(this, file.Path));
@@ -133,12 +162,34 @@ public class BannerTexMergerViewModel : BindableBase
             _icons.Add(cell);
         }
     }
+    public void DeleteIcons(IEnumerable<IconTexture> icons)
+    {
+        var queue = new Queue<IconTexture>(icons);
+        while (queue.Count > 0)
+        {
+            var deleting = queue.Dequeue();
+            if (!Icons.Remove(deleting))
+            {
+                // a more expensive way to ensure the icon is deleted
+                var index = Icons.Select(i => i.FilePath).ToList().IndexOf(deleting.FilePath);
+                if (index > -1)
+                {
+                    Icons.RemoveAt(index);
+                }
+            }
+        }
+    }
     public void RefreshCellIndex()
     {
         for (int i = 0; i < _icons.Count; i++)
         {
             _icons[i].AtlasIndex = i / 16;
         }
+    }
+    public void NotifySelectionChange()
+    {
+        OnPropertyChanged(nameof(Selection));
+        OnPropertyChanged(nameof(HasSelection));
     }
 }
 
@@ -167,6 +218,8 @@ public class IconTexture : BindableBase
     {
         get => $"{_viewModel.GroupName}_{AtlasIndex}";
     }
+
+    public bool IsSelected { get; set; }
 
     public IconTexture(BannerTexMergerViewModel viewModel, string filePath)
     {

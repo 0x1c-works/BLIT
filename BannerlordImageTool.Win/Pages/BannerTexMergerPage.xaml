@@ -51,6 +51,22 @@
             <AppBarSeparator Margin="8,0"/>
             <AppBarButton x:Uid="AppButtonAddImages" x:Name="btnOpenImages" Icon="Add"  VerticalAlignment="Center"
                           Click="btnOpenImages_Click"/>
+            <AppBarButton x:Uid="AppButtonDeleteImages" x:Name="btnDeleteSelected" Icon="Delete" VerticalAlignment="Center"
+                          IsEnabled="{x:Bind ViewModel.HasSelection,Mode=OneWay}">
+                <AppBarButton.Flyout>
+                    <Flyout x:Name="flyoutConfirmDelete" Placement="Bottom" LightDismissOverlayMode="On" >
+                        <Flyout.FlyoutPresenterStyle>
+                            <Style TargetType="FlyoutPresenter">
+                                <Setter Property="Background" Value="{StaticResource DangerBackground}"/>
+                            </Style>
+                        </Flyout.FlyoutPresenterStyle>
+                        <StackPanel>
+                            <TextBlock x:Uid="TextConfirmDeleteSelection" Margin="0,4,0,16" />
+                            <Button x:Uid="ButtonYesDeleteSelection" x:Name="btnConfirmDelete" Click="btnConfirmDelete_Click"/>
+                        </StackPanel>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
             <AppBarButton x:Uid="AppButtonImport" x:Name="btnImport" Icon="Import"  VerticalAlignment="Center"
                           Click="btnImport_Click"/>
             <AppBarButton x:Uid="AppButtonExport" x:Name="btnExport" Icon="BrowsePhotos"  VerticalAlignment="Center"

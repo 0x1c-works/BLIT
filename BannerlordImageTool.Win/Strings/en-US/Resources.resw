@@ -118,7 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppButtonAddImages.Label" xml:space="preserve">
-    <value>Add Icon</value>
+    <value>Add</value>
+  </data>
+  <data name="AppButtonDeleteImages.Label" xml:space="preserve">
+    <value>Delete</value>
   </data>
   <data name="AppButtonExport.Label" xml:space="preserve">
     <value>Export</value>
@@ -136,6 +139,9 @@
   <data name="ButtonBrowser.Content" xml:space="preserve">
     <value>Browse...</value>
   </data>
+  <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">
+    <value>Yes, delete them</value>
+  </data>
   <data name="LabelBannerGroupID.Text" xml:space="preserve">
     <value>Group ID</value>
   </data>
@@ -150,5 +156,8 @@
   </data>
   <data name="PleaseSelect" xml:space="preserve">
     <value>Select</value>
+  </data>
+  <data name="TextConfirmDeleteSelection.Text" xml:space="preserve">
+    <value>All selected items will be removed. Do you want to continue?</value>
   </data>
 </root>
