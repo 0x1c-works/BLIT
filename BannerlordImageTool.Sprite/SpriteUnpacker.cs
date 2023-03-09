@@ -1,4 +1,8 @@
-﻿using ImageMagick;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using ImageMagick;
+using System.Globalization;
+using System.Security.Cryptography.X509Certificates;
 
 namespace BannerlordImageTool.Sprite;
 
@@ -11,6 +15,20 @@ public class SpriteUnpacker
         using (var sprite = new MagickImage(spriteSheet, settings))
         {
             sprite.Write(outputFile);
+        }
+    }
+    public void UnpackFromCSV(string csvFile, string sourceDir, string outputDir)
+    {
+        Directory.CreateDirectory(outputDir);
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture);
+        using var reader = File.OpenText(csvFile);
+        using var csv = new CsvReader(reader, config);
+        var rows = csv.GetRecords<SpriteInfo>();
+        foreach (var row in rows)
+        {
+            var sourceFile = Path.Combine(sourceDir, row.Atlas);
+            var outputFile = Path.Combine(outputDir, row.Atlas, row.ID + ".png");
+            UnpackSingle(sourceFile, outputFile, row.Region);
         }
     }
 }
@@ -42,4 +60,28 @@ public record SpriteRegion(int X, int Y, int Width, int Height)
         return new SpriteRegion(x, y, w, h);
     }
     public MagickGeometry ToGeometry() => new MagickGeometry(X, Y, Width, Height);
+}
+public class SpriteInfo
+{
+    public string Atlas { get; set; } = "";
+    public string ID { get; set; } = "";
+    public int Width { get; set; }
+    public int Height { get; set; }
+    public int X { get; set; }
+    public int Y { get; set; }
+
+    public bool IsValid
+    {
+        get => !string.IsNullOrEmpty(Atlas)
+            && !string.IsNullOrEmpty(ID)
+            && Width > 0
+            && Height > 0
+            && X >= 0
+            && Y >= 0;
+    }
+
+    public SpriteRegion Region
+    {
+        get => new(X, Y, Width, Height);
+    }
 }
