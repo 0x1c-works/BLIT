@@ -20,8 +20,18 @@
 
             <SolidColorBrush x:Key="Danger">#AA3232</SolidColorBrush>
             <AcrylicBrush x:Key="DangerBackground" TintOpacity=".4" 
-                          TintLuminosityOpacity=".6"
-                          TintColor="Red" FallbackColor="DarkRed"/>
+                          TintLuminosityOpacity=".3"
+                          TintColor="Red"
+                         />
+            <Style x:Key="DangerButton" TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource DangerBackground}"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="CornerRadius" Value="2"/>
+            </Style>
+            <!--<SymbolIcon x:Key="DangerIcon" Symbol="">
+
+            </SymbolIcon>-->
         </ResourceDictionary>
     </Application.Resources>
 </Application>

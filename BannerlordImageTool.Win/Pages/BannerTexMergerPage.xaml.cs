@@ -1,8 +1,10 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
+using BannerlordImageTool.BannerTex;
 using BannerlordImageTool.Win.Common;
 using BannerlordImageTool.Win.Settings;
+using ImageMagick;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -11,7 +13,9 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -37,12 +41,36 @@ public sealed partial class BannerTexMergerPage : Page
         {
             return;
         }
-        ViewModel.OutputResolution = item.Tag as string;
+        ViewModel.OutputResolutionName = item.Tag as string;
     }
 
-    void btnExport_Click(object sender, RoutedEventArgs e)
+    async void btnExport_Click(object sender, RoutedEventArgs e)
     {
+        if (ViewModel.IsExporting) return;
 
+        var outFolder = await FileHelper.PickFolder($"BannerTextureExportDir-{ViewModel.GroupID}",
+                                                    "bannerExportTo");
+        if (outFolder == null) return;
+
+        TextureMerger merger = new TextureMerger(GlobalSettings.Current.BannerTexOutputResolution);
+        var outBasePath = Path.Join(outFolder.Path, ViewModel.GroupName);
+
+        ViewModel.IsExporting = true;
+        infoExport.IsOpen = false;
+        await Task.Factory.StartNew(() => {
+            merger.Merge(outBasePath, ViewModel.Icons.Select(icon => icon.FilePath).ToArray());
+        });
+        ViewModel.IsExporting = false;
+
+        infoExport.Message = string.Format(I18n.Current.GetString("exportSuccess"), outFolder.Path);
+        infoExport.Severity = InfoBarSeverity.Success;
+        infoExport.IsOpen = true;
+        var btnGo = new Button() {
+            Content = "Open the folder",
+        };
+        btnGo.Click += (s, e) => Process.Start("explorer.exe", outFolder.Path);
+
+        infoExport.ActionButton = btnGo;
     }
 
     void btnImport_Click(object sender, RoutedEventArgs e)
@@ -58,7 +86,7 @@ public sealed partial class BannerTexMergerPage : Page
 
     async void btnOpenImages_Click(object sender, RoutedEventArgs e)
     {
-        var files = await FileHelper.PickMultipleFiles();
+        var files = await FileHelper.PickMultipleFiles(".png");
 
         if (files.Count == 0) return;
         ViewModel.AddIcons(files);
@@ -89,6 +117,7 @@ public class BannerTexMergerViewModel : BindableBase
 {
     private ObservableCollection<IconTexture> _icons = new();
     private int _groupID = 7;
+    private bool _isExporting = false;
 
     public ObservableCollection<IconTexture> Icons { get => _icons; }
 
@@ -105,7 +134,20 @@ public class BannerTexMergerViewModel : BindableBase
     {
         get => $"banners_{GroupID}";
     }
-    public string OutputResolution
+    public bool IsExporting
+    {
+        get => _isExporting;
+        set
+        {
+            SetProperty(ref _isExporting, value);
+            OnPropertyChanged(nameof(CanExport));
+        }
+    }
+    public bool CanExport
+    {
+        get => Icons.Count > 0 && !IsExporting;
+    }
+    public string OutputResolutionName
     {
         get
         {
@@ -151,6 +193,7 @@ public class BannerTexMergerViewModel : BindableBase
             RefreshCellIndex();
         }
         OnPropertyChanged(nameof(Icons));
+        OnPropertyChanged(nameof(CanExport));
     }
 
     public void AddIcons(IEnumerable<StorageFile> files)
@@ -183,7 +226,7 @@ public class BannerTexMergerViewModel : BindableBase
     {
         for (int i = 0; i < _icons.Count; i++)
         {
-            _icons[i].AtlasIndex = i / 16;
+            _icons[i].AtlasIndex = i / (TextureMerger.ROWS * TextureMerger.COLS);
         }
     }
     public void NotifySelectionChange()
@@ -216,10 +259,11 @@ public class IconTexture : BindableBase
 
     public string AtlasName
     {
-        get => $"{_viewModel.GroupName}_{AtlasIndex}";
+        get => $"{_viewModel.GroupName}_{AtlasIndex + 1:d2}";
     }
 
     public bool IsSelected { get; set; }
+    public bool IsValid { get => !string.IsNullOrEmpty(FilePath) && AtlasIndex >= 0; }
 
     public IconTexture(BannerTexMergerViewModel viewModel, string filePath)
     {

@@ -19,4 +19,10 @@
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="gsdll64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
