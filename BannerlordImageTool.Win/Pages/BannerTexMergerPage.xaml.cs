@@ -53,12 +53,11 @@ public sealed partial class BannerTexMergerPage : Page
         if (outFolder == null) return;
 
         TextureMerger merger = new TextureMerger(GlobalSettings.Current.BannerTexOutputResolution);
-        var outBasePath = Path.Join(outFolder.Path, ViewModel.GroupName);
 
         ViewModel.IsExporting = true;
         infoExport.IsOpen = false;
         await Task.Factory.StartNew(() => {
-            merger.Merge(outBasePath, ViewModel.Icons.Select(icon => icon.FilePath).ToArray());
+            merger.Merge(outFolder.Path, ViewModel.GroupID, ViewModel.Icons.Select(icon => icon.FilePath).ToArray());
         });
         ViewModel.IsExporting = false;
 
@@ -132,7 +131,7 @@ public class BannerTexMergerViewModel : BindableBase
     }
     public string GroupName
     {
-        get => $"banners_{GroupID}";
+        get => BannerUtils.GetGroupName(GroupID);
     }
     public bool IsExporting
     {
@@ -153,8 +152,8 @@ public class BannerTexMergerViewModel : BindableBase
         {
             switch (GlobalSettings.Current.BannerTexOutputResolution)
             {
-                case BannerTex.OutputResolution.Res2K: return "2K";
-                case BannerTex.OutputResolution.Res4K: return "4K";
+                case OutputResolution.Res2K: return "2K";
+                case OutputResolution.Res4K: return "4K";
                 default: return I18n.Current.GetString("PleaseSelect");
             }
         }
@@ -226,7 +225,7 @@ public class BannerTexMergerViewModel : BindableBase
     {
         for (int i = 0; i < _icons.Count; i++)
         {
-            _icons[i].AtlasIndex = i / (TextureMerger.ROWS * TextureMerger.COLS);
+            _icons[i].CellIndex = i;
         }
     }
     public void NotifySelectionChange()
@@ -241,25 +240,36 @@ public class IconTexture : BindableBase
     private BannerTexMergerViewModel _viewModel;
     private string _filePath;
     private int _atlasIndex;
+    private int _cellIndex;
 
     public string FilePath
     {
         get => _filePath;
         set => SetProperty(ref _filePath, value);
     }
-    public int AtlasIndex
+    public int CellIndex
     {
-        get => _atlasIndex;
+        get => _cellIndex;
         set
         {
-            SetProperty(ref _atlasIndex, value);
+            if (value == _cellIndex) return;
+            SetProperty(ref _cellIndex, value);
+            OnPropertyChanged(nameof(ID));
             OnPropertyChanged(nameof(AtlasName));
         }
+    }
+    public int AtlasIndex
+    {
+        get => CellIndex / (TextureMerger.ROWS * TextureMerger.COLS);
     }
 
     public string AtlasName
     {
-        get => $"{_viewModel.GroupName}_{AtlasIndex + 1:d2}";
+        get => BannerUtils.GetAtlasName(_viewModel.GroupID, AtlasIndex);
+    }
+    public int ID
+    {
+        get => BannerUtils.GetIconID(_viewModel.GroupID, CellIndex);
     }
 
     public bool IsSelected { get; set; }
@@ -278,6 +288,7 @@ public class IconTexture : BindableBase
         if (e.PropertyName == nameof(BannerTexMergerViewModel.GroupName))
         {
             OnPropertyChanged(nameof(AtlasName));
+            OnPropertyChanged(nameof(ID));
         }
     }
 }

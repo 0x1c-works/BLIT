@@ -13,14 +13,33 @@
     <Page.Resources>
         <DataTemplate x:Key="IconTextureTemplate" x:DataType="local:IconTexture">
             <Grid>
-                <Image Stretch="Uniform"  Width="128" Height="128">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Stretch="Uniform" Width="128" Height="128" Grid.ColumnSpan="2">
                     <Image.Source>
                         <BitmapImage UriSource="{x:Bind FilePath,Mode=OneWay}" DecodePixelWidth="128"/>
                     </Image.Source>
                 </Image>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                            Background="{ThemeResource AppBarBackgroundThemeBrush}">
-                    <TextBlock Text="{x:Bind AtlasName,Mode=OneWay}"/>
+                <Grid VerticalAlignment="Top" Grid.ColumnSpan="2" >
+                    <Grid.Background>
+                        <SolidColorBrush Opacity=".2" Color="Black"/>
+                    </Grid.Background>
+
+                    <TextBlock Text="{x:Bind AtlasName,Mode=OneWay}" FontSize="10" HorizontalTextAlignment="Center"
+                               Foreground="White"/>
+                </Grid>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" 
+                            Spacing="8"
+                            Padding="4,1"
+                            CornerRadius="2">
+                    <StackPanel.Background>
+                        <AcrylicBrush TintOpacity=".5" TintLuminosityOpacity=".5" TintColor="White"
+                                      Opacity=".4"/>
+                    </StackPanel.Background>
+                    <TextBlock Text="#" Foreground="Black" LineHeight="8"/>
+                    <TextBlock Text="{x:Bind ID,Mode=OneWay}" Foreground="Black" FontWeight="Bold" LineHeight="8"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>

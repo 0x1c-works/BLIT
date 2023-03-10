@@ -21,9 +21,10 @@ public class TextureMerger
         MagickNET.SetGhostscriptDirectory(AppDomain.CurrentDomain.BaseDirectory);
     }
 
-    public void Merge(string outBasePath, string[] sourceFileNames)
+    public void Merge(string outDir, int groupID, string[] sourceFileNames)
     {
         using var collection = new MagickImageCollection();
+        var outBasePath = Path.Join(outDir, BannerUtils.GetGroupName(groupID));
 
         var next = sourceFileNames;
         var index = 0;
