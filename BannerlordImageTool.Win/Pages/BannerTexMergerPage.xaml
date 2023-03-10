@@ -25,14 +25,14 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
-    <Grid >
+    <Grid Margin="32" Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <!--Top bar-->
         <StackPanel x:Name="Toolbar" Orientation="Horizontal" Spacing="4">
-            <TextBlock x:Uid="LabelBannerGroupID" VerticalAlignment="Center" Margin="8,0,0,0"/>
+            <TextBlock x:Uid="LabelBannerGroupID" VerticalAlignment="Center" />
             <NumberBox x:Name="BannerGroupId" Value="{x:Bind ViewModel.GroupID,Mode=TwoWay}" 
                        Maximum="99999999" AcceptsExpression="True"  
                        SpinButtonPlacementMode="Compact"
@@ -76,8 +76,9 @@
                     <KeyboardAccelerator Key="Delete" />
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
-            <AppBarButton x:Uid="AppButtonImport" x:Name="btnImport" Icon="Import"  VerticalAlignment="Center"
-                          Click="btnImport_Click"/>
+            <!--WIP-->
+            <!--<AppBarButton x:Uid="AppButtonImport" x:Name="btnImport" Icon="Import"  VerticalAlignment="Center"
+                          Click="btnImport_Click"/>-->
             <AppBarButton x:Uid="AppButtonExport" x:Name="btnExport" Icon="BrowsePhotos"  VerticalAlignment="Center"
                           Click="btnExport_Click" KeyboardAcceleratorPlacementMode="Auto"
                           IsEnabled="{x:Bind ViewModel.CanExport,Mode=OneWay}">

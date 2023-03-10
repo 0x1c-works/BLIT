@@ -12,7 +12,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Margin="32,32,32,32" Background="Transparent">
+    <Grid Margin="32" Background="Transparent">
         <ScrollViewer>
             <StackPanel DataContext="{x:Bind settings:GlobalSettings.Current}">
                 <TextBlock x:Uid="LabelGameRootFolder">Game root folder:</TextBlock>
