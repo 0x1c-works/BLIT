@@ -26,11 +26,11 @@
                     />
         </StackPanel>
         <NavigationView x:Name="AppNav" 
-                        ItemInvoked="AppNav_ItemInvoked"
                         Grid.Row="1"
                         IsTabStop="False"
                         IsBackButtonVisible="Collapsed"
-                        Header="Title">
+                        Header="Title"
+                        SelectionChanged="AppNav_SelectionChanged">
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Uid="AppNavMenuBanner" Icon="Flag" Content="Banner Texture" Tag="BannerTexture"/>
             </NavigationView.MenuItems>

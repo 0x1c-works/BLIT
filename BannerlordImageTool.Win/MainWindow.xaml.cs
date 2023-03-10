@@ -32,6 +32,7 @@ public sealed partial class MainWindow : ThemedWindow
         InitializeComponent();
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
+        AppNav.SelectedItem = AppNav.MenuItems.First();
 
         Activated += MainWindow_Activated;
     }
@@ -46,38 +47,27 @@ public sealed partial class MainWindow : ThemedWindow
         {
             AppTitleText.Foreground = (SolidColorBrush)App.Current.Resources["WindowCaptionForeground"];
         }
-        AppNav.SelectedItem = AppNav.MenuItems.First();
     }
 
-    private async void btnSelectBLFolder_Click(object sender, RoutedEventArgs e)
+    private void AppNav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
-        var picker = new FolderPicker();
-        BindHwnd(picker);
-        var folder = await picker.PickSingleFolderAsync();
-        if (folder is not null)
-        {
-            Model.RootFolder = folder;
-        }
-    }
+        var item = args.SelectedItem as NavigationViewItem;
+        if (item is null) return;
+        AppNav.Header = item.Content;
 
-    private void BindHwnd(object target)
-    {
-        var hwnd = WindowNative.GetWindowHandle(this);
-        InitializeWithWindow.Initialize(target, hwnd);
-    }
-
-    private void AppNav_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
-    {
-        if (args.IsSettingsInvoked)
+        if (args.IsSettingsSelected)
         {
             AppContent.Navigate(typeof(SettingsPage));
         }
         else
         {
-            var item = sender.MenuItems.OfType<NavigationViewItem>().First(i => i.Content == args.InvokedItem);
-            if (TAGGED_PAGES.TryGetValue(item.Tag.ToString(), out var pageType))
+            if (item is not null)
             {
-                AppContent.Navigate(pageType);
+                var tag = item?.Tag as string;
+                if (TAGGED_PAGES.TryGetValue(tag, out var pageType))
+                {
+                    AppContent.Navigate(pageType);
+                }
             }
         }
     }
