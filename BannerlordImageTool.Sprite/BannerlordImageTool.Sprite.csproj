@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="E:\gamework\mb2\BannerlordImageTool\BannerlordImageTool.Sprite\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="E:\gamework\mb2\BannerlordImageTool\BannerlordImageTool.Sprite\.editorconfig" />
+  </ItemGroup>
+
+</Project>

@@ -4,8 +4,8 @@ namespace BannerlordImageTool.BannerTex;
 
 public class TextureMerger
 {
-    const int ROWS = 4;
-    const int COLS = 4;
+    public const int ROWS = 4;
+    public const int COLS = 4;
 
     static readonly Dictionary<OutputResolution, int> CELL_SIZES = new()
     {
@@ -18,9 +18,10 @@ public class TextureMerger
     public TextureMerger(OutputResolution resolution)
     {
         _resolution = resolution;
+        MagickNET.SetGhostscriptDirectory(AppDomain.CurrentDomain.BaseDirectory);
     }
 
-    public void Merge(string outBaseName, string[] sourceFileNames)
+    public void Merge(string outBasePath, string[] sourceFileNames)
     {
         using var collection = new MagickImageCollection();
 
@@ -28,18 +29,18 @@ public class TextureMerger
         var index = 0;
         while (next.Length > 0)
         {
-            next = MakeSingleTexture(outBaseName, index++, next);
+            next = MakeSingleTexture(outBasePath, index++, next);
         }
     }
 
-    private string[] MakeSingleTexture(string outBaseName, int texIndex, string[] sourceFileNames)
+    private string[] MakeSingleTexture(string outBasePath, int texIndex, string[] sourceFileNames)
     {
         var index = 0;
         using var tex = new MagickImageCollection();
         MagickImageCollection? row = null;
         try
         {
-            while (index <= ROWS * COLS)
+            while (index < ROWS * COLS)
             {
                 var processedCount = MakeRow(tex, sourceFileNames.Skip(index).Take(COLS));
                 if (processedCount == 0) break;
@@ -48,10 +49,10 @@ public class TextureMerger
             if (tex.Count > 0)
             {
                 // output tex
-                var outputFile = ($"{outBaseName}_{texIndex + 1:d2}.png");
+                var outputFile = ($"{outBasePath}_{texIndex + 1:d2}.psd");
                 var output = tex.AppendVertically();
                 output.BackgroundColor = new MagickColor(0, 0, 0, 0);
-                output.Extent(new MagickGeometry(4096), Gravity.Northwest);
+                output.Extent(GetTextureGeometry(), Gravity.Northwest);
                 output.Write(outputFile);
                 Console.WriteLine($"Generated: {outputFile}");
             }
@@ -74,8 +75,22 @@ public class TextureMerger
             row.Add(ResizeCell(new MagickImage(file)));
             count++;
         }
-        if (row.Count > 0) tex.Add(row.AppendHorizontally());
-        return ++count;
+        if (row.Count > 0)
+        {
+            var rowTex = row.AppendHorizontally();
+            rowTex.BackgroundColor = MagickColor.FromRgba(0, 0, 0, 0);
+            tex.Add(rowTex);
+        }
+        return count;
+    }
+
+    private MagickGeometry GetTextureGeometry()
+    {
+        if (!CELL_SIZES.TryGetValue(_resolution, out var size))
+        {
+            throw new ArgumentException($"unsupported output resolution: {_resolution}");
+        }
+        return new MagickGeometry(size * COLS, size * ROWS);
     }
 
     private MagickGeometry GetCellGeometry()
@@ -97,15 +112,9 @@ public class TextureMerger
     }
 }
 
-public class BadSourceException : Exception
-{
-    public BadSourceException(string filename, string reason) : base($"bad source image {filename}: {reason}")
-    {
-    }
-}
-
 public enum OutputResolution
 {
+    INVALID = -1,
     Res2K,
     Res4K,
 }
