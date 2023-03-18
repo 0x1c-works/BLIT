@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using BannerlordImageTool.Win.Pages;
+using BannerlordImageTool.Win.Pages.BannerIcons;
 using BannerlordImageTool.Win.Theming;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -71,7 +72,7 @@ public sealed partial class MainWindow : ThemedWindow
     }
 
     static readonly Dictionary<string, Type> TAGGED_PAGES = new() {
-        {"BannerTexture",typeof(BannerTexMergerPage) },
+        {"BannerIcons",typeof(BannerIconsEditor) },
     };
 
     public class ViewModel : INotifyPropertyChanged
