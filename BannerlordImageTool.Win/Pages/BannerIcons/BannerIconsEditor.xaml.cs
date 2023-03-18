@@ -21,11 +21,11 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons;
 /// </summary>
 public sealed partial class BannerIconsEditor : Page
 {
-    public BannerGroupViewModel ViewModel { get; private set; }
+    DataViewModel ViewModel { get; init; } = new();
+
     public BannerIconsEditor()
     {
         this.InitializeComponent();
-        ViewModel = new BannerGroupViewModel();
     }
 
     void ResolutionOption_Click(object sender, RoutedEventArgs e)
@@ -41,20 +41,19 @@ public sealed partial class BannerIconsEditor : Page
     {
         if (ViewModel.IsExporting) return;
 
-        var outFolder = await FileHelper.PickFolder($"BannerIconsExportDir-{ViewModel.GroupID}",
-                                                    "bannerIconsExportTo");
+        var outFolder = await FileHelper.PickFolder($"BannerIconsExportDir", "bannerIconsExportTo");
         if (outFolder == null) return;
 
         TextureMerger merger = new TextureMerger(GlobalSettings.Current.BannerTexOutputResolution);
 
         ViewModel.IsExporting = true;
         infoExport.IsOpen = false;
-        await Task.Factory.StartNew(() => {
-            merger.Merge(outFolder.Path, ViewModel.GroupID, ViewModel.Icons.Select(icon => icon.FilePath).ToArray());
-        });
-        var xmlData = new BannerIconData();
-        xmlData.IconGroups.Add(ViewModel.ToBannerIconGroup());
-        xmlData.SaveToXml(outFolder.Path);
+        await Task.WhenAll(ViewModel.GetExportingGroups().Select(g =>
+            Task.Factory.StartNew(() => {
+                merger.Merge(outFolder.Path, g.GroupID, g.Icons.Select(icon => icon.FilePath).ToArray());
+            })
+        ));
+        ViewModel.ToBannerIconData().SaveToXml(outFolder.Path);
         ViewModel.IsExporting = false;
 
         infoExport.Message = string.Format(I18n.Current.GetString("exportSuccess"), outFolder.Path);
@@ -73,37 +72,13 @@ public sealed partial class BannerIconsEditor : Page
 
     }
 
-    private void btnConfirmDelete_Click(object sender, RoutedEventArgs e)
+    private void btnAddGroup_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.DeleteIcons(ViewModel.Selection);
-        flyoutConfirmDelete.Hide();
+        ViewModel.AddGroup();
     }
 
-    async void btnOpenImages_Click(object sender, RoutedEventArgs e)
+    private void listGroups_ItemClick(object sender, ItemClickEventArgs e)
     {
-        var files = await FileHelper.PickMultipleFiles(".png");
-
-        if (files.Count == 0) return;
-        ViewModel.AddIcons(files);
+        ViewModel.SelectedGroup = e.ClickedItem as GroupViewModel;
     }
-
-    private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        var changed = false;
-        foreach (var item in e.AddedItems.Where(item => item is BannerIconViewModel).Cast<BannerIconViewModel>())
-        {
-            item.IsSelected = true;
-            changed = true;
-        }
-        foreach (var item in e.RemovedItems.Where(item => item is BannerIconViewModel).Cast<BannerIconViewModel>())
-        {
-            item.IsSelected = false;
-            changed = true;
-        }
-        if (changed)
-        {
-            ViewModel.NotifySelectionChange();
-        }
-    }
-
 }

@@ -10,13 +10,12 @@ using Windows.Storage;
 
 namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
 
-public class BannerGroupViewModel : BindableBase
+public class GroupViewModel : BindableBase
 {
-    private ObservableCollection<BannerIconViewModel> _icons = new();
+    private ObservableCollection<IconViewModel> _icons = new();
     private int _groupID = 7;
-    private bool _isExporting = false;
 
-    public ObservableCollection<BannerIconViewModel> Icons { get => _icons; }
+    public ObservableCollection<IconViewModel> Icons { get => _icons; }
 
     public int GroupID
     {
@@ -31,45 +30,13 @@ public class BannerGroupViewModel : BindableBase
     {
         get => BannerUtils.GetGroupName(GroupID);
     }
-    public bool IsExporting
-    {
-        get => _isExporting;
-        set
-        {
-            SetProperty(ref _isExporting, value);
-            OnPropertyChanged(nameof(CanExport));
-        }
-    }
+
     public bool CanExport
     {
-        get => Icons.Count > 0 && !IsExporting;
-    }
-    public string OutputResolutionName
-    {
-        get
-        {
-            switch (GlobalSettings.Current.BannerTexOutputResolution)
-            {
-                case OutputResolution.Res2K: return "2K";
-                case OutputResolution.Res4K: return "4K";
-                default: return I18n.Current.GetString("PleaseSelect");
-            }
-        }
-        set
-        {
-            if (Enum.TryParse<BannerTex.OutputResolution>(value, out var enumValue))
-            {
-                GlobalSettings.Current.BannerTexOutputResolution = enumValue;
-            }
-            else
-            {
-                GlobalSettings.Current.BannerTexOutputResolution = BannerTex.OutputResolution.INVALID;
-            }
-            OnPropertyChanged();
-        }
+        get => Icons.Count > 0;
     }
 
-    public IEnumerable<BannerIconViewModel> Selection
+    public IEnumerable<IconViewModel> Selection
     {
         get => Icons.Where(icon => icon.IsSelected);
     }
@@ -78,7 +45,7 @@ public class BannerGroupViewModel : BindableBase
         get => Icons.Any(icon => icon.IsSelected);
     }
 
-    internal BannerGroupViewModel()
+    internal GroupViewModel()
     {
         _icons.CollectionChanged += _icons_CollectionChanged;
     }
@@ -96,15 +63,15 @@ public class BannerGroupViewModel : BindableBase
     public void AddIcons(IEnumerable<StorageFile> files)
     {
         var newCells = files.Where(file => !_icons.Any(icon => icon.FilePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)))
-            .Select(file => new BannerIconViewModel(this, file.Path));
+            .Select(file => new IconViewModel(this, file.Path));
         foreach (var cell in newCells)
         {
             _icons.Add(cell);
         }
     }
-    public void DeleteIcons(IEnumerable<BannerIconViewModel> icons)
+    public void DeleteIcons(IEnumerable<IconViewModel> icons)
     {
-        var queue = new Queue<BannerIconViewModel>(icons);
+        var queue = new Queue<IconViewModel>(icons);
         while (queue.Count > 0)
         {
             var deleting = queue.Dequeue();

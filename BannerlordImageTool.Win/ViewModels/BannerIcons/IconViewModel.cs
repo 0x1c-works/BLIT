@@ -3,9 +3,9 @@ using BannerlordImageTool.Win.Common;
 using System.ComponentModel;
 
 namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
-public class BannerIconViewModel : BindableBase
+public class IconViewModel : BindableBase
 {
-    private BannerGroupViewModel _groupViewModel;
+    private GroupViewModel _groupViewModel;
     private string _texturePath;
     private int _cellIndex;
 
@@ -42,7 +42,7 @@ public class BannerIconViewModel : BindableBase
     public bool IsSelected { get; set; }
     public bool IsValid { get => !string.IsNullOrEmpty(FilePath) && AtlasIndex >= 0; }
 
-    public BannerIconViewModel(BannerGroupViewModel groupVm, string filePath)
+    public IconViewModel(GroupViewModel groupVm, string filePath)
     {
         _groupViewModel = groupVm;
         _texturePath = filePath;
@@ -52,7 +52,7 @@ public class BannerIconViewModel : BindableBase
 
     private void _viewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(BannerGroupViewModel.GroupName))
+        if (e.PropertyName == nameof(GroupViewModel.GroupName))
         {
             OnPropertyChanged(nameof(AtlasName));
             OnPropertyChanged(nameof(ID));
