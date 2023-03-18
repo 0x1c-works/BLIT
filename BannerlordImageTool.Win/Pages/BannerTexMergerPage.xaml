@@ -11,7 +11,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
-        <DataTemplate x:Key="IconTextureTemplate" x:DataType="local:IconTexture">
+        <DataTemplate x:Key="IconTextureTemplate" x:DataType="local:BannerIconViewModel">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>

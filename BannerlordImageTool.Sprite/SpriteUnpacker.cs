@@ -2,7 +2,6 @@
 using CsvHelper.Configuration;
 using ImageMagick;
 using System.Globalization;
-using System.Security.Cryptography.X509Certificates;
 
 namespace BannerlordImageTool.Sprite;
 

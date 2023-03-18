@@ -4,7 +4,6 @@
 using BannerlordImageTool.BannerTex;
 using BannerlordImageTool.Win.Common;
 using BannerlordImageTool.Win.Settings;
-using ImageMagick;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -13,7 +12,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -59,6 +57,9 @@ public sealed partial class BannerTexMergerPage : Page
         await Task.Factory.StartNew(() => {
             merger.Merge(outFolder.Path, ViewModel.GroupID, ViewModel.Icons.Select(icon => icon.FilePath).ToArray());
         });
+        var xmlData = new BannerIconData();
+        xmlData.IconGroups.Add(ViewModel.ToBannerIconGroup());
+        xmlData.SaveToXml(outFolder.Path);
         ViewModel.IsExporting = false;
 
         infoExport.Message = string.Format(I18n.Current.GetString("exportSuccess"), outFolder.Path);
@@ -94,12 +95,12 @@ public sealed partial class BannerTexMergerPage : Page
     private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         var changed = false;
-        foreach (var item in e.AddedItems.Where(item => item is IconTexture).Cast<IconTexture>())
+        foreach (var item in e.AddedItems.Where(item => item is BannerIconViewModel).Cast<BannerIconViewModel>())
         {
             item.IsSelected = true;
             changed = true;
         }
-        foreach (var item in e.RemovedItems.Where(item => item is IconTexture).Cast<IconTexture>())
+        foreach (var item in e.RemovedItems.Where(item => item is BannerIconViewModel).Cast<BannerIconViewModel>())
         {
             item.IsSelected = false;
             changed = true;
@@ -114,11 +115,11 @@ public sealed partial class BannerTexMergerPage : Page
 
 public class BannerTexMergerViewModel : BindableBase
 {
-    private ObservableCollection<IconTexture> _icons = new();
+    private ObservableCollection<BannerIconViewModel> _icons = new();
     private int _groupID = 7;
     private bool _isExporting = false;
 
-    public ObservableCollection<IconTexture> Icons { get => _icons; }
+    public ObservableCollection<BannerIconViewModel> Icons { get => _icons; }
 
     public int GroupID
     {
@@ -171,7 +172,7 @@ public class BannerTexMergerViewModel : BindableBase
         }
     }
 
-    public IEnumerable<IconTexture> Selection
+    public IEnumerable<BannerIconViewModel> Selection
     {
         get => Icons.Where(icon => icon.IsSelected);
     }
@@ -198,15 +199,15 @@ public class BannerTexMergerViewModel : BindableBase
     public void AddIcons(IEnumerable<StorageFile> files)
     {
         var newCells = files.Where(file => !_icons.Any(icon => icon.FilePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)))
-            .Select(file => new IconTexture(this, file.Path));
+            .Select(file => new BannerIconViewModel(this, file.Path));
         foreach (var cell in newCells)
         {
             _icons.Add(cell);
         }
     }
-    public void DeleteIcons(IEnumerable<IconTexture> icons)
+    public void DeleteIcons(IEnumerable<BannerIconViewModel> icons)
     {
-        var queue = new Queue<IconTexture>(icons);
+        var queue = new Queue<BannerIconViewModel>(icons);
         while (queue.Count > 0)
         {
             var deleting = queue.Dequeue();
@@ -233,19 +234,32 @@ public class BannerTexMergerViewModel : BindableBase
         OnPropertyChanged(nameof(Selection));
         OnPropertyChanged(nameof(HasSelection));
     }
+
+    public BannerIconGroup ToBannerIconGroup()
+    {
+        var group = new BannerIconGroup() {
+            ID = GroupID,
+            Name = GroupName,
+            IsPattern = false,
+        };
+        foreach (var icon in Icons)
+        {
+            group.Icons.Add(icon.ToBannerIcon());
+        }
+        return group;
+    }
 }
 
-public class IconTexture : BindableBase
+public class BannerIconViewModel : BindableBase
 {
     private BannerTexMergerViewModel _viewModel;
-    private string _filePath;
-    private int _atlasIndex;
+    private string _texturePath;
     private int _cellIndex;
 
     public string FilePath
     {
-        get => _filePath;
-        set => SetProperty(ref _filePath, value);
+        get => _texturePath;
+        set => SetProperty(ref _texturePath, value);
     }
     public int CellIndex
     {
@@ -275,10 +289,10 @@ public class IconTexture : BindableBase
     public bool IsSelected { get; set; }
     public bool IsValid { get => !string.IsNullOrEmpty(FilePath) && AtlasIndex >= 0; }
 
-    public IconTexture(BannerTexMergerViewModel viewModel, string filePath)
+    public BannerIconViewModel(BannerTexMergerViewModel viewModel, string filePath)
     {
         _viewModel = viewModel;
-        _filePath = filePath;
+        _texturePath = filePath;
 
         _viewModel.PropertyChanged += _viewModel_PropertyChanged;
     }
@@ -290,5 +304,10 @@ public class IconTexture : BindableBase
             OnPropertyChanged(nameof(AtlasName));
             OnPropertyChanged(nameof(ID));
         }
+    }
+
+    public BannerIcon ToBannerIcon()
+    {
+        return new BannerIcon() { ID = ID, MaterialName = AtlasName, TextureIndex = CellIndex };
     }
 }

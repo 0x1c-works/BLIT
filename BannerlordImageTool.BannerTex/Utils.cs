@@ -9,8 +9,9 @@ public class BannerUtils
     }
     public static int GetIconID(int groupID, int iconIndex)
     {
-        var idstr= $"{groupID}{iconIndex + 1:d2}";
-        if (!int.TryParse(idstr,out var id)) {
+        var idstr = $"{groupID}{iconIndex + 1:d2}";
+        if (!int.TryParse(idstr, out var id))
+        {
             throw new InvalidDataException($"invalid banner icon ID: {idstr}");
         }
         return id;
