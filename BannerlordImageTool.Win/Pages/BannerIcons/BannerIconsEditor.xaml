@@ -52,11 +52,6 @@
         </Grid.RowDefinitions>
         <!--Top bar-->
         <StackPanel x:Name="Toolbar" Orientation="Horizontal" Spacing="4">
-            <TextBlock x:Uid="LabelBannerGroupID" VerticalAlignment="Center" />
-            <NumberBox x:Name="BannerGroupId" Value="{x:Bind ViewModel.GroupID,Mode=TwoWay}" 
-                       Maximum="99999999" AcceptsExpression="True"  
-                       SpinButtonPlacementMode="Compact"
-                       VerticalAlignment="Center" Margin="8,0"/>
             <TextBlock x:Uid="LabelOutputResolution" VerticalAlignment="Center" Margin="8,0"/>
             <DropDownButton x:Name="dropdownOutputResolution" 
                             Content="{x:Bind ViewModel.OutputResolutionName,Mode=OneWay}" 
@@ -69,33 +64,6 @@
                 </DropDownButton.Flyout>
             </DropDownButton>
             <AppBarSeparator Margin="8,0"/>
-            <AppBarButton x:Uid="AppButtonAddImages" x:Name="btnOpenImages" Icon="Add"  VerticalAlignment="Center"
-                          Click="btnOpenImages_Click">
-                <AppBarButton.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="A" />
-                </AppBarButton.KeyboardAccelerators>
-            </AppBarButton>
-            <AppBarButton x:Uid="AppButtonDeleteImages" x:Name="btnDeleteSelected" Icon="Delete" VerticalAlignment="Center"
-                          IsEnabled="{x:Bind ViewModel.HasSelection,Mode=OneWay,FallbackValue=False}"
-                          AllowFocusOnInteraction="True">
-                <AppBarButton.Flyout>
-                    <Flyout x:Name="flyoutConfirmDelete" Placement="Bottom" LightDismissOverlayMode="On" >
-                        <Flyout.FlyoutPresenterStyle>
-                            <Style TargetType="FlyoutPresenter">
-                                <Setter Property="CornerRadius" Value="8"/>
-                            </Style>
-                        </Flyout.FlyoutPresenterStyle>
-                        <StackPanel>
-                            <TextBlock x:Uid="TextConfirmDeleteSelection" Margin="0,4,0,16" />
-                            <Button x:Uid="ButtonYesDeleteSelection" x:Name="btnConfirmDelete" Click="btnConfirmDelete_Click"
-                                    Style="{StaticResource DangerButton}"/>
-                        </StackPanel>
-                    </Flyout>
-                </AppBarButton.Flyout>
-                <AppBarButton.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="Delete" />
-                </AppBarButton.KeyboardAccelerators>
-            </AppBarButton>
             <!--WIP-->
             <!--<AppBarButton x:Uid="AppButtonImport" x:Name="btnImport" Icon="Import"  VerticalAlignment="Center"
                           Click="btnImport_Click"/>-->
@@ -108,8 +76,71 @@
             </AppBarButton>
         </StackPanel>
 
-        <!--Image grid-->
-        <GridView Grid.Row="1"
+        <!--Icon Group Editor-->
+        <SplitView Grid.Row="1" IsPaneOpen="True" DisplayMode="Inline"
+                   OpenPaneLength="200">
+            <!--Group List-->
+            <SplitView.Pane>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Uid="TextBannerGroupListTitle" FontWeight="Bold" TextAlignment="Center"
+                               Padding="0,8" />
+                    <ListView Grid.Row="1">
+                        <ListView.Items>
+                            <ListViewItem>hello</ListViewItem>
+                        </ListView.Items>
+                    </ListView>
+                </Grid>
+            </SplitView.Pane>
+
+            <!--Pane Content-->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <!--Icon Group Toolbar-->
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Uid="LabelBannerGroupID" VerticalAlignment="Center" />
+                    <NumberBox x:Name="BannerGroupId" Value="{x:Bind ViewModel.GroupID,Mode=TwoWay}" 
+                       Maximum="99999999" AcceptsExpression="True"  
+                       SpinButtonPlacementMode="Compact"
+                       VerticalAlignment="Center" Margin="8,0"/>
+                    <AppBarSeparator/>
+                    <AppBarButton x:Uid="AppButtonAddImages" x:Name="btnOpenImages" Icon="Add"  VerticalAlignment="Center"
+                          Click="btnOpenImages_Click">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="A" />
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
+                    <AppBarButton x:Uid="AppButtonDeleteImages" x:Name="btnDeleteSelected" Icon="Delete" VerticalAlignment="Center"
+                          IsEnabled="{x:Bind ViewModel.HasSelection,Mode=OneWay,FallbackValue=False}"
+                          AllowFocusOnInteraction="True">
+                        <AppBarButton.Flyout>
+                            <Flyout x:Name="flyoutConfirmDelete" Placement="Bottom" LightDismissOverlayMode="On" >
+                                <Flyout.FlyoutPresenterStyle>
+                                    <Style TargetType="FlyoutPresenter">
+                                        <Setter Property="CornerRadius" Value="8"/>
+                                    </Style>
+                                </Flyout.FlyoutPresenterStyle>
+                                <StackPanel>
+                                    <TextBlock x:Uid="TextConfirmDeleteSelection" Margin="0,4,0,16" />
+                                    <Button x:Uid="ButtonYesDeleteSelection" x:Name="btnConfirmDelete" Click="btnConfirmDelete_Click"
+                                    Style="{StaticResource DangerButton}"/>
+                                </StackPanel>
+                            </Flyout>
+                        </AppBarButton.Flyout>
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="Delete" />
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
+                </StackPanel>
+                <!--Texture Grid-->
+                <GridView Grid.Row="1"
                   ItemsSource="{x:Bind ViewModel.Icons}"
                   ItemTemplate="{StaticResource IconTextureTemplate}" 
                   IsItemClickEnabled="True" 
@@ -117,14 +148,17 @@
                   CanDragItems="True" AllowDrop="True" CanReorderItems="True"
                   SelectionChanged="GridView_SelectionChanged"
                   >
-            <GridView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="4"/>
-                </ItemsPanelTemplate>
-            </GridView.ItemsPanel>
-        </GridView>
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="4"/>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                </GridView>
+            </Grid>
+        </SplitView>
 
-        <StackPanel Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Top" >
+        <!--Floating Toasts-->
+        <StackPanel Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Top" IsTabStop="False">
             <InfoBar IsIconVisible="False" IsOpen="{x:Bind ViewModel.IsExporting, Mode=OneWay}" IsClosable="False">
                 <InfoBar.Content>
                     <StackPanel Orientation="Horizontal" Padding="8,8,32,8">
