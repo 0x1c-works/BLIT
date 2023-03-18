@@ -96,5 +96,6 @@ public class DataViewModel : BindableBase
             predictedId++;
         }
         Groups.Add(new GroupViewModel() { GroupID = predictedId });
+        OnPropertyChanged(nameof(CanExport));
     }
 }

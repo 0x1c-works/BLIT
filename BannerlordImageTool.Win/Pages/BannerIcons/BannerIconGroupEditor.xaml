@@ -87,7 +87,7 @@
         </StackPanel>
         <!--Texture Grid-->
         <GridView Grid.Row="1"
-                  ItemsSource="{x:Bind ViewModel.Icons}"
+                  ItemsSource="{x:Bind ViewModel.Icons,Mode=OneWay}"
                   ItemTemplate="{StaticResource IconTextureTemplate}" 
                   IsItemClickEnabled="True" 
                   SelectionMode="Extended"
