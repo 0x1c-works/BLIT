@@ -1,6 +1,4 @@
 ﻿using BannerlordImageTool.Win.Common;
-using Microsoft.Windows.ApplicationModel.Resources;
-using System.Globalization;
 using Windows.Storage;
 
 namespace BannerlordImageTool.Win.Settings;
