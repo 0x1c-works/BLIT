@@ -2,7 +2,7 @@
 <!-- Licensed under the MIT License. -->
 
 <Page
-    x:Class="BannerlordImageTool.Win.Pages.BannerTexMergerPage"
+    x:Class="BannerlordImageTool.Win.Pages.BannerIcons.BannerIconsEditor"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:BannerlordImageTool.Win.Pages"

@@ -7,28 +7,22 @@ using BannerlordImageTool.Win.Settings;
 using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace BannerlordImageTool.Win.Pages;
+namespace BannerlordImageTool.Win.Pages.BannerIcons;
 
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class BannerTexMergerPage : Page
+public sealed partial class BannerIconsEditor : Page
 {
     public BannerGroupViewModel ViewModel { get; private set; }
-    public BannerTexMergerPage()
+    public BannerIconsEditor()
     {
         this.InitializeComponent();
         ViewModel = new BannerGroupViewModel();
@@ -47,8 +41,8 @@ public sealed partial class BannerTexMergerPage : Page
     {
         if (ViewModel.IsExporting) return;
 
-        var outFolder = await FileHelper.PickFolder($"BannerTextureExportDir-{ViewModel.GroupID}",
-                                                    "bannerExportTo");
+        var outFolder = await FileHelper.PickFolder($"BannerIconsExportDir-{ViewModel.GroupID}",
+                                                    "bannerIconsExportTo");
         if (outFolder == null) return;
 
         TextureMerger merger = new TextureMerger(GlobalSettings.Current.BannerTexOutputResolution);

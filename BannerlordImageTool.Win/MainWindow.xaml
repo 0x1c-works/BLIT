@@ -32,7 +32,7 @@
                         Header="Title"
                         SelectionChanged="AppNav_SelectionChanged">
             <NavigationView.MenuItems>
-                <NavigationViewItem x:Uid="AppNavMenuBanner" Icon="Flag" Content="Banner Texture" Tag="BannerTexture"/>
+                <NavigationViewItem x:Uid="AppNavMenuBanner" Icon="Flag" Content="Banner Icons" Tag="BannerIcons"/>
             </NavigationView.MenuItems>
             <Frame x:Name="AppContent" Padding="32,16">
             </Frame>
