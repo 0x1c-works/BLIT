@@ -12,9 +12,11 @@ public class FileHelper
 {
     public static async Task<StorageFolder> PickFolder(string accessToken, string settingsId = null)
     {
-        var picker = new FolderPicker();
+        var picker = new FolderPicker() {
+            SettingsIdentifier = settingsId,
+            SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+        };
         BindHwnd(picker);
-        picker.SettingsIdentifier = settingsId;
         var folder = await picker.PickSingleFolderAsync();
         if (folder is not null)
         {
