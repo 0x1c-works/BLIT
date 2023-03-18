@@ -30,7 +30,8 @@
                         IsTabStop="False"
                         IsBackButtonVisible="Collapsed"
                         Header="Title"
-                        SelectionChanged="AppNav_SelectionChanged">
+                        SelectionChanged="AppNav_SelectionChanged"
+                        OpenPaneLength="200">
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Uid="AppNavMenuBanner" Icon="Flag" Content="Banner Icons" Tag="BannerIcons"/>
             </NavigationView.MenuItems>

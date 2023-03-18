@@ -163,6 +163,9 @@
   <data name="PleaseSelect" xml:space="preserve">
     <value>Select</value>
   </data>
+  <data name="TextBannerGroupListTitle.Text" xml:space="preserve">
+    <value>BANNER ICON GROUPS</value>
+  </data>
   <data name="TextConfirmDeleteSelection.Text" xml:space="preserve">
     <value>All selected items will be removed. Do you want to continue?</value>
   </data>
