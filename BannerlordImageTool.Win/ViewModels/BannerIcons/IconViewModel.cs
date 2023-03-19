@@ -1,6 +1,8 @@
 ﻿using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Common;
+using BannerlordImageTool.Win.Settings;
 using System.ComponentModel;
+using System.IO;
 
 namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
 public class IconViewModel : BindableBase
@@ -72,5 +74,21 @@ public class IconViewModel : BindableBase
     public IconSprite ToIconSprite()
     {
         return new(_groupViewModel.GroupID, ID, _spritePath);
+    }
+
+    public void AutoScanSprite()
+    {
+        if (string.IsNullOrEmpty(TexturePath)) return;
+        var dir = Path.GetDirectoryName(TexturePath);
+        var filename = Path.GetFileName(TexturePath);
+        foreach (var relPath in GlobalSettings.Current.BannerIconSpriteScanFolders)
+        {
+            var tryPath = Path.Join(dir, relPath, filename);
+            if (File.Exists(tryPath))
+            {
+                SpritePath = tryPath;
+                return;
+            }
+        }
     }
 }

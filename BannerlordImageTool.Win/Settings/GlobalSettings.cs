@@ -1,4 +1,5 @@
 ﻿using BannerlordImageTool.Win.Common;
+using System.Collections.Generic;
 using Windows.Storage;
 
 namespace BannerlordImageTool.Win.Settings;
@@ -26,4 +27,8 @@ public class GlobalSettings : BindableBase
         get => GameRootFolder?.Path ?? I18n.Current.GetString("NeedGameRootFolder");
     }
     public Banner.OutputResolution BannerTexOutputResolution { get; set; }
+
+    public List<string> BannerIconSpriteScanFolders { get; } = new() {
+        "../图标",
+    };
 }
