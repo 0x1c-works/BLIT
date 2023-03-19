@@ -33,7 +33,7 @@ public sealed partial class BannerIconGroupEditor : UserControl
 
     private void btnConfirmDelete_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.DeleteIcons(ViewModel.Selection);
+        ViewModel.DeleteIcons(ViewModel.AllSelection);
         flyoutConfirmDelete.Hide();
     }
 

@@ -145,14 +145,14 @@
   <data name="ButtonBrowser.Content" xml:space="preserve">
     <value>Browse...</value>
   </data>
+  <data name="ButtonSelectEllipses" xml:space="preserve">
+    <value>Select...</value>
+  </data>
   <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">
     <value>Yes, delete them</value>
   </data>
   <data name="DeleteGroupDialogTitle" xml:space="preserve">
     <value>Delete Banner Group</value>
-  </data>
-  <data name="ExpanderTextureProperty.Header" xml:space="preserve">
-    <value>Texture Properties</value>
   </data>
   <data name="ExportSuccess" xml:space="preserve">
     <value>Successfully exported to {0}.</value>
@@ -195,6 +195,15 @@
   </data>
   <data name="TextNoSelectedBannerGroup.Text" xml:space="preserve">
     <value>Please select or create a new banner group.</value>
+  </data>
+  <data name="TextTexturePreview.Text" xml:space="preserve">
+    <value>Texture Preview</value>
+  </data>
+  <data name="TextTextureProperties.Text" xml:space="preserve">
+    <value>Texture Properties</value>
+  </data>
+  <data name="TextUISprite.Text" xml:space="preserve">
+    <value>UI Sprite</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>

@@ -9,6 +9,7 @@
     xmlns:vm="using:BannerlordImageTool.Win.ViewModels.BannerIcons"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:com="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d">
     <UserControl.Resources>
         <DataTemplate x:Key="IconTextureTemplate" x:DataType="vm:IconViewModel">
@@ -49,8 +50,13 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
         <!--Icon Group Toolbar-->
-        <StackPanel Orientation="Horizontal">
+        <StackPanel x:Name="toolBar" Orientation="Horizontal" Grid.ColumnSpan="2" Padding="16,0"
+                    Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
             <TextBlock x:Uid="LabelBannerGroupID" VerticalAlignment="Center" />
             <NumberBox x:Name="BannerGroupId" Value="{x:Bind ViewModel.GroupID,Mode=TwoWay}" 
                        Maximum="99999999" AcceptsExpression="True"  
@@ -86,7 +92,7 @@
             </AppBarButton>
         </StackPanel>
         <!--Texture Grid-->
-        <GridView Grid.Row="1"
+        <GridView Grid.Row="1" Padding="16"
                   ItemsSource="{x:Bind ViewModel.Icons,Mode=OneWay}"
                   ItemTemplate="{StaticResource IconTextureTemplate}" 
                   IsItemClickEnabled="True" 
@@ -94,11 +100,44 @@
                   CanDragItems="True" AllowDrop="True" CanReorderItems="True"
                   SelectionChanged="GridView_SelectionChanged"
                   >
-            <GridView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="4"/>
-                </ItemsPanelTemplate>
-            </GridView.ItemsPanel>
         </GridView>
+        <Grid Grid.Column="1" Grid.Row="1" Padding="0">
+            <StackPanel>
+                <Border Grid.Row="0" Grid.ColumnSpan="2"
+                    Padding="16" Background="{ThemeResource CardStrokeColorDefaultBrush}" >
+                    <TextBlock x:Uid="TextTextureProperties" VerticalAlignment="Center"
+                               FontWeight="Bold">Texture Properties</TextBlock>
+                </Border>
+                <ScrollViewer>
+                    <Grid Padding="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" MaxWidth="200" MinWidth="100"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Uid="TextTexturePreview" Grid.Row="1" TextWrapping="Wrap">Texture Preview</TextBlock>
+                        <Image Grid.Row="1" Grid.Column="1" 
+                               Source="{x:Bind ViewModel.SingleSelection.FilePath,Mode=OneWay}"
+                   MinHeight="256" MaxHeight="512"/>
+                        <TextBlock x:Uid="TextUISprite" Grid.Row="2">UI Sprite</TextBlock>
+                        <Button x:Uid="ButtonSelectEllipses" x:Name="btnSelectSprite" 
+                                Grid.Row="2" Grid.Column="1" IsEnabled="{x:Bind ViewModel.HasSelection, Mode=OneWay}">
+                            Select
+                        </Button>
+                    </Grid>
+                </ScrollViewer>
+            </StackPanel>
+        </Grid>
+        <com:GridSplitter Grid.Column="1" Grid.Row="1"
+                          HorizontalAlignment="Left"
+                          Width="8">
+            <com:GridSplitter.RenderTransform>
+                <TranslateTransform X="-8" />
+            </com:GridSplitter.RenderTransform>
+        </com:GridSplitter>
     </Grid>
 </UserControl>

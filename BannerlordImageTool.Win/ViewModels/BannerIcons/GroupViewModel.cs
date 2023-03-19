@@ -35,9 +35,13 @@ public class GroupViewModel : BindableBase
         get => Icons.Count > 0;
     }
 
-    public IEnumerable<IconViewModel> Selection
+    public IEnumerable<IconViewModel> AllSelection
     {
         get => Icons.Where(icon => icon.IsSelected);
+    }
+    public IconViewModel SingleSelection
+    {
+        get => Icons.Where(icon => icon.IsSelected).FirstOrDefault();
     }
     public bool HasSelection
     {
@@ -94,7 +98,8 @@ public class GroupViewModel : BindableBase
     }
     public void NotifySelectionChange()
     {
-        OnPropertyChanged(nameof(Selection));
+        OnPropertyChanged(nameof(AllSelection));
+        OnPropertyChanged(nameof(SingleSelection));
         OnPropertyChanged(nameof(HasSelection));
     }
 
