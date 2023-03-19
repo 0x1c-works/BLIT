@@ -43,7 +43,7 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BannerlordImageTool.BannerTex\BannerlordImageTool.Banner.csproj" />
+    <ProjectReference Include="..\BannerlordImageTool.Banner\BannerlordImageTool.Banner.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\BannerIcons\BannerIconGroupEditor.xaml">
