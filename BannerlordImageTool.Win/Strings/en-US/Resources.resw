@@ -151,6 +151,9 @@
   <data name="DeleteGroupDialogTitle" xml:space="preserve">
     <value>Delete Banner Group</value>
   </data>
+  <data name="ExpanderTextureProperty.Header" xml:space="preserve">
+    <value>Texture Properties</value>
+  </data>
   <data name="ExportSuccess" xml:space="preserve">
     <value>Successfully exported to {0}.</value>
   </data>
@@ -189,6 +192,9 @@
   </data>
   <data name="TextExporting.Text" xml:space="preserve">
     <value>Exporting...</value>
+  </data>
+  <data name="TextNoSelectedBannerGroup.Text" xml:space="preserve">
+    <value>Please select or create a new banner group.</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>

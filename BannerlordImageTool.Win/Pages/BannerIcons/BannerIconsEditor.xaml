@@ -88,9 +88,7 @@
             <Grid Padding="16,0">
                 <local:BannerIconGroupEditor ViewModel="{x:Bind ViewModel.SelectedGroup, Mode=OneWay}" 
                                          Visibility="{x:Bind ViewModel.HasSelectedGroup, Mode=OneWay}"/>
-                <TextBlock Visibility="{x:Bind ViewModel.ShowEmptyHint, Mode=OneWay}">
-                    Select or create a new group first.
-                </TextBlock>
+                <TextBlock x:Uid="TextNoSelectedBannerGroup" Visibility="{x:Bind ViewModel.ShowEmptyHint, Mode=OneWay}" Padding="16" />
             </Grid>
         </SplitView>
 
