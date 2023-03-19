@@ -73,4 +73,10 @@ public sealed partial class BannerIconGroupEditor : UserControl
         ViewModel.SingleSelection.SpritePath = file.Path;
     }
 
+    private async void btnSelectTexture_Click(object sender, RoutedEventArgs e)
+    {
+        var file = await FileHelper.PickSingleFile(".png");
+        if (file is null || ViewModel.SingleSelection is null) return;
+        ViewModel.SingleSelection.TexturePath = file.Path;
+    }
 }

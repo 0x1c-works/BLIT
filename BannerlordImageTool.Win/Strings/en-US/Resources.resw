@@ -145,7 +145,7 @@
   <data name="ButtonBrowser.Content" xml:space="preserve">
     <value>Browse...</value>
   </data>
-  <data name="ButtonSelectEllipses" xml:space="preserve">
+  <data name="ButtonSelectEllipses.Content" xml:space="preserve">
     <value>Select...</value>
   </data>
   <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">

@@ -18,7 +18,7 @@ public class IconViewModel : BindableBase
     }
     public string SpritePath
     {
-        get => _spritePath??EMPTY_ASSET;
+        get => _spritePath ?? "";
         set => SetProperty(ref _spritePath, value);
     }
     public int CellIndex
