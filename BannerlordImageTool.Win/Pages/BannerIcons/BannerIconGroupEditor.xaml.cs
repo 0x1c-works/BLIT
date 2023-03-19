@@ -17,7 +17,10 @@ public sealed partial class BannerIconGroupEditor : UserControl
     public GroupViewModel ViewModel
     {
         get => GetValue(ViewModelProperty) as GroupViewModel;
-        set => SetValue(ViewModelProperty, value);
+        set
+        {
+            SetValue(ViewModelProperty, value);
+        }
     }
     public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
         nameof(ViewModel),
@@ -28,7 +31,6 @@ public sealed partial class BannerIconGroupEditor : UserControl
     public BannerIconGroupEditor()
     {
         this.InitializeComponent();
-        ViewModel = new GroupViewModel();
     }
 
     private void btnConfirmDelete_Click(object sender, RoutedEventArgs e)
@@ -63,4 +65,12 @@ public sealed partial class BannerIconGroupEditor : UserControl
             ViewModel.NotifySelectionChange();
         }
     }
+
+    private async void btnSelectSprite_Click(object sender, RoutedEventArgs e)
+    {
+        var file = await FileHelper.PickSingleFile(".png");
+        if (file is null || ViewModel.SingleSelection is null) return;
+        ViewModel.SingleSelection.SpritePath = file.Path;
+    }
+
 }

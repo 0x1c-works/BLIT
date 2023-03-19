@@ -20,7 +20,7 @@
                 </Grid.ColumnDefinitions>
                 <Image Stretch="Uniform" Width="128" Height="128" Grid.ColumnSpan="2">
                     <Image.Source>
-                        <BitmapImage UriSource="{x:Bind FilePath,Mode=OneWay}" DecodePixelWidth="128"/>
+                        <BitmapImage UriSource="{x:Bind TexturePath,Mode=OneWay}" DecodePixelWidth="128"/>
                     </Image.Source>
                 </Image>
                 <Grid VerticalAlignment="Top" Grid.ColumnSpan="2" >
@@ -119,15 +119,28 @@
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <TextBlock x:Uid="TextTexturePreview" Grid.Row="1" TextWrapping="Wrap">Texture Preview</TextBlock>
-                        <Image Grid.Row="1" Grid.Column="1" 
-                               Source="{x:Bind ViewModel.SingleSelection.FilePath,Mode=OneWay}"
+
+                        <!--UI Sprite-->
+                        <TextBlock x:Uid="TextUISprite" Grid.Row="1">UI Sprite</TextBlock>
+                        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                            <Image Source="{x:Bind ViewModel.SingleSelection.SpritePath, Mode=OneWay}" 
+                                       Width="128" Height="128"/>
+                            <Button x:Uid="ButtonSelectEllipses" x:Name="btnSelectSprite" 
+                            VerticalAlignment="Top"
+                                    IsEnabled="{x:Bind ViewModel.HasSelection, Mode=OneWay}"
+                                    Click="btnSelectSprite_Click">
+                                Select
+                            </Button>
+                        </StackPanel>
+
+                        <!--Texture Preview-->
+                        <TextBlock x:Uid="TextTexturePreview" 
+                                   Grid.Row="2" TextWrapping="Wrap">
+                            Texture Preview
+                        </TextBlock>
+                        <Image Grid.Row="2" Grid.Column="1" 
+                               Source="{x:Bind ViewModel.SingleSelection.TexturePath,Mode=OneWay}"
                    MinHeight="256" MaxHeight="512"/>
-                        <TextBlock x:Uid="TextUISprite" Grid.Row="2">UI Sprite</TextBlock>
-                        <Button x:Uid="ButtonSelectEllipses" x:Name="btnSelectSprite" 
-                                Grid.Row="2" Grid.Column="1" IsEnabled="{x:Bind ViewModel.HasSelection, Mode=OneWay}">
-                            Select
-                        </Button>
                     </Grid>
                 </ScrollViewer>
             </StackPanel>

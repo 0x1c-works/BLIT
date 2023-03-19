@@ -65,7 +65,7 @@ public class GroupViewModel : BindableBase
 
     public void AddIcons(IEnumerable<StorageFile> files)
     {
-        var newCells = files.Where(file => !_icons.Any(icon => icon.FilePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)))
+        var newCells = files.Where(file => !_icons.Any(icon => icon.TexturePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)))
             .Select(file => new IconViewModel(this, file.Path));
         foreach (var cell in newCells)
         {
@@ -81,7 +81,7 @@ public class GroupViewModel : BindableBase
             if (!Icons.Remove(deleting))
             {
                 // a more expensive way to ensure the icon is deleted
-                var index = Icons.Select(i => i.FilePath).ToList().IndexOf(deleting.FilePath);
+                var index = Icons.Select(i => i.TexturePath).ToList().IndexOf(deleting.TexturePath);
                 if (index > -1)
                 {
                     Icons.RemoveAt(index);

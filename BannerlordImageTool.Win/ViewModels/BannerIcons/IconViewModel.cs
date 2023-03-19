@@ -5,14 +5,21 @@ using System.ComponentModel;
 namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
 public class IconViewModel : BindableBase
 {
+    const string EMPTY_ASSET = "/Assets/empty-asset.png";
     private GroupViewModel _groupViewModel;
     private string _texturePath;
+    private string _spritePath;
     private int _cellIndex;
 
-    public string FilePath
+    public string TexturePath
     {
         get => _texturePath;
         set => SetProperty(ref _texturePath, value);
+    }
+    public string SpritePath
+    {
+        get => _spritePath??EMPTY_ASSET;
+        set => SetProperty(ref _spritePath, value);
     }
     public int CellIndex
     {
@@ -40,12 +47,12 @@ public class IconViewModel : BindableBase
     }
 
     public bool IsSelected { get; set; }
-    public bool IsValid { get => !string.IsNullOrEmpty(FilePath) && AtlasIndex >= 0; }
+    public bool IsValid { get => !string.IsNullOrEmpty(TexturePath) && AtlasIndex >= 0; }
 
-    public IconViewModel(GroupViewModel groupVm, string filePath)
+    public IconViewModel(GroupViewModel groupVm, string texturePath)
     {
         _groupViewModel = groupVm;
-        _texturePath = filePath;
+        _texturePath = texturePath;
 
         _groupViewModel.PropertyChanged += _viewModel_PropertyChanged;
     }

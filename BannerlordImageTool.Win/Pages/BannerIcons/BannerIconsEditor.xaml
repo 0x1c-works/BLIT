@@ -71,10 +71,12 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock x:Uid="TextBannerGroupListTitle" FontWeight="Bold" Padding="0,8" TextAlignment="Center"/>
-                    <StackPanel Grid.Row="1" Background="Transparent" Orientation="Horizontal">
-                        <AppBarButton x:Name="btnAddGroup" Icon="Add" Label="Add" LabelPosition="Collapsed" Click="btnAddGroup_Click"/>
-                        <AppBarButton x:Name="btnDeleteGroup" Icon="Delete" Label="Delete" LabelPosition="Collapsed" 
+                    <Border Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" Padding="16">
+                        <TextBlock x:Uid="TextBannerGroupListTitle" FontWeight="Bold" Padding="0,8" TextAlignment="Center"/>
+                    </Border>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <AppBarButton x:Name="btnAddGroup" Icon="Add" Label="New Group" LabelPosition="Collapsed" Click="btnAddGroup_Click"/>
+                        <AppBarButton x:Name="btnDeleteGroup" Icon="Delete" Label="Delete Group" LabelPosition="Collapsed" 
                                       Click="btnDeleteGroup_Click" IsEnabled="{x:Bind ViewModel.HasSelectedGroup,Mode=OneWay}"/>
                     </StackPanel>
                     <ListView Grid.Row="2" x:Name="listViewGroups"
@@ -82,6 +84,7 @@
                               ItemTemplate="{StaticResource GroupItemTemplate}"
                               IsItemClickEnabled="True"
                               ItemClick="listViewGroups_ItemClick"
+                              Background="{ThemeResource CardStrokeColorDefaultBrush}"
                               >
                     </ListView>
                 </Grid>

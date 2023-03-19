@@ -62,7 +62,7 @@ public sealed partial class BannerIconsEditor : Page
         infoExport.IsOpen = false;
         await Task.WhenAll(ViewModel.GetExportingGroups().Select(g =>
             Task.Factory.StartNew(() => {
-                merger.Merge(outFolder.Path, g.GroupID, g.Icons.Select(icon => icon.FilePath).ToArray());
+                merger.Merge(outFolder.Path, g.GroupID, g.Icons.Select(icon => icon.TexturePath).ToArray());
             })
         ));
         await SaveXML(outFolder);
