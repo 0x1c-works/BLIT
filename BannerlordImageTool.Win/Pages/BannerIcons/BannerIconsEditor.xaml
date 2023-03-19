@@ -38,11 +38,18 @@
             <!--WIP-->
             <!--<AppBarButton x:Uid="AppButtonImport" x:Name="btnImport" Icon="Import"  VerticalAlignment="Center"
                           Click="btnImport_Click"/>-->
-            <AppBarButton x:Uid="AppButtonExport" x:Name="btnExport" Icon="BrowsePhotos"  VerticalAlignment="Center"
+            <AppBarButton x:Uid="AppButtonExport" x:Name="btnExport" Icon="Directions"  VerticalAlignment="Center"
                           Click="btnExport_Click" KeyboardAcceleratorPlacementMode="Auto"
                           IsEnabled="{x:Bind ViewModel.CanExport,Mode=OneWay}">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="E" />
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
+            <AppBarButton x:Uid="AppButtonSaveXML" x:Name="btnSaveXML" Icon="SaveLocal"  VerticalAlignment="Center"
+                          Click="btnSaveXML_Click" KeyboardAcceleratorPlacementMode="Auto"
+                          IsEnabled="{x:Bind ViewModel.CanExport,Mode=OneWay}" Label="Save XML">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="X" />
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
         </StackPanel>
@@ -77,7 +84,7 @@
             </SplitView.Pane>
 
             <!--Pane Content-->
-            <Grid>
+            <Grid Padding="16,0">
                 <local:BannerIconGroupEditor ViewModel="{x:Bind ViewModel.SelectedGroup, Mode=OneWay}" 
                                          Visibility="{x:Bind ViewModel.HasSelectedGroup, Mode=OneWay}"/>
                 <TextBlock Visibility="{x:Bind ViewModel.ShowEmptyHint, Mode=OneWay}">

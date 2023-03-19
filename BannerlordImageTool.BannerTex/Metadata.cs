@@ -2,26 +2,30 @@
 
 namespace BannerlordImageTool.BannerTex;
 
-[XmlRoot("base")]
 public class BannerIconData
 {
     const string XML_FILE_NAME = "banner_icons.xml";
 
-    [XmlElement]
+    [XmlElement("BannerIconGroup")]
     public List<BannerIconGroup> IconGroups = new();
     [XmlArrayItem("Color")]
-    public List<BannerColor> Colors = new();
+    public List<BannerColor> BannerColors = new();
 
     public void SaveToXml(string outDir)
     {
-        var serializer = new XmlSerializer(typeof(BannerIconData));
+        var serializer = new XmlSerializer(typeof(XmlDoc));
         if (!string.IsNullOrEmpty(outDir))
         {
             Directory.CreateDirectory(outDir);
         }
 
         using var writer = new FileStream(Path.Join(outDir, XML_FILE_NAME), FileMode.Create);
-        serializer.Serialize(writer, this);
+        serializer.Serialize(writer, new XmlDoc { BannerIconData = this });
+    }
+    [XmlRoot("base")]
+    public class XmlDoc
+    {
+        public BannerIconData BannerIconData = new();
     }
 }
 
@@ -34,7 +38,7 @@ public class BannerIconGroup
     [XmlAttribute("is_pattern")]
     public bool IsPattern;
 
-    [XmlArrayItem("Icon")]
+    [XmlElement("Icon")]
     public List<BannerIcon> Icons = new();
 }
 

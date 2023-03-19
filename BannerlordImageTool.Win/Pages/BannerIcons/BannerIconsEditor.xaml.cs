@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Controls;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -53,7 +54,7 @@ public sealed partial class BannerIconsEditor : Page
                 merger.Merge(outFolder.Path, g.GroupID, g.Icons.Select(icon => icon.FilePath).ToArray());
             })
         ));
-        ViewModel.ToBannerIconData().SaveToXml(outFolder.Path);
+        await SaveXML(outFolder);
         ViewModel.IsExporting = false;
 
         infoExport.Message = string.Format(I18n.Current.GetString("exportSuccess"), outFolder.Path);
@@ -80,5 +81,22 @@ public sealed partial class BannerIconsEditor : Page
     private void listGroups_ItemClick(object sender, ItemClickEventArgs e)
     {
         ViewModel.SelectedGroup = e.ClickedItem as GroupViewModel;
+    }
+
+    private async void btnSaveXML_Click(object sender, RoutedEventArgs e)
+    {
+        await SaveXML(null);
+    }
+
+    async Task SaveXML(StorageFolder outFolder)
+    {
+        if (outFolder is null)
+        {
+            outFolder = await FileHelper.PickFolder("BannerIconsSaveXMLDir", "bannerIconsSaveXMLTo");
+        }
+        if (outFolder is not null)
+        {
+            ViewModel.ToBannerIconData().SaveToXml(outFolder.Path);
+        }
     }
 }

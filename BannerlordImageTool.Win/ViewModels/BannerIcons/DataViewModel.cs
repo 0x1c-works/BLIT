@@ -4,6 +4,7 @@ using BannerlordImageTool.Win.Settings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -95,7 +96,14 @@ public class DataViewModel : BindableBase
         {
             predictedId++;
         }
-        Groups.Add(new GroupViewModel() { GroupID = predictedId });
+        var newGroup = new GroupViewModel() { GroupID = predictedId };
+        newGroup.PropertyChanged += OnGroupPropertyChanged;
+        Groups.Add(newGroup);
+        OnPropertyChanged(nameof(CanExport));
+    }
+
+    private void OnGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
         OnPropertyChanged(nameof(CanExport));
     }
 }
