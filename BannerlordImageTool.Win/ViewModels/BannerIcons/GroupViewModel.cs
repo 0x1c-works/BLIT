@@ -65,7 +65,12 @@ public class GroupViewModel : BindableBase
 
     public void AddIcons(IEnumerable<StorageFile> files)
     {
-        var icons = files.Where(file => !_icons.Any(icon => icon.TexturePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)))
+        var icons = files
+            .Where(file =>
+                !_icons.Any(icon =>
+                    icon.TexturePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)
+                )
+            )
             .Select(file => new IconViewModel(this, file.Path));
         foreach (var icon in icons)
         {

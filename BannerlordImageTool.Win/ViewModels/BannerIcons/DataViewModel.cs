@@ -136,5 +136,9 @@ public class DataViewModel : BindableBase
     private void OnGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         OnPropertyChanged(nameof(CanExport));
+        if(e.PropertyName == nameof(GroupViewModel.GroupID))
+        {
+            
+        }
     }
 }

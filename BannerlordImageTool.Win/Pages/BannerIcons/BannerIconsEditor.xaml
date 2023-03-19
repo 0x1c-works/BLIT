@@ -13,7 +13,23 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
         <DataTemplate x:Key="GroupItemTemplate" x:DataType="vm:GroupViewModel">
-            <TextBlock Text="{x:Bind GroupID}" x:Phase="1" />
+            <Grid x:Phase="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{x:Bind GroupID, Mode=OneWay}" x:Phase="1" />
+                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                    <StackPanel.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{ThemeResource TextFillColorTertiaryBrush}" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <TextBlock>(</TextBlock>
+                    <TextBlock Text="{x:Bind Icons.Count, Mode=OneWay}" />
+                    <TextBlock>)</TextBlock>
+                </StackPanel>
+            </Grid>
         </DataTemplate>
     </Page.Resources>
     <Grid Margin="0,24,0,0" Background="Transparent">
@@ -80,7 +96,7 @@
                                       Click="btnDeleteGroup_Click" IsEnabled="{x:Bind ViewModel.HasSelectedGroup,Mode=OneWay}"/>
                     </StackPanel>
                     <ListView Grid.Row="2" x:Name="listViewGroups"
-                              ItemsSource="{x:Bind ViewModel.Groups}"
+                              ItemsSource="{x:Bind ViewModel.Groups,Mode=OneWay}"
                               ItemTemplate="{StaticResource GroupItemTemplate}"
                               IsItemClickEnabled="True"
                               ItemClick="listViewGroups_ItemClick"
