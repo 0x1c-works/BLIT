@@ -99,6 +99,31 @@ public class DataViewModel : BindableBase
         var newGroup = new GroupViewModel() { GroupID = predictedId };
         newGroup.PropertyChanged += OnGroupPropertyChanged;
         Groups.Add(newGroup);
+        if (SelectedGroup is null)
+        {
+            SelectedGroup = Groups.Last();
+        }
+        OnPropertyChanged(nameof(CanExport));
+    }
+
+    public void DeleteGroup(GroupViewModel group)
+    {
+        if (group is null) return;
+        var index = Groups.IndexOf(group);
+        if (index < 0) return;
+        group.PropertyChanged -= OnGroupPropertyChanged;
+        Groups.Remove(group);
+        if (group == SelectedGroup)
+        {
+            if (Groups.Count > 0)
+            {
+                SelectedGroup = Groups[Math.Max(0, index - 1)];
+            }
+            else
+            {
+                SelectedGroup = null;
+            }
+        }
         OnPropertyChanged(nameof(CanExport));
     }
 

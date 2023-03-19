@@ -7,7 +7,9 @@ using BannerlordImageTool.Win.Settings;
 using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -27,6 +29,15 @@ public sealed partial class BannerIconsEditor : Page
     public BannerIconsEditor()
     {
         this.InitializeComponent();
+        ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+    }
+
+    private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ViewModel.SelectedGroup))
+        {
+            listViewGroups.SelectedItem = ViewModel.SelectedGroup;
+        }
     }
 
     void ResolutionOption_Click(object sender, RoutedEventArgs e)
@@ -57,15 +68,21 @@ public sealed partial class BannerIconsEditor : Page
         await SaveXML(outFolder);
         ViewModel.IsExporting = false;
 
-        infoExport.Message = string.Format(I18n.Current.GetString("exportSuccess"), outFolder.Path);
-        infoExport.Severity = InfoBarSeverity.Success;
-        infoExport.IsOpen = true;
         var btnGo = new Button() {
-            Content = "Open the folder",
+            Content = I18n.Current.GetString("Open"),
         };
         btnGo.Click += (s, e) => Process.Start("explorer.exe", outFolder.Path);
+        ShowSuccessInfo(
+            string.Format(I18n.Current.GetString("ExportSuccess"), outFolder.Path),
+            btnGo);
+    }
 
-        infoExport.ActionButton = btnGo;
+    void ShowSuccessInfo(string message, Button actionButton)
+    {
+        infoExport.Message = message;
+        infoExport.Severity = InfoBarSeverity.Success;
+        infoExport.IsOpen = true;
+        infoExport.ActionButton = actionButton;
     }
 
     void btnImport_Click(object sender, RoutedEventArgs e)
@@ -78,17 +95,27 @@ public sealed partial class BannerIconsEditor : Page
         ViewModel.AddGroup();
     }
 
-    private void listGroups_ItemClick(object sender, ItemClickEventArgs e)
+    private void listViewGroups_ItemClick(object sender, ItemClickEventArgs e)
     {
         ViewModel.SelectedGroup = e.ClickedItem as GroupViewModel;
     }
 
     private async void btnSaveXML_Click(object sender, RoutedEventArgs e)
     {
-        await SaveXML(null);
+        var outDir = await SaveXML(null);
+        if (outDir is not null)
+        {
+            var btnGo = new Button() {
+                Content = I18n.Current.GetString("Open"),
+            };
+            btnGo.Click += (s, e) => Process.Start("explorer.exe", outDir);
+            ShowSuccessInfo(string.Format(I18n.Current.GetString("SaveXMLSuccess"),
+                                          Path.Join(outDir, "banner_icons.xml")),
+                            btnGo);
+        } 
     }
 
-    async Task SaveXML(StorageFolder outFolder)
+    async Task<string> SaveXML(StorageFolder outFolder)
     {
         if (outFolder is null)
         {
@@ -97,6 +124,31 @@ public sealed partial class BannerIconsEditor : Page
         if (outFolder is not null)
         {
             ViewModel.ToBannerIconData().SaveToXml(outFolder.Path);
+            return outFolder.Path;
+        }
+        return null;
+    }
+
+    private async void btnDeleteGroup_Click(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.SelectedGroup is null) return;
+
+        var dialog = new ContentDialog() {
+            XamlRoot = XamlRoot,
+            Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+            Title = I18n.Current.GetString("DeleteGroupDialogTitle"),
+            PrimaryButtonText = I18n.Current.GetString("Yes"),
+            SecondaryButtonText = I18n.Current.GetString("No"),
+            DefaultButton = ContentDialogButton.Secondary,
+            Content = new TextBlock() {
+                Text = string.Format(I18n.Current.GetString("AskDeleteGroup"),
+                                     ViewModel.SelectedGroup.GroupID),
+            }
+        };
+        var result = await dialog.ShowAsync().AsTask();
+        if (result == ContentDialogResult.Primary)
+        {
+            ViewModel.DeleteGroup(ViewModel.SelectedGroup);
         }
     }
 }
