@@ -5,6 +5,7 @@
     x:Class="BannerlordImageTool.Win.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:brushes="using:CommunityToolkit.WinUI.UI.Media"
     xmlns:local="using:BannerlordImageTool.Win">
     <Application.Resources>
         <ResourceDictionary>
@@ -32,6 +33,7 @@
             <!--<SymbolIcon x:Key="DangerIcon" Symbol="">
 
             </SymbolIcon>-->
+            <brushes:TilesBrush x:Key="TransparentCheckBrush" TextureUri="/Assets/transparent-bg.png"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

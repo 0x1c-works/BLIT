@@ -18,6 +18,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
+                <Rectangle Width="128" Height="128" Fill="{StaticResource TransparentCheckBrush}" />
                 <Image Stretch="Uniform" Width="128" Height="128" Grid.ColumnSpan="2">
                     <Image.Source>
                         <BitmapImage UriSource="{x:Bind TexturePath,Mode=OneWay}" DecodePixelWidth="128"/>
@@ -25,22 +26,25 @@
                 </Image>
                 <Grid VerticalAlignment="Top" Grid.ColumnSpan="2" >
                     <Grid.Background>
-                        <SolidColorBrush Opacity=".2" Color="Black"/>
+                        <SolidColorBrush Opacity=".5" Color="Black"/>
                     </Grid.Background>
 
                     <TextBlock Text="{x:Bind AtlasName,Mode=OneWay}" FontSize="10" HorizontalTextAlignment="Center"
                                Foreground="White"/>
                 </Grid>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" 
-                            Spacing="8"
-                            Padding="4,1"
-                            CornerRadius="2">
+                HorizontalAlignment="Right"
+                            FlowDirection="RightToLeft" Spacing="2" Padding="4,1"
+                            BorderThickness="1" BorderBrush="DarkGray"
+                            CornerRadius="4">
                     <StackPanel.Background>
-                        <AcrylicBrush TintOpacity=".5" TintLuminosityOpacity=".5" TintColor="White"
-                                      Opacity=".4"/>
+                        <AcrylicBrush TintOpacity=".9" TintLuminosityOpacity=".5" TintColor="LightGray"
+                                      Opacity=".6"
+                                      />
                     </StackPanel.Background>
+                    <TextBlock Text="{x:Bind ID,Mode=OneWay}" Foreground="Black" 
+                               FontWeight="Bold" LineHeight="8" />
                     <TextBlock Text="#" Foreground="Black" LineHeight="8"/>
-                    <TextBlock Text="{x:Bind ID,Mode=OneWay}" Foreground="Black" FontWeight="Bold" LineHeight="8"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -109,24 +113,29 @@
                                FontWeight="Bold">Texture Properties</TextBlock>
                 </Border>
                 <ScrollViewer>
-                    <Grid Padding="16">
+                    <Grid Padding="16" RowSpacing="8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" MaxWidth="200" MinWidth="100"/>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" MinHeight="256"/>
                         </Grid.RowDefinitions>
 
                         <!--UI Sprite-->
                         <TextBlock x:Uid="TextUISprite" Grid.Row="1">UI Sprite</TextBlock>
                         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-                            <Image Source="{x:Bind ViewModel.SingleSelection.SpritePath, Mode=OneWay}" 
+                            <Grid BorderThickness="4"
+                                  BorderBrush="{ThemeResource AccentControlElevationBorderBrush}">
+                                <Rectangle Width="128" Height="128" Fill="{StaticResource TransparentCheckBrush}" />
+                                <Image Source="{x:Bind ViewModel.SingleSelection.SpritePath, Mode=OneWay}" 
                                        Width="128" Height="128"/>
+                            </Grid>
                             <Button x:Uid="ButtonSelectEllipses" x:Name="btnSelectSprite" 
-                            VerticalAlignment="Top"
+                                    Grid.Column="1"
+                                    VerticalAlignment="Top"
                                     IsEnabled="{x:Bind ViewModel.HasSelection, Mode=OneWay}"
                                     Click="btnSelectSprite_Click">
                                 Select
@@ -138,9 +147,15 @@
                                    Grid.Row="2" TextWrapping="Wrap">
                             Texture Preview
                         </TextBlock>
-                        <Image Grid.Row="2" Grid.Column="1" 
+
+                        <Grid Grid.Row="2" Grid.Column="1" Width="Auto" Height="Auto"
+                              BorderThickness="4" 
+                              BorderBrush="{ThemeResource AccentControlElevationBorderBrush}">
+                            <Rectangle Fill="{StaticResource TransparentCheckBrush}" />
+                            <Image 
                                Source="{x:Bind ViewModel.SingleSelection.TexturePath,Mode=OneWay}"
                    MinHeight="256" MaxHeight="512"/>
+                        </Grid>
                     </Grid>
                 </ScrollViewer>
             </StackPanel>
