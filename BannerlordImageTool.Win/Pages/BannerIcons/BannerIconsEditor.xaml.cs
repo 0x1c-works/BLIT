@@ -65,6 +65,7 @@ public sealed partial class BannerIconsEditor : Page
                 merger.Merge(outFolder.Path, g.GroupID, g.Icons.Select(icon => icon.TexturePath).ToArray());
             })
         ));
+        await SpriteOrganizer.CollectToSpriteParts(outFolder.Path, ViewModel.ToIconSprites());
         await SaveXML(outFolder);
         ViewModel.IsExporting = false;
 

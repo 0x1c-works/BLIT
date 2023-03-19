@@ -5,7 +5,6 @@ using System.ComponentModel;
 namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
 public class IconViewModel : BindableBase
 {
-    const string EMPTY_ASSET = "/Assets/empty-asset.png";
     private GroupViewModel _groupViewModel;
     private string _texturePath;
     private string _spritePath;
@@ -69,5 +68,9 @@ public class IconViewModel : BindableBase
     public BannerIcon ToBannerIcon()
     {
         return new BannerIcon() { ID = ID, MaterialName = AtlasName, TextureIndex = CellIndex };
+    }
+    public IconSprite ToIconSprite()
+    {
+        return new(_groupViewModel.GroupID, ID, _spritePath);
     }
 }

@@ -2,6 +2,7 @@
 using BannerlordImageTool.Win.Common;
 using BannerlordImageTool.Win.Settings;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -79,6 +80,14 @@ public class DataViewModel : BindableBase
             data.IconGroups.Add(group.ToBannerIconGroup());
         }
         return data;
+    }
+    public IEnumerable<IconSprite> ToIconSprites()
+    {
+        return GetExportingGroups().Aggregate(new List<IconSprite>(), (icons, g) => {
+            icons.AddRange(g.Icons.Where(icon => !string.IsNullOrWhiteSpace(icon.SpritePath))
+                                  .Select(icon => icon.ToIconSprite()));
+            return icons;
+        });
     }
 
     public IOrderedEnumerable<GroupViewModel> GetExportingGroups()
