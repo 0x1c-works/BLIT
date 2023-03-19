@@ -69,15 +69,16 @@
                     <TextBlock x:Uid="TextBannerGroupListTitle" FontWeight="Bold" Padding="0,8" TextAlignment="Center"/>
                     <StackPanel Grid.Row="1" Background="Transparent" Orientation="Horizontal">
                         <AppBarButton x:Name="btnAddGroup" Icon="Add" Label="Add" LabelPosition="Collapsed" Click="btnAddGroup_Click"/>
-                        <AppBarButton x:Name="btnDeleteGroup" Icon="Delete" Label="Delete" LabelPosition="Collapsed"/>
+                        <AppBarButton x:Name="btnDeleteGroup" Icon="Delete" Label="Delete" LabelPosition="Collapsed" 
+                                      Click="btnDeleteGroup_Click" IsEnabled="{x:Bind ViewModel.HasSelectedGroup,Mode=OneWay}"/>
                     </StackPanel>
-                    <ListView Grid.Row="2" x:Name="listGroups"
+                    <ListView Grid.Row="2" x:Name="listViewGroups"
                               ItemsSource="{x:Bind ViewModel.Groups}"
                               ItemTemplate="{StaticResource GroupItemTemplate}"
                               BorderThickness="1" 
                               BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
                               IsItemClickEnabled="True"
-                              ItemClick="listGroups_ItemClick"
+                              ItemClick="listViewGroups_ItemClick"
                               >
                     </ListView>
                 </Grid>
@@ -105,5 +106,6 @@
             </InfoBar>
             <InfoBar x:Name="infoExport" x:Uid="InfoBarExport" IsOpen="False" IsClosable="True" />
         </StackPanel>
+
     </Grid>
 </Page>

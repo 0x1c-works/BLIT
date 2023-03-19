@@ -129,6 +129,9 @@
   <data name="AppButtonImport.Label" xml:space="preserve">
     <value>Import</value>
   </data>
+  <data name="AppButtonSaveXML.Label" xml:space="preserve">
+    <value>Save XML</value>
+  </data>
   <data name="AppNavMenuBanner.Content" xml:space="preserve">
     <value>Banner Icons</value>
   </data>
@@ -136,11 +139,17 @@
     <value>Bannerlord Image Tool</value>
     <comment>The main window's title</comment>
   </data>
+  <data name="AskDeleteGroup" xml:space="preserve">
+    <value>Are you sure to delete banner group {0}?</value>
+  </data>
   <data name="ButtonBrowser.Content" xml:space="preserve">
     <value>Browse...</value>
   </data>
   <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">
     <value>Yes, delete them</value>
+  </data>
+  <data name="DeleteGroupDialogTitle" xml:space="preserve">
+    <value>Delete Banner Group</value>
   </data>
   <data name="ExportSuccess" xml:space="preserve">
     <value>Successfully exported to {0}.</value>
@@ -160,8 +169,17 @@
   <data name="NeedGameRootFolder" xml:space="preserve">
     <value>(Please select the game install folder)</value>
   </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
   <data name="PleaseSelect" xml:space="preserve">
     <value>Select</value>
+  </data>
+  <data name="SaveXMLSuccess" xml:space="preserve">
+    <value>Successfully saved to {0}.</value>
   </data>
   <data name="TextBannerGroupListTitle.Text" xml:space="preserve">
     <value>BANNER ICON GROUPS</value>
@@ -171,5 +189,8 @@
   </data>
   <data name="TextExporting.Text" xml:space="preserve">
     <value>Exporting...</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
   </data>
 </root>
