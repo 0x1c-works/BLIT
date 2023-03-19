@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using BannerlordImageTool.BannerTex;
+using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Common;
 using BannerlordImageTool.Win.Settings;
 using BannerlordImageTool.Win.ViewModels.BannerIcons;
@@ -112,7 +112,7 @@ public sealed partial class BannerIconsEditor : Page
             ShowSuccessInfo(string.Format(I18n.Current.GetString("SaveXMLSuccess"),
                                           Path.Join(outDir, "banner_icons.xml")),
                             btnGo);
-        } 
+        }
     }
 
     async Task<string> SaveXML(StorageFolder outFolder)

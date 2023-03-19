@@ -1,13 +1,10 @@
-﻿using BannerlordImageTool.BannerTex;
+﻿using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Common;
 using BannerlordImageTool.Win.Settings;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
 public class DataViewModel : BindableBase

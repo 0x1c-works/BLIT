@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BannerlordImageTool.BannerTex\BannerlordImageTool.BannerTex.csproj" />
+    <ProjectReference Include="..\BannerlordImageTool.BannerTex\BannerlordImageTool.Banner.csproj" />
     <ProjectReference Include="..\BannerlordImageTool.Sprite\BannerlordImageTool.Sprite.csproj" />
   </ItemGroup>
 

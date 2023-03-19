@@ -1,6 +1,5 @@
-﻿using BannerlordImageTool.BannerTex;
+﻿using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Common;
-using BannerlordImageTool.Win.Settings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

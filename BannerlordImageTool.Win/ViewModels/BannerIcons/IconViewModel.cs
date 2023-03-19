@@ -1,4 +1,4 @@
-﻿using BannerlordImageTool.BannerTex;
+﻿using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Common;
 using System.ComponentModel;
 

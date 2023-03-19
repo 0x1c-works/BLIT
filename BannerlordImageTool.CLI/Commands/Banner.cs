@@ -1,4 +1,4 @@
-﻿using BannerlordImageTool.BannerTex;
+﻿using BannerlordImageTool.Banner;
 
 namespace BannerlordImageTool.CLI.Commands
 {

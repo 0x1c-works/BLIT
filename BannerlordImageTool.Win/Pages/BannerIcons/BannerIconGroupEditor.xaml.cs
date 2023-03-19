@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using System.Linq;
+using BannerlordImageTool.Win.Common;
+using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using BannerlordImageTool.Win.ViewModels.BannerIcons;
-using BannerlordImageTool.Win.Common;
+using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.

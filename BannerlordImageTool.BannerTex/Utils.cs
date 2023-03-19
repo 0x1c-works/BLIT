@@ -1,4 +1,4 @@
-﻿namespace BannerlordImageTool.BannerTex;
+﻿namespace BannerlordImageTool.Banner;
 
 public class BannerUtils
 {

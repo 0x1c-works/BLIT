@@ -1,6 +1,6 @@
 ﻿using ImageMagick;
 
-namespace BannerlordImageTool.BannerTex;
+namespace BannerlordImageTool.Banner;
 
 public class TextureMerger
 {

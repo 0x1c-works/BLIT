@@ -25,5 +25,5 @@ public class GlobalSettings : BindableBase
     {
         get => GameRootFolder?.Path ?? I18n.Current.GetString("NeedGameRootFolder");
     }
-    public BannerTex.OutputResolution BannerTexOutputResolution { get; set; }
+    public Banner.OutputResolution BannerTexOutputResolution { get; set; }
 }
