@@ -36,7 +36,7 @@ public class DataViewModel : BindableBase
     {
         get
         {
-            switch (GlobalSettings.Current.BannerTexOutputResolution)
+            switch (GlobalSettings.Current.Banner.TextureOutputResolution)
             {
                 case OutputResolution.Res2K: return "2K";
                 case OutputResolution.Res4K: return "4K";
@@ -47,11 +47,11 @@ public class DataViewModel : BindableBase
         {
             if (Enum.TryParse<OutputResolution>(value, out var enumValue))
             {
-                GlobalSettings.Current.BannerTexOutputResolution = enumValue;
+                GlobalSettings.Current.Banner.TextureOutputResolution = enumValue;
             }
             else
             {
-                GlobalSettings.Current.BannerTexOutputResolution = OutputResolution.INVALID;
+                GlobalSettings.Current.Banner.TextureOutputResolution = OutputResolution.INVALID;
             }
             OnPropertyChanged();
         }
@@ -136,9 +136,9 @@ public class DataViewModel : BindableBase
     private void OnGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         OnPropertyChanged(nameof(CanExport));
-        if(e.PropertyName == nameof(GroupViewModel.GroupID))
+        if (e.PropertyName == nameof(GroupViewModel.GroupID))
         {
-            
+
         }
     }
 }

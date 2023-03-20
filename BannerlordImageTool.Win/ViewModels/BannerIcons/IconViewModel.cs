@@ -81,7 +81,7 @@ public class IconViewModel : BindableBase
         if (string.IsNullOrEmpty(TexturePath)) return;
         var dir = Path.GetDirectoryName(TexturePath);
         var filename = Path.GetFileName(TexturePath);
-        foreach (var relPath in GlobalSettings.Current.BannerSpriteScanFolders)
+        foreach (var relPath in GlobalSettings.Current.Banner.SpriteScanFolders)
         {
             var tryPath = Path.Join(dir, relPath, filename);
             if (File.Exists(tryPath))

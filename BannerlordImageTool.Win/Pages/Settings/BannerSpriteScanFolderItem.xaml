@@ -22,12 +22,12 @@
             </Grid.ColumnDefinitions>
             <TextBox x:Name="editPath" 
                  Text="{Binding RelativePath,Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                 KeyDown="editPath_KeyDown"/>
-            <Button x:Name="btnAccept" Grid.Column="1" Click="btnAccept_Click">
-                <SymbolIcon Symbol="Accept"/>
+                 KeyDown="editPath_KeyDown" CornerRadius="0"/>
+            <Button x:Name="btnAccept" Grid.Column="1" Click="btnAccept_Click" CornerRadius="0">
+                <SymbolIcon Symbol="Accept" />
             </Button>
-            <Button x:Name="btnDiscard" Grid.Column="2" Click="btnDiscard_Click">
-                <SymbolIcon Symbol="Cancel"/>
+            <Button x:Name="btnDiscard" Grid.Column="2" Click="btnDiscard_Click" CornerRadius="0">
+                <SymbolIcon Symbol="Cancel" />
             </Button>
         </Grid>
     </Grid>

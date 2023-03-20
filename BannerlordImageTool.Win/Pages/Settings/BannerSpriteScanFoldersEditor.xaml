@@ -60,6 +60,7 @@
                   BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                   SelectionMode="Single"
                   SelectionChanged="listViewBannerSrpiteScanFolders_SelectionChanged"
+                  DoubleTapped="listViewBannerSrpiteScanFolders_DoubleTapped"
                   />
         </SplitView>
     </Grid>

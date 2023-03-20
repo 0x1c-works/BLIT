@@ -56,7 +56,7 @@ public sealed partial class BannerIconsEditor : Page
         var outFolder = await FileHelper.PickFolder($"BannerIconsExportDir", "bannerIconsExportTo");
         if (outFolder == null) return;
 
-        TextureMerger merger = new TextureMerger(GlobalSettings.Current.BannerTexOutputResolution);
+        TextureMerger merger = new TextureMerger(GlobalSettings.Current.Banner.TextureOutputResolution);
 
         ViewModel.IsExporting = true;
         infoExport.IsOpen = false;
