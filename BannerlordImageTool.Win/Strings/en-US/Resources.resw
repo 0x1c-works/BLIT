@@ -184,8 +184,8 @@
   <data name="LabelGameRootFolder.Text" xml:space="preserve">
     <value>Game Root Folder</value>
   </data>
-  <data name="LabelOutputResolution.Text" xml:space="preserve">
-    <value>Output Resolution</value>
+  <data name="LabelTextureResolution.Text" xml:space="preserve">
+    <value>Texture Resolution</value>
   </data>
   <data name="NeedGameRootFolder" xml:space="preserve">
     <value>(Please select the game install folder)</value>
@@ -195,6 +195,12 @@
   </data>
   <data name="Open" xml:space="preserve">
     <value>Open</value>
+  </data>
+  <data name="PivotBannerColorsEditor.Header" xml:space="preserve">
+    <value>BANNER COLORS</value>
+  </data>
+  <data name="PivotBannerGroupsEditor.Header" xml:space="preserve">
+    <value>BANNER GROUPS</value>
   </data>
   <data name="PleaseSelect" xml:space="preserve">
     <value>Select</value>
