@@ -14,24 +14,25 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <Style x:Key="SectionTitle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Margin" Value="0,32,0,8" />
-        </Style>
     </Page.Resources>
 
     <Grid Margin="32" Background="Transparent">
         <ScrollViewer>
             <StackPanel DataContext="{x:Bind settings:GlobalSettings.Current}">
-                <TextBlock x:Uid="LabelGameRootFolder">Game root folder:</TextBlock>
-                <StackPanel Orientation="Horizontal" Margin="0,8">
-                    <TextBlock Grid.Column="1" Text="{Binding GameRootFolderPath}" VerticalAlignment="Center"/>
-                    <Button x:Name="btnPickGameFolder" x:Uid="ButtonBrowse" Margin="8,0" Content="Browse..."/>
-                </StackPanel>
+                <!--<TextBlock x:Uid="LabelGameRootFolder">Game root folder:</TextBlock>
+                <StackPanel Orientation="Horizontal" Margin="0,8" Spacing="8">
+                    <TextBlock Text="{Binding GameRootFolderPath}" VerticalAlignment="Center"/>
+                    <Button x:Name="btnPickGameFolder" x:Uid="ButtonBrowse" Content="Browse..."/>
+                </StackPanel>-->
 
                 <TextBlock x:Uid="TextBannerSettingsTitle" Style="{StaticResource SectionTitle}">Banner Settings</TextBlock>
                 <local:BannerSpriteScanFoldersEditor ViewModel="{x:Bind ViewModel.BannerSettings,Mode=OneWay}"/>
+
+                <TextBlock x:Uid="TextAdvancedSettingsTitle" Style="{StaticResource SectionTitle}">Advanced</TextBlock>
+                <StackPanel Orientation="Horizontal" Margin="0,8" Spacing="8">
+                    <TextBlock x:Uid="TextViewLogFiles" Style="{StaticResource ItemLabel}"/>
+                    <Button x:Uid="ButtonOpenFolder" x:Name="btnOpenLogFolder" Click="btnOpenLogFolder_Click"/>
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
     </Grid>

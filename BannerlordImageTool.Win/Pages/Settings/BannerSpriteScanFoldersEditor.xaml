@@ -29,7 +29,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBlock x:Uid="TextBannerSpriteScanFolders" 
-                   Grid.Column="0" Grid.Row="0"/>
+                   Grid.Column="0" Grid.Row="0" Style="{StaticResource ItemLabel}"/>
         <TextBlock x:Uid="TextBannerSpriteScanFoldersExplain" 
                    Grid.Column="0" Grid.Row="1" 
                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"

@@ -70,7 +70,7 @@ public sealed partial class BannerIconsEditor : Page
         ViewModel.IsExporting = false;
 
         var btnGo = new Button() {
-            Content = I18n.Current.GetString("Open"),
+            Content = I18n.Current.GetString("ButtonOpenFolder/Content"),
         };
         btnGo.Click += (s, e) => Process.Start("explorer.exe", outFolder.Path);
         ShowSuccessInfo(
@@ -135,8 +135,8 @@ public sealed partial class BannerIconsEditor : Page
         if (ViewModel.SelectedGroup is null) return;
         var result = await DialogHelper.ShowDangerConfirmDialog(
             this,
-            I18n.Current.GetString("DialogDeleteBannerGroupTitle"),
-            string.Format(I18n.Current.GetString("DialogDeleteBannerGroupContent"), ViewModel.SelectedGroup.GroupID));
+            I18n.Current.GetString("DialogDeleteBannerGroup/Title"),
+            string.Format(I18n.Current.GetString("DialogDeleteBannerGroup/Content"), ViewModel.SelectedGroup.GroupID));
         if (result == ContentDialogResult.Primary)
         {
             ViewModel.DeleteGroup(ViewModel.SelectedGroup);

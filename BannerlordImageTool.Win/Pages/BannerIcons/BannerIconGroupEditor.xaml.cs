@@ -36,8 +36,8 @@ public sealed partial class BannerIconGroupEditor : UserControl
         if (!ViewModel.HasSelection) return;
         var result = await DialogHelper.ShowDangerConfirmDialog(
             this,
-            I18n.Current.GetString("DialogDeleteBannerIconTitle"),
-            string.Format(I18n.Current.GetString("DialogDeleteBannerIconContent"), ViewModel.AllSelection.Count()));
+            I18n.Current.GetString("DialogDeleteBannerIcon/Title"),
+            string.Format(I18n.Current.GetString("DialogDeleteBannerIcon/Content"), ViewModel.AllSelection.Count()));
         if (result == ContentDialogResult.Primary)
         {
             ViewModel.DeleteIcons(ViewModel.AllSelection);

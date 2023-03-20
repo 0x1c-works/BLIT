@@ -142,7 +142,7 @@
   <data name="ButtonAdd.Content" xml:space="preserve">
     <value>Add</value>
   </data>
-  <data name="ButtonBrowser.Content" xml:space="preserve">
+  <data name="ButtonBrowse.Content" xml:space="preserve">
     <value>Browse...</value>
   </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
@@ -151,22 +151,25 @@
   <data name="ButtonEdit.Content" xml:space="preserve">
     <value>Edit</value>
   </data>
+  <data name="ButtonOpenFolder.Content" xml:space="preserve">
+    <value>Open folder</value>
+  </data>
   <data name="ButtonSelectEllipses.Content" xml:space="preserve">
     <value>Select...</value>
   </data>
   <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">
     <value>Yes, delete them</value>
   </data>
-  <data name="DialogDeleteBannerGroupContent" xml:space="preserve">
+  <data name="DialogDeleteBannerGroup.Content" xml:space="preserve">
     <value>Are you sure to delete banner group "{0}"?</value>
   </data>
-  <data name="DialogDeleteBannerGroupTitle" xml:space="preserve">
+  <data name="DialogDeleteBannerGroup.Title" xml:space="preserve">
     <value>Delete Banner Group</value>
   </data>
-  <data name="DialogDeleteBannerIconContent" xml:space="preserve">
+  <data name="DialogDeleteBannerIcon.Content" xml:space="preserve">
     <value>Are you sure to delete {0} selected banner icons?</value>
   </data>
-  <data name="DialogDeleteBannerIconTitle" xml:space="preserve">
+  <data name="DialogDeleteBannerIcon.Title" xml:space="preserve">
     <value>Delete Banner Icon</value>
   </data>
   <data name="ExportSuccess" xml:space="preserve">
@@ -199,6 +202,9 @@
   <data name="SaveXMLSuccess" xml:space="preserve">
     <value>Successfully saved to {0}.</value>
   </data>
+  <data name="TextAdvancedSettingsTitle" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
   <data name="TextBannerGroupListTitle.Text" xml:space="preserve">
     <value>BANNER ICON GROUPS</value>
   </data>
@@ -229,6 +235,9 @@ The relative paths are based on the texture import location.</value>
   </data>
   <data name="TextUISprite.Text" xml:space="preserve">
     <value>UI Sprite</value>
+  </data>
+  <data name="TextViewLogFiles.Text" xml:space="preserve">
+    <value>View log files</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
