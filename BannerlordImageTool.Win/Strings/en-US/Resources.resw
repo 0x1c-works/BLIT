@@ -142,8 +142,17 @@
   <data name="AskDeleteGroup" xml:space="preserve">
     <value>Are you sure to delete banner group {0}?</value>
   </data>
+  <data name="ButtonAdd.Content" xml:space="preserve">
+    <value>Add</value>
+  </data>
   <data name="ButtonBrowser.Content" xml:space="preserve">
     <value>Browse...</value>
+  </data>
+  <data name="ButtonDelete.Content" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ButtonEdit.Content" xml:space="preserve">
+    <value>Edit</value>
   </data>
   <data name="ButtonSelectEllipses.Content" xml:space="preserve">
     <value>Select...</value>
@@ -186,6 +195,16 @@
   </data>
   <data name="TextBannerGroupListTitle.Text" xml:space="preserve">
     <value>BANNER ICON GROUPS</value>
+  </data>
+  <data name="TextBannerSettingsTitle.Text" xml:space="preserve">
+    <value>Banner Settings</value>
+  </data>
+  <data name="TextBannerSpriteScanFolders.Text" xml:space="preserve">
+    <value>Scan banner sprites in the following folders</value>
+  </data>
+  <data name="TextBannerSpriteScanFoldersExplain.Text" xml:space="preserve">
+    <value>Manage the relative paths to folders where the sprites are likely to be found.
+The relative paths are based on the texture import location.</value>
   </data>
   <data name="TextConfirmDeleteSelection.Text" xml:space="preserve">
     <value>All selected items will be removed. Do you want to continue?</value>

@@ -17,6 +17,8 @@
     <None Remove="Pages\BannerIcons\BannerIconGroupEditor.xaml" />
     <None Remove="Pages\BannerTexMergerPage.xaml" />
     <None Remove="Pages\SettingsPage.xaml" />
+    <None Remove="Pages\Settings\BannerSpriteScanFoldersEditor.xaml" />
+    <None Remove="ViewModels\Settings\BannerSpriteScanFolderItem.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +51,11 @@
     <ProjectReference Include="..\BannerlordImageTool.Banner\BannerlordImageTool.Banner.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="ViewModels\Settings\BannerSpriteScanFolderItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Pages\BannerIcons\BannerIconGroupEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -60,6 +67,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\BannerTexMergerPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Settings\BannerSpriteScanFoldersEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

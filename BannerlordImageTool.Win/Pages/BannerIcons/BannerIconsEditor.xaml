@@ -13,7 +13,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
         <DataTemplate x:Key="GroupItemTemplate" x:DataType="vm:GroupViewModel">
-            <Grid x:Phase="1">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -26,7 +26,7 @@
                         </Style>
                     </StackPanel.Resources>
                     <TextBlock>(</TextBlock>
-                    <TextBlock Text="{x:Bind Icons.Count, Mode=OneWay}" />
+                    <TextBlock Text="{x:Bind Icons.Count, Mode=OneWay}" x:Phase="1"/>
                     <TextBlock>)</TextBlock>
                 </StackPanel>
             </Grid>

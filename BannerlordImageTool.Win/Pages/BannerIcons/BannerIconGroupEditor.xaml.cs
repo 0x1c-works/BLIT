@@ -17,11 +17,9 @@ public sealed partial class BannerIconGroupEditor : UserControl
     public GroupViewModel ViewModel
     {
         get => GetValue(ViewModelProperty) as GroupViewModel;
-        set
-        {
-            SetValue(ViewModelProperty, value);
-        }
+        set => SetValue(ViewModelProperty, value);
     }
+
     public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
         nameof(ViewModel),
         typeof(GroupViewModel),

@@ -28,7 +28,8 @@ public class GlobalSettings : BindableBase
     }
     public Banner.OutputResolution BannerTexOutputResolution { get; set; }
 
-    public List<string> BannerIconSpriteScanFolders { get; } = new() {
+    public List<string> BannerSpriteScanFolders { get; } = new() {
         "../图标",
     };
 }
+
