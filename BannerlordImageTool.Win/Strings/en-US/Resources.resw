@@ -139,9 +139,6 @@
     <value>Bannerlord Image Tool</value>
     <comment>The main window's title</comment>
   </data>
-  <data name="AskDeleteGroup" xml:space="preserve">
-    <value>Are you sure to delete banner group {0}?</value>
-  </data>
   <data name="ButtonAdd.Content" xml:space="preserve">
     <value>Add</value>
   </data>
@@ -160,8 +157,17 @@
   <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">
     <value>Yes, delete them</value>
   </data>
-  <data name="DeleteGroupDialogTitle" xml:space="preserve">
+  <data name="DialogDeleteBannerGroupContent" xml:space="preserve">
+    <value>Are you sure to delete banner group "{0}"?</value>
+  </data>
+  <data name="DialogDeleteBannerGroupTitle" xml:space="preserve">
     <value>Delete Banner Group</value>
+  </data>
+  <data name="DialogDeleteBannerIconContent" xml:space="preserve">
+    <value>Are you sure to delete {0} selected banner icons?</value>
+  </data>
+  <data name="DialogDeleteBannerIconTitle" xml:space="preserve">
+    <value>Delete Banner Icon</value>
   </data>
   <data name="ExportSuccess" xml:space="preserve">
     <value>Successfully exported to {0}.</value>

@@ -81,21 +81,7 @@
             </AppBarButton>
             <AppBarButton x:Uid="AppButtonDeleteImages" x:Name="btnDeleteSelected" Icon="Delete" VerticalAlignment="Center"
                           IsEnabled="{x:Bind ViewModel.HasSelection,Mode=OneWay,FallbackValue=False}"
-                          AllowFocusOnInteraction="True">
-                <AppBarButton.Flyout>
-                    <Flyout x:Name="flyoutConfirmDelete" Placement="Bottom" LightDismissOverlayMode="On" >
-                        <Flyout.FlyoutPresenterStyle>
-                            <Style TargetType="FlyoutPresenter">
-                                <Setter Property="CornerRadius" Value="8"/>
-                            </Style>
-                        </Flyout.FlyoutPresenterStyle>
-                        <StackPanel>
-                            <TextBlock x:Uid="TextConfirmDeleteSelection" Margin="0,4,0,16" />
-                            <Button x:Uid="ButtonYesDeleteSelection" x:Name="btnConfirmDelete" Click="btnConfirmDelete_Click"
-                                    Style="{StaticResource DangerButton}"/>
-                        </StackPanel>
-                    </Flyout>
-                </AppBarButton.Flyout>
+                          Click="btnDeleteSelected_Click">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="Delete" />
                 </AppBarButton.KeyboardAccelerators>

@@ -31,10 +31,17 @@ public sealed partial class BannerIconGroupEditor : UserControl
         this.InitializeComponent();
     }
 
-    private void btnConfirmDelete_Click(object sender, RoutedEventArgs e)
+    private async void btnDeleteSelected_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.DeleteIcons(ViewModel.AllSelection);
-        flyoutConfirmDelete.Hide();
+        if (!ViewModel.HasSelection) return;
+        var result = await DialogHelper.ShowDangerConfirmDialog(
+            this,
+            I18n.Current.GetString("DialogDeleteBannerIconTitle"),
+            string.Format(I18n.Current.GetString("DialogDeleteBannerIconContent"), ViewModel.AllSelection.Count()));
+        if (result == ContentDialogResult.Primary)
+        {
+            ViewModel.DeleteIcons(ViewModel.AllSelection);
+        }
     }
 
     async void btnOpenImages_Click(object sender, RoutedEventArgs e)
@@ -77,4 +84,5 @@ public sealed partial class BannerIconGroupEditor : UserControl
         if (file is null || ViewModel.SingleSelection is null) return;
         ViewModel.SingleSelection.TexturePath = file.Path;
     }
+
 }

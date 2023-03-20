@@ -133,20 +133,10 @@ public sealed partial class BannerIconsEditor : Page
     private async void btnDeleteGroup_Click(object sender, RoutedEventArgs e)
     {
         if (ViewModel.SelectedGroup is null) return;
-
-        var dialog = new ContentDialog() {
-            XamlRoot = XamlRoot,
-            Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
-            Title = I18n.Current.GetString("DeleteGroupDialogTitle"),
-            PrimaryButtonText = I18n.Current.GetString("Yes"),
-            SecondaryButtonText = I18n.Current.GetString("No"),
-            DefaultButton = ContentDialogButton.Secondary,
-            Content = new TextBlock() {
-                Text = string.Format(I18n.Current.GetString("AskDeleteGroup"),
-                                     ViewModel.SelectedGroup.GroupID),
-            }
-        };
-        var result = await dialog.ShowAsync().AsTask();
+        var result = await DialogHelper.ShowDangerConfirmDialog(
+            this,
+            I18n.Current.GetString("DialogDeleteBannerGroupTitle"),
+            string.Format(I18n.Current.GetString("DialogDeleteBannerGroupContent"), ViewModel.SelectedGroup.GroupID));
         if (result == ContentDialogResult.Primary)
         {
             ViewModel.DeleteGroup(ViewModel.SelectedGroup);
