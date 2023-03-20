@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace BannerlordImageTool.BannerTex;
+namespace BannerlordImageTool.Banner;
 
 public class BannerIconData
 {

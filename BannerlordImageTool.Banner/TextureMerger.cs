@@ -1,11 +1,12 @@
 ﻿using ImageMagick;
 
-namespace BannerlordImageTool.BannerTex;
+namespace BannerlordImageTool.Banner;
 
 public class TextureMerger
 {
     public const int ROWS = 4;
     public const int COLS = 4;
+    static readonly string TEXTURE_SUB_FOLDER = Path.Join("AssetSources", "BannerIcons");
 
     static readonly Dictionary<OutputResolution, int> CELL_SIZES = new()
     {
@@ -21,10 +22,17 @@ public class TextureMerger
         MagickNET.SetGhostscriptDirectory(AppDomain.CurrentDomain.BaseDirectory);
     }
 
+    static string EnsureOutFolder(string outDir)
+    {
+        var dir = Path.Join(outDir, TEXTURE_SUB_FOLDER);
+        Directory.CreateDirectory(dir);
+        return dir;
+    }
+
     public void Merge(string outDir, int groupID, string[] sourceFileNames)
     {
         using var collection = new MagickImageCollection();
-        var outBasePath = Path.Join(outDir, BannerUtils.GetGroupName(groupID));
+        var outBasePath = Path.Join(EnsureOutFolder(outDir), BannerUtils.GetGroupName(groupID));
 
         var next = sourceFileNames;
         var index = 0;

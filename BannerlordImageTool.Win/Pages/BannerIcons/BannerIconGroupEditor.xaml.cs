@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using System.Linq;
+using BannerlordImageTool.Win.Common;
+using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using BannerlordImageTool.Win.ViewModels.BannerIcons;
-using BannerlordImageTool.Win.Common;
+using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -19,6 +19,7 @@ public sealed partial class BannerIconGroupEditor : UserControl
         get => GetValue(ViewModelProperty) as GroupViewModel;
         set => SetValue(ViewModelProperty, value);
     }
+
     public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
         nameof(ViewModel),
         typeof(GroupViewModel),
@@ -28,13 +29,19 @@ public sealed partial class BannerIconGroupEditor : UserControl
     public BannerIconGroupEditor()
     {
         this.InitializeComponent();
-        ViewModel = new GroupViewModel();
     }
 
-    private void btnConfirmDelete_Click(object sender, RoutedEventArgs e)
+    private async void btnDeleteSelected_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.DeleteIcons(ViewModel.Selection);
-        flyoutConfirmDelete.Hide();
+        if (!ViewModel.HasSelection) return;
+        var result = await DialogHelper.ShowDangerConfirmDialog(
+            this,
+            I18n.Current.GetString("DialogDeleteBannerIcon/Title"),
+            string.Format(I18n.Current.GetString("DialogDeleteBannerIcon/Content"), ViewModel.AllSelection.Count()));
+        if (result == ContentDialogResult.Primary)
+        {
+            ViewModel.DeleteIcons(ViewModel.AllSelection);
+        }
     }
 
     async void btnOpenImages_Click(object sender, RoutedEventArgs e)
@@ -63,4 +70,19 @@ public sealed partial class BannerIconGroupEditor : UserControl
             ViewModel.NotifySelectionChange();
         }
     }
+
+    private async void btnSelectSprite_Click(object sender, RoutedEventArgs e)
+    {
+        var file = await FileHelper.PickSingleFile(".png");
+        if (file is null || ViewModel.SingleSelection is null) return;
+        ViewModel.SingleSelection.SpritePath = file.Path;
+    }
+
+    private async void btnSelectTexture_Click(object sender, RoutedEventArgs e)
+    {
+        var file = await FileHelper.PickSingleFile(".png");
+        if (file is null || ViewModel.SingleSelection is null) return;
+        ViewModel.SingleSelection.TexturePath = file.Path;
+    }
+
 }

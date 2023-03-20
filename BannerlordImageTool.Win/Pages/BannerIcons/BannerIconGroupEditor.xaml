@@ -9,6 +9,7 @@
     xmlns:vm="using:BannerlordImageTool.Win.ViewModels.BannerIcons"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:com="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d">
     <UserControl.Resources>
         <DataTemplate x:Key="IconTextureTemplate" x:DataType="vm:IconViewModel">
@@ -17,40 +18,55 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
+                <Rectangle Width="128" Height="128" Fill="{StaticResource TransparentCheckBrush}" />
                 <Image Stretch="Uniform" Width="128" Height="128" Grid.ColumnSpan="2">
                     <Image.Source>
-                        <BitmapImage UriSource="{x:Bind FilePath,Mode=OneWay}" DecodePixelWidth="128"/>
+                        <BitmapImage UriSource="{x:Bind TexturePath,Mode=OneWay}" DecodePixelWidth="128"/>
                     </Image.Source>
                 </Image>
                 <Grid VerticalAlignment="Top" Grid.ColumnSpan="2" >
                     <Grid.Background>
-                        <SolidColorBrush Opacity=".2" Color="Black"/>
+                        <SolidColorBrush Opacity=".5" Color="Black"/>
                     </Grid.Background>
 
                     <TextBlock Text="{x:Bind AtlasName,Mode=OneWay}" FontSize="10" HorizontalTextAlignment="Center"
                                Foreground="White"/>
                 </Grid>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" 
-                            Spacing="8"
-                            Padding="4,1"
-                            CornerRadius="2">
+                HorizontalAlignment="Right"
+                            FlowDirection="RightToLeft" Spacing="2" Padding="4,1"
+                            BorderThickness="1" BorderBrush="DarkGray"
+                            CornerRadius="4">
                     <StackPanel.Background>
-                        <AcrylicBrush TintOpacity=".5" TintLuminosityOpacity=".5" TintColor="White"
-                                      Opacity=".4"/>
+                        <AcrylicBrush TintOpacity=".9" TintLuminosityOpacity=".5" TintColor="LightGray"
+                                      Opacity=".6"
+                                      />
                     </StackPanel.Background>
+                    <TextBlock Text="{x:Bind ID,Mode=OneWay}" Foreground="Black" 
+                               FontWeight="Bold" LineHeight="8" />
                     <TextBlock Text="#" Foreground="Black" LineHeight="8"/>
-                    <TextBlock Text="{x:Bind ID,Mode=OneWay}" Foreground="Black" FontWeight="Bold" LineHeight="8"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>
+        <Style x:Key="FilenNameStyle" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="TextAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
         <!--Icon Group Toolbar-->
-        <StackPanel Orientation="Horizontal">
+        <StackPanel x:Name="toolBar" Orientation="Horizontal" Grid.ColumnSpan="2" Padding="16,0"
+                    Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
             <TextBlock x:Uid="LabelBannerGroupID" VerticalAlignment="Center" />
             <NumberBox x:Name="BannerGroupId" Value="{x:Bind ViewModel.GroupID,Mode=TwoWay}" 
                        Maximum="99999999" AcceptsExpression="True"  
@@ -65,28 +81,14 @@
             </AppBarButton>
             <AppBarButton x:Uid="AppButtonDeleteImages" x:Name="btnDeleteSelected" Icon="Delete" VerticalAlignment="Center"
                           IsEnabled="{x:Bind ViewModel.HasSelection,Mode=OneWay,FallbackValue=False}"
-                          AllowFocusOnInteraction="True">
-                <AppBarButton.Flyout>
-                    <Flyout x:Name="flyoutConfirmDelete" Placement="Bottom" LightDismissOverlayMode="On" >
-                        <Flyout.FlyoutPresenterStyle>
-                            <Style TargetType="FlyoutPresenter">
-                                <Setter Property="CornerRadius" Value="8"/>
-                            </Style>
-                        </Flyout.FlyoutPresenterStyle>
-                        <StackPanel>
-                            <TextBlock x:Uid="TextConfirmDeleteSelection" Margin="0,4,0,16" />
-                            <Button x:Uid="ButtonYesDeleteSelection" x:Name="btnConfirmDelete" Click="btnConfirmDelete_Click"
-                                    Style="{StaticResource DangerButton}"/>
-                        </StackPanel>
-                    </Flyout>
-                </AppBarButton.Flyout>
+                          Click="btnDeleteSelected_Click">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="Delete" />
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
         </StackPanel>
         <!--Texture Grid-->
-        <GridView Grid.Row="1"
+        <GridView Grid.Row="1" Padding="16"
                   ItemsSource="{x:Bind ViewModel.Icons,Mode=OneWay}"
                   ItemTemplate="{StaticResource IconTextureTemplate}" 
                   IsItemClickEnabled="True" 
@@ -94,11 +96,106 @@
                   CanDragItems="True" AllowDrop="True" CanReorderItems="True"
                   SelectionChanged="GridView_SelectionChanged"
                   >
-            <GridView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="4"/>
-                </ItemsPanelTemplate>
-            </GridView.ItemsPanel>
         </GridView>
+        <Grid Grid.Column="1" Grid.Row="1" Padding="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Grid.ColumnSpan="2"
+                    Padding="16" Background="{ThemeResource CardStrokeColorDefaultBrush}" >
+                    <TextBlock x:Uid="TextTextureProperties" VerticalAlignment="Center"
+                               FontWeight="Bold">Texture Properties</TextBlock>
+                </Border>
+                <ScrollViewer Grid.Row="1"
+                    DataContext="{x:Bind ViewModel.SingleSelection,Mode=OneWay}">
+                    <Grid Padding="16" RowSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" MaxWidth="200" MinWidth="110"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" MinHeight="256"/>
+                        </Grid.RowDefinitions>
+
+                        <!--UI Sprite-->
+                        <TextBlock x:Uid="TextUISprite" Grid.Row="1">UI Sprite</TextBlock>
+                        <Grid Grid.Row="1" Grid.Column="1" ColumnSpacing="8" RowSpacing="4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Button x:Uid="ButtonSelectEllipses" x:Name="btnSelectSprite" 
+                                    Grid.Row="0" Grid.Column="0"
+                                    VerticalAlignment="Top"
+                                    IsEnabled="{x:Bind ViewModel.HasSelection, Mode=OneWay}"
+                                    Click="btnSelectSprite_Click" />
+                            <TextBlock Grid.Row="0" Grid.Column="1" 
+                                       Style="{StaticResource FilenNameStyle}"
+                                       Text="{Binding SpritePath,Mode=OneWay}" />
+                            <Grid Grid.ColumnSpan="2" Grid.Row="1"
+                                  BorderThickness="4"
+                                  HorizontalAlignment="Left"
+                                  VerticalAlignment="Top"
+                                  BorderBrush="{ThemeResource AccentControlElevationBorderBrush}">
+                                <Rectangle Width="256" Height="256" Fill="{StaticResource TransparentCheckBrush}" />
+                                <Image Source="{Binding SpritePath, Mode=OneWay,FallbackValue='/Assets/empty-asset.png'}" 
+                                       Width="256" Height="256"/>
+                            </Grid>
+                        </Grid>
+
+                        <!--Texture Preview-->
+                        <TextBlock x:Uid="TextTexturePreview" 
+                                   Grid.Row="2" TextWrapping="Wrap">
+                            Texture Preview
+                        </TextBlock>
+
+                        <Grid Grid.Row="2" Grid.Column="1" ColumnSpacing="8" RowSpacing="4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Button x:Uid="ButtonSelectEllipses" x:Name="btnSelectTexture" 
+                                    Grid.Row="0" Grid.Column="0"
+                                    VerticalAlignment="Top"
+                                    IsEnabled="{x:Bind ViewModel.HasSelection, Mode=OneWay}"
+                                    Click="btnSelectTexture_Click" />
+                            <TextBlock Grid.Row="0" Grid.Column="1" 
+                                       Style="{StaticResource FilenNameStyle}"
+                                       Text="{Binding TexturePath,Mode=OneWay}" />
+                            <Grid Grid.Row="1" Grid.ColumnSpan="2"
+                                  HorizontalAlignment="Left"
+                                  VerticalAlignment="Top"
+                                  Width="Auto" Height="Auto" 
+                                  BorderThickness="4" 
+                                  BorderBrush="{ThemeResource AccentControlElevationBorderBrush}">
+                                <Rectangle Fill="{StaticResource TransparentCheckBrush}" />
+                                <Image Source="{Binding TexturePath,Mode=OneWay}" 
+                                       MinWidth="256" MaxWidth="512"
+                                       MinHeight="256" MaxHeight="512"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+        <com:GridSplitter Grid.Column="1" Grid.Row="1"
+                          HorizontalAlignment="Left"
+                          Width="16">
+            <com:GridSplitter.RenderTransform>
+                <TranslateTransform X="-8" />
+            </com:GridSplitter.RenderTransform>
+        </com:GridSplitter>
     </Grid>
 </UserControl>

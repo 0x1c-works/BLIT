@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using BannerlordImageTool.BannerTex;
+using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Common;
 using BannerlordImageTool.Win.Settings;
 using BannerlordImageTool.Win.ViewModels.BannerIcons;
@@ -56,20 +56,21 @@ public sealed partial class BannerIconsEditor : Page
         var outFolder = await FileHelper.PickFolder($"BannerIconsExportDir", "bannerIconsExportTo");
         if (outFolder == null) return;
 
-        TextureMerger merger = new TextureMerger(GlobalSettings.Current.BannerTexOutputResolution);
+        TextureMerger merger = new TextureMerger(GlobalSettings.Current.Banner.TextureOutputResolution);
 
         ViewModel.IsExporting = true;
         infoExport.IsOpen = false;
         await Task.WhenAll(ViewModel.GetExportingGroups().Select(g =>
             Task.Factory.StartNew(() => {
-                merger.Merge(outFolder.Path, g.GroupID, g.Icons.Select(icon => icon.FilePath).ToArray());
+                merger.Merge(outFolder.Path, g.GroupID, g.Icons.Select(icon => icon.TexturePath).ToArray());
             })
         ));
+        await SpriteOrganizer.CollectToSpriteParts(outFolder.Path, ViewModel.ToIconSprites());
         await SaveXML(outFolder);
         ViewModel.IsExporting = false;
 
         var btnGo = new Button() {
-            Content = I18n.Current.GetString("Open"),
+            Content = I18n.Current.GetString("ButtonOpenFolder/Content"),
         };
         btnGo.Click += (s, e) => Process.Start("explorer.exe", outFolder.Path);
         ShowSuccessInfo(
@@ -112,7 +113,7 @@ public sealed partial class BannerIconsEditor : Page
             ShowSuccessInfo(string.Format(I18n.Current.GetString("SaveXMLSuccess"),
                                           Path.Join(outDir, "banner_icons.xml")),
                             btnGo);
-        } 
+        }
     }
 
     async Task<string> SaveXML(StorageFolder outFolder)
@@ -132,20 +133,10 @@ public sealed partial class BannerIconsEditor : Page
     private async void btnDeleteGroup_Click(object sender, RoutedEventArgs e)
     {
         if (ViewModel.SelectedGroup is null) return;
-
-        var dialog = new ContentDialog() {
-            XamlRoot = XamlRoot,
-            Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
-            Title = I18n.Current.GetString("DeleteGroupDialogTitle"),
-            PrimaryButtonText = I18n.Current.GetString("Yes"),
-            SecondaryButtonText = I18n.Current.GetString("No"),
-            DefaultButton = ContentDialogButton.Secondary,
-            Content = new TextBlock() {
-                Text = string.Format(I18n.Current.GetString("AskDeleteGroup"),
-                                     ViewModel.SelectedGroup.GroupID),
-            }
-        };
-        var result = await dialog.ShowAsync().AsTask();
+        var result = await DialogHelper.ShowDangerConfirmDialog(
+            this,
+            I18n.Current.GetString("DialogDeleteBannerGroup/Title"),
+            string.Format(I18n.Current.GetString("DialogDeleteBannerGroup/Content"), ViewModel.SelectedGroup.GroupID));
         if (result == ContentDialogResult.Primary)
         {
             ViewModel.DeleteGroup(ViewModel.SelectedGroup);

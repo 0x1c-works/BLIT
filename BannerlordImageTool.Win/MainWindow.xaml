@@ -29,13 +29,12 @@
                         Grid.Row="1"
                         IsTabStop="False"
                         IsBackButtonVisible="Collapsed"
-                        Header="Title"
                         SelectionChanged="AppNav_SelectionChanged"
                         OpenPaneLength="200">
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Uid="AppNavMenuBanner" Icon="Flag" Content="Banner Icons" Tag="BannerIcons"/>
             </NavigationView.MenuItems>
-            <Frame x:Name="AppContent" Padding="32,16">
+            <Frame x:Name="AppContent" Padding="0">
             </Frame>
         </NavigationView>
     </Grid>

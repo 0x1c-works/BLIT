@@ -1,6 +1,5 @@
-﻿using BannerlordImageTool.BannerTex;
+﻿using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Common;
-using BannerlordImageTool.Win.Settings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -36,9 +35,13 @@ public class GroupViewModel : BindableBase
         get => Icons.Count > 0;
     }
 
-    public IEnumerable<IconViewModel> Selection
+    public IEnumerable<IconViewModel> AllSelection
     {
         get => Icons.Where(icon => icon.IsSelected);
+    }
+    public IconViewModel SingleSelection
+    {
+        get => Icons.Where(icon => icon.IsSelected).FirstOrDefault();
     }
     public bool HasSelection
     {
@@ -62,11 +65,17 @@ public class GroupViewModel : BindableBase
 
     public void AddIcons(IEnumerable<StorageFile> files)
     {
-        var newCells = files.Where(file => !_icons.Any(icon => icon.FilePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)))
+        var icons = files
+            .Where(file =>
+                !_icons.Any(icon =>
+                    icon.TexturePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)
+                )
+            )
             .Select(file => new IconViewModel(this, file.Path));
-        foreach (var cell in newCells)
+        foreach (var icon in icons)
         {
-            _icons.Add(cell);
+            _icons.Add(icon);
+            icon.AutoScanSprite();
         }
     }
     public void DeleteIcons(IEnumerable<IconViewModel> icons)
@@ -78,7 +87,7 @@ public class GroupViewModel : BindableBase
             if (!Icons.Remove(deleting))
             {
                 // a more expensive way to ensure the icon is deleted
-                var index = Icons.Select(i => i.FilePath).ToList().IndexOf(deleting.FilePath);
+                var index = Icons.Select(i => i.TexturePath).ToList().IndexOf(deleting.TexturePath);
                 if (index > -1)
                 {
                     Icons.RemoveAt(index);
@@ -95,7 +104,8 @@ public class GroupViewModel : BindableBase
     }
     public void NotifySelectionChange()
     {
-        OnPropertyChanged(nameof(Selection));
+        OnPropertyChanged(nameof(AllSelection));
+        OnPropertyChanged(nameof(SingleSelection));
         OnPropertyChanged(nameof(HasSelection));
     }
 

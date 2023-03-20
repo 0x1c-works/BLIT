@@ -1,4 +1,4 @@
-﻿using BannerlordImageTool.BannerTex;
+﻿using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Common;
 using BannerlordImageTool.Win.Settings;
 using System;
@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
 public class DataViewModel : BindableBase
@@ -38,7 +36,7 @@ public class DataViewModel : BindableBase
     {
         get
         {
-            switch (GlobalSettings.Current.BannerTexOutputResolution)
+            switch (GlobalSettings.Current.Banner.TextureOutputResolution)
             {
                 case OutputResolution.Res2K: return "2K";
                 case OutputResolution.Res4K: return "4K";
@@ -49,11 +47,11 @@ public class DataViewModel : BindableBase
         {
             if (Enum.TryParse<OutputResolution>(value, out var enumValue))
             {
-                GlobalSettings.Current.BannerTexOutputResolution = enumValue;
+                GlobalSettings.Current.Banner.TextureOutputResolution = enumValue;
             }
             else
             {
-                GlobalSettings.Current.BannerTexOutputResolution = OutputResolution.INVALID;
+                GlobalSettings.Current.Banner.TextureOutputResolution = OutputResolution.INVALID;
             }
             OnPropertyChanged();
         }
@@ -82,6 +80,14 @@ public class DataViewModel : BindableBase
             data.IconGroups.Add(group.ToBannerIconGroup());
         }
         return data;
+    }
+    public IEnumerable<IconSprite> ToIconSprites()
+    {
+        return GetExportingGroups().Aggregate(new List<IconSprite>(), (icons, g) => {
+            icons.AddRange(g.Icons.Where(icon => !string.IsNullOrWhiteSpace(icon.SpritePath))
+                                  .Select(icon => icon.ToIconSprite()));
+            return icons;
+        });
     }
 
     public IOrderedEnumerable<GroupViewModel> GetExportingGroups()
@@ -130,5 +136,9 @@ public class DataViewModel : BindableBase
     private void OnGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         OnPropertyChanged(nameof(CanExport));
+        if (e.PropertyName == nameof(GroupViewModel.GroupID))
+        {
+
+        }
     }
 }

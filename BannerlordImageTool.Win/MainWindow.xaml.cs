@@ -3,6 +3,7 @@
 
 using BannerlordImageTool.Win.Pages;
 using BannerlordImageTool.Win.Pages.BannerIcons;
+using BannerlordImageTool.Win.Pages.Settings;
 using BannerlordImageTool.Win.Theming;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

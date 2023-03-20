@@ -5,16 +5,16 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BannerlordImageTool.CLI", "BannerlordImageTool.CLI\BannerlordImageTool.CLI.csproj", "{4CE9F320-D2C0-4A2C-A390-DDCBE7BB4006}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BannerlordImageTool.BannerTex", "BannerlordImageTool.BannerTex\BannerlordImageTool.BannerTex.csproj", "{797DEF92-A8B2-4E04-9B5A-2480418D9DEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BannerlordImageTool.Banner", "BannerlordImageTool.Banner\BannerlordImageTool.Banner.csproj", "{797DEF92-A8B2-4E04-9B5A-2480418D9DEA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4117F212-C781-4CB2-A07D-31C92AE69065}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BannerlordImageTool.Win", "BannerlordImageTool.Win\BannerlordImageTool.Win.csproj", "{E6ED8759-8803-46D9-AF58-A658FD1758E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BannerlordImageTool.Win", "BannerlordImageTool.Win\BannerlordImageTool.Win.csproj", "{E6ED8759-8803-46D9-AF58-A658FD1758E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BannerlordImageTool.Sprite", "BannerlordImageTool.Sprite\BannerlordImageTool.Sprite.csproj", "{7ED7233A-487E-4052-9288-00F48CE40A61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BannerlordImageTool.Sprite", "BannerlordImageTool.Sprite\BannerlordImageTool.Sprite.csproj", "{7ED7233A-487E-4052-9288-00F48CE40A61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
