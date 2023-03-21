@@ -33,3 +33,7 @@ public class ColorViewModel : BindableBase
     }
 
 }
+
+public class ColorsEditorViewModel : BindableBase
+{
+}

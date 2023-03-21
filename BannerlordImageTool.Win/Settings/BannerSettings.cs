@@ -12,6 +12,10 @@ public class BannerSettings
     public List<string> SpriteScanFolders { get; set; } = new();
     [Key(1)]
     public Banner.OutputResolution TextureOutputResolution { get; set; }
+    [Key(2)]
+    public int CustomGroupStartID = 10000;
+    [Key(3)]
+    public int CustomColorStartID = 500;
 
     public void SaveSpriteScanFolders(IEnumerable<string> scanFolders)
     {

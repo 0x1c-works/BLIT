@@ -117,7 +117,7 @@
                 </SplitView>
             </PivotItem>
             <PivotItem x:Uid="PivotBannerColorsEditor">
-                <local:BannerColorsEditor />
+                <local:BannerColorsEditor DataViewModel="{x:Bind ViewModel,Mode=OneWay}"/>
             </PivotItem>
         </Pivot>
 

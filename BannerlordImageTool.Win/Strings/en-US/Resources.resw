@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AppButtonAddColor.Label" xml:space="preserve">
+    <value>Add</value>
+  </data>
   <data name="AppButtonAddImages.Label" xml:space="preserve">
     <value>Add</value>
+  </data>
+  <data name="AppButtonDeleteColors.Label" xml:space="preserve">
+    <value>Delete</value>
   </data>
   <data name="AppButtonDeleteImages.Label" xml:space="preserve">
     <value>Delete</value>
@@ -193,6 +199,12 @@
   <data name="DialogDeleteBannerIcon.Title" xml:space="preserve">
     <value>Delete Banner Icon</value>
   </data>
+  <data name="DialogDeleteColor.Content" xml:space="preserve">
+    <value>Are you sure to delete {0} selected banner colors?</value>
+  </data>
+  <data name="DialogDeleteColor.Title" xml:space="preserve">
+    <value>Delete Banner Color</value>
+  </data>
   <data name="DialogSelectColor.Title" xml:space="preserve">
     <value>Pick A Color</value>
   </data>
@@ -210,6 +222,12 @@
   </data>
   <data name="LabelTextureResolution.Text" xml:space="preserve">
     <value>Texture Resolution</value>
+  </data>
+  <data name="MenuItemAdd.Text" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="MenuItemDelete.Text" xml:space="preserve">
+    <value>Delete</value>
   </data>
   <data name="NeedGameRootFolder" xml:space="preserve">
     <value>(Please select the game install folder)</value>
