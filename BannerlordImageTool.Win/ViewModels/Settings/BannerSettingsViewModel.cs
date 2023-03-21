@@ -26,6 +26,25 @@ public class BannerSettingsViewModel : BindableBase
                 : null;
     }
 
+    public int CustomGroupStartID
+    {
+        get => GlobalSettings.Current.Banner.CustomGroupStartID;
+        set
+        {
+            GlobalSettings.Current.Banner.CustomGroupStartID = value;
+            OnPropertyChanged();
+        }
+    }
+    public int CustomColorStartID
+    {
+        get => GlobalSettings.Current.Banner.CustomColorStartID;
+        set
+        {
+            GlobalSettings.Current.Banner.CustomColorStartID = value;
+            OnPropertyChanged();
+        }
+    }
+
     public BannerSettingsViewModel()
     {
         foreach (var folderVM in GlobalSettings
