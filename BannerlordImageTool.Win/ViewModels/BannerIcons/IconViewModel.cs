@@ -69,7 +69,12 @@ public class IconViewModel : BindableBase
 
     public BannerIcon ToBannerIcon()
     {
-        return new BannerIcon() { ID = ID, MaterialName = AtlasName, TextureIndex = CellIndex };
+        return new BannerIcon() {
+            ID = ID,
+            MaterialName = AtlasName,
+            TextureIndex = CellIndex,
+            Comment = Path.GetFileNameWithoutExtension(TexturePath),
+        };
     }
     public IconSprite ToIconSprite()
     {
