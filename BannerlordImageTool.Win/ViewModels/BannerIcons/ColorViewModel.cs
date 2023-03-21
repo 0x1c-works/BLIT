@@ -1,4 +1,5 @@
-﻿using BannerlordImageTool.Win.Common;
+﻿using BannerlordImageTool.Banner;
+using BannerlordImageTool.Win.Common;
 using System.Collections.Generic;
 using Windows.UI;
 
@@ -32,8 +33,24 @@ public class ColorViewModel : BindableBase
         set => SetProperty(ref _isForBackground, value);
     }
 
+    public bool CanExport
+    {
+        get => ID >= 0 && Color.A > 0;
+    }
+
+    public BannerColor ToBannerColor()
+    {
+        return new BannerColor {
+            ID = ID,
+            Hex = ColorToHex(Color),
+            PlayerCanChooseForSigil = IsForSigil,
+            PlayerCanChooseForBackground = IsForBackground,
+        };
+    }
+
+    static string ColorToHex(Color color)
+    {
+        return $"0xff{color.R.ToString("X2")}{color.G.ToString("X2")}{color.B.ToString("X2")}";
+    }
 }
 
-public class ColorsEditorViewModel : BindableBase
-{
-}

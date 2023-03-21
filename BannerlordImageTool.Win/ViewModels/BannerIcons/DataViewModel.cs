@@ -84,6 +84,10 @@ public class DataViewModel : BindableBase
         {
             data.IconGroups.Add(group.ToBannerIconGroup());
         }
+        foreach (var color in GetExportingColors())
+        {
+            data.BannerColors.Add(color.ToBannerColor());
+        }
         return data;
     }
     public IEnumerable<IconSprite> ToIconSprites()
@@ -97,7 +101,11 @@ public class DataViewModel : BindableBase
 
     public IOrderedEnumerable<GroupViewModel> GetExportingGroups()
     {
-        return Groups.Where(g => g.CanExport).OrderBy(g => g.GroupID);
+        return Groups.Where(g => g?.CanExport ?? false).OrderBy(g => g.GroupID);
+    }
+    public IOrderedEnumerable<ColorViewModel> GetExportingColors()
+    {
+        return Colors.Where(c => c?.CanExport ?? false).OrderBy(c => c.ID);
     }
 
     public void AddGroup()
