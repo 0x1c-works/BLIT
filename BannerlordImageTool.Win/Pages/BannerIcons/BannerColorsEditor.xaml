@@ -13,10 +13,13 @@
     mc:Ignorable="d">
 
     <Grid>
-        <controls:DataGrid x:Name="dataGrid" ItemsSource="{x:Bind Colors, Mode=OneWay}" AutoGenerateColumns="False">
+        <controls:DataGrid x:Name="dataGrid" ItemsSource="{x:Bind Colors, Mode=OneWay}" AutoGenerateColumns="False"
+                           Sorting="dataGrid_Sorting">
             <controls:DataGrid.Columns>
-                <controls:DataGridTextColumn Header="ID" Binding="{Binding ID,Mode=OneWay}" />
-                <controls:DataGridTemplateColumn Header="Color">
+                <controls:DataGridTextColumn x:Name="ColorGridColumnID" Header="ID" Binding="{Binding ID,Mode=TwoWay}"
+                                             Tag="ID" />
+                <controls:DataGridTemplateColumn x:Name="ColorGridColumnColor" 
+                                                 Header="Color" Tag="Color">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
@@ -46,8 +49,10 @@
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellEditingTemplate>
                 </controls:DataGridTemplateColumn>
-                <controls:DataGridCheckBoxColumn Header="Sigil" Binding="{Binding IsForSigil,Mode=OneWay}" />
-                <controls:DataGridCheckBoxColumn Header="Background" Binding="{Binding IsForBackground,Mode=OneWay}" />
+                <controls:DataGridCheckBoxColumn x:Name="ColorGridColumnSigil" 
+                                                 Header="Sigil" Binding="{Binding IsForSigil,Mode=TwoWay}" Tag="Sigil"/>
+                <controls:DataGridCheckBoxColumn x:Name="ColorGridColumnBackground" 
+                                                 Header="Background" Binding="{Binding IsForBackground,Mode=TwoWay}" Tag="Background"/>
             </controls:DataGrid.Columns>
         </controls:DataGrid>
     </Grid>

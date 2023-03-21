@@ -4,10 +4,6 @@ using Windows.UI;
 
 namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
 
-public class ColorsEditorViewModel : BindableBase
-{
-}
-
 public class ColorViewModel : BindableBase
 {
     private int _id;

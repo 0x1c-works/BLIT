@@ -169,6 +169,18 @@
   <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">
     <value>Yes, delete them</value>
   </data>
+  <data name="ColorGridColumnBackground.Header" xml:space="preserve">
+    <value>Background</value>
+  </data>
+  <data name="ColorGridColumnColor.Header" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="ColorGridColumnID.Header" xml:space="preserve">
+    <value>Color ID</value>
+  </data>
+  <data name="ColorGridColumnSigil.Header" xml:space="preserve">
+    <value>Sigil</value>
+  </data>
   <data name="DialogDeleteBannerGroup.Content" xml:space="preserve">
     <value>Are you sure to delete banner group "{0}"?</value>
   </data>
