@@ -117,7 +117,7 @@
                 </SplitView>
             </PivotItem>
             <PivotItem x:Uid="PivotBannerColorsEditor">
-                Colors!!!
+                <local:BannerColorsEditor />
             </PivotItem>
         </Pivot>
 

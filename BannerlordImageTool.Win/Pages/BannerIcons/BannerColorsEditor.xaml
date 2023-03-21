@@ -1,0 +1,49 @@
+<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<UserControl
+    x:Class="BannerlordImageTool.Win.Pages.BannerIcons.BannerColorsEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BannerlordImageTool.Win.Pages.BannerIcons"
+    xmlns:vm="using:BannerlordImageTool.Win.ViewModels.BannerIcons"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <controls:DataGrid x:Name="dataGrid" ItemsSource="{x:Bind Colors, Mode=OneWay}" AutoGenerateColumns="False">
+            <controls:DataGrid.Columns>
+                <controls:DataGridTextColumn Header="ID" Binding="{Binding ID}" />
+                <controls:DataGridTemplateColumn Header="Color">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Rectangle>
+                                    <Rectangle.Fill>
+                                        <SolidColorBrush Color="{Binding Color}"/>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </Grid>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                    <controls:DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <controls:ColorPickerButton SelectedColor="{Binding Color}">
+                                    <controls:ColorPickerButton.Style>
+                                        <Style TargetType="controls:ColorPicker">
+                                            <Setter Property="IsAlphaEnabled" Value="false"/>
+                                            <Setter Property="IsHexInputVisible" Value="true" />
+                                        </Style>
+                                    </controls:ColorPickerButton.Style>
+                                </controls:ColorPickerButton>
+                            </Grid>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellEditingTemplate>
+                </controls:DataGridTemplateColumn>
+            </controls:DataGrid.Columns>
+        </controls:DataGrid>
+    </Grid>
+</UserControl>
