@@ -15,14 +15,14 @@
     <Grid>
         <controls:DataGrid x:Name="dataGrid" ItemsSource="{x:Bind Colors, Mode=OneWay}" AutoGenerateColumns="False">
             <controls:DataGrid.Columns>
-                <controls:DataGridTextColumn Header="ID" Binding="{Binding ID}" />
+                <controls:DataGridTextColumn Header="ID" Binding="{Binding ID,Mode=OneWay}" />
                 <controls:DataGridTemplateColumn Header="Color">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Rectangle>
                                     <Rectangle.Fill>
-                                        <SolidColorBrush Color="{Binding Color}"/>
+                                        <SolidColorBrush Color="{Binding Color,Mode=OneWay}"/>
                                     </Rectangle.Fill>
                                 </Rectangle>
                             </Grid>
@@ -31,18 +31,23 @@
                     <controls:DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <Grid>
-                                <controls:ColorPickerButton SelectedColor="{Binding Color}">
-                                    <controls:ColorPickerButton.Style>
-                                        <Style TargetType="controls:ColorPicker">
-                                            <Setter Property="IsAlphaEnabled" Value="false"/>
-                                            <Setter Property="IsHexInputVisible" Value="true" />
-                                        </Style>
-                                    </controls:ColorPickerButton.Style>
-                                </controls:ColorPickerButton>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Rectangle Margin="8" RadiusX="4" RadiusY="4">
+                                    <Rectangle.Fill>
+                                        <SolidColorBrush Color="{Binding Color, Mode=OneWay}" />
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                                <Button Grid.Column="1" x:Name="btnChangeColor" Content="Change" 
+                                        Click="btnChangeColor_Click" Tag="{Binding}"/>
                             </Grid>
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellEditingTemplate>
                 </controls:DataGridTemplateColumn>
+                <controls:DataGridCheckBoxColumn Header="Sigil" Binding="{Binding IsForSigil,Mode=OneWay}" />
+                <controls:DataGridCheckBoxColumn Header="Background" Binding="{Binding IsForBackground,Mode=OneWay}" />
             </controls:DataGrid.Columns>
         </controls:DataGrid>
     </Grid>
