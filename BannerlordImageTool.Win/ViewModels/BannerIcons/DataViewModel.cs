@@ -17,10 +17,7 @@ namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
 public class DataViewModel : BindableBase
 {
     public ObservableCollection<GroupViewModel> Groups { get; } = new();
-    public ObservableCollection<ColorViewModel> Colors { get; } = new() {
-            new ColorViewModel(){ID=123,Color=Color.FromArgb(255,255,0,0)},
-            new ColorViewModel(){ID=234,Color=Color.FromArgb(255,0,255,0)},
-    };
+    public ObservableCollection<ColorViewModel> Colors { get; } = new();
 
     private GroupViewModel _selectedGroup;
     public GroupViewModel SelectedGroup
