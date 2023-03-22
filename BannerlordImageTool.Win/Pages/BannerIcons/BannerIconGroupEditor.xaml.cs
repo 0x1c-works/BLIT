@@ -46,7 +46,7 @@ public sealed partial class BannerIconGroupEditor : UserControl
 
     async void btnOpenImages_Click(object sender, RoutedEventArgs e)
     {
-        var files = await FileHelper.PickMultipleFiles(".png");
+        var files = await FileHelper.OpenMultipleFiles(".png");
 
         if (files.Count == 0) return;
         ViewModel.AddIcons(files);
@@ -73,14 +73,14 @@ public sealed partial class BannerIconGroupEditor : UserControl
 
     private async void btnSelectSprite_Click(object sender, RoutedEventArgs e)
     {
-        var file = await FileHelper.PickSingleFile(".png");
+        var file = await FileHelper.OpenSingleFile(".png");
         if (file is null || ViewModel.SingleSelection is null) return;
         ViewModel.SingleSelection.SpritePath = file.Path;
     }
 
     private async void btnSelectTexture_Click(object sender, RoutedEventArgs e)
     {
-        var file = await FileHelper.PickSingleFile(".png");
+        var file = await FileHelper.OpenSingleFile(".png");
         if (file is null || ViewModel.SingleSelection is null) return;
         ViewModel.SingleSelection.TexturePath = file.Path;
     }

@@ -7,6 +7,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:BannerlordImageTool.Win.Pages.BannerIcons"
     xmlns:vm="using:BannerlordImageTool.Win.ViewModels.BannerIcons"
+    xmlns:common="using:BannerlordImageTool.Win.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -31,6 +32,7 @@
                 </StackPanel>
             </Grid>
         </DataTemplate>
+        <common:InvertBoolConverter x:Key="InvertBoolConverter" />
     </Page.Resources>
     <Grid Margin="0,24,0,0" Background="Transparent">
         <Grid.RowDefinitions>
@@ -40,6 +42,29 @@
         <!--Top bar-->
         <StackPanel x:Name="Toolbar" Orientation="Horizontal" Spacing="4"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+            <AppBarButton x:Uid="AppButtonSaveProject" x:Name="btnSaveProject" Icon="Save" VerticalAlignment="Center"
+                          Click="btnSaveProject_Click" 
+                          IsEnabled="{x:Bind ViewModel.IsSavingOrLoading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="S" Modifiers="Control" />
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
+            <AppBarButton x:Uid="AppButtonSaveProjectAs" x:Name="btnSaveProjectAs" Icon="Save" VerticalAlignment="Center"
+                          Click="btnSaveProjectAs_Click"  
+                          IsEnabled="{x:Bind ViewModel.IsSavingOrLoading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="S" Modifiers="Shift,Control" />
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
+            <AppBarButton x:Uid="AppButtonOpenProject" x:Name="btnOpenProject" Icon="OpenFile" VerticalAlignment="Center"
+                          Click="btnOpenProject_Click"  
+                          IsEnabled="{x:Bind ViewModel.IsSavingOrLoading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="O" Modifiers="Control" />
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
+
+            <AppBarSeparator Margin="8,0"/>
             <TextBlock x:Uid="LabelTextureResolution" VerticalAlignment="Center" Margin="8,0"/>
             <DropDownButton x:Name="dropdownOutputResolution" 
                             Content="{x:Bind ViewModel.OutputResolutionName,Mode=OneWay}" 
@@ -55,15 +80,15 @@
             <!--WIP-->
             <!--<AppBarButton x:Uid="AppButtonImport" x:Name="btnImport" Icon="Import"  VerticalAlignment="Center"
                           Click="btnImport_Click"/>-->
-            <AppBarButton x:Uid="AppButtonExport" x:Name="btnExport" Icon="Directions"  VerticalAlignment="Center"
-                          Click="btnExport_Click" KeyboardAcceleratorPlacementMode="Auto"
+            <AppBarButton x:Uid="AppButtonExportAll" x:Name="btnExportAll" Icon="Directions"  VerticalAlignment="Center"
+                          Click="btnExportAll_Click" KeyboardAcceleratorPlacementMode="Auto"
                           IsEnabled="{x:Bind ViewModel.CanExport,Mode=OneWay}">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="E" />
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
-            <AppBarButton x:Uid="AppButtonSaveXML" x:Name="btnSaveXML" Icon="SaveLocal"  VerticalAlignment="Center"
-                          Click="btnSaveXML_Click" KeyboardAcceleratorPlacementMode="Auto"
+            <AppBarButton x:Uid="AppButtonExportXML" x:Name="btnExportXML" Icon="SaveLocal"  VerticalAlignment="Center"
+                          Click="btnExportXML_Click" KeyboardAcceleratorPlacementMode="Auto"
                           IsEnabled="{x:Bind ViewModel.CanExport,Mode=OneWay}" Label="Save XML">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="X" />

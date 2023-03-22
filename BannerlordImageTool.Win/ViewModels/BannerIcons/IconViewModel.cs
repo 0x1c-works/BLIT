@@ -1,6 +1,7 @@
 ﻿using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Common;
 using BannerlordImageTool.Win.Settings;
+using MessagePack;
 using System.ComponentModel;
 using System.IO;
 
@@ -94,6 +95,33 @@ public class IconViewModel : BindableBase
                 SpritePath = tryPath;
                 return;
             }
+        }
+    }
+
+    [MessagePackObject]
+    public class SaveData
+    {
+        [Key(0)]
+        public string TexturePath;
+        [Key(1)]
+        public string SpritePath;
+        [Key(2)]
+        public int CellIndex;
+
+        public SaveData(IconViewModel vm)
+        {
+            TexturePath = vm.TexturePath;
+            SpritePath = vm.SpritePath;
+            CellIndex = vm.CellIndex;
+        }
+        public SaveData() { }
+
+        public IconViewModel Load(GroupViewModel groupVM)
+        {
+            return new IconViewModel(groupVM, TexturePath) {
+                SpritePath = SpritePath,
+                CellIndex = CellIndex,
+            };
         }
     }
 }

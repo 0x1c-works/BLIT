@@ -1,5 +1,6 @@
 ﻿using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Common;
+using MessagePack;
 using System.Collections.Generic;
 using Windows.UI;
 
@@ -51,6 +52,38 @@ public class ColorViewModel : BindableBase
     static string ColorToHex(Color color)
     {
         return $"0xff{color.R.ToString("X2")}{color.G.ToString("X2")}{color.B.ToString("X2")}";
+    }
+
+    [MessagePackObject]
+    public class SaveData
+    {
+        [Key(0)]
+        public int ID;
+        [Key(1)]
+        [MessagePackFormatter(typeof(WinUIColorFormatter))]
+        public Color Color;
+        [Key(2)]
+        public bool IsForSigil;
+        [Key(3)]
+        public bool IsForBackground;
+
+        public SaveData(ColorViewModel vm)
+        {
+            ID = vm.ID;
+            Color = vm.Color;
+            IsForSigil = vm.IsForSigil;
+            IsForBackground = vm.IsForBackground;
+        }
+        public SaveData() { }
+        public ColorViewModel Load()
+        {
+            return new ColorViewModel() {
+                ID = ID,
+                Color = Color,
+                IsForSigil = IsForSigil,
+                IsForBackground = IsForBackground,
+            };
+        }
     }
 }
 

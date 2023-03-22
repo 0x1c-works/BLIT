@@ -8,6 +8,7 @@ using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -24,7 +25,13 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons;
 /// </summary>
 public sealed partial class BannerIconsEditor : Page
 {
+    const string PROJECT_FILE_TYPE_NAME = "Banner Icons Project";
+    const string PROJECT_FILE_EXT = ".bip";
+    static readonly IDictionary<string, IList<string>> SAVE_FILE_TYPE = new Dictionary<string, IList<string>>() {
+        {PROJECT_FILE_TYPE_NAME, new []{PROJECT_FILE_EXT} },
+    };
     DataViewModel ViewModel { get => App.Current.BannerViewModel; }
+    StorageFile _currentFile;
 
     public BannerIconsEditor()
     {
@@ -49,11 +56,11 @@ public sealed partial class BannerIconsEditor : Page
         ViewModel.OutputResolutionName = item.Tag as string;
     }
 
-    async void btnExport_Click(object sender, RoutedEventArgs e)
+    async void btnExportAll_Click(object sender, RoutedEventArgs e)
     {
         if (ViewModel.IsExporting) return;
 
-        var outFolder = await FileHelper.PickFolder($"BannerIconsExportDir", "bannerIconsExportTo");
+        var outFolder = await FileHelper.OpenFolder($"BannerIconsExportDir", "bannerIconsExportTo");
         if (outFolder == null) return;
 
         TextureMerger merger = new TextureMerger(GlobalSettings.Current.Banner.TextureOutputResolution);
@@ -66,7 +73,7 @@ public sealed partial class BannerIconsEditor : Page
             })
         ));
         await SpriteOrganizer.CollectToSpriteParts(outFolder.Path, ViewModel.ToIconSprites());
-        await SaveXML(outFolder);
+        await ExportXML(outFolder);
         ViewModel.IsExporting = false;
 
         var btnGo = new Button() {
@@ -101,9 +108,9 @@ public sealed partial class BannerIconsEditor : Page
         ViewModel.SelectedGroup = e.ClickedItem as GroupViewModel;
     }
 
-    private async void btnSaveXML_Click(object sender, RoutedEventArgs e)
+    private async void btnExportXML_Click(object sender, RoutedEventArgs e)
     {
-        var outDir = await SaveXML(null);
+        var outDir = await ExportXML(null);
         if (outDir is not null)
         {
             var btnGo = new Button() {
@@ -116,11 +123,11 @@ public sealed partial class BannerIconsEditor : Page
         }
     }
 
-    async Task<string> SaveXML(StorageFolder outFolder)
+    async Task<string> ExportXML(StorageFolder outFolder)
     {
         if (outFolder is null)
         {
-            outFolder = await FileHelper.PickFolder("BannerIconsSaveXMLDir", "bannerIconsSaveXMLTo");
+            outFolder = await FileHelper.OpenFolder("BannerIconsSaveXMLDir", "bannerIconsSaveXMLTo");
         }
         if (outFolder is not null)
         {
@@ -141,5 +148,36 @@ public sealed partial class BannerIconsEditor : Page
         {
             ViewModel.DeleteGroup(ViewModel.SelectedGroup);
         }
+    }
+
+    private async void btnSaveProject_Click(object sender, RoutedEventArgs e)
+    {
+        await SaveProject(false);
+    }
+
+    private async void btnOpenProject_Click(object sender, RoutedEventArgs e)
+    {
+        var file = await FileHelper.OpenSingleFile(new[] { PROJECT_FILE_EXT });
+        if (file is null) return;
+        await ViewModel.Load(file.Path);
+        _currentFile = file;
+    }
+
+    private async void btnSaveProjectAs_Click(object sender, RoutedEventArgs e)
+    {
+        await SaveProject(true);
+    }
+
+    async Task SaveProject(bool force)
+    {
+        StorageFile file = _currentFile;
+        if (force || file is null)
+        {
+            file = await FileHelper.SaveFile(SAVE_FILE_TYPE, "banner_icons", file);
+        }
+        if (file is null) return;
+
+        await ViewModel.Save(file.Path);
+        _currentFile = file;
     }
 }

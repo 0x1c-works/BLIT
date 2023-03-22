@@ -1,5 +1,6 @@
 ﻿using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Common;
+using MessagePack;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,10 +13,9 @@ namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
 public class GroupViewModel : BindableBase
 {
     private ObservableCollection<IconViewModel> _icons = new();
-    private int _groupID = 7;
-
     public ObservableCollection<IconViewModel> Icons { get => _icons; }
 
+    private int _groupID = 7;
     public int GroupID
     {
         get => _groupID;
@@ -121,5 +121,31 @@ public class GroupViewModel : BindableBase
             group.Icons.Add(icon.ToBannerIcon());
         }
         return group;
+    }
+
+    [MessagePackObject]
+    public class SaveData
+    {
+        [Key(0)]
+        public int GroupID;
+        [Key(1)]
+        public IconViewModel.SaveData[] Icons = new IconViewModel.SaveData[] { };
+
+        public SaveData(GroupViewModel vm)
+        {
+            GroupID = vm.GroupID;
+            Icons = vm.Icons.Select(icon => new IconViewModel.SaveData(icon)).ToArray();
+        }
+        public SaveData() { }
+
+        public GroupViewModel Load()
+        {
+            var vm = new GroupViewModel() { GroupID = GroupID };
+            foreach (var icon in Icons)
+            {
+                vm.Icons.Add(icon.Load(vm));
+            }
+            return vm;
+        }
     }
 }
