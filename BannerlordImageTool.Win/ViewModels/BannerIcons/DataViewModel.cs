@@ -1,11 +1,16 @@
 ﻿using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Common;
 using BannerlordImageTool.Win.Settings;
+using MessagePack;
+using Microsoft.UI.Xaml.Controls;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.UI;
 
 namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
@@ -75,6 +80,13 @@ public class DataViewModel : BindableBase
     public bool CanExport
     {
         get => !_isExporting && (Groups.Any(g => g.CanExport) || Colors.Count > 0);
+    }
+
+    private bool _isSavingOrLoading = false;
+    public bool IsSavingOrLoading
+    {
+        get => _isSavingOrLoading;
+        set => SetProperty(ref _isSavingOrLoading, value);
     }
 
     public BannerIconData ToBannerIconData()
@@ -170,5 +182,70 @@ public class DataViewModel : BindableBase
         {
 
         }
+    }
+
+    public async Task Save(string filePath)
+    {
+        IsSavingOrLoading = true;
+        try
+        {
+            var data = new SaveData(this);
+            using var file = File.OpenWrite(filePath);
+            await MessagePackSerializer.SerializeAsync(file, data);
+        }
+        catch (Exception ex) { Log.Error(ex, "error in saving the banner project"); }
+        finally
+        {
+            IsSavingOrLoading = false;
+        }
+    }
+    public async Task Load(string filePath)
+    {
+        try
+        {
+            IsSavingOrLoading = true;
+            using var file = File.OpenRead(filePath);
+            var data = await MessagePackSerializer.DeserializeAsync<SaveData>(file);
+            Groups.Clear();
+            Colors.Clear();
+            foreach (var groupData in data.Groups)
+            {
+                Groups.Add(groupData.Load());
+            }
+            foreach (var colorData in data.Colors)
+            {
+                Colors.Add(colorData.Load());
+            }
+            // Update the selection if there was any
+            if (HasSelectedGroup)
+            {
+                SelectedGroup = Groups.FirstOrDefault(g => g.GroupID == SelectedGroup.GroupID);
+            }
+            else
+            {
+                SelectedGroup = Groups.FirstOrDefault();
+            }
+        }
+        catch (Exception ex) { Log.Error(ex, "error in loading the banner project"); }
+        finally
+        {
+            IsSavingOrLoading = false;
+        }
+    }
+
+    [MessagePackObject]
+    public class SaveData
+    {
+        [Key(0)]
+        public GroupViewModel.SaveData[] Groups = new GroupViewModel.SaveData[] { };
+        [Key(1)]
+        public ColorViewModel.SaveData[] Colors = new ColorViewModel.SaveData[] { };
+
+        public SaveData(DataViewModel vm)
+        {
+            Groups = vm.Groups.Select(g => new GroupViewModel.SaveData(g)).ToArray();
+            Colors = vm.Colors.Select(g => new ColorViewModel.SaveData(g)).ToArray();
+        }
+        public SaveData() { }
     }
 }
