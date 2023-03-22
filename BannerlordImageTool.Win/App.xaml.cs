@@ -24,6 +24,8 @@ namespace BannerlordImageTool.Win
         public I18n I18n { get; } = new I18n(new ResourceLoader(), new ResourceManager());
         public Window MainWindow { get => m_window; }
 
+        public ViewModels.BannerIcons.DataViewModel BannerViewModel { get; set; } = new();
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().

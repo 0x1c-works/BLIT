@@ -14,6 +14,11 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
+        <Style x:Key="HorizontalBlockStyle" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="Margin" Value="0,16,0,0" />
+            <Setter Property="Spacing" Value="8" />
+        </Style>
     </Page.Resources>
 
     <Grid Margin="32" Background="Transparent">
@@ -25,12 +30,32 @@
                     <Button x:Name="btnPickGameFolder" x:Uid="ButtonBrowse" Content="Browse..."/>
                 </StackPanel>-->
 
-                <TextBlock x:Uid="TextBannerSettingsTitle" Style="{StaticResource SectionTitle}">Banner Settings</TextBlock>
+                <TextBlock x:Uid="TextBannerSettingsTitle" Style="{StaticResource SectionTitleStyle}">Banner Settings</TextBlock>
                 <local:BannerSpriteScanFoldersEditor ViewModel="{x:Bind ViewModel.BannerSettings,Mode=OneWay}"/>
+                <StackPanel Style="{StaticResource HorizontalBlockStyle}">
+                    <StackPanel Spacing="8">
+                        <TextBlock x:Uid="TextCustomBannerGroupStartID" Style="{StaticResource ItemLabelStyle}"/>
+                        <TextBlock x:Uid="TextCustomBannerGroupStartIDExplain" Style="{StaticResource CaptionStyle}"/>
+                    </StackPanel>
+                    <NumberBox Minimum="1" Maximum="99999" 
+                               Width="200" VerticalAlignment="Top" 
+                               AcceptsExpression="True" SpinButtonPlacementMode="Compact"
+                               Value="{x:Bind ViewModel.BannerSettings.CustomGroupStartID,Mode=TwoWay}"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalBlockStyle}">
+                    <StackPanel Spacing="8">
+                        <TextBlock x:Uid="TextCustomBannerColorStartID" Style="{StaticResource ItemLabelStyle}"/>
+                        <TextBlock x:Uid="TextCustomBannerColorStartIDExplain" Style="{StaticResource CaptionStyle}"/>
+                    </StackPanel>
+                    <NumberBox Minimum="0" Maximum="9999999" 
+                               Width="200" VerticalAlignment="Top"
+                               AcceptsExpression="True" SpinButtonPlacementMode="Compact"
+                               Value="{x:Bind ViewModel.BannerSettings.CustomColorStartID,Mode=TwoWay}"/>
+                </StackPanel>
 
-                <TextBlock x:Uid="TextAdvancedSettingsTitle" Style="{StaticResource SectionTitle}">Advanced</TextBlock>
-                <StackPanel Orientation="Horizontal" Margin="0,8" Spacing="8">
-                    <TextBlock x:Uid="TextViewLogFiles" Style="{StaticResource ItemLabel}"/>
+                <TextBlock x:Uid="TextAdvancedSettingsTitle" Style="{StaticResource SectionTitleStyle}">Advanced</TextBlock>
+                <StackPanel Style="{StaticResource HorizontalBlockStyle}">
+                    <TextBlock x:Uid="TextViewLogFiles" Style="{StaticResource ItemLabelStyle}"/>
                     <Button x:Uid="ButtonOpenFolder" x:Name="btnOpenLogFolder" Click="btnOpenLogFolder_Click"/>
                 </StackPanel>
             </StackPanel>

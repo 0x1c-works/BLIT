@@ -6,11 +6,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using Windows.UI;
 
 namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
 public class DataViewModel : BindableBase
 {
     public ObservableCollection<GroupViewModel> Groups { get; } = new();
+    public ObservableCollection<ColorViewModel> Colors { get; } = new() {
+            new ColorViewModel(){ID=123,Color=Color.FromArgb(255,255,0,0)},
+            new ColorViewModel(){ID=234,Color=Color.FromArgb(255,0,255,0)},
+    };
 
     private GroupViewModel _selectedGroup;
     public GroupViewModel SelectedGroup
@@ -69,7 +74,7 @@ public class DataViewModel : BindableBase
     }
     public bool CanExport
     {
-        get => !_isExporting && Groups.Any(g => g.CanExport);
+        get => !_isExporting && (Groups.Any(g => g.CanExport) || Colors.Count > 0);
     }
 
     public BannerIconData ToBannerIconData()
@@ -78,6 +83,10 @@ public class DataViewModel : BindableBase
         foreach (var group in GetExportingGroups())
         {
             data.IconGroups.Add(group.ToBannerIconGroup());
+        }
+        foreach (var color in GetExportingColors())
+        {
+            data.BannerColors.Add(color.ToBannerColor());
         }
         return data;
     }
@@ -92,17 +101,16 @@ public class DataViewModel : BindableBase
 
     public IOrderedEnumerable<GroupViewModel> GetExportingGroups()
     {
-        return Groups.Where(g => g.CanExport).OrderBy(g => g.GroupID);
+        return Groups.Where(g => g?.CanExport ?? false).OrderBy(g => g.GroupID);
+    }
+    public IOrderedEnumerable<ColorViewModel> GetExportingColors()
+    {
+        return Colors.Where(c => c?.CanExport ?? false).OrderBy(c => c.ID);
     }
 
     public void AddGroup()
     {
-        int predictedId = Groups.OrderBy(g => g.GroupID).LastOrDefault()?.GroupID + 1 ?? 800;
-        while (Groups.Any(g => g.GroupID == predictedId))
-        {
-            predictedId++;
-        }
-        var newGroup = new GroupViewModel() { GroupID = predictedId };
+        var newGroup = new GroupViewModel() { GroupID = GetNextGroupID() };
         newGroup.PropertyChanged += OnGroupPropertyChanged;
         Groups.Add(newGroup);
         if (SelectedGroup is null)
@@ -131,6 +139,28 @@ public class DataViewModel : BindableBase
             }
         }
         OnPropertyChanged(nameof(CanExport));
+    }
+
+    public void AddColor()
+    {
+        Colors.Add(new ColorViewModel() { ID = GetNextColorID() });
+    }
+    public void DeleteColors(IEnumerable<ColorViewModel> colors)
+    {
+        var deleting = colors.ToArray();
+        foreach (var color in deleting)
+        {
+            Colors.Remove(color);
+        }
+    }
+    public int GetNextGroupID()
+    {
+        return Groups.Count > 0 ? Groups.Max(g => g.GroupID) + 1 : GlobalSettings.Current.Banner.CustomGroupStartID;
+    }
+
+    public int GetNextColorID()
+    {
+        return Colors.Count > 0 ? Colors.Max(c => c.ID) + 1 : GlobalSettings.Current.Banner.CustomColorStartID;
     }
 
     private void OnGroupPropertyChanged(object sender, PropertyChangedEventArgs e)

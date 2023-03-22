@@ -40,7 +40,7 @@
         <!--Top bar-->
         <StackPanel x:Name="Toolbar" Orientation="Horizontal" Spacing="4"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-            <TextBlock x:Uid="LabelOutputResolution" VerticalAlignment="Center" Margin="8,0"/>
+            <TextBlock x:Uid="LabelTextureResolution" VerticalAlignment="Center" Margin="8,0"/>
             <DropDownButton x:Name="dropdownOutputResolution" 
                             Content="{x:Bind ViewModel.OutputResolutionName,Mode=OneWay}" 
                             VerticalAlignment="Center" >
@@ -71,48 +71,55 @@
             </AppBarButton>
         </StackPanel>
 
-        <!--Icon Group Editor-->
-        <SplitView Grid.Row="1" IsPaneOpen="True" DisplayMode="Inline"
+        <Pivot Grid.Row="1">
+            <PivotItem x:Uid="PivotBannerGroupsEditor">
+                <!--Icon Group Editor-->
+                <SplitView IsPaneOpen="True" DisplayMode="Inline"
                    OpenPaneLength="300" >
-            <SplitView.PaneBackground>
-                <AcrylicBrush Opacity=".1" TintColor="DarkCyan" 
+                    <SplitView.PaneBackground>
+                        <AcrylicBrush Opacity=".1" TintColor="DarkCyan" 
                               TintOpacity=".2" TintLuminosityOpacity=".5"/>
-            </SplitView.PaneBackground>
-            <!--Group List-->
-            <SplitView.Pane>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Border Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" Padding="16">
-                        <TextBlock x:Uid="TextBannerGroupListTitle" FontWeight="Bold" Padding="0,8" TextAlignment="Center"/>
-                    </Border>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal">
-                        <AppBarButton x:Name="btnAddGroup" Icon="Add" Label="New Group" LabelPosition="Collapsed" Click="btnAddGroup_Click"/>
-                        <AppBarButton x:Name="btnDeleteGroup" Icon="Delete" Label="Delete Group" LabelPosition="Collapsed" 
+                    </SplitView.PaneBackground>
+                    <!--Group List-->
+                    <SplitView.Pane>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Border Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" Padding="16">
+                                <TextBlock x:Uid="TextBannerGroupListTitle" FontWeight="Bold" Padding="0,8" TextAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                <AppBarButton x:Name="btnAddGroup" Icon="Add" Label="New Group" LabelPosition="Collapsed" Click="btnAddGroup_Click"/>
+                                <AppBarButton x:Name="btnDeleteGroup" Icon="Delete" Label="Delete Group" LabelPosition="Collapsed" 
                                       Click="btnDeleteGroup_Click" IsEnabled="{x:Bind ViewModel.HasSelectedGroup,Mode=OneWay}"/>
-                    </StackPanel>
-                    <ListView Grid.Row="2" x:Name="listViewGroups"
+                            </StackPanel>
+                            <ListView Grid.Row="2" x:Name="listViewGroups"
                               ItemsSource="{x:Bind ViewModel.Groups,Mode=OneWay}"
                               ItemTemplate="{StaticResource GroupItemTemplate}"
                               IsItemClickEnabled="True"
                               ItemClick="listViewGroups_ItemClick"
                               Background="{ThemeResource CardStrokeColorDefaultBrush}"
                               >
-                    </ListView>
-                </Grid>
-            </SplitView.Pane>
+                            </ListView>
+                        </Grid>
+                    </SplitView.Pane>
 
-            <!--Pane Content-->
-            <Grid>
-                <local:BannerIconGroupEditor ViewModel="{x:Bind ViewModel.SelectedGroup, Mode=OneWay}" 
+                    <!--Pane Content-->
+                    <Grid>
+                        <local:BannerIconGroupEditor ViewModel="{x:Bind ViewModel.SelectedGroup, Mode=OneWay}" 
                                          Visibility="{x:Bind ViewModel.HasSelectedGroup, Mode=OneWay}"/>
-                <TextBlock x:Uid="TextNoSelectedBannerGroup" Visibility="{x:Bind ViewModel.ShowEmptyHint, Mode=OneWay}" Padding="16" />
-            </Grid>
-        </SplitView>
+                        <TextBlock x:Uid="TextNoSelectedBannerGroup" Visibility="{x:Bind ViewModel.ShowEmptyHint, Mode=OneWay}" Padding="16" />
+                    </Grid>
+                </SplitView>
+            </PivotItem>
+            <PivotItem x:Uid="PivotBannerColorsEditor">
+                <local:BannerColorsEditor DataViewModel="{x:Bind ViewModel,Mode=OneWay}"/>
+            </PivotItem>
+        </Pivot>
 
         <!--Floating Toasts-->
         <StackPanel Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Top" IsTabStop="False">

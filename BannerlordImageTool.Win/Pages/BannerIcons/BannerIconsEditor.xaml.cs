@@ -24,7 +24,7 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons;
 /// </summary>
 public sealed partial class BannerIconsEditor : Page
 {
-    DataViewModel ViewModel { get; init; } = new();
+    DataViewModel ViewModel { get => App.Current.BannerViewModel; }
 
     public BannerIconsEditor()
     {

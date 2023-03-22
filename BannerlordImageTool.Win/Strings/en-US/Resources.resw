@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AppButtonAddColor.Label" xml:space="preserve">
+    <value>Add</value>
+  </data>
   <data name="AppButtonAddImages.Label" xml:space="preserve">
     <value>Add</value>
+  </data>
+  <data name="AppButtonDeleteColors.Label" xml:space="preserve">
+    <value>Delete</value>
   </data>
   <data name="AppButtonDeleteImages.Label" xml:space="preserve">
     <value>Delete</value>
@@ -145,11 +151,20 @@
   <data name="ButtonBrowse.Content" xml:space="preserve">
     <value>Browse...</value>
   </data>
+  <data name="ButtonCancel.Content" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ButtonChange.Content" xml:space="preserve">
+    <value>Change</value>
+  </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
     <value>Delete</value>
   </data>
   <data name="ButtonEdit.Content" xml:space="preserve">
     <value>Edit</value>
+  </data>
+  <data name="ButtonOK.Content" xml:space="preserve">
+    <value>OK</value>
   </data>
   <data name="ButtonOpenFolder.Content" xml:space="preserve">
     <value>Open folder</value>
@@ -159,6 +174,18 @@
   </data>
   <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">
     <value>Yes, delete them</value>
+  </data>
+  <data name="ColorGridColumnBackground.Header" xml:space="preserve">
+    <value>Background</value>
+  </data>
+  <data name="ColorGridColumnColor.Header" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="ColorGridColumnID.Header" xml:space="preserve">
+    <value>Color ID</value>
+  </data>
+  <data name="ColorGridColumnSigil.Header" xml:space="preserve">
+    <value>Sigil</value>
   </data>
   <data name="DialogDeleteBannerGroup.Content" xml:space="preserve">
     <value>Are you sure to delete banner group "{0}"?</value>
@@ -172,6 +199,15 @@
   <data name="DialogDeleteBannerIcon.Title" xml:space="preserve">
     <value>Delete Banner Icon</value>
   </data>
+  <data name="DialogDeleteColor.Content" xml:space="preserve">
+    <value>Are you sure to delete {0} selected banner colors?</value>
+  </data>
+  <data name="DialogDeleteColor.Title" xml:space="preserve">
+    <value>Delete Banner Color</value>
+  </data>
+  <data name="DialogSelectColor.Title" xml:space="preserve">
+    <value>Pick A Color</value>
+  </data>
   <data name="ExportSuccess" xml:space="preserve">
     <value>Successfully exported to {0}.</value>
   </data>
@@ -184,8 +220,14 @@
   <data name="LabelGameRootFolder.Text" xml:space="preserve">
     <value>Game Root Folder</value>
   </data>
-  <data name="LabelOutputResolution.Text" xml:space="preserve">
-    <value>Output Resolution</value>
+  <data name="LabelTextureResolution.Text" xml:space="preserve">
+    <value>Texture Resolution</value>
+  </data>
+  <data name="MenuItemAdd.Text" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="MenuItemDelete.Text" xml:space="preserve">
+    <value>Delete</value>
   </data>
   <data name="NeedGameRootFolder" xml:space="preserve">
     <value>(Please select the game install folder)</value>
@@ -195,6 +237,12 @@
   </data>
   <data name="Open" xml:space="preserve">
     <value>Open</value>
+  </data>
+  <data name="PivotBannerColorsEditor.Header" xml:space="preserve">
+    <value>BANNER COLORS</value>
+  </data>
+  <data name="PivotBannerGroupsEditor.Header" xml:space="preserve">
+    <value>BANNER GROUPS</value>
   </data>
   <data name="PleaseSelect" xml:space="preserve">
     <value>Select</value>
@@ -220,6 +268,22 @@ The relative paths are based on the texture import location.</value>
   </data>
   <data name="TextConfirmDeleteSelection.Text" xml:space="preserve">
     <value>All selected items will be removed. Do you want to continue?</value>
+  </data>
+  <data name="TextCustomBannerColorStartID.Text" xml:space="preserve">
+    <value>Custom color start ID:</value>
+  </data>
+  <data name="TextCustomBannerColorStartIDExplain.Text" xml:space="preserve">
+    <value>Ranged from 0 to 9999999.
+Larger IDs are recommended to prevent collision.
+Note that 0 to 193 are used by the vanilla game.</value>
+  </data>
+  <data name="TextCustomBannerGroupStartID.Text" xml:space="preserve">
+    <value>Custom group start ID:</value>
+  </data>
+  <data name="TextCustomBannerGroupStartIDExplain.Text" xml:space="preserve">
+    <value>Ranged from 1 to 99999.
+Larger IDs are recommended to prevent collision.
+Note that 1 to 6 are used by the vanilla game.</value>
   </data>
   <data name="TextExporting.Text" xml:space="preserve">
     <value>Exporting...</value>
