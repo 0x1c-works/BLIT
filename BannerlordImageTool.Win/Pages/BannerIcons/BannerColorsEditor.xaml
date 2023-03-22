@@ -32,9 +32,9 @@
                            SelectionMode="Extended" VerticalAlignment="Stretch" 
                            AlternatingRowBackground="{StaticResource AlternativeRowBackgroundBrush}" >
             <controls:DataGrid.Columns>
-                <controls:DataGridTextColumn x:Name="ColorGridColumnID" Header="ID" Binding="{Binding ID,Mode=TwoWay}"
+                <controls:DataGridTextColumn x:Uid="ColorGridColumnID" Header="ID" Binding="{Binding ID,Mode=TwoWay}"
                                              Tag="ID" />
-                <controls:DataGridTemplateColumn x:Name="ColorGridColumnColor" 
+                <controls:DataGridTemplateColumn x:Uid="ColorGridColumnColor" 
                                                  Header="Color" Tag="Color">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -49,8 +49,7 @@
                     </controls:DataGridTemplateColumn.CellTemplate>
                     <controls:DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <Button Grid.Column="1" x:Name="btnChangeColor" 
-                                        Click="btnChangeColor_Click" Tag="{Binding}">
+                            <Button Grid.Column="1" x:Name="btnChangeColor" Click="btnChangeColor_Click" Tag="{Binding}">
                                 <Button.Content>
                                     <Grid ColumnSpacing="8">
                                         <Grid.ColumnDefinitions>
@@ -69,9 +68,9 @@
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellEditingTemplate>
                 </controls:DataGridTemplateColumn>
-                <controls:DataGridCheckBoxColumn x:Name="ColorGridColumnSigil" 
+                <controls:DataGridCheckBoxColumn x:Uid="ColorGridColumnSigil" 
                                                  Header="Sigil" Binding="{Binding IsForSigil,Mode=TwoWay}" Tag="Sigil"/>
-                <controls:DataGridCheckBoxColumn x:Name="ColorGridColumnBackground" 
+                <controls:DataGridCheckBoxColumn x:Uid="ColorGridColumnBackground" 
                                                  Header="Background" Binding="{Binding IsForBackground,Mode=TwoWay}" Tag="Background"/>
             </controls:DataGrid.Columns>
             <controls:DataGrid.ContextFlyout>

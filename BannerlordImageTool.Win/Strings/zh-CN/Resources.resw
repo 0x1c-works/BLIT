@@ -188,7 +188,7 @@
     <value>颜色</value>
   </data>
   <data name="ColorGridColumnID.Header" xml:space="preserve">
-    <value>颜色ID</value>
+    <value>ID</value>
   </data>
   <data name="ColorGridColumnSigil.Header" xml:space="preserve">
     <value>纹章色</value>
