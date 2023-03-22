@@ -49,19 +49,23 @@
                     </controls:DataGridTemplateColumn.CellTemplate>
                     <controls:DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="32" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Rectangle Margin="8" RadiusX="4" RadiusY="4">
-                                    <Rectangle.Fill>
-                                        <SolidColorBrush Color="{Binding Color, Mode=OneWay,FallbackValue='Transparent'}" />
-                                    </Rectangle.Fill>
-                                </Rectangle>
-                                <Button Grid.Column="1" x:Name="btnChangeColor" Content="Change" 
-                                        Click="btnChangeColor_Click" Tag="{Binding}"/>
-                            </Grid>
+                            <Button Grid.Column="1" x:Name="btnChangeColor" 
+                                        Click="btnChangeColor_Click" Tag="{Binding}">
+                                <Button.Content>
+                                    <Grid ColumnSpacing="8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="24" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Rectangle RadiusX="4" RadiusY="4">
+                                            <Rectangle.Fill>
+                                                <SolidColorBrush Color="{Binding Color, Mode=OneWay,FallbackValue='Transparent'}" />
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                        <TextBlock x:Uid="TextChange" Grid.Column="1"/>
+                                    </Grid>
+                                </Button.Content>
+                            </Button>
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellEditingTemplate>
                 </controls:DataGridTemplateColumn>
