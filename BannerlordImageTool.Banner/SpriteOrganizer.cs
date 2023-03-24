@@ -1,8 +1,11 @@
 ﻿using ImageMagick;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace BannerlordImageTool.Banner;
 
-public record IconSprite(int GroupID, int IconID, string RawPath);
+public record IconSprite(int GroupID, int IconID, string RawPath, bool AlwaysLoad = true);
 
 public class SpriteOrganizer
 {
@@ -16,19 +19,47 @@ public class SpriteOrganizer
         }
 
         await Task.WhenAll(icons.Select(icon => ResizeAndSave(outDir, icon)));
+        GenerateConfigXML(outDir, icons);
+    }
+    public static void GenerateConfigXML(string outDir, IEnumerable<IconSprite> icons)
+    {
+        var doc = new XmlDocument();
+        var root = doc.CreateElement("Config");
+        doc.AppendChild(root);
+        foreach (var icon in icons.Where(icon => icon.AlwaysLoad).DistinctBy(icon => icon.GroupID))
+        {
+            var node = doc.CreateElement("SpriteCategory");
+            node.SetAttribute("Name", GetAtlasID(icon.GroupID));
+            node.AppendChild(doc.CreateElement("AlwaysLoad"));
+            root.AppendChild(node);
+        }
+        using var writer = XmlWriter.Create(
+            Path.Join(EnsureSpriteFolder(outDir), "Config.xml"),
+            new XmlWriterSettings() {
+                Encoding = Encoding.UTF8,
+                Indent = true,
+            });
+        doc.WriteTo(writer);
     }
 
-    static string EnsureOutFolder(string outDir, int groupID)
+    static string EnsureSpriteFolder(string outDir)
     {
-        var dir = Path.Join(outDir, SPRITE_SUB_FOLDER, $"ui_{groupID}");
+        var dir = Path.Join(outDir, SPRITE_SUB_FOLDER);
+        Directory.CreateDirectory(dir);
+        return dir;
+    }
+
+    static string EnsureGroupFolder(string outDir, int groupID)
+    {
+        var dir = Path.Join(EnsureSpriteFolder(outDir), GetAtlasID(groupID));
         Directory.CreateDirectory(dir);
         return dir;
     }
 
     async static Task ResizeAndSave(string outDir, IconSprite icon)
     {
-        var (groupID, iconID, filePath) = icon;
-        var outPath = Path.Join(EnsureOutFolder(outDir, groupID), $"{iconID}.png");
+        var (groupID, iconID, filePath, _) = icon;
+        var outPath = Path.Join(EnsureGroupFolder(outDir, groupID), $"{iconID}.png");
         using (var img = new MagickImage(filePath))
         {
             if (img.Width != 512 && img.Height != 512)
@@ -37,5 +68,10 @@ public class SpriteOrganizer
             }
             await img.WriteAsync(outPath);
         }
+    }
+
+    static string GetAtlasID(int groupID)
+    {
+        return $"ui_{groupID}";
     }
 }

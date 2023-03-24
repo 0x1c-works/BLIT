@@ -42,6 +42,13 @@
         <!--Top bar-->
         <StackPanel x:Name="Toolbar" Orientation="Horizontal" Spacing="4"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+            <AppBarButton x:Uid="AppButtonNewProject" x:Name="btnNewProject" Icon="NewFolder" VerticalAlignment="Center"
+                          Click="btnNewProject_Click" 
+                          IsEnabled="{x:Bind ViewModel.IsSavingOrLoading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="S" Modifiers="Control" />
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
             <AppBarButton x:Uid="AppButtonSaveProject" x:Name="btnSaveProject" Icon="Save" VerticalAlignment="Center"
                           Click="btnSaveProject_Click" 
                           IsEnabled="{x:Bind ViewModel.IsSavingOrLoading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
@@ -49,7 +56,7 @@
                     <KeyboardAccelerator Key="S" Modifiers="Control" />
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
-            <AppBarButton x:Uid="AppButtonSaveProjectAs" x:Name="btnSaveProjectAs" Icon="Save" VerticalAlignment="Center"
+            <AppBarButton x:Uid="AppButtonSaveProjectAs" x:Name="btnSaveProjectAs" Icon="SaveLocal" VerticalAlignment="Center"
                           Click="btnSaveProjectAs_Click"  
                           IsEnabled="{x:Bind ViewModel.IsSavingOrLoading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
                 <AppBarButton.KeyboardAccelerators>

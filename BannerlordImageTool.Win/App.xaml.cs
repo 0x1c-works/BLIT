@@ -5,9 +5,6 @@ using BannerlordImageTool.Win.Common;
 using BannerlordImageTool.Win.Settings;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.ApplicationModel.Resources;
-using Serilog;
-using System.IO;
-using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.

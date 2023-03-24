@@ -2,7 +2,6 @@
 using BannerlordImageTool.Win.Common;
 using BannerlordImageTool.Win.Settings;
 using MessagePack;
-using Microsoft.UI.Xaml.Controls;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -11,16 +10,14 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI;
+using Windows.Storage;
 
 namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
 public class DataViewModel : BindableBase
 {
     public ObservableCollection<GroupViewModel> Groups { get; } = new();
-    public ObservableCollection<ColorViewModel> Colors { get; } = new() {
-            new ColorViewModel(){ID=123,Color=Color.FromArgb(255,255,0,0)},
-            new ColorViewModel(){ID=234,Color=Color.FromArgb(255,0,255,0)},
-    };
+    public ObservableCollection<ColorViewModel> Colors { get; } = new();
+    public StorageFile CurrentFile { get; set; }
 
     private GroupViewModel _selectedGroup;
     public GroupViewModel SelectedGroup
@@ -79,14 +76,18 @@ public class DataViewModel : BindableBase
     }
     public bool CanExport
     {
-        get => !_isExporting && (Groups.Any(g => g.CanExport) || Colors.Count > 0);
+        get => !_isExporting && !IsSavingOrLoading && (Groups.Any(g => g.CanExport) || Colors.Count > 0);
     }
 
     private bool _isSavingOrLoading = false;
     public bool IsSavingOrLoading
     {
         get => _isSavingOrLoading;
-        set => SetProperty(ref _isSavingOrLoading, value);
+        set
+        {
+            SetProperty(ref _isSavingOrLoading, value);
+            OnPropertyChanged(nameof(CanExport));
+        }
     }
 
     public BannerIconData ToBannerIconData()
@@ -184,14 +185,24 @@ public class DataViewModel : BindableBase
         }
     }
 
-    public async Task Save(string filePath)
+    public void Reset()
+    {
+        Groups.Clear();
+        Colors.Clear();
+        IsExporting = false;
+        SelectedGroup = null;
+        CurrentFile = null;
+    }
+
+    public async Task Save(StorageFile savingFile)
     {
         IsSavingOrLoading = true;
         try
         {
             var data = new SaveData(this);
-            using var file = File.OpenWrite(filePath);
+            using var file = File.OpenWrite(savingFile.Path);
             await MessagePackSerializer.SerializeAsync(file, data);
+            CurrentFile = savingFile;
         }
         catch (Exception ex) { Log.Error(ex, "error in saving the banner project"); }
         finally
@@ -199,13 +210,14 @@ public class DataViewModel : BindableBase
             IsSavingOrLoading = false;
         }
     }
-    public async Task Load(string filePath)
+    public async Task Load(StorageFile openedFile)
     {
         try
         {
             IsSavingOrLoading = true;
-            using var file = File.OpenRead(filePath);
+            using var file = File.OpenRead(openedFile.Path);
             var data = await MessagePackSerializer.DeserializeAsync<SaveData>(file);
+            CurrentFile = openedFile;
             Groups.Clear();
             Colors.Clear();
             foreach (var groupData in data.Groups)
@@ -225,6 +237,8 @@ public class DataViewModel : BindableBase
             {
                 SelectedGroup = Groups.FirstOrDefault();
             }
+
+            OnPropertyChanged(nameof(CanExport));
         }
         catch (Exception ex) { Log.Error(ex, "error in loading the banner project"); }
         finally

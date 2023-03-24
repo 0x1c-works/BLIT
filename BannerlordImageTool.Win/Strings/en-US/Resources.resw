@@ -121,13 +121,13 @@
     <value>Add</value>
   </data>
   <data name="AppButtonAddImages.Label" xml:space="preserve">
-    <value>Add</value>
+    <value>Add Texture</value>
   </data>
   <data name="AppButtonDeleteColors.Label" xml:space="preserve">
     <value>Delete</value>
   </data>
   <data name="AppButtonDeleteImages.Label" xml:space="preserve">
-    <value>Delete</value>
+    <value>Delete Texture</value>
   </data>
   <data name="AppButtonExportAll.Label" xml:space="preserve">
     <value>Export All</value>
@@ -137,6 +137,9 @@
   </data>
   <data name="AppButtonImport.Label" xml:space="preserve">
     <value>Import</value>
+  </data>
+  <data name="AppButtonNewProject.Label" xml:space="preserve">
+    <value>New Project</value>
   </data>
   <data name="AppButtonOpenProject.Label" xml:space="preserve">
     <value>Open Project</value>
@@ -162,9 +165,6 @@
   </data>
   <data name="ButtonCancel.Content" xml:space="preserve">
     <value>Cancel</value>
-  </data>
-  <data name="ButtonChange.Content" xml:space="preserve">
-    <value>Change</value>
   </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
     <value>Delete</value>
@@ -274,6 +274,9 @@
   <data name="TextBannerSpriteScanFoldersExplain.Text" xml:space="preserve">
     <value>Manage the relative paths to folders where the sprites are likely to be found.
 The relative paths are based on the texture import location.</value>
+  </data>
+  <data name="TextChange.Text" xml:space="preserve">
+    <value>Change</value>
   </data>
   <data name="TextConfirmDeleteSelection.Text" xml:space="preserve">
     <value>All selected items will be removed. Do you want to continue?</value>
