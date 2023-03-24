@@ -138,6 +138,9 @@
   <data name="AppButtonImport.Label" xml:space="preserve">
     <value>导入</value>
   </data>
+  <data name="AppButtonNewProject.Label" xml:space="preserve">
+    <value>新建项目</value>
+  </data>
   <data name="AppButtonOpenProject.Label" xml:space="preserve">
     <value>打开项目</value>
   </data>

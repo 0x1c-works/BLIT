@@ -30,7 +30,6 @@ public sealed partial class BannerIconsEditor : Page
         {PROJECT_FILE_TYPE_NAME, new []{PROJECT_FILE_EXT} },
     };
     DataViewModel ViewModel { get => App.Current.BannerViewModel; }
-    StorageFile _currentFile;
 
     public BannerIconsEditor()
     {
@@ -150,6 +149,10 @@ public sealed partial class BannerIconsEditor : Page
         }
     }
 
+    private void btnNewProject_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.Reset();
+    }
     private async void btnSaveProject_Click(object sender, RoutedEventArgs e)
     {
         await SaveProject(false);
@@ -159,8 +162,7 @@ public sealed partial class BannerIconsEditor : Page
     {
         var file = await FileHelper.OpenSingleFile(new[] { PROJECT_FILE_EXT });
         if (file is null) return;
-        await ViewModel.Load(file.Path);
-        _currentFile = file;
+        await ViewModel.Load(file);
     }
 
     private async void btnSaveProjectAs_Click(object sender, RoutedEventArgs e)
@@ -170,14 +172,13 @@ public sealed partial class BannerIconsEditor : Page
 
     async Task SaveProject(bool force)
     {
-        StorageFile file = _currentFile;
+        StorageFile file = ViewModel.CurrentFile;
         if (force || file is null)
         {
             file = await FileHelper.SaveFile(SAVE_FILE_TYPE, "banner_icons", file);
         }
         if (file is null) return;
 
-        await ViewModel.Save(file.Path);
-        _currentFile = file;
+        await ViewModel.Save(file);
     }
 }

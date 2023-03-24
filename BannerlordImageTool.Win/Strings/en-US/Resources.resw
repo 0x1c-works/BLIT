@@ -138,6 +138,9 @@
   <data name="AppButtonImport.Label" xml:space="preserve">
     <value>Import</value>
   </data>
+  <data name="AppButtonNewProject.Label" xml:space="preserve">
+    <value>New Project</value>
+  </data>
   <data name="AppButtonOpenProject.Label" xml:space="preserve">
     <value>Open Project</value>
   </data>
