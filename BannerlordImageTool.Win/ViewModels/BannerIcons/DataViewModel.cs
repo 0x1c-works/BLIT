@@ -220,6 +220,8 @@ public class DataViewModel : BindableBase
             {
                 SelectedGroup = Groups.FirstOrDefault();
             }
+
+            OnPropertyChanged(nameof(CanExport));
         }
         catch (Exception ex) { Log.Error(ex, "error in loading the banner project"); }
         finally

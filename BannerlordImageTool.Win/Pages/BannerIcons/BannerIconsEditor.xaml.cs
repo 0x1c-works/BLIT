@@ -131,6 +131,7 @@ public sealed partial class BannerIconsEditor : Page
         if (outFolder is not null)
         {
             ViewModel.ToBannerIconData().SaveToXml(outFolder.Path);
+            SpriteOrganizer.GenerateConfigXML(outFolder.Path, ViewModel.ToIconSprites());
             return outFolder.Path;
         }
         return null;
