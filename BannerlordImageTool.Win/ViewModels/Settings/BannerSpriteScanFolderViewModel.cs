@@ -5,7 +5,7 @@ namespace BannerlordImageTool.Win.ViewModels.Settings;
 
 public class BannerSpriteScanFolderViewModel : BindableBase
 {
-    private string _relativePath="";
+    private string _relativePath = "";
     public string RelativePath
     {
         get => _relativePath;

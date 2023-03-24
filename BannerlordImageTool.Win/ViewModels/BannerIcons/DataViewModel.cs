@@ -2,7 +2,6 @@
 using BannerlordImageTool.Win.Common;
 using BannerlordImageTool.Win.Settings;
 using MessagePack;
-using Microsoft.UI.Xaml.Controls;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI;
 
 namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
 public class DataViewModel : BindableBase

@@ -1,7 +1,6 @@
 ﻿using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Common;
 using MessagePack;
-using System.Collections.Generic;
 using Windows.UI;
 
 namespace BannerlordImageTool.Win.ViewModels.BannerIcons;

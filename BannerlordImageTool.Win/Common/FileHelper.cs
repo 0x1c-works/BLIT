@@ -35,7 +35,7 @@ public class FileHelper
         var picker = PrepareFileOpenPicker(exts);
         return await picker.PickMultipleFilesAsync();
     }
-    public static async Task<StorageFile> SaveFile(IDictionary<string, IList<string>> fileTypes, 
+    public static async Task<StorageFile> SaveFile(IDictionary<string, IList<string>> fileTypes,
         string suggestedFileName = "",
         StorageFile suggestedFile = null)
     {

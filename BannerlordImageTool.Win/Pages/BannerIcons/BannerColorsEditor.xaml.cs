@@ -1,20 +1,16 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using System;
+using BannerlordImageTool.Win.Common;
+using BannerlordImageTool.Win.ViewModels.BannerIcons;
+using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.Collections.ObjectModel;
-using BannerlordImageTool.Win.ViewModels.BannerIcons;
-using Windows.UI;
-using BannerlordImageTool.Win.Common;
-using CommunityToolkit.WinUI.UI.Controls;
-
-using CP = CommunityToolkit.WinUI.UI.Controls.ColorPicker;
-using System.Linq;
-using Microsoft.UI.Xaml.Data;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using CP = CommunityToolkit.WinUI.UI.Controls.ColorPicker;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 

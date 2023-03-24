@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using BannerlordImageTool.Win.Pages;
 using BannerlordImageTool.Win.Pages.BannerIcons;
 using BannerlordImageTool.Win.Pages.Settings;
 using BannerlordImageTool.Win.Theming;
