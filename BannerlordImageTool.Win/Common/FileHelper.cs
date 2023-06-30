@@ -6,6 +6,10 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
+using Vanara.PInvoke;
+using Serilog;
+using System.Threading;
+//using PInvoke;
 
 namespace BannerlordImageTool.Win.Common;
 
@@ -17,6 +21,7 @@ public class FileHelper
             SettingsIdentifier = settingsId,
             SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
         };
+        picker.FileTypeFilter.Add("*");
         BindHwnd(picker);
         var folder = await picker.PickSingleFolderAsync();
         if (folder is not null)
@@ -24,6 +29,32 @@ public class FileHelper
             StorageApplicationPermissions.FutureAccessList.AddOrReplace(accessToken, folder);
         }
         return folder;
+    }
+    public static void OpenFolder2()
+    {
+        var CLSID_OpenFileDialog = new Guid("{DC1C5A9C-E88A-4dde-A5A1-60F82A20AEF7}");
+        var CLSID_IOpenFileDialog = new Guid("{D57C7288-D4AD-4768-BE02-9D969532D960}");
+        Log.Debug("cls ID: {clsId}", CLSID_OpenFileDialog);
+
+        if (Thread.CurrentThread.GetApartmentState() != ApartmentState.STA || (int)Ole32.CoInitialize() < (int)HRESULT.S_OK)
+        {
+            throw new InvalidOperationException("The current thread must be STA.");
+        }
+
+        var hr = Ole32.CoCreateInstance(CLSID_OpenFileDialog, null, Ole32.CLSCTX.CLSCTX_INPROC_SERVER, CLSID_IOpenFileDialog, out var com);
+        Log.Debug("hr: {hr}; com: {com}", hr, com);
+        if (hr == HRESULT.S_OK)
+        {
+            var ofd = (Shell32.IFileOpenDialog)com;
+
+            var flags = ofd.GetOptions();
+            flags |= Shell32.FILEOPENDIALOGOPTIONS.FOS_PICKFOLDERS;
+            ofd.SetOptions(flags);
+
+            ofd.Show(HWND.NULL);
+        }
+
+        Ole32.CoUninitialize();
     }
     public static async Task<StorageFile> OpenSingleFile(params string[] exts)
     {

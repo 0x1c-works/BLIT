@@ -58,6 +58,9 @@ public sealed partial class BannerIconsEditor : Page
     {
         if (ViewModel.IsExporting) return;
 
+        FileHelper.OpenFolder2();
+        return;
+
         var outFolder = await FileHelper.OpenFolder($"BannerIconsExportDir", "bannerIconsExportTo");
         if (outFolder == null) return;
 
