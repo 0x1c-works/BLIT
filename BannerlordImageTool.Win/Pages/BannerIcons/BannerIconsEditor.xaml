@@ -46,7 +46,7 @@
                           Click="btnNewProject_Click" 
                           IsEnabled="{x:Bind ViewModel.IsSavingOrLoading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
                 <AppBarButton.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="S" Modifiers="Control" />
+                    <KeyboardAccelerator Key="N" Modifiers="Control" />
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
             <AppBarButton x:Uid="AppButtonSaveProject" x:Name="btnSaveProject" Icon="Save" VerticalAlignment="Center"

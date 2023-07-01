@@ -3,6 +3,7 @@
 
 using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Common;
+using BannerlordImageTool.Win.Services;
 using BannerlordImageTool.Win.Settings;
 using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using Microsoft.UI.Xaml;
@@ -31,6 +32,9 @@ public sealed partial class BannerIconsEditor : Page
     static readonly IDictionary<string, IList<string>> SAVE_FILE_TYPE = new Dictionary<string, IList<string>>() {
         {PROJECT_FILE_TYPE_NAME, new []{PROJECT_FILE_EXT} },
     };
+    static readonly Guid GUID_EXPORT_DIALOG = new Guid("0c5f39f0-1a31-4d85-a9ee-7ad0cfd690b6");
+    static readonly Guid GUID_PROJECT_DIALOG = new Guid("f86d402a-33de-4f62-8c2b-c5e75428c018");
+
     DataViewModel ViewModel { get => App.Current.BannerViewModel; }
 
     public BannerIconsEditor()
@@ -84,7 +88,7 @@ public sealed partial class BannerIconsEditor : Page
         if (ViewModel.IsExporting) return;
         try
         {
-            var outFolder = await FileHelper.OpenFolder($"BannerIconsExportDir");
+            var outFolder = await FileDialogService.Current.OpenFolder(GUID_EXPORT_DIALOG);
             if (outFolder == null) return;
 
             TextureMerger merger = new TextureMerger(GlobalSettings.Current.Banner.TextureOutputResolution);
@@ -110,7 +114,7 @@ public sealed partial class BannerIconsEditor : Page
         }
         catch (Exception ex)
         {
-            await new MessageDialog(ex.Message, "Error").ShowAsync();
+            //await new MessageDialog(ex.Message, "Error").ShowAsync();
         }
     }
     private async void btnExportXML_Click(object sender, RoutedEventArgs e)
@@ -131,23 +135,31 @@ public sealed partial class BannerIconsEditor : Page
         }
         catch (Exception ex)
         {
-            await new MessageDialog(ex.Message, "Error").ShowAsync();
+            // TODO: error toast
         }
     }
 
     async Task<string> ExportXML(StorageFolder outFolder)
     {
-        if (outFolder is null)
+        try
         {
-            outFolder = await FileHelper.OpenFolder("BannerIconsSaveXMLDir");
+            if (outFolder is null)
+            {
+                outFolder = await FileDialogService.Current.OpenFolder(GUID_EXPORT_DIALOG);
+            }
+            if (outFolder is not null)
+            {
+                ViewModel.ToBannerIconData().SaveToXml(outFolder.Path);
+                SpriteOrganizer.GenerateConfigXML(outFolder.Path, ViewModel.ToIconSprites());
+                return outFolder.Path;
+            }
+            return null;
         }
-        if (outFolder is not null)
+        catch (Exception ex)
         {
-            ViewModel.ToBannerIconData().SaveToXml(outFolder.Path);
-            SpriteOrganizer.GenerateConfigXML(outFolder.Path, ViewModel.ToIconSprites());
-            return outFolder.Path;
+            // TODO: error toast
+            return null;
         }
-        return null;
     }
 
     private async void btnDeleteGroup_Click(object sender, RoutedEventArgs e)
@@ -174,7 +186,7 @@ public sealed partial class BannerIconsEditor : Page
 
     private async void btnOpenProject_Click(object sender, RoutedEventArgs e)
     {
-        var file = await FileHelper.OpenSingleFile(new[] { PROJECT_FILE_EXT });
+        var file = await FileDialogService.Current.OpenFile(GUID_PROJECT_DIALOG, new[] { PROJECT_FILE_EXT });
         if (file is null) return;
         await ViewModel.Load(file);
     }
@@ -189,7 +201,7 @@ public sealed partial class BannerIconsEditor : Page
         StorageFile file = ViewModel.CurrentFile;
         if (force || file is null)
         {
-            file = await FileHelper.SaveFile(SAVE_FILE_TYPE, "banner_icons", file);
+            file = await FileDialogService.Current.SaveFile(GUID_PROJECT_DIALOG, SAVE_FILE_TYPE, "banner_icons", file);
         }
         if (file is null) return;
 

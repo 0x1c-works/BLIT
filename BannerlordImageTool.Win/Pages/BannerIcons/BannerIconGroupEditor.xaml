@@ -73,15 +73,15 @@
                        SpinButtonPlacementMode="Compact"
                        VerticalAlignment="Center" Margin="8,0"/>
             <AppBarSeparator/>
-            <AppBarButton x:Uid="AppButtonAddImages" x:Name="btnOpenImages" Icon="Add"  VerticalAlignment="Center"
-                          Click="btnOpenImages_Click">
+            <AppBarButton x:Uid="AppButtonAddTextures" x:Name="btnOpenTextures" Icon="Add"  VerticalAlignment="Center"
+                          Click="btnOpenTextures_Click">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="A" />
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
-            <AppBarButton x:Uid="AppButtonDeleteImages" x:Name="btnDeleteSelected" Icon="Delete" VerticalAlignment="Center"
+            <AppBarButton x:Uid="AppButtonDeleteTextures" x:Name="btnDeleteSelectedTextures" Icon="Delete" VerticalAlignment="Center"
                           IsEnabled="{x:Bind ViewModel.HasSelection,Mode=OneWay,FallbackValue=False}"
-                          Click="btnDeleteSelected_Click">
+                          Click="btnDeleteSelectedTextures_Click">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="Delete" />
                 </AppBarButton.KeyboardAccelerators>
