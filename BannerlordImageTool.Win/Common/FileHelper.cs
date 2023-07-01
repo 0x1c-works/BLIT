@@ -9,52 +9,81 @@ using WinRT.Interop;
 using Vanara.PInvoke;
 using Serilog;
 using System.Threading;
+using Microsoft.UI.Xaml;
+using System.Runtime.InteropServices;
 //using PInvoke;
 
 namespace BannerlordImageTool.Win.Common;
 
 public class FileHelper
 {
-    public static async Task<StorageFolder> OpenFolder(string accessToken, string settingsId = null)
+    /// <summary>
+    /// Because <c>Windows.Storage.FolderPicker</c> has a bug that on re-opening, its "Select"
+    /// button becomes grayed out, so we have to use <c>Shell32.FileOpenDialog</c> instead.
+    /// </summary>
+    /// <remarks>
+    /// More explanation on this bug can be found at:
+    /// https://github.com/CommunityToolkit/Maui/issues/1085#issuecomment-1464286082
+    /// </remarks>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    public static async Task<StorageFolder> OpenFolder(string accessToken)
     {
-        var picker = new FolderPicker() {
-            SettingsIdentifier = settingsId,
-            SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
-        };
-        picker.FileTypeFilter.Add("*");
-        BindHwnd(picker);
-        var folder = await picker.PickSingleFolderAsync();
-        if (folder is not null)
-        {
-            StorageApplicationPermissions.FutureAccessList.AddOrReplace(accessToken, folder);
-        }
-        return folder;
-    }
-    public static void OpenFolder2()
-    {
-        var CLSID_OpenFileDialog = new Guid("{DC1C5A9C-E88A-4dde-A5A1-60F82A20AEF7}");
-        var CLSID_IOpenFileDialog = new Guid("{D57C7288-D4AD-4768-BE02-9D969532D960}");
-        Log.Debug("cls ID: {clsId}", CLSID_OpenFileDialog);
-
-        if (Thread.CurrentThread.GetApartmentState() != ApartmentState.STA || (int)Ole32.CoInitialize() < (int)HRESULT.S_OK)
+        if (Thread.CurrentThread.GetApartmentState() != ApartmentState.STA || (int)Ole32.CoInitialize() < HRESULT.S_OK)
         {
             throw new InvalidOperationException("The current thread must be STA.");
         }
-
-        var hr = Ole32.CoCreateInstance(CLSID_OpenFileDialog, null, Ole32.CLSCTX.CLSCTX_INPROC_SERVER, CLSID_IOpenFileDialog, out var com);
-        Log.Debug("hr: {hr}; com: {com}", hr, com);
-        if (hr == HRESULT.S_OK)
+        try
         {
-            var ofd = (Shell32.IFileOpenDialog)com;
+            var hr = Ole32.CoCreateInstance(typeof(Shell32.CFileOpenDialog).GUID, null, Ole32.CLSCTX.CLSCTX_INPROC_SERVER, typeof(Shell32.IFileOpenDialog).GUID, out var com);
+            if (hr != HRESULT.S_OK)
+            {
+                throw new HRESULTException(hr, "error in CoCreateInstance a FileOpenDialog");
+            }
+            else
+            {
+                var ofd = (Shell32.IFileOpenDialog)com;
 
-            var flags = ofd.GetOptions();
-            flags |= Shell32.FILEOPENDIALOGOPTIONS.FOS_PICKFOLDERS;
-            ofd.SetOptions(flags);
+                var flags = ofd.GetOptions();
+                flags |= Shell32.FILEOPENDIALOGOPTIONS.FOS_PICKFOLDERS;
+                ofd.SetOptions(flags);
+                ofd.SetDefaultFolder(Shell32.KNOWNFOLDERID.FOLDERID_DocumentsLibrary.GetIShellItem());
 
-            ofd.Show(HWND.NULL);
+                hr = ofd.Show(GetHwnd());
+                if (hr == HRESULT.HRESULT_FROM_WIN32(Win32Error.ERROR_CANCELLED))
+                {
+                    // User closes the dialog by clicking "Cancel".
+                    return null;
+                }
+                var selectedFolder = ofd.GetFolder();
+                var path = selectedFolder.GetDisplayName(Shell32.SIGDN.SIGDN_FILESYSPATH);
+                Log.Information("selected folder: {Folder}", path);
+                if (string.IsNullOrEmpty(path))
+                {
+                    throw new InvalidOperationException("failed to get the selected folder's path");
+                }
+                var folder = await StorageFolder.GetFolderFromPathAsync(path);
+                if (folder is not null)
+                {
+                    StorageApplicationPermissions.FutureAccessList.AddOrReplace(accessToken, folder);
+                }
+                return folder;
+            }
         }
-
-        Ole32.CoUninitialize();
+        catch (COMException ex)
+        {
+            Log.Error("COMException during opening folder: {Exception}", ex);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            Log.Error("failed to open folder: {Exception}", ex);
+            throw;
+        }
+        finally
+        {
+            Ole32.CoUninitialize();
+        }
     }
     public static async Task<StorageFile> OpenSingleFile(params string[] exts)
     {
@@ -79,7 +108,7 @@ public class FileHelper
     private static FileOpenPicker PrepareFileOpenPicker(string[] exts)
     {
         var picker = new FileOpenPicker();
-        BindHwnd(picker);
+        BindHwndToTarget(picker);
         picker.ViewMode = PickerViewMode.Thumbnail;
         if (exts == null || exts.Length == 0)
         {
@@ -102,7 +131,7 @@ public class FileHelper
     private static FileSavePicker PrepareFileSavePicker(IDictionary<string, IList<string>> fileTypes)
     {
         var picker = new FileSavePicker();
-        BindHwnd(picker);
+        BindHwndToTarget(picker);
         if (fileTypes == null || fileTypes.Count == 0)
         {
             throw new ArgumentNullException(nameof(fileTypes));
@@ -125,9 +154,21 @@ public class FileHelper
         return picker;
 
     }
-    private static void BindHwnd(object target)
+    private static void BindHwndToTarget(object target, Window wnd = null)
     {
-        var hwnd = WindowNative.GetWindowHandle(App.Current.MainWindow);
-        InitializeWithWindow.Initialize(target, hwnd);
+        InitializeWithWindow.Initialize(target, GetHwnd(wnd));
+    }
+    private static IntPtr GetHwnd(Window wnd = null)
+    {
+        return WindowNative.GetWindowHandle(wnd ?? App.Current.MainWindow);
+    }
+}
+
+public class HRESULTException : Exception
+{
+    public HRESULT HRESULT { get; }
+    public HRESULTException(HRESULT hr, string message) : base(message)
+    {
+        HRESULT = hr;
     }
 }

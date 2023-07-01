@@ -7,12 +7,14 @@ using BannerlordImageTool.Win.Settings;
 using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Popups;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -54,38 +56,6 @@ public sealed partial class BannerIconsEditor : Page
         ViewModel.OutputResolutionName = item.Tag as string;
     }
 
-    async void btnExportAll_Click(object sender, RoutedEventArgs e)
-    {
-        if (ViewModel.IsExporting) return;
-
-        FileHelper.OpenFolder2();
-        return;
-
-        var outFolder = await FileHelper.OpenFolder($"BannerIconsExportDir", "bannerIconsExportTo");
-        if (outFolder == null) return;
-
-        TextureMerger merger = new TextureMerger(GlobalSettings.Current.Banner.TextureOutputResolution);
-
-        ViewModel.IsExporting = true;
-        infoExport.IsOpen = false;
-        await Task.WhenAll(ViewModel.GetExportingGroups().Select(g =>
-            Task.Factory.StartNew(() => {
-                merger.Merge(outFolder.Path, g.GroupID, g.Icons.Select(icon => icon.TexturePath).ToArray());
-            })
-        ));
-        await SpriteOrganizer.CollectToSpriteParts(outFolder.Path, ViewModel.ToIconSprites());
-        await ExportXML(outFolder);
-        ViewModel.IsExporting = false;
-
-        var btnGo = new Button() {
-            Content = I18n.Current.GetString("ButtonOpenFolder/Content"),
-        };
-        btnGo.Click += (s, e) => Process.Start("explorer.exe", outFolder.Path);
-        ShowSuccessInfo(
-            string.Format(I18n.Current.GetString("ExportSuccess"), outFolder.Path),
-            btnGo);
-    }
-
     void ShowSuccessInfo(string message, Button actionButton)
     {
         infoExport.Message = message;
@@ -109,18 +79,59 @@ public sealed partial class BannerIconsEditor : Page
         ViewModel.SelectedGroup = e.ClickedItem as GroupViewModel;
     }
 
+    private async void btnExportAll_Click(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.IsExporting) return;
+        try
+        {
+            var outFolder = await FileHelper.OpenFolder($"BannerIconsExportDir");
+            if (outFolder == null) return;
+
+            TextureMerger merger = new TextureMerger(GlobalSettings.Current.Banner.TextureOutputResolution);
+
+            ViewModel.IsExporting = true;
+            infoExport.IsOpen = false;
+            await Task.WhenAll(ViewModel.GetExportingGroups().Select(g =>
+                Task.Factory.StartNew(() => {
+                    merger.Merge(outFolder.Path, g.GroupID, g.Icons.Select(icon => icon.TexturePath).ToArray());
+                })
+            ));
+            await SpriteOrganizer.CollectToSpriteParts(outFolder.Path, ViewModel.ToIconSprites());
+            await ExportXML(outFolder);
+            ViewModel.IsExporting = false;
+
+            var btnGo = new Button() {
+                Content = I18n.Current.GetString("ButtonOpenFolder/Content"),
+            };
+            btnGo.Click += (s, e) => Process.Start("explorer.exe", outFolder.Path);
+            ShowSuccessInfo(
+                string.Format(I18n.Current.GetString("ExportSuccess"), outFolder.Path),
+                btnGo);
+        }
+        catch (Exception ex)
+        {
+            await new MessageDialog(ex.Message, "Error").ShowAsync();
+        }
+    }
     private async void btnExportXML_Click(object sender, RoutedEventArgs e)
     {
-        var outDir = await ExportXML(null);
-        if (outDir is not null)
+        try
         {
-            var btnGo = new Button() {
-                Content = I18n.Current.GetString("Open"),
-            };
-            btnGo.Click += (s, e) => Process.Start("explorer.exe", outDir);
-            ShowSuccessInfo(string.Format(I18n.Current.GetString("SaveXMLSuccess"),
-                                          Path.Join(outDir, "banner_icons.xml")),
-                            btnGo);
+            var outDir = await ExportXML(null);
+            if (outDir is not null)
+            {
+                var btnGo = new Button() {
+                    Content = I18n.Current.GetString("Open"),
+                };
+                btnGo.Click += (s, e) => Process.Start("explorer.exe", outDir);
+                ShowSuccessInfo(string.Format(I18n.Current.GetString("SaveXMLSuccess"),
+                                              Path.Join(outDir, "banner_icons.xml")),
+                                btnGo);
+            }
+        }
+        catch (Exception ex)
+        {
+            await new MessageDialog(ex.Message, "Error").ShowAsync();
         }
     }
 
@@ -128,7 +139,7 @@ public sealed partial class BannerIconsEditor : Page
     {
         if (outFolder is null)
         {
-            outFolder = await FileHelper.OpenFolder("BannerIconsSaveXMLDir", "bannerIconsSaveXMLTo");
+            outFolder = await FileHelper.OpenFolder("BannerIconsSaveXMLDir");
         }
         if (outFolder is not null)
         {
