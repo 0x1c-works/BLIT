@@ -88,7 +88,7 @@ public sealed partial class BannerIconsEditor : Page
         if (ViewModel.IsExporting) return;
         try
         {
-            var outFolder = await FileDialogService.Current.OpenFolder(GUID_EXPORT_DIALOG);
+            var outFolder = await AppService.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
             if (outFolder == null) return;
 
             TextureMerger merger = new TextureMerger(GlobalSettings.Current.Banner.TextureOutputResolution);
@@ -145,7 +145,7 @@ public sealed partial class BannerIconsEditor : Page
         {
             if (outFolder is null)
             {
-                outFolder = await FileDialogService.Current.OpenFolder(GUID_EXPORT_DIALOG);
+                outFolder = await AppService.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
             }
             if (outFolder is not null)
             {
@@ -165,7 +165,7 @@ public sealed partial class BannerIconsEditor : Page
     private async void btnDeleteGroup_Click(object sender, RoutedEventArgs e)
     {
         if (ViewModel.SelectedGroup is null) return;
-        var result = await DialogHelper.ShowDangerConfirmDialog(
+        var result = await AppService.Get<IConfirmDialogService>().ShowDanger(
             this,
             I18n.Current.GetString("DialogDeleteBannerGroup/Title"),
             string.Format(I18n.Current.GetString("DialogDeleteBannerGroup/Content"), ViewModel.SelectedGroup.GroupID));
@@ -186,7 +186,7 @@ public sealed partial class BannerIconsEditor : Page
 
     private async void btnOpenProject_Click(object sender, RoutedEventArgs e)
     {
-        var file = await FileDialogService.Current.OpenFile(GUID_PROJECT_DIALOG, new[] { PROJECT_FILE_EXT });
+        var file = await AppService.Get<IFileDialogService>().OpenFile(GUID_PROJECT_DIALOG, new[] { PROJECT_FILE_EXT });
         if (file is null) return;
         await ViewModel.Load(file);
     }
@@ -201,7 +201,7 @@ public sealed partial class BannerIconsEditor : Page
         StorageFile file = ViewModel.CurrentFile;
         if (force || file is null)
         {
-            file = await FileDialogService.Current.SaveFile(GUID_PROJECT_DIALOG, SAVE_FILE_TYPE, "banner_icons", file);
+            file = await AppService.Get<IFileDialogService>().SaveFile(GUID_PROJECT_DIALOG, SAVE_FILE_TYPE, "banner_icons", file);
         }
         if (file is null) return;
 

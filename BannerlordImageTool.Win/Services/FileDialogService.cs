@@ -24,10 +24,6 @@ public interface IFileDialogService
 }
 public class FileDialogService : IFileDialogService
 {
-    public static IFileDialogService Current
-    {
-        get => App.Current.Services.GetService<IFileDialogService>();
-    }
     public async Task<StorageFolder> OpenFolder(Guid stateGuid)
     {
         return await NativeHelpers.RunCom<Task<StorageFolder>>(async () => {

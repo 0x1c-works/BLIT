@@ -39,7 +39,7 @@ public sealed partial class BannerIconGroupEditor : UserControl
     private async void btnDeleteSelectedTextures_Click(object sender, RoutedEventArgs e)
     {
         if (!ViewModel.HasSelection) return;
-        var result = await DialogHelper.ShowDangerConfirmDialog(
+        var result = await AppService.Get<IConfirmDialogService>().ShowDanger(
             this,
             I18n.Current.GetString("DialogDeleteBannerIcon/Title"),
             string.Format(I18n.Current.GetString("DialogDeleteBannerIcon/Content"), ViewModel.AllSelection.Count()));
@@ -51,7 +51,7 @@ public sealed partial class BannerIconGroupEditor : UserControl
 
     async void btnOpenTextures_Click(object sender, RoutedEventArgs e)
     {
-        var files = await FileDialogService.Current.OpenFiles(GUID_TEXTURE_DIALOG, ".png");
+        var files = await AppService.Get<IFileDialogService>().OpenFiles(GUID_TEXTURE_DIALOG, ".png");
 
         if (files.Count == 0) return;
         ViewModel.AddIcons(files);
@@ -78,14 +78,14 @@ public sealed partial class BannerIconGroupEditor : UserControl
 
     private async void btnSelectSprite_Click(object sender, RoutedEventArgs e)
     {
-        var file = await FileDialogService.Current.OpenFile(GUID_SPRITE_DIALOG, ViewModel.SingleSelection.SpritePath, ".png");
+        var file = await AppService.Get<IFileDialogService>().OpenFile(GUID_SPRITE_DIALOG, ViewModel.SingleSelection.SpritePath, ".png");
         if (file is null || ViewModel.SingleSelection is null) return;
         ViewModel.SingleSelection.SpritePath = file.Path;
     }
 
     private async void btnSelectTexture_Click(object sender, RoutedEventArgs e)
     {
-        var file = await FileDialogService.Current.OpenFile(GUID_TEXTURE_DIALOG, ViewModel.SingleSelection.TexturePath, ".png");
+        var file = await AppService.Get<IFileDialogService>().OpenFile(GUID_TEXTURE_DIALOG, ViewModel.SingleSelection.TexturePath, ".png");
         if (file is null || ViewModel.SingleSelection is null) return;
         ViewModel.SingleSelection.TexturePath = file.Path;
     }

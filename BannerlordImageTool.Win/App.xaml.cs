@@ -4,7 +4,6 @@
 using BannerlordImageTool.Win.Common;
 using BannerlordImageTool.Win.Services;
 using BannerlordImageTool.Win.Settings;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.ApplicationModel.Resources;
 using System;
@@ -35,7 +34,7 @@ namespace BannerlordImageTool.Win
         {
             this.InitializeComponent();
             Logging.Initialize();
-            Services = ConfigureServices();
+            Services = AppService.Configure();
         }
 
         /// <summary>
@@ -49,12 +48,5 @@ namespace BannerlordImageTool.Win
         }
 
         private Window m_window;
-
-        private IServiceProvider ConfigureServices()
-        {
-            var service = new ServiceCollection();
-            service.AddSingleton<IFileDialogService, FileDialogService>();
-            return service.BuildServiceProvider();
-        }
     }
 }
