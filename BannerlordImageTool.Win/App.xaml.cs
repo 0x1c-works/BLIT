@@ -2,9 +2,11 @@
 // Licensed under the MIT License.
 
 using BannerlordImageTool.Win.Common;
+using BannerlordImageTool.Win.Services;
 using BannerlordImageTool.Win.Settings;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.ApplicationModel.Resources;
+using System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -20,6 +22,7 @@ namespace BannerlordImageTool.Win
         public GlobalSettings Settings { get; } = new GlobalSettings();
         public I18n I18n { get; } = new I18n(new ResourceLoader(), new ResourceManager());
         public Window MainWindow { get => m_window; }
+        public IServiceProvider Services { get; }
 
         public ViewModels.BannerIcons.DataViewModel BannerViewModel { get; set; } = new();
 
@@ -31,6 +34,7 @@ namespace BannerlordImageTool.Win
         {
             this.InitializeComponent();
             Logging.Initialize();
+            Services = AppService.Configure();
         }
 
         /// <summary>

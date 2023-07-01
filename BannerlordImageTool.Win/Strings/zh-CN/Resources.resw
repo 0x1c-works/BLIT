@@ -120,13 +120,13 @@
   <data name="AppButtonAddColor.Label" xml:space="preserve">
     <value>新颜色</value>
   </data>
-  <data name="AppButtonAddImages.Label" xml:space="preserve">
+  <data name="AppButtonAddTextures.Label" xml:space="preserve">
     <value>添加贴图</value>
   </data>
   <data name="AppButtonDeleteColors.Label" xml:space="preserve">
     <value>删除颜色</value>
   </data>
-  <data name="AppButtonDeleteImages.Label" xml:space="preserve">
+  <data name="AppButtonDeleteTextures.Label" xml:space="preserve">
     <value>删除贴图</value>
   </data>
   <data name="AppButtonExportAll.Label" xml:space="preserve">

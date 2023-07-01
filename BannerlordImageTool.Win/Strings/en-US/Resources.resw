@@ -120,14 +120,14 @@
   <data name="AppButtonAddColor.Label" xml:space="preserve">
     <value>Add</value>
   </data>
-  <data name="AppButtonAddImages.Label" xml:space="preserve">
-    <value>Add Texture</value>
+  <data name="AppButtonAddTextures.Label" xml:space="preserve">
+    <value>Add Textures</value>
   </data>
   <data name="AppButtonDeleteColors.Label" xml:space="preserve">
     <value>Delete</value>
   </data>
-  <data name="AppButtonDeleteImages.Label" xml:space="preserve">
-    <value>Delete Texture</value>
+  <data name="AppButtonDeleteTextures.Label" xml:space="preserve">
+    <value>Delete Textures</value>
   </data>
   <data name="AppButtonExportAll.Label" xml:space="preserve">
     <value>Export All</value>

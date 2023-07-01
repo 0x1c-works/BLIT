@@ -194,15 +194,15 @@ public class DataViewModel : BindableBase
         CurrentFile = null;
     }
 
-    public async Task Save(StorageFile savingFile)
+    public async Task Save(string filePath)
     {
         IsSavingOrLoading = true;
         try
         {
             var data = new SaveData(this);
-            using var file = File.OpenWrite(savingFile.Path);
+            using var file = File.OpenWrite(filePath);
             await MessagePackSerializer.SerializeAsync(file, data);
-            CurrentFile = savingFile;
+            CurrentFile = await StorageFile.GetFileFromPathAsync(filePath);
         }
         catch (Exception ex) { Log.Error(ex, "error in saving the banner project"); }
         finally

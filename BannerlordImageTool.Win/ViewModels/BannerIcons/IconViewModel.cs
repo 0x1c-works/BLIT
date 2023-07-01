@@ -16,12 +16,22 @@ public class IconViewModel : BindableBase
     public string TexturePath
     {
         get => _texturePath;
-        set => SetProperty(ref _texturePath, value);
+        set
+        {
+            var newPath = Path.GetFullPath(value);
+            if (newPath == _texturePath) return;
+            SetProperty(ref _texturePath, value);
+        }
     }
     public string SpritePath
     {
         get => _spritePath ?? "";
-        set => SetProperty(ref _spritePath, value);
+        set
+        {
+            var newPath = Path.GetFullPath(value);
+            if (newPath == _spritePath) return;
+            SetProperty(ref _spritePath, newPath);
+        }
     }
     public int CellIndex
     {
