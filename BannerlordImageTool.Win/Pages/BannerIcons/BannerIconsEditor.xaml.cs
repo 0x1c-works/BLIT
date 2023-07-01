@@ -26,11 +26,6 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons;
 /// </summary>
 public sealed partial class BannerIconsEditor : Page
 {
-    const string PROJECT_FILE_TYPE_NAME = "Banner Icons Project";
-    const string PROJECT_FILE_EXT = ".bip";
-    static readonly IDictionary<string, IList<string>> SAVE_FILE_TYPE = new Dictionary<string, IList<string>>() {
-        {PROJECT_FILE_TYPE_NAME, new []{PROJECT_FILE_EXT} },
-    };
     static readonly Guid GUID_EXPORT_DIALOG = new Guid("0c5f39f0-1a31-4d85-a9ee-7ad0cfd690b6");
     static readonly Guid GUID_PROJECT_DIALOG = new Guid("f86d402a-33de-4f62-8c2b-c5e75428c018");
 
@@ -185,7 +180,7 @@ public sealed partial class BannerIconsEditor : Page
 
     private async void btnOpenProject_Click(object sender, RoutedEventArgs e)
     {
-        var file = await AppService.Get<IFileDialogService>().OpenFile(GUID_PROJECT_DIALOG, new[] { PROJECT_FILE_EXT });
+        var file = await AppService.Get<IFileDialogService>().OpenFile(GUID_PROJECT_DIALOG, new[] { CommonFileTypes.BannerIconsProject });
         if (file is null) return;
         await ViewModel.Load(file);
     }
@@ -197,13 +192,16 @@ public sealed partial class BannerIconsEditor : Page
 
     async Task SaveProject(bool force)
     {
-        StorageFile file = ViewModel.CurrentFile;
-        if (force || file is null)
+        string filePath = ViewModel.CurrentFile?.Path;
+        if (force || string.IsNullOrEmpty(filePath))
         {
-            file = await AppService.Get<IFileDialogService>().SaveFile(GUID_PROJECT_DIALOG, SAVE_FILE_TYPE, "banner_icons", file);
+            filePath = AppService.Get<IFileDialogService>().SaveFile(GUID_PROJECT_DIALOG,
+                                                                     new[] { CommonFileTypes.BannerIconsProject },
+                                                                     "banner_icons",
+                                                                     filePath);
         }
-        if (file is null) return;
+        if (string.IsNullOrEmpty(filePath)) return;
 
-        await ViewModel.Save(file);
+        await ViewModel.Save(filePath);
     }
 }

@@ -51,7 +51,7 @@ public sealed partial class BannerIconGroupEditor : UserControl
 
     async void btnOpenTextures_Click(object sender, RoutedEventArgs e)
     {
-        var files = await AppService.Get<IFileDialogService>().OpenFiles(GUID_TEXTURE_DIALOG, ".png");
+        var files = await AppService.Get<IFileDialogService>().OpenFiles(GUID_TEXTURE_DIALOG, new[] { CommonFileTypes.Png });
 
         if (files.Count == 0) return;
         ViewModel.AddIcons(files);
@@ -78,14 +78,18 @@ public sealed partial class BannerIconGroupEditor : UserControl
 
     private async void btnSelectSprite_Click(object sender, RoutedEventArgs e)
     {
-        var file = await AppService.Get<IFileDialogService>().OpenFile(GUID_SPRITE_DIALOG, ViewModel.SingleSelection.SpritePath, ".png");
+        var file = await AppService.Get<IFileDialogService>().OpenFile(GUID_SPRITE_DIALOG,
+                                                                       ViewModel.SingleSelection.SpritePath,
+                                                                       new[] { CommonFileTypes.Png });
         if (file is null || ViewModel.SingleSelection is null) return;
         ViewModel.SingleSelection.SpritePath = file.Path;
     }
 
     private async void btnSelectTexture_Click(object sender, RoutedEventArgs e)
     {
-        var file = await AppService.Get<IFileDialogService>().OpenFile(GUID_TEXTURE_DIALOG, ViewModel.SingleSelection.TexturePath, ".png");
+        var file = await AppService.Get<IFileDialogService>().OpenFile(GUID_TEXTURE_DIALOG,
+                                                                       ViewModel.SingleSelection.TexturePath,
+                                                                       new[] { CommonFileTypes.Png });
         if (file is null || ViewModel.SingleSelection is null) return;
         ViewModel.SingleSelection.TexturePath = file.Path;
     }
