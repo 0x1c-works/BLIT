@@ -1,5 +1,4 @@
 ﻿using BannerlordImageTool.Win.Common;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -26,7 +25,7 @@ public class FileDialogService : IFileDialogService
 {
     public async Task<StorageFolder> OpenFolder(Guid stateGuid)
     {
-        return await NativeHelpers.RunCom<Task<StorageFolder>>(async () => {
+        return await NativeHelpers.RunCom(async () => {
             var hr = Ole32.CoCreateInstance(typeof(Shell32.CFileOpenDialog).GUID, null, Ole32.CLSCTX.CLSCTX_INPROC_SERVER, typeof(Shell32.IFileOpenDialog).GUID, out var com);
             if (hr != HRESULT.S_OK)
             {
