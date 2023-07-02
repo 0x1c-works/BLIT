@@ -26,11 +26,19 @@
             </StackPanel.Resources>
         </StackPanel>
         <StackPanel x:Name="testButtons" Canvas.Top="400">
-            <Button x:Name="btnTestInfo" Content="info+1" />
-            <Button x:Name="btnTestWarning" Content="warn+1" />
-            <Button x:Name="btnTestError" Content="err+1" />
-            <Button x:Name="btnTestSuccess" Content="success+1" />
-            <Button x:Name="btnTestProgressing" Content="wip+1" />
+            <Button x:Name="btnAutoTestInfo" Content="info+1" />
+            <Button x:Name="btnAutoTestWarning" Content="warn+1" />
+            <Button x:Name="btnAutoTestError" Content="err+1" />
+            <Button x:Name="btnAutoTestSuccess" Content="success+1" />
+            <Button x:Name="btnAutoTestProgressing" Content="wip+1" />
+            <Button
+                x:Name="btnTestTimeout"
+                Click="btnTestTimeout_Click"
+                Content="timeout 2s" />
+            <Button
+                x:Name="btnTestNoTimeout"
+                Click="btnTestNoTimeout_Click"
+                Content="timeout 0s" />
         </StackPanel>
     </Canvas>
 </UserControl>

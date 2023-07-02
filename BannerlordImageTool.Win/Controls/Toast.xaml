@@ -11,7 +11,7 @@
     <UserControl.Resources>
         <local:ToastVariantIsIconVisibleConverter x:Key="VariantIsIconVisibleConverter" />
         <local:ToastVariantSeverityConverter x:Key="VariantSeverityConverter" />
-        <local:ToastVariantProgressBarVisibilityConverter x:Key="ProgressBarVisibilityConverter" />
+        <local:ToastProgressBarIndeterminateConverter x:Key="ProgressBarIndeterminateConverter" />
     </UserControl.Resources>
 
     <InfoBar
@@ -21,7 +21,11 @@
         Message="{Binding Message, Mode=OneWay}"
         Severity="{Binding Variant, Mode=OneWay, Converter={StaticResource VariantSeverityConverter}}">
         <InfoBar.Content>
-            <ProgressBar IsIndeterminate="True" Visibility="{Binding Variant, Mode=OneWay, Converter={StaticResource ProgressBarVisibilityConverter}}" />
+            <ProgressBar
+                x:Name="progressBar"
+                IsIndeterminate="{Binding Progress, Mode=OneWay, Converter={StaticResource ProgressBarIndeterminateConverter}}"
+                Visibility="{Binding ProgressBarVisibility, Mode=OneWay}"
+                Value="{Binding Progress, Mode=OneWay}" />
         </InfoBar.Content>
     </InfoBar>
 </UserControl>

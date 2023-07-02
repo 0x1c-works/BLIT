@@ -1,6 +1,6 @@
-using BannerlordImageTool.Win.ViewModels.Global;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.Web.WebView2.Core;
 using System;
 using System.Linq;
 
@@ -40,13 +40,17 @@ public sealed partial class ToastPanel : UserControl
     }
 
     #region Tester
+    const string AUTO_TEST_BTN_PREFIX = "btnAutoTest";
     private void BindAllTestButtons()
     {
-        testButtons.Children.Where(c => c is Button).Cast<Button>().ToList().ForEach(b => b.Click += TestButton_Click);
+        testButtons.Children.Where(c => c is Button && (c as Button).Name.StartsWith(AUTO_TEST_BTN_PREFIX))
+            .Cast<Button>()
+            .ToList()
+            .ForEach(b => b.Click += AutoTestButtonClick);
     }
-    private void TestButton_Click(object sender, RoutedEventArgs e)
+    private void AutoTestButtonClick(object sender, RoutedEventArgs e)
     {
-        var variantName = (sender as Button).Name.Replace("btnTest", "");
+        var variantName = (sender as Button).Name.Replace(AUTO_TEST_BTN_PREFIX, "");
         if (Enum.TryParse<ToastVariant>(variantName, out var variant))
         {
             AddTestToast(variant);
@@ -62,5 +66,28 @@ public sealed partial class ToastPanel : UserControl
         };
         container.Children.Add(toast);
     }
+
+    private void btnTestTimeout_Click(object sender, RoutedEventArgs e)
+    {
+        var toast = new Toast() {
+            Title = "Timeout Test",
+            Message = "I'm gonna close in 2 seconds.",
+            IsOpen = true,
+            TimeoutSeconds = 2,
+        };
+        container.Children.Add(toast);
+    }
+
+    private void btnTestNoTimeout_Click(object sender, RoutedEventArgs e)
+    {
+        var toast = new Toast() {
+            Title = "Timeout 0s Test",
+            Message = "I'm not gonna close automatically.",
+            IsOpen = true,
+            TimeoutSeconds = 0,
+        };
+        container.Children.Add(toast);
+    }
     #endregion
 }
+
