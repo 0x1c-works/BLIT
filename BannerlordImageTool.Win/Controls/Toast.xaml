@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<UserControl
+    x:Class="BannerlordImageTool.Win.Controls.Toast"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BannerlordImageTool.Win.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <local:ToastVariantIsIconVisibleConverter x:Key="VariantIsIconVisibleConverter" />
+        <local:ToastVariantSeverityConverter x:Key="VariantSeverityConverter" />
+        <local:ToastVariantProgressBarVisibilityConverter x:Key="ProgressBarVisibilityConverter" />
+    </UserControl.Resources>
+
+    <InfoBar
+        DataContext="{x:Bind ViewModel, Mode=OneWay}"
+        IsIconVisible="{Binding Variant, Mode=OneWay, Converter={StaticResource VariantIsIconVisibleConverter}}"
+        IsOpen="{Binding IsOpen, Mode=TwoWay}"
+        Message="{Binding Message, Mode=OneWay}"
+        Severity="{Binding Variant, Mode=OneWay, Converter={StaticResource VariantSeverityConverter}}">
+        <InfoBar.Content>
+            <ProgressBar IsIndeterminate="True" Visibility="{Binding Variant, Mode=OneWay, Converter={StaticResource ProgressBarVisibilityConverter}}" />
+        </InfoBar.Content>
+    </InfoBar>
+</UserControl>
