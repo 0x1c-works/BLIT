@@ -1,5 +1,7 @@
+using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.Web.WebView2.Core;
 using System;
 using System.Linq;
@@ -69,12 +71,30 @@ public sealed partial class ToastPanel : UserControl
 
     private void btnTestTimeout_Click(object sender, RoutedEventArgs e)
     {
+        var btn = new Button() { Content = "Refresh", };
+        btn.Click += (s, e) => {
+            // FIXME: better code
+            var parent = VisualTreeHelper.GetParent(s as Button) as UIElement;
+            parent = VisualTreeHelper.GetParent(parent) as UIElement;
+            parent = VisualTreeHelper.GetParent(parent) as UIElement;
+            parent = VisualTreeHelper.GetParent(parent) as UIElement;
+            parent = VisualTreeHelper.GetParent(parent) as UIElement;
+            parent = VisualTreeHelper.GetParent(parent) as UIElement;
+            var t = parent.GetType();
+            var toast = parent as Toast;
+            if (toast != null)
+            {
+                toast.TimeoutSeconds = 2;
+            }
+        };
         var toast = new Toast() {
             Title = "Timeout Test",
             Message = "I'm gonna close in 2 seconds.",
             IsOpen = true,
             TimeoutSeconds = 2,
+            ActionButton = btn,
         };
+
         container.Children.Add(toast);
     }
 

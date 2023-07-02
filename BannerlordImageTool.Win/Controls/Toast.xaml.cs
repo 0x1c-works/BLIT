@@ -3,6 +3,7 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
+using Serilog;
 using System;
 using System.ComponentModel;
 using System.Threading;
@@ -42,6 +43,11 @@ public sealed partial class Toast : UserControl
             ViewModel.IsOpen = value;
         }
     }
+    public Button ActionButton
+    {
+        get => ViewModel.ActionButton;
+        set => ViewModel.ActionButton = value;
+    }
 
     public static readonly DependencyProperty TimeoutSecondsProperty = DependencyProperty.Register(
         nameof(TimeoutSeconds),
@@ -74,16 +80,21 @@ public sealed partial class Toast : UserControl
         }
         if (TimeoutSeconds > 0)
         {
+            var cancelToken = _cancelTimeout.Token;
             var timeRemaining = TimeoutSeconds;
             var total = TimeoutSeconds;
-            Task.Delay(TimeSpan.FromSeconds(TimeoutSeconds), _cancelTimeout.Token).ContinueWith(t => {
-                if (!IsOpen) throw new InvalidOperationException("already closed");
-                IsOpen = false;
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+            Task.Delay(TimeSpan.FromSeconds(TimeoutSeconds), cancelToken)
+                .ContinueWith(t => {
+                    if (!IsOpen) throw new InvalidOperationException("already closed");
+                    IsOpen = false;
+                },
+                cancellationToken: cancelToken,
+                continuationOptions: TaskContinuationOptions.NotOnCanceled,
+                scheduler: TaskScheduler.FromCurrentSynchronizationContext());
             Task.Run(async () => {
                 if (timeRemaining < 0) return;
                 var prevTime = DateTime.Now;
-                while (!_cancelTimeout.Token.IsCancellationRequested)
+                while (!cancelToken.IsCancellationRequested)
                 {
                     try
                     {
@@ -91,15 +102,15 @@ public sealed partial class Toast : UserControl
                         await DispatcherQueue.EnqueueAsync(() => ViewModel.Progress = progress);
                         await Task.Delay(1);
                         timeRemaining -= (DateTime.Now - prevTime).TotalSeconds;
-                        prevTime= DateTime.Now;
+                        prevTime = DateTime.Now;
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex);
+                        Log.Error("Toast countdown error: {Exception}", ex);
                         break;
                     }
                 }
-            });
+            }, cancelToken);
         }
     }
     private void EndTimeout()
@@ -150,6 +161,12 @@ public class ToastViewModel : BindableBase
     public Visibility ProgressBarVisibility
     {
         get => Progress >= 0 || Variant == ToastVariant.Progressing ? Visibility.Visible : Visibility.Collapsed;
+    }
+    private Button _actionButton;
+    public Button ActionButton
+    {
+        get => _actionButton;
+        set => SetProperty(ref _actionButton, value);
     }
 }
 public enum ToastVariant

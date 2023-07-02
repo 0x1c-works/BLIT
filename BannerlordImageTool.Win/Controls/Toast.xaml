@@ -15,6 +15,7 @@
     </UserControl.Resources>
 
     <InfoBar
+        ActionButton="{Binding ActionButton, Mode=OneWay}"
         DataContext="{x:Bind ViewModel, Mode=OneWay}"
         IsIconVisible="{Binding Variant, Mode=OneWay, Converter={StaticResource VariantIsIconVisibleConverter}}"
         IsOpen="{Binding IsOpen, Mode=TwoWay}"
