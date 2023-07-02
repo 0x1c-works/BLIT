@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using BannerlordImageTool.Win.Common;
+using BannerlordImageTool.Win.Helpers;
 using BannerlordImageTool.Win.Services;
 using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using Microsoft.UI.Xaml;

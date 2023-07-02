@@ -1,6 +1,6 @@
 ﻿using Vanara.PInvoke;
 
-namespace BannerlordImageTool.Win.Common;
+namespace BannerlordImageTool.Win.Helpers;
 
 /// <summary>
 /// A struct that represents a file type.

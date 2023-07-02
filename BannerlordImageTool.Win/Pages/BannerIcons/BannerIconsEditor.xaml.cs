@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using BannerlordImageTool.Banner;
-using BannerlordImageTool.Win.Common;
+using BannerlordImageTool.Win.Helpers;
 using BannerlordImageTool.Win.Services;
 using BannerlordImageTool.Win.Settings;
 using BannerlordImageTool.Win.ViewModels.BannerIcons;

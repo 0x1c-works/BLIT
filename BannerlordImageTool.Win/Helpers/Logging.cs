@@ -2,7 +2,7 @@
 using System.IO;
 using Windows.Storage;
 
-namespace BannerlordImageTool.Win.Common;
+namespace BannerlordImageTool.Win.Helpers;
 
 public class Logging
 {

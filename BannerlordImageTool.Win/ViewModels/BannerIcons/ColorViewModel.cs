@@ -1,5 +1,5 @@
 ﻿using BannerlordImageTool.Banner;
-using BannerlordImageTool.Win.Common;
+using BannerlordImageTool.Win.Helpers;
 using MessagePack;
 using Windows.UI;
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.UI.Xaml.Data;
 using System;
 
-namespace BannerlordImageTool.Win.Common;
+namespace BannerlordImageTool.Win.Helpers;
 
 public class InvertBoolConverter : IValueConverter
 {

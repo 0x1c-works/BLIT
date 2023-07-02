@@ -1,6 +1,6 @@
 ﻿using Microsoft.Windows.ApplicationModel.Resources;
 
-namespace BannerlordImageTool.Win.Common;
+namespace BannerlordImageTool.Win.Helpers;
 
 public class I18n
 {
