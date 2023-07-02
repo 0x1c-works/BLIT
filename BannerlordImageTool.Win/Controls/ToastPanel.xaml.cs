@@ -73,15 +73,7 @@ public sealed partial class ToastPanel : UserControl
     {
         var btn = new Button() { Content = "Refresh", };
         btn.Click += (s, e) => {
-            // FIXME: better code
-            var parent = VisualTreeHelper.GetParent(s as Button) as UIElement;
-            parent = VisualTreeHelper.GetParent(parent) as UIElement;
-            parent = VisualTreeHelper.GetParent(parent) as UIElement;
-            parent = VisualTreeHelper.GetParent(parent) as UIElement;
-            parent = VisualTreeHelper.GetParent(parent) as UIElement;
-            parent = VisualTreeHelper.GetParent(parent) as UIElement;
-            var t = parent.GetType();
-            var toast = parent as Toast;
+            var toast = (s as Button).FindAscendant<Toast>();
             if (toast != null)
             {
                 toast.TimeoutSeconds = 2;
