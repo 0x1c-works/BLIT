@@ -55,7 +55,7 @@ public sealed partial class Toast : UserControl
         nameof(TimeoutSeconds),
         typeof(double),
         typeof(Toast),
-        new PropertyMetadata(0.0));
+        new PropertyMetadata(10));
 
     private CancellationTokenSource _cancelTimeout = new();
     public double TimeoutSeconds

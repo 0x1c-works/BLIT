@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using BannerlordImageTool.Banner;
+using BannerlordImageTool.Win.Controls;
 using BannerlordImageTool.Win.Helpers;
 using BannerlordImageTool.Win.Services;
 using BannerlordImageTool.Win.Settings;
@@ -54,14 +55,6 @@ public sealed partial class BannerIconsEditor : Page
         ViewModel.OutputResolutionName = item.Tag as string;
     }
 
-    void ShowSuccessInfo(string message, Button actionButton)
-    {
-        infoExport.Message = message;
-        infoExport.Severity = InfoBarSeverity.Success;
-        infoExport.IsOpen = true;
-        infoExport.ActionButton = actionButton;
-    }
-
     void btnImport_Click(object sender, RoutedEventArgs e)
     {
 
@@ -88,7 +81,6 @@ public sealed partial class BannerIconsEditor : Page
             TextureMerger merger = new TextureMerger(GlobalSettings.Current.Banner.TextureOutputResolution);
 
             ViewModel.IsExporting = true;
-            infoExport.IsOpen = false;
             await Task.WhenAll(ViewModel.GetExportingGroups().Select(g =>
                 Task.Factory.StartNew(() => {
                     merger.Merge(outFolder.Path, g.GroupID, g.Icons.Select(icon => icon.TexturePath).ToArray());
@@ -98,17 +90,21 @@ public sealed partial class BannerIconsEditor : Page
             await ExportXML(outFolder);
             ViewModel.IsExporting = false;
 
-            var btnGo = new Button() {
-                Content = I18n.Current.GetString("ButtonOpenFolder/Content"),
-            };
-            btnGo.Click += (s, e) => Process.Start("explorer.exe", outFolder.Path);
-            ShowSuccessInfo(
-                string.Format(I18n.Current.GetString("ExportSuccess"), outFolder.Path),
-                btnGo);
+            AppServices.Get<INotificationService>().Notify(new(
+                ToastVariant.Success,
+                Message: string.Format(I18n.Current.GetString("ExportSuccess"), outFolder.Path),
+                Action: new(
+                    I18n.Current.GetString("ButtonOpenFolder/Content"),
+                    (s, e) => FileHelpers.OpenFolderInExplorer(outFolder.Path))));
         }
         catch (Exception ex)
         {
-            //await new MessageDialog(ex.Message, "Error").ShowAsync();
+            AppServices.Get<INotificationService>().Notify(new(
+                ToastVariant.Error,
+                Message: ex.Message,
+                Title: string.Format(
+                    I18n.Current.GetString("ErrorWhen"),
+                    I18n.Current.GetString("OperationExporting"))));
         }
     }
     private async void btnExportXML_Click(object sender, RoutedEventArgs e)
@@ -118,42 +114,38 @@ public sealed partial class BannerIconsEditor : Page
             var outDir = await ExportXML(null);
             if (outDir is not null)
             {
-                var btnGo = new Button() {
-                    Content = I18n.Current.GetString("Open"),
-                };
-                btnGo.Click += (s, e) => Process.Start("explorer.exe", outDir);
-                ShowSuccessInfo(string.Format(I18n.Current.GetString("SaveXMLSuccess"),
-                                              Path.Join(outDir, "banner_icons.xml")),
-                                btnGo);
+                AppServices.Get<INotificationService>().Notify(new(
+                    ToastVariant.Success,
+                    Message: string.Format(I18n.Current.GetString("SaveXMLSuccess"), Path.Join(outDir, "banner_icons.xml")),
+                    Action: new(
+                        I18n.Current.GetString("ButtonOpenFolder/Content"),
+                        (s, e) => FileHelpers.OpenFolderInExplorer(outDir))));
             }
         }
         catch (Exception ex)
         {
-            // TODO: error toast
+            AppServices.Get<INotificationService>().Notify(new(
+                ToastVariant.Error,
+                Message: ex.Message,
+                Title: string.Format(
+                    I18n.Current.GetString("ErrorWhen"),
+                    I18n.Current.GetString("OperationExporting"))));
         }
     }
 
     async Task<string> ExportXML(StorageFolder outFolder)
     {
-        try
+        if (outFolder is null)
         {
-            if (outFolder is null)
-            {
-                outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
-            }
-            if (outFolder is not null)
-            {
-                ViewModel.ToBannerIconData().SaveToXml(outFolder.Path);
-                SpriteOrganizer.GenerateConfigXML(outFolder.Path, ViewModel.ToIconSprites());
-                return outFolder.Path;
-            }
-            return null;
+            outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
         }
-        catch (Exception ex)
+        if (outFolder is not null)
         {
-            // TODO: error toast
-            return null;
+            ViewModel.ToBannerIconData().SaveToXml(outFolder.Path);
+            SpriteOrganizer.GenerateConfigXML(outFolder.Path, ViewModel.ToIconSprites());
+            return outFolder.Path;
         }
+        return null;
     }
 
     private async void btnDeleteGroup_Click(object sender, RoutedEventArgs e)
