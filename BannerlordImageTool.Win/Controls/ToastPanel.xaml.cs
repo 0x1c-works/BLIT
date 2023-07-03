@@ -2,6 +2,7 @@ using BannerlordImageTool.Win.Services;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Serilog;
 using System;
 using System.Linq;
 
@@ -12,7 +13,7 @@ namespace BannerlordImageTool.Win.Controls;
 
 public sealed partial class ToastPanel : UserControl
 {
-    private Visibility DEBUG_BUTTONS_VISIBILITIES = Visibility.Collapsed;
+    private Visibility DebugButtonVisibility { get; } = Visibility.Collapsed;
     public ToastPanel()
     {
         this.InitializeComponent();

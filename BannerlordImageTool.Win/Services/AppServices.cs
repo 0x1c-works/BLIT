@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace BannerlordImageTool.Win.Services;
@@ -7,11 +9,11 @@ public class AppServices
 {
     public static IServiceProvider Configure()
     {
-        var service = new ServiceCollection();
-        service.AddSingleton<IFileDialogService, FileDialogService>();
-        service.AddSingleton<IConfirmDialogService, ConfirmDialogService>();
-        service.AddSingleton<INotificationService, NotificationService>();
-        return service.BuildServiceProvider();
+        var builder = new ContainerBuilder();
+        builder.RegisterType<FileDialogService>().AsImplementedInterfaces();
+        builder.RegisterType<ConfirmDialogService>().AsImplementedInterfaces();
+        builder.RegisterType<NotificationService>().AsImplementedInterfaces();
+        return new AutofacServiceProvider(builder.Build());
     }
 
     public static T Get<T>() => App.Current.Services.GetService<T>();

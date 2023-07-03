@@ -28,7 +28,7 @@
         <StackPanel
             x:Name="debugButtons"
             Canvas.Top="400"
-            Visibility="{x:Bind DEBUG_BUTTONS_VISIBILITIES}">
+            Visibility="{x:Bind DebugButtonVisibility}">
             <Button x:Name="btnAutoTestInfo" Content="info+1" />
             <Button x:Name="btnAutoTestWarning" Content="warn+1" />
             <Button x:Name="btnAutoTestError" Content="err+1" />
