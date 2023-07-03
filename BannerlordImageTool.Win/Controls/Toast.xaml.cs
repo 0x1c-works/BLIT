@@ -16,7 +16,9 @@ namespace BannerlordImageTool.Win.Controls;
 
 public sealed partial class Toast : UserControl
 {
+    const double TIMER_INTERVAL = 0.01;
     ToastViewModel ViewModel { get; } = new ToastViewModel();
+    PeriodicTimer _countdownTimer = new(TimeSpan.FromSeconds(TIMER_INTERVAL));
 
     public ToastVariant Variant
     {
@@ -81,8 +83,7 @@ public sealed partial class Toast : UserControl
         if (TimeoutSeconds > 0)
         {
             var cancelToken = _cancelTimeout.Token;
-            var timeRemaining = TimeoutSeconds;
-            var total = TimeoutSeconds;
+            // close the toast after timeout
             Task.Delay(TimeSpan.FromSeconds(TimeoutSeconds), cancelToken)
                 .ContinueWith(t => {
                     if (!IsOpen) throw new InvalidOperationException("already closed");
@@ -91,18 +92,26 @@ public sealed partial class Toast : UserControl
                 cancellationToken: cancelToken,
                 continuationOptions: TaskContinuationOptions.NotOnCanceled,
                 scheduler: TaskScheduler.FromCurrentSynchronizationContext());
+
+            // update the toast's progress bar during the countdown
+            var timeRemaining = TimeoutSeconds;
+            var total = TimeoutSeconds;
             Task.Run(async () => {
                 if (timeRemaining < 0) return;
+                var UpdateProgress = new Func<double, Task>(async (t) => {
+                    var progress = t / total * 100;
+                    await DispatcherQueue.EnqueueAsync(() => ViewModel.Progress = progress);
+                });
+                await UpdateProgress(timeRemaining);
                 var prevTime = DateTime.Now;
-                while (!cancelToken.IsCancellationRequested)
+                while (!cancelToken.IsCancellationRequested && await _countdownTimer.WaitForNextTickAsync(cancelToken))
                 {
                     try
                     {
-                        var progress = Math.Max(0, timeRemaining / total * 100);
-                        await DispatcherQueue.EnqueueAsync(() => ViewModel.Progress = progress);
-                        await Task.Delay(1);
-                        timeRemaining -= (DateTime.Now - prevTime).TotalSeconds;
-                        prevTime = DateTime.Now;
+                        var newTime = DateTime.Now;
+                        timeRemaining -= (newTime - prevTime).TotalSeconds;
+                        prevTime = newTime;
+                        await UpdateProgress(timeRemaining);
                     }
                     catch (Exception ex)
                     {
