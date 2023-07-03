@@ -6,7 +6,7 @@ using System.Threading;
 using Vanara.PInvoke;
 using WinRT.Interop;
 
-namespace BannerlordImageTool.Win.Common;
+namespace BannerlordImageTool.Win.Helpers;
 
 public static class NativeHelpers
 {

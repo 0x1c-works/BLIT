@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using BannerlordImageTool.Win.Common;
+using BannerlordImageTool.Win.Helpers;
 using BannerlordImageTool.Win.Services;
 using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using Microsoft.UI.Xaml;
@@ -39,7 +39,7 @@ public sealed partial class BannerIconGroupEditor : UserControl
     private async void btnDeleteSelectedTextures_Click(object sender, RoutedEventArgs e)
     {
         if (!ViewModel.HasSelection) return;
-        var result = await AppService.Get<IConfirmDialogService>().ShowDanger(
+        var result = await AppServices.Get<IConfirmDialogService>().ShowDanger(
             this,
             I18n.Current.GetString("DialogDeleteBannerIcon/Title"),
             string.Format(I18n.Current.GetString("DialogDeleteBannerIcon/Content"), ViewModel.AllSelection.Count()));
@@ -51,7 +51,7 @@ public sealed partial class BannerIconGroupEditor : UserControl
 
     async void btnOpenTextures_Click(object sender, RoutedEventArgs e)
     {
-        var files = await AppService.Get<IFileDialogService>().OpenFiles(GUID_TEXTURE_DIALOG, new[] { CommonFileTypes.Png });
+        var files = await AppServices.Get<IFileDialogService>().OpenFiles(GUID_TEXTURE_DIALOG, new[] { CommonFileTypes.Png });
 
         if (files.Count == 0) return;
         ViewModel.AddIcons(files);
@@ -78,7 +78,7 @@ public sealed partial class BannerIconGroupEditor : UserControl
 
     private async void btnSelectSprite_Click(object sender, RoutedEventArgs e)
     {
-        var file = await AppService.Get<IFileDialogService>().OpenFile(GUID_SPRITE_DIALOG,
+        var file = await AppServices.Get<IFileDialogService>().OpenFile(GUID_SPRITE_DIALOG,
                                                                        ViewModel.SingleSelection.SpritePath,
                                                                        new[] { CommonFileTypes.Png });
         if (file is null || ViewModel.SingleSelection is null) return;
@@ -87,7 +87,7 @@ public sealed partial class BannerIconGroupEditor : UserControl
 
     private async void btnSelectTexture_Click(object sender, RoutedEventArgs e)
     {
-        var file = await AppService.Get<IFileDialogService>().OpenFile(GUID_TEXTURE_DIALOG,
+        var file = await AppServices.Get<IFileDialogService>().OpenFile(GUID_TEXTURE_DIALOG,
                                                                        ViewModel.SingleSelection.TexturePath,
                                                                        new[] { CommonFileTypes.Png });
         if (file is null || ViewModel.SingleSelection is null) return;

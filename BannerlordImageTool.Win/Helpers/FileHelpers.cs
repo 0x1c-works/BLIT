@@ -1,6 +1,8 @@
-﻿using Vanara.PInvoke;
+﻿using System.Diagnostics;
+using System.IO;
+using Vanara.PInvoke;
 
-namespace BannerlordImageTool.Win.Common;
+namespace BannerlordImageTool.Win.Helpers;
 
 /// <summary>
 /// A struct that represents a file type.
@@ -16,7 +18,6 @@ public record struct FileType(string DisplayName, string Extension)
         return new Shell32.COMDLG_FILTERSPEC() { pszName = DisplayName, pszSpec = $"*.{Extension}" };
     }
 }
-
 public static class CommonFileTypes
 {
     // App
@@ -24,4 +25,15 @@ public static class CommonFileTypes
 
     // Images
     public static readonly FileType Png = new("PNG Images", "png");
+}
+public static class FileHelpers
+{
+    public static void OpenFolderInExplorer(string path)
+    {
+        if (!File.GetAttributes(path).HasFlag(FileAttributes.Directory))
+        {
+            path = Path.GetDirectoryName(path);
+        }
+        Process.Start("explorer.exe", path);
+    }
 }

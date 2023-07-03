@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using BannerlordImageTool.Win.Common;
+using BannerlordImageTool.Win.Helpers;
 using BannerlordImageTool.Win.Services;
 using BannerlordImageTool.Win.Settings;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.ApplicationModel.Resources;
+using Serilog;
 using System;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -34,7 +35,9 @@ namespace BannerlordImageTool.Win
         {
             this.InitializeComponent();
             Logging.Initialize();
-            Services = AppService.Configure();
+            Services = AppServices.Configure();
+
+            Log.Information("Bannerlord Image Tool started.");
         }
 
         /// <summary>

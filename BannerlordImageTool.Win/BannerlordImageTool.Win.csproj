@@ -14,6 +14,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\empty-asset.png" />
+    <None Remove="Controls\Toast.xaml" />
+    <None Remove="Controls\ToastPanel.xaml" />
     <None Remove="Pages\BannerIcons\BannerColorsEditor.xaml" />
     <None Remove="Pages\BannerIcons\BannerIconGroupEditor.xaml" />
     <None Remove="Pages\BannerTexMergerPage.xaml" />
@@ -45,6 +47,7 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
     <PackageReference Include="Serilog" Version="2.12.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.4.15" />
     <Manifest Include="$(ApplicationManifest)" />
@@ -60,6 +63,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BannerlordImageTool.Banner\BannerlordImageTool.Banner.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\ToastPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\BannerIcons\BannerColorsEditor.xaml">
@@ -88,6 +96,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Settings\BannerSpriteScanFoldersEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\Toast.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

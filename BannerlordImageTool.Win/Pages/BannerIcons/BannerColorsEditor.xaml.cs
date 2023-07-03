@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using BannerlordImageTool.Win.Common;
+using BannerlordImageTool.Win.Helpers;
 using BannerlordImageTool.Win.Services;
 using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using CommunityToolkit.WinUI.UI.Controls;
@@ -39,7 +39,7 @@ public sealed partial class BannerColorsEditor : UserControl
     {
         var tag = (sender as Button)?.Tag;
         if (tag is null || tag is not ColorViewModel vm) return;
-        var dialog = AppService.Get<IConfirmDialogService>().Create(this);
+        var dialog = AppServices.Get<IConfirmDialogService>().Create(this);
         dialog.Title = I18n.Current.GetString("DialogSelectColor/Title");
         dialog.PrimaryButtonText = I18n.Current.GetString("ButtonOK/Content");
         dialog.SecondaryButtonText = I18n.Current.GetString("ButtonCancel/Content");
@@ -82,7 +82,7 @@ public sealed partial class BannerColorsEditor : UserControl
     {
         var selection = editorViewModel.Selection;
         if (!selection.Any()) return;
-        if (await AppService.Get<IConfirmDialogService>().ShowDanger(
+        if (await AppServices.Get<IConfirmDialogService>().ShowDanger(
             this,
             I18n.Current.GetString("DialogDeleteColor/Title"),
             string.Format(I18n.Current.GetString("DialogDeleteColor/Content"), selection.Count()))

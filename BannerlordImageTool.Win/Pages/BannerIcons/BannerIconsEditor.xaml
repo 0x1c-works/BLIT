@@ -1,17 +1,17 @@
-<!-- Copyright (c) Microsoft Corporation and Contributors. -->
-<!-- Licensed under the MIT License. -->
+<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+<!--  Licensed under the MIT License.  -->
 
 <Page
     x:Class="BannerlordImageTool.Win.Pages.BannerIcons.BannerIconsEditor"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BannerlordImageTool.Win.Pages.BannerIcons"
-    xmlns:vm="using:BannerlordImageTool.Win.ViewModels.BannerIcons"
-    xmlns:common="using:BannerlordImageTool.Win.Common"
+    xmlns:common="using:BannerlordImageTool.Win.Helpers"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BannerlordImageTool.Win.Pages.BannerIcons"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    xmlns:vm="using:BannerlordImageTool.Win.ViewModels.BannerIcons"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="GroupItemTemplate" x:DataType="vm:GroupViewModel">
             <Grid>
@@ -19,15 +19,15 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind GroupID, Mode=OneWay}" x:Phase="1" />
-                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                <TextBlock x:Phase="1" Text="{x:Bind GroupID, Mode=OneWay}" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <StackPanel.Resources>
                         <Style TargetType="TextBlock">
                             <Setter Property="Foreground" Value="{ThemeResource TextFillColorTertiaryBrush}" />
                         </Style>
                     </StackPanel.Resources>
                     <TextBlock>(</TextBlock>
-                    <TextBlock Text="{x:Bind Icons.Count, Mode=OneWay}" x:Phase="1"/>
+                    <TextBlock x:Phase="1" Text="{x:Bind Icons.Count, Mode=OneWay}" />
                     <TextBlock>)</TextBlock>
                 </StackPanel>
             </Grid>
@@ -36,67 +36,101 @@
     </Page.Resources>
     <Grid Margin="0,24,0,0" Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <!--Top bar-->
-        <StackPanel x:Name="Toolbar" Orientation="Horizontal" Spacing="4"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-            <AppBarButton x:Uid="AppButtonNewProject" x:Name="btnNewProject" Icon="NewFolder" VerticalAlignment="Center"
-                          Click="btnNewProject_Click" 
-                          IsEnabled="{x:Bind ViewModel.IsSavingOrLoading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
+        <!--  Top bar  -->
+        <StackPanel
+            x:Name="Toolbar"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            Orientation="Horizontal"
+            Spacing="4">
+            <AppBarButton
+                x:Name="btnNewProject"
+                x:Uid="AppButtonNewProject"
+                VerticalAlignment="Center"
+                Click="btnNewProject_Click"
+                Icon="NewFolder"
+                IsEnabled="{x:Bind ViewModel.IsSavingOrLoading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="N" Modifiers="Control" />
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
-            <AppBarButton x:Uid="AppButtonSaveProject" x:Name="btnSaveProject" Icon="Save" VerticalAlignment="Center"
-                          Click="btnSaveProject_Click" 
-                          IsEnabled="{x:Bind ViewModel.IsSavingOrLoading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
+            <AppBarButton
+                x:Name="btnSaveProject"
+                x:Uid="AppButtonSaveProject"
+                VerticalAlignment="Center"
+                Click="btnSaveProject_Click"
+                Icon="Save"
+                IsEnabled="{x:Bind ViewModel.IsSavingOrLoading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="S" Modifiers="Control" />
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
-            <AppBarButton x:Uid="AppButtonSaveProjectAs" x:Name="btnSaveProjectAs" Icon="SaveLocal" VerticalAlignment="Center"
-                          Click="btnSaveProjectAs_Click"  
-                          IsEnabled="{x:Bind ViewModel.IsSavingOrLoading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
+            <AppBarButton
+                x:Name="btnSaveProjectAs"
+                x:Uid="AppButtonSaveProjectAs"
+                VerticalAlignment="Center"
+                Click="btnSaveProjectAs_Click"
+                Icon="SaveLocal"
+                IsEnabled="{x:Bind ViewModel.IsSavingOrLoading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="S" Modifiers="Shift,Control" />
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
-            <AppBarButton x:Uid="AppButtonOpenProject" x:Name="btnOpenProject" Icon="OpenFile" VerticalAlignment="Center"
-                          Click="btnOpenProject_Click"  
-                          IsEnabled="{x:Bind ViewModel.IsSavingOrLoading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
+            <AppBarButton
+                x:Name="btnOpenProject"
+                x:Uid="AppButtonOpenProject"
+                VerticalAlignment="Center"
+                Click="btnOpenProject_Click"
+                Icon="OpenFile"
+                IsEnabled="{x:Bind ViewModel.IsSavingOrLoading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="O" Modifiers="Control" />
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
 
-            <AppBarSeparator Margin="8,0"/>
-            <TextBlock x:Uid="LabelTextureResolution" VerticalAlignment="Center" Margin="8,0"/>
-            <DropDownButton x:Name="dropdownOutputResolution" 
-                            Content="{x:Bind ViewModel.OutputResolutionName,Mode=OneWay}" 
-                            VerticalAlignment="Center" >
+            <AppBarSeparator Margin="8,0" />
+            <TextBlock
+                x:Uid="LabelTextureResolution"
+                Margin="8,0"
+                VerticalAlignment="Center" />
+            <DropDownButton
+                x:Name="dropdownOutputResolution"
+                VerticalAlignment="Center"
+                Content="{x:Bind ViewModel.OutputResolutionName, Mode=OneWay}">
                 <DropDownButton.Flyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Tag="Res2K" Click="ResolutionOption_Click">2K</MenuFlyoutItem>
-                        <MenuFlyoutItem Tag="Res4K" Click="ResolutionOption_Click">4K</MenuFlyoutItem>
+                        <MenuFlyoutItem Click="ResolutionOption_Click" Tag="Res2K">2K</MenuFlyoutItem>
+                        <MenuFlyoutItem Click="ResolutionOption_Click" Tag="Res4K">4K</MenuFlyoutItem>
                     </MenuFlyout>
                 </DropDownButton.Flyout>
             </DropDownButton>
-            <AppBarSeparator Margin="8,0"/>
-            <!--WIP-->
+            <AppBarSeparator Margin="8,0" />
+            <!--  WIP  -->
             <!--<AppBarButton x:Uid="AppButtonImport" x:Name="btnImport" Icon="Import"  VerticalAlignment="Center"
                           Click="btnImport_Click"/>-->
-            <AppBarButton x:Uid="AppButtonExportAll" x:Name="btnExportAll" Icon="Directions"  VerticalAlignment="Center"
-                          Click="btnExportAll_Click" KeyboardAcceleratorPlacementMode="Auto"
-                          IsEnabled="{x:Bind ViewModel.CanExport,Mode=OneWay}">
+            <AppBarButton
+                x:Name="btnExportAll"
+                x:Uid="AppButtonExportAll"
+                VerticalAlignment="Center"
+                Click="btnExportAll_Click"
+                Icon="Directions"
+                IsEnabled="{x:Bind ViewModel.CanExport, Mode=OneWay}"
+                KeyboardAcceleratorPlacementMode="Auto">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="E" />
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
-            <AppBarButton x:Uid="AppButtonExportXML" x:Name="btnExportXML" Icon="SaveLocal"  VerticalAlignment="Center"
-                          Click="btnExportXML_Click" KeyboardAcceleratorPlacementMode="Auto"
-                          IsEnabled="{x:Bind ViewModel.CanExport,Mode=OneWay}" Label="Save XML">
+            <AppBarButton
+                x:Name="btnExportXML"
+                x:Uid="AppButtonExportXML"
+                VerticalAlignment="Center"
+                Click="btnExportXML_Click"
+                Icon="SaveLocal"
+                IsEnabled="{x:Bind ViewModel.CanExport, Mode=OneWay}"
+                KeyboardAcceleratorPlacementMode="Auto"
+                Label="Save XML">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="X" />
                 </AppBarButton.KeyboardAccelerators>
@@ -105,14 +139,19 @@
 
         <Pivot Grid.Row="1">
             <PivotItem x:Uid="PivotBannerGroupsEditor">
-                <!--Icon Group Editor-->
-                <SplitView IsPaneOpen="True" DisplayMode="Inline"
-                   OpenPaneLength="300" >
+                <!--  Icon Group Editor  -->
+                <SplitView
+                    DisplayMode="Inline"
+                    IsPaneOpen="True"
+                    OpenPaneLength="300">
                     <SplitView.PaneBackground>
-                        <AcrylicBrush Opacity=".1" TintColor="DarkCyan" 
-                              TintOpacity=".2" TintLuminosityOpacity=".5"/>
+                        <AcrylicBrush
+                            Opacity=".1"
+                            TintColor="DarkCyan"
+                            TintLuminosityOpacity=".5"
+                            TintOpacity=".2" />
                     </SplitView.PaneBackground>
-                    <!--Group List-->
+                    <!--  Group List  -->
                     <SplitView.Pane>
                         <Grid>
                             <Grid.RowDefinitions>
@@ -121,50 +160,52 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <Border Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" Padding="16">
-                                <TextBlock x:Uid="TextBannerGroupListTitle" FontWeight="Bold" Padding="0,8" TextAlignment="Center"/>
+                            <Border Padding="16" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+                                <TextBlock
+                                    x:Uid="TextBannerGroupListTitle"
+                                    Padding="0,8"
+                                    FontWeight="Bold"
+                                    TextAlignment="Center" />
                             </Border>
                             <StackPanel Grid.Row="1" Orientation="Horizontal">
-                                <AppBarButton x:Name="btnAddGroup" Icon="Add" Label="New Group" LabelPosition="Collapsed" Click="btnAddGroup_Click"/>
-                                <AppBarButton x:Name="btnDeleteGroup" Icon="Delete" Label="Delete Group" LabelPosition="Collapsed" 
-                                      Click="btnDeleteGroup_Click" IsEnabled="{x:Bind ViewModel.HasSelectedGroup,Mode=OneWay}"/>
+                                <AppBarButton
+                                    x:Name="btnAddGroup"
+                                    Click="btnAddGroup_Click"
+                                    Icon="Add"
+                                    Label="New Group"
+                                    LabelPosition="Collapsed" />
+                                <AppBarButton
+                                    x:Name="btnDeleteGroup"
+                                    Click="btnDeleteGroup_Click"
+                                    Icon="Delete"
+                                    IsEnabled="{x:Bind ViewModel.HasSelectedGroup, Mode=OneWay}"
+                                    Label="Delete Group"
+                                    LabelPosition="Collapsed" />
                             </StackPanel>
-                            <ListView Grid.Row="2" x:Name="listViewGroups"
-                              ItemsSource="{x:Bind ViewModel.Groups,Mode=OneWay}"
-                              ItemTemplate="{StaticResource GroupItemTemplate}"
-                              IsItemClickEnabled="True"
-                              ItemClick="listViewGroups_ItemClick"
-                              Background="{ThemeResource CardStrokeColorDefaultBrush}"
-                              >
-                            </ListView>
+                            <ListView
+                                x:Name="listViewGroups"
+                                Grid.Row="2"
+                                Background="{ThemeResource CardStrokeColorDefaultBrush}"
+                                IsItemClickEnabled="True"
+                                ItemClick="listViewGroups_ItemClick"
+                                ItemTemplate="{StaticResource GroupItemTemplate}"
+                                ItemsSource="{x:Bind ViewModel.Groups, Mode=OneWay}" />
                         </Grid>
                     </SplitView.Pane>
 
-                    <!--Pane Content-->
+                    <!--  Pane Content  -->
                     <Grid>
-                        <local:BannerIconGroupEditor ViewModel="{x:Bind ViewModel.SelectedGroup, Mode=OneWay}" 
-                                         Visibility="{x:Bind ViewModel.HasSelectedGroup, Mode=OneWay}"/>
-                        <TextBlock x:Uid="TextNoSelectedBannerGroup" Visibility="{x:Bind ViewModel.ShowEmptyHint, Mode=OneWay}" Padding="16" />
+                        <local:BannerIconGroupEditor ViewModel="{x:Bind ViewModel.SelectedGroup, Mode=OneWay}" Visibility="{x:Bind ViewModel.HasSelectedGroup, Mode=OneWay}" />
+                        <TextBlock
+                            x:Uid="TextNoSelectedBannerGroup"
+                            Padding="16"
+                            Visibility="{x:Bind ViewModel.ShowEmptyHint, Mode=OneWay}" />
                     </Grid>
                 </SplitView>
             </PivotItem>
             <PivotItem x:Uid="PivotBannerColorsEditor">
-                <local:BannerColorsEditor DataViewModel="{x:Bind ViewModel,Mode=OneWay}"/>
+                <local:BannerColorsEditor DataViewModel="{x:Bind ViewModel, Mode=OneWay}" />
             </PivotItem>
         </Pivot>
-
-        <!--Floating Toasts-->
-        <StackPanel Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Top" IsTabStop="False">
-            <InfoBar IsIconVisible="False" IsOpen="{x:Bind ViewModel.IsExporting, Mode=OneWay}" IsClosable="False">
-                <InfoBar.Content>
-                    <StackPanel Orientation="Horizontal" Padding="8,8,32,8">
-                        <ProgressRing VerticalAlignment="Center"/>
-                        <TextBlock x:Uid="TextExporting" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </InfoBar.Content>
-            </InfoBar>
-            <InfoBar x:Name="infoExport" x:Uid="InfoBarExport" IsOpen="False" IsClosable="True" />
-        </StackPanel>
-
     </Grid>
 </Page>

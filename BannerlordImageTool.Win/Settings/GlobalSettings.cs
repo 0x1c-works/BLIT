@@ -1,4 +1,4 @@
-﻿using BannerlordImageTool.Win.Common;
+﻿using BannerlordImageTool.Win.Helpers;
 using Windows.Storage;
 
 namespace BannerlordImageTool.Win.Settings;

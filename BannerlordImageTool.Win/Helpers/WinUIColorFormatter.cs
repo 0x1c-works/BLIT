@@ -2,7 +2,7 @@
 using MessagePack.Formatters;
 using Windows.UI;
 
-namespace BannerlordImageTool.Win.Common;
+namespace BannerlordImageTool.Win.Helpers;
 
 public class WinUIColorFormatter : IMessagePackFormatter<Color>
 {
