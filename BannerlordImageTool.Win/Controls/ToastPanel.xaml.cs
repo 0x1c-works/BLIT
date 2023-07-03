@@ -1,3 +1,4 @@
+using BannerlordImageTool.Win.Services;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -17,8 +18,14 @@ public sealed partial class ToastPanel : UserControl
     {
         this.InitializeComponent();
         BindAllTestButtons();
-
+        AppServices.Get<INotificationService>().OnNotify += NotificationService_OnNotify;
     }
+
+    private void NotificationService_OnNotify(Notification notification)
+    {
+        AddToast(notification);
+    }
+
     private void rootCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         UpdateContainerPosition();
@@ -32,11 +39,22 @@ public sealed partial class ToastPanel : UserControl
         Canvas.SetLeft(container, rootCanvas.ActualWidth - container.ActualWidth);
         Canvas.SetTop(container, rootCanvas.ActualHeight - container.ActualHeight);
     }
-    private void AddToast()
+    private void AddToast(Notification notification)
     {
+        Button actionButton = null;
+        if (notification.Action.HasValue)
+        {
+            actionButton = new Button() {
+                Content = notification.Action.Value.Text,
+            };
+            actionButton.Click += (s, e) => notification.Action.Value.OnClick(s as Button, e);
+        }
         var toast = new Toast() {
-            Message = $"Heyhey {DateTime.Now.ToLongTimeString()}",
+            Message = notification.Message,
+            Title = notification.Title,
+            Variant = notification.Variant,
             IsOpen = true,
+            ActionButton = actionButton,
         };
         container.Children.Add(toast);
     }

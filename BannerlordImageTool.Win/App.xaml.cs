@@ -34,7 +34,7 @@ namespace BannerlordImageTool.Win
         {
             this.InitializeComponent();
             Logging.Initialize();
-            Services = AppService.Configure();
+            Services = AppServices.Configure();
         }
 
         /// <summary>

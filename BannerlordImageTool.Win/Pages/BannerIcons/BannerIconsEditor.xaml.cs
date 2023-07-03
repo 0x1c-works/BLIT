@@ -82,7 +82,7 @@ public sealed partial class BannerIconsEditor : Page
         if (ViewModel.IsExporting) return;
         try
         {
-            var outFolder = await AppService.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
+            var outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
             if (outFolder == null) return;
 
             TextureMerger merger = new TextureMerger(GlobalSettings.Current.Banner.TextureOutputResolution);
@@ -139,7 +139,7 @@ public sealed partial class BannerIconsEditor : Page
         {
             if (outFolder is null)
             {
-                outFolder = await AppService.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
+                outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
             }
             if (outFolder is not null)
             {
@@ -159,7 +159,7 @@ public sealed partial class BannerIconsEditor : Page
     private async void btnDeleteGroup_Click(object sender, RoutedEventArgs e)
     {
         if (ViewModel.SelectedGroup is null) return;
-        var result = await AppService.Get<IConfirmDialogService>().ShowDanger(
+        var result = await AppServices.Get<IConfirmDialogService>().ShowDanger(
             this,
             I18n.Current.GetString("DialogDeleteBannerGroup/Title"),
             string.Format(I18n.Current.GetString("DialogDeleteBannerGroup/Content"), ViewModel.SelectedGroup.GroupID));
@@ -180,7 +180,7 @@ public sealed partial class BannerIconsEditor : Page
 
     private async void btnOpenProject_Click(object sender, RoutedEventArgs e)
     {
-        var file = await AppService.Get<IFileDialogService>().OpenFile(GUID_PROJECT_DIALOG, new[] { CommonFileTypes.BannerIconsProject });
+        var file = await AppServices.Get<IFileDialogService>().OpenFile(GUID_PROJECT_DIALOG, new[] { CommonFileTypes.BannerIconsProject });
         if (file is null) return;
         await ViewModel.Load(file);
     }
@@ -195,7 +195,7 @@ public sealed partial class BannerIconsEditor : Page
         string filePath = ViewModel.CurrentFile?.Path;
         if (force || string.IsNullOrEmpty(filePath))
         {
-            filePath = AppService.Get<IFileDialogService>().SaveFile(GUID_PROJECT_DIALOG,
+            filePath = AppServices.Get<IFileDialogService>().SaveFile(GUID_PROJECT_DIALOG,
                                                                      new[] { CommonFileTypes.BannerIconsProject },
                                                                      "banner_icons",
                                                                      filePath);
