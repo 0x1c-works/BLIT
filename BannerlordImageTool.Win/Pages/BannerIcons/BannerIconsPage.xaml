@@ -2,18 +2,18 @@
 <!--  Licensed under the MIT License.  -->
 
 <Page
-    x:Class="BannerlordImageTool.Win.Pages.BannerIcons.BannerIconsEditor"
+    x:Class="BannerlordImageTool.Win.Pages.BannerIcons.BannerIconsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:common="using:BannerlordImageTool.Win.Helpers"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BannerlordImageTool.Win.Pages.BannerIcons"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="using:BannerlordImageTool.Win.ViewModels.BannerIcons"
+    xmlns:vm="using:BannerlordImageTool.Win.Pages.BannerIcons.ViewModels"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:Key="GroupItemTemplate" x:DataType="vm:GroupViewModel">
+        <DataTemplate x:Key="GroupItemTemplate" x:DataType="vm:BannerGroupViewModel">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -204,7 +204,7 @@
                 </SplitView>
             </PivotItem>
             <PivotItem x:Uid="PivotBannerColorsEditor">
-                <local:BannerColorsEditor DataViewModel="{x:Bind ViewModel, Mode=OneWay}" />
+                <local:BannerColorsEditor PageViewModel="{x:Bind ViewModel, Mode=OneWay}" />
             </PivotItem>
         </Pivot>
     </Grid>

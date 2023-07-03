@@ -16,8 +16,6 @@
     <None Remove="Assets\empty-asset.png" />
     <None Remove="Controls\Toast.xaml" />
     <None Remove="Controls\ToastPanel.xaml" />
-    <None Remove="Pages\BannerIcons\BannerColorsEditor.xaml" />
-    <None Remove="Pages\BannerIcons\BannerIconGroupEditor.xaml" />
     <None Remove="Pages\BannerTexMergerPage.xaml" />
     <None Remove="Pages\SettingsPage.xaml" />
     <None Remove="Pages\Settings\BannerSpriteScanFoldersEditor.xaml" />
@@ -105,6 +103,10 @@
     <Page Update="Controls\Toast.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Pages\BannerIcons\Controls\" />
+    <Folder Include="ViewModels\BannerIcons\" />
   </ItemGroup>
 
   <!-- 

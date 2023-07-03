@@ -72,7 +72,7 @@ public sealed partial class MainWindow : ThemedWindow
     }
 
     static readonly Dictionary<string, Type> TAGGED_PAGES = new() {
-        {"BannerIcons",typeof(BannerIconsEditor) },
+        {"BannerIcons",typeof(BannerIconsPage) },
     };
 
     public class ViewModel : INotifyPropertyChanged

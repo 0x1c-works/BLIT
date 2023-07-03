@@ -3,9 +3,9 @@ using BannerlordImageTool.Win.Helpers;
 using MessagePack;
 using Windows.UI;
 
-namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
+namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 
-public class ColorViewModel : BindableBase
+public class BannerColorViewModel : BindableBase
 {
     private int _id;
     private Color _color;
@@ -66,7 +66,7 @@ public class ColorViewModel : BindableBase
         [Key(3)]
         public bool IsForBackground;
 
-        public SaveData(ColorViewModel vm)
+        public SaveData(BannerColorViewModel vm)
         {
             ID = vm.ID;
             Color = vm.Color;
@@ -74,9 +74,9 @@ public class ColorViewModel : BindableBase
             IsForBackground = vm.IsForBackground;
         }
         public SaveData() { }
-        public ColorViewModel Load()
+        public BannerColorViewModel Load()
         {
-            return new ColorViewModel() {
+            return new BannerColorViewModel() {
                 ID = ID,
                 Color = Color,
                 IsForSigil = IsForSigil,

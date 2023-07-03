@@ -1,16 +1,15 @@
 ﻿using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Helpers;
 using BannerlordImageTool.Win.Services;
-using BannerlordImageTool.Win.Settings;
 using MessagePack;
 using System.ComponentModel;
 using System.IO;
 
-namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
-public class IconViewModel : BindableBase
+namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
+public class BannerIconViewModel : BindableBase
 {
     private readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
-    private GroupViewModel _groupViewModel;
+    private BannerGroupViewModel _groupViewModel;
     private string _texturePath;
     private string _spritePath;
     private int _cellIndex;
@@ -63,7 +62,7 @@ public class IconViewModel : BindableBase
     public bool IsSelected { get; set; }
     public bool IsValid { get => !string.IsNullOrEmpty(TexturePath) && AtlasIndex >= 0; }
 
-    public IconViewModel(GroupViewModel groupVm, string texturePath)
+    public BannerIconViewModel(BannerGroupViewModel groupVm, string texturePath)
     {
         _groupViewModel = groupVm;
         _texturePath = texturePath;
@@ -73,7 +72,7 @@ public class IconViewModel : BindableBase
 
     private void _viewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(GroupViewModel.GroupName))
+        if (e.PropertyName == nameof(BannerGroupViewModel.GroupName))
         {
             OnPropertyChanged(nameof(AtlasName));
             OnPropertyChanged(nameof(ID));
@@ -120,7 +119,7 @@ public class IconViewModel : BindableBase
         [Key(2)]
         public int CellIndex;
 
-        public SaveData(IconViewModel vm)
+        public SaveData(BannerIconViewModel vm)
         {
             TexturePath = vm.TexturePath;
             SpritePath = vm.SpritePath;
@@ -128,9 +127,9 @@ public class IconViewModel : BindableBase
         }
         public SaveData() { }
 
-        public IconViewModel Load(GroupViewModel groupVM)
+        public BannerIconViewModel Load(BannerGroupViewModel groupVM)
         {
-            return new IconViewModel(groupVM, TexturePath) {
+            return new BannerIconViewModel(groupVM, TexturePath) {
                 SpritePath = SpritePath,
                 CellIndex = CellIndex,
             };

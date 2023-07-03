@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 using BannerlordImageTool.Win.Settings;
-using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -21,7 +21,7 @@ public class AppServices
         // Singleton data objects
         builder.RegisterType<GlobalSettings>().AsSelf().SingleInstance();
         builder.Register((ctx) => BannerSettings.Load()).AsSelf().SingleInstance();
-        builder.RegisterType<DataViewModel>().AsSelf().SingleInstance();
+        builder.RegisterType<BannerIconsPageViewModel>().AsSelf().SingleInstance();
 
         return new AutofacServiceProvider(builder.Build());
     }

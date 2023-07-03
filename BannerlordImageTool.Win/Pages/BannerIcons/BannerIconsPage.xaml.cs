@@ -4,9 +4,9 @@
 using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Controls;
 using BannerlordImageTool.Win.Helpers;
+using BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 using BannerlordImageTool.Win.Services;
 using BannerlordImageTool.Win.Settings;
-using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -23,15 +23,15 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class BannerIconsEditor : Page
+public sealed partial class BannerIconsPage : Page
 {
     static readonly Guid GUID_EXPORT_DIALOG = new Guid("0c5f39f0-1a31-4d85-a9ee-7ad0cfd690b6");
     static readonly Guid GUID_PROJECT_DIALOG = new Guid("f86d402a-33de-4f62-8c2b-c5e75428c018");
 
     private readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
-    private DataViewModel ViewModel { get => AppServices.Get<DataViewModel>(); }
+    private BannerIconsPageViewModel ViewModel { get => AppServices.Get<BannerIconsPageViewModel>(); }
 
-    public BannerIconsEditor()
+    public BannerIconsPage()
     {
         this.InitializeComponent();
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;

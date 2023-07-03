@@ -8,12 +8,12 @@ using System.Collections.Specialized;
 using System.Linq;
 using Windows.Storage;
 
-namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
+namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 
-public class GroupViewModel : BindableBase
+public class BannerGroupViewModel : BindableBase
 {
-    private ObservableCollection<IconViewModel> _icons = new();
-    public ObservableCollection<IconViewModel> Icons { get => _icons; }
+    private ObservableCollection<BannerIconViewModel> _icons = new();
+    public ObservableCollection<BannerIconViewModel> Icons { get => _icons; }
 
     private int _groupID = 7;
     public int GroupID
@@ -35,11 +35,11 @@ public class GroupViewModel : BindableBase
         get => Icons.Count > 0;
     }
 
-    public IEnumerable<IconViewModel> AllSelection
+    public IEnumerable<BannerIconViewModel> AllSelection
     {
         get => Icons.Where(icon => icon.IsSelected);
     }
-    public IconViewModel SingleSelection
+    public BannerIconViewModel SingleSelection
     {
         get => Icons.Where(icon => icon.IsSelected).FirstOrDefault();
     }
@@ -48,7 +48,7 @@ public class GroupViewModel : BindableBase
         get => Icons.Any(icon => icon.IsSelected);
     }
 
-    internal GroupViewModel()
+    internal BannerGroupViewModel()
     {
         _icons.CollectionChanged += _icons_CollectionChanged;
     }
@@ -71,16 +71,16 @@ public class GroupViewModel : BindableBase
                     icon.TexturePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)
                 )
             )
-            .Select(file => new IconViewModel(this, file.Path));
+            .Select(file => new BannerIconViewModel(this, file.Path));
         foreach (var icon in icons)
         {
             _icons.Add(icon);
             icon.AutoScanSprite();
         }
     }
-    public void DeleteIcons(IEnumerable<IconViewModel> icons)
+    public void DeleteIcons(IEnumerable<BannerIconViewModel> icons)
     {
-        var queue = new Queue<IconViewModel>(icons);
+        var queue = new Queue<BannerIconViewModel>(icons);
         while (queue.Count > 0)
         {
             var deleting = queue.Dequeue();
@@ -129,18 +129,18 @@ public class GroupViewModel : BindableBase
         [Key(0)]
         public int GroupID;
         [Key(1)]
-        public IconViewModel.SaveData[] Icons = new IconViewModel.SaveData[] { };
+        public BannerIconViewModel.SaveData[] Icons = new BannerIconViewModel.SaveData[] { };
 
-        public SaveData(GroupViewModel vm)
+        public SaveData(BannerGroupViewModel vm)
         {
             GroupID = vm.GroupID;
-            Icons = vm.Icons.Select(icon => new IconViewModel.SaveData(icon)).ToArray();
+            Icons = vm.Icons.Select(icon => new BannerIconViewModel.SaveData(icon)).ToArray();
         }
         public SaveData() { }
 
-        public GroupViewModel Load()
+        public BannerGroupViewModel Load()
         {
-            var vm = new GroupViewModel() { GroupID = GroupID };
+            var vm = new BannerGroupViewModel() { GroupID = GroupID };
             foreach (var icon in Icons)
             {
                 vm.Icons.Add(icon.Load(vm));

@@ -2,8 +2,8 @@
 // Licensed under the MIT License.
 
 using BannerlordImageTool.Win.Helpers;
+using BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 using BannerlordImageTool.Win.Services;
-using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -19,17 +19,17 @@ public sealed partial class BannerIconGroupEditor : UserControl
     static readonly Guid GUID_TEXTURE_DIALOG = new Guid("8a8429ec-b674-40d8-82f0-ad42be0d6e8f");
     static readonly Guid GUID_SPRITE_DIALOG = new Guid("7fb7d0f4-e50d-4fa3-a890-ae0775bca3d8");
 
-    public GroupViewModel ViewModel
+    public BannerGroupViewModel ViewModel
     {
-        get => GetValue(ViewModelProperty) as GroupViewModel;
+        get => GetValue(ViewModelProperty) as BannerGroupViewModel;
         set => SetValue(ViewModelProperty, value);
     }
 
     public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
         nameof(ViewModel),
-        typeof(GroupViewModel),
-        typeof(BannerIconsEditor),
-        new PropertyMetadata(default(GroupViewModel)));
+        typeof(BannerGroupViewModel),
+        typeof(BannerIconsPage),
+        new PropertyMetadata(default(BannerGroupViewModel)));
 
     public BannerIconGroupEditor()
     {
@@ -60,12 +60,12 @@ public sealed partial class BannerIconGroupEditor : UserControl
     private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         var changed = false;
-        foreach (var item in e.AddedItems.Where(item => item is IconViewModel).Cast<IconViewModel>())
+        foreach (var item in e.AddedItems.Where(item => item is BannerIconViewModel).Cast<BannerIconViewModel>())
         {
             item.IsSelected = true;
             changed = true;
         }
-        foreach (var item in e.RemovedItems.Where(item => item is IconViewModel).Cast<IconViewModel>())
+        foreach (var item in e.RemovedItems.Where(item => item is BannerIconViewModel).Cast<BannerIconViewModel>())
         {
             item.IsSelected = false;
             changed = true;
