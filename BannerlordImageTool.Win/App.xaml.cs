@@ -20,12 +20,9 @@ namespace BannerlordImageTool.Win
     public partial class App : Application
     {
         public static new App Current { get => Application.Current as App; }
-        public GlobalSettings Settings { get; } = new GlobalSettings();
         public I18n I18n { get; } = new I18n(new ResourceLoader(), new ResourceManager());
         public Window MainWindow { get => m_window; }
         public IServiceProvider Services { get; }
-
-        public ViewModels.BannerIcons.DataViewModel BannerViewModel { get; set; } = new();
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code

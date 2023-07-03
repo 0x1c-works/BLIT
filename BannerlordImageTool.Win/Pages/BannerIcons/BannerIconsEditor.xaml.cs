@@ -28,7 +28,8 @@ public sealed partial class BannerIconsEditor : Page
     static readonly Guid GUID_EXPORT_DIALOG = new Guid("0c5f39f0-1a31-4d85-a9ee-7ad0cfd690b6");
     static readonly Guid GUID_PROJECT_DIALOG = new Guid("f86d402a-33de-4f62-8c2b-c5e75428c018");
 
-    DataViewModel ViewModel { get => App.Current.BannerViewModel; }
+    private readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
+    private DataViewModel ViewModel { get => AppServices.Get<DataViewModel>(); }
 
     public BannerIconsEditor()
     {
@@ -63,17 +64,12 @@ public sealed partial class BannerIconsEditor : Page
         ViewModel.AddGroup();
     }
 
-    private void listViewGroups_ItemClick(object sender, ItemClickEventArgs e)
-    {
-        ViewModel.SelectedGroup = e.ClickedItem as GroupViewModel;
-    }
-
     private async void btnExportAll_Click(object sender, RoutedEventArgs e)
     {
         var outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
         if (outFolder == null) return;
         await DoExportAsync(async () => {
-            TextureMerger merger = new TextureMerger(GlobalSettings.Current.Banner.TextureOutputResolution);
+            TextureMerger merger = new TextureMerger(_settings.Banner.TextureOutputResolution);
             await Task.WhenAll(ViewModel.GetExportingGroups().Select(g =>
                 Task.Factory.StartNew(() => {
                     merger.Merge(outFolder.Path, g.GroupID, g.Icons.Select(icon => icon.TexturePath).ToArray());

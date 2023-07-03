@@ -187,9 +187,9 @@
                                 Grid.Row="2"
                                 Background="{ThemeResource CardStrokeColorDefaultBrush}"
                                 IsItemClickEnabled="True"
-                                ItemClick="listViewGroups_ItemClick"
                                 ItemTemplate="{StaticResource GroupItemTemplate}"
-                                ItemsSource="{x:Bind ViewModel.Groups, Mode=OneWay}" />
+                                ItemsSource="{x:Bind ViewModel.Groups, Mode=OneWay}"
+                                SelectedItem="{x:Bind ViewModel.SelectedGroup, Mode=TwoWay}" />
                         </Grid>
                     </SplitView.Pane>
 

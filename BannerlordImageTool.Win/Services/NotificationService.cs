@@ -49,7 +49,7 @@ public interface INotificationService
     Toast Notify(Notification notification);
 }
 
-class NotificationService : INotificationService
+public class NotificationService : INotificationService
 {
     public event NotifyHandler OnNotify;
     public Toast Notify(Notification notification)

@@ -24,11 +24,9 @@ namespace BannerlordImageTool.Win.Pages.Settings
             this.InitializeComponent();
         }
 
-        public GlobalSettings Settings { get => GlobalSettings.Current; }
-
         private void btnOpenLogFolder_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            Process.Start("explorer.exe", Logging.Folder);
+            FileHelpers.OpenFolderInExplorer(Logging.Folder);
         }
     }
 

@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using BannerlordImageTool.Win.Settings;
+using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -13,6 +15,14 @@ public class AppServices
         builder.RegisterType<FileDialogService>().AsImplementedInterfaces();
         builder.RegisterType<ConfirmDialogService>().AsImplementedInterfaces();
         builder.RegisterType<NotificationService>().AsImplementedInterfaces();
+
+        builder.RegisterType<SettingsService>().AsImplementedInterfaces();
+
+        // Singleton data objects
+        builder.RegisterType<GlobalSettings>().AsSelf().SingleInstance();
+        builder.Register((ctx) => BannerSettings.Load()).AsSelf().SingleInstance();
+        builder.RegisterType<DataViewModel>().AsSelf().SingleInstance();
+
         return new AutofacServiceProvider(builder.Build());
     }
 

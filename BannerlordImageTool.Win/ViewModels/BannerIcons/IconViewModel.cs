@@ -1,5 +1,6 @@
 ﻿using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Helpers;
+using BannerlordImageTool.Win.Services;
 using BannerlordImageTool.Win.Settings;
 using MessagePack;
 using System.ComponentModel;
@@ -8,6 +9,7 @@ using System.IO;
 namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
 public class IconViewModel : BindableBase
 {
+    private readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
     private GroupViewModel _groupViewModel;
     private string _texturePath;
     private string _spritePath;
@@ -97,7 +99,7 @@ public class IconViewModel : BindableBase
         if (string.IsNullOrEmpty(TexturePath)) return;
         var dir = Path.GetDirectoryName(TexturePath);
         var filename = Path.GetFileName(TexturePath);
-        foreach (var relPath in GlobalSettings.Current.Banner.SpriteScanFolders)
+        foreach (var relPath in _settings.Banner.SpriteScanFolders)
         {
             var tryPath = Path.Join(dir, relPath, filename);
             if (File.Exists(tryPath))

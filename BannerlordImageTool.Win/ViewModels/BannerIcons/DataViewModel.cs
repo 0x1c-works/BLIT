@@ -1,6 +1,6 @@
 ﻿using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Helpers;
-using BannerlordImageTool.Win.Settings;
+using BannerlordImageTool.Win.Services;
 using MessagePack;
 using Serilog;
 using System;
@@ -15,6 +15,7 @@ using Windows.Storage;
 namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
 public class DataViewModel : BindableBase
 {
+    private readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
     public ObservableCollection<GroupViewModel> Groups { get; } = new();
     public ObservableCollection<ColorViewModel> Colors { get; } = new();
     public StorageFile CurrentFile { get; set; }
@@ -43,7 +44,7 @@ public class DataViewModel : BindableBase
     {
         get
         {
-            switch (GlobalSettings.Current.Banner.TextureOutputResolution)
+            switch (_settings.Banner.TextureOutputResolution)
             {
                 case OutputResolution.Res2K: return "2K";
                 case OutputResolution.Res4K: return "4K";
@@ -54,11 +55,11 @@ public class DataViewModel : BindableBase
         {
             if (Enum.TryParse<OutputResolution>(value, out var enumValue))
             {
-                GlobalSettings.Current.Banner.TextureOutputResolution = enumValue;
+                _settings.Banner.TextureOutputResolution = enumValue;
             }
             else
             {
-                GlobalSettings.Current.Banner.TextureOutputResolution = OutputResolution.INVALID;
+                _settings.Banner.TextureOutputResolution = OutputResolution.INVALID;
             }
             OnPropertyChanged();
         }
@@ -168,12 +169,12 @@ public class DataViewModel : BindableBase
     }
     public int GetNextGroupID()
     {
-        return Groups.Count > 0 ? Groups.Max(g => g.GroupID) + 1 : GlobalSettings.Current.Banner.CustomGroupStartID;
+        return Groups.Count > 0 ? Groups.Max(g => g.GroupID) + 1 : _settings.Banner.CustomGroupStartID;
     }
 
     public int GetNextColorID()
     {
-        return Colors.Count > 0 ? Colors.Max(c => c.ID) + 1 : GlobalSettings.Current.Banner.CustomColorStartID;
+        return Colors.Count > 0 ? Colors.Max(c => c.ID) + 1 : _settings.Banner.CustomColorStartID;
     }
 
     private void OnGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
