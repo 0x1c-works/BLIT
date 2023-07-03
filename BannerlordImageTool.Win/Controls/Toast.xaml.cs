@@ -20,6 +20,8 @@ public sealed partial class Toast : UserControl
     ToastViewModel ViewModel { get; } = new ToastViewModel();
     PeriodicTimer _countdownTimer = new(TimeSpan.FromSeconds(TIMER_INTERVAL));
 
+    public event Action<Toast> OnClosed;
+
     public ToastVariant Variant
     {
         get => ViewModel.Variant;
@@ -40,8 +42,15 @@ public sealed partial class Toast : UserControl
         get => ViewModel.IsOpen;
         set
         {
-            if (!value) EndTimeout();
-            else if (value != ViewModel.IsOpen) StartTimeout();
+            if (!value)
+            {
+                StopTimeout();
+                if (value != ViewModel.IsOpen) OnClosed?.Invoke(this);
+            }
+            else if (value != ViewModel.IsOpen)
+            {
+                StartTimeout();
+            }
             ViewModel.IsOpen = value;
         }
     }
@@ -55,7 +64,7 @@ public sealed partial class Toast : UserControl
         nameof(TimeoutSeconds),
         typeof(double),
         typeof(Toast),
-        new PropertyMetadata(10));
+        new PropertyMetadata(0.0));
 
     private CancellationTokenSource _cancelTimeout = new();
     public double TimeoutSeconds
@@ -71,11 +80,12 @@ public sealed partial class Toast : UserControl
     public Toast()
     {
         this.InitializeComponent();
+        infoBar.Closed += (s, e) => IsOpen = false;
     }
 
     private void StartTimeout()
     {
-        EndTimeout();
+        StopTimeout();
         if (!_cancelTimeout.TryReset())
         {
             _cancelTimeout = new CancellationTokenSource();
@@ -122,7 +132,7 @@ public sealed partial class Toast : UserControl
             }, cancelToken);
         }
     }
-    private void EndTimeout()
+    private void StopTimeout()
     {
         _cancelTimeout.Cancel();
     }

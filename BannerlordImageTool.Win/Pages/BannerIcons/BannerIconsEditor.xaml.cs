@@ -72,55 +72,54 @@ public sealed partial class BannerIconsEditor : Page
 
     private async void btnExportAll_Click(object sender, RoutedEventArgs e)
     {
-        if (ViewModel.IsExporting) return;
-        try
-        {
-            var outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
-            if (outFolder == null) return;
-
+        var outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
+        if (outFolder == null) return;
+        await DoExportAsync(async () => {
             TextureMerger merger = new TextureMerger(GlobalSettings.Current.Banner.TextureOutputResolution);
-
-            ViewModel.IsExporting = true;
             await Task.WhenAll(ViewModel.GetExportingGroups().Select(g =>
                 Task.Factory.StartNew(() => {
                     merger.Merge(outFolder.Path, g.GroupID, g.Icons.Select(icon => icon.TexturePath).ToArray());
                 })
             ));
             await SpriteOrganizer.CollectToSpriteParts(outFolder.Path, ViewModel.ToIconSprites());
-            await ExportXML(outFolder);
-            ViewModel.IsExporting = false;
+            var outDir = await ExportXML(outFolder);
 
             AppServices.Get<INotificationService>().Notify(new(
                 ToastVariant.Success,
-                Message: string.Format(I18n.Current.GetString("ExportSuccess"), outFolder.Path),
+                Message: string.Format(I18n.Current.GetString("ExportSuccess"), outDir),
                 Action: new(
                     I18n.Current.GetString("ButtonOpenFolder/Content"),
-                    (s, e) => FileHelpers.OpenFolderInExplorer(outFolder.Path))));
-        }
-        catch (Exception ex)
-        {
-            AppServices.Get<INotificationService>().Notify(new(
-                ToastVariant.Error,
-                Message: ex.Message,
-                Title: string.Format(
-                    I18n.Current.GetString("ErrorWhen"),
-                    I18n.Current.GetString("OperationExporting"))));
-        }
+                    (s, e) => FileHelpers.OpenFolderInExplorer(outDir))));
+        });
     }
     private async void btnExportXML_Click(object sender, RoutedEventArgs e)
     {
+        var outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
+        if (outFolder == null) return;
+        await DoExportAsync(async () => {
+            var outDir = await ExportXML(outFolder);
+            AppServices.Get<INotificationService>().Notify(new(
+                ToastVariant.Success,
+                Message: string.Format(I18n.Current.GetString("SaveXMLSuccess"), Path.Join(outDir, "banner_icons.xml")),
+                Action: new(
+                    I18n.Current.GetString("ButtonOpenFolder/Content"),
+                    (s, e) => FileHelpers.OpenFolderInExplorer(outDir))));
+        });
+    }
+
+    async Task DoExportAsync(Func<Task> work)
+    {
+        if (ViewModel.IsExporting) return;
+        Toast progressToast = null;
         try
         {
-            var outDir = await ExportXML(null);
-            if (outDir is not null)
-            {
-                AppServices.Get<INotificationService>().Notify(new(
-                    ToastVariant.Success,
-                    Message: string.Format(I18n.Current.GetString("SaveXMLSuccess"), Path.Join(outDir, "banner_icons.xml")),
-                    Action: new(
-                        I18n.Current.GetString("ButtonOpenFolder/Content"),
-                        (s, e) => FileHelpers.OpenFolderInExplorer(outDir))));
-            }
+            progressToast = AppServices.Get<INotificationService>().Notify(new(
+                ToastVariant.Progressing,
+                Message: I18n.Current.GetString("TextExporting/Text"),
+                KeepOpen: true
+            ));
+            ViewModel.IsExporting = true;
+            await work();
         }
         catch (Exception ex)
         {
@@ -130,6 +129,14 @@ public sealed partial class BannerIconsEditor : Page
                 Title: string.Format(
                     I18n.Current.GetString("ErrorWhen"),
                     I18n.Current.GetString("OperationExporting"))));
+        }
+        finally
+        {
+            ViewModel.IsExporting = false;
+            if (progressToast != null)
+            {
+                progressToast.IsOpen = false;
+            }
         }
     }
 

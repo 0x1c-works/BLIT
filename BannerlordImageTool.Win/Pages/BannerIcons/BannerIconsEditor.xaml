@@ -207,28 +207,5 @@
                 <local:BannerColorsEditor DataViewModel="{x:Bind ViewModel, Mode=OneWay}" />
             </PivotItem>
         </Pivot>
-
-        <!--  Floating Toasts  -->
-        <StackPanel
-            Grid.Row="1"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            IsTabStop="False">
-            <InfoBar
-                IsClosable="False"
-                IsIconVisible="False"
-                IsOpen="{x:Bind ViewModel.IsExporting, Mode=OneWay}">
-                <InfoBar.Content>
-                    <StackPanel Padding="8,8,32,8" Orientation="Horizontal">
-                        <ProgressRing VerticalAlignment="Center" />
-                        <TextBlock
-                            x:Uid="TextExporting"
-                            Margin="16,0,0,0"
-                            VerticalAlignment="Center" />
-                    </StackPanel>
-                </InfoBar.Content>
-            </InfoBar>
-        </StackPanel>
-
     </Grid>
 </Page>

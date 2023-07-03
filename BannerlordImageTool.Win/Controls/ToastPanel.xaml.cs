@@ -21,9 +21,9 @@ public sealed partial class ToastPanel : UserControl
         AppServices.Get<INotificationService>().OnNotify += NotificationService_OnNotify;
     }
 
-    private void NotificationService_OnNotify(Notification notification)
+    private Toast NotificationService_OnNotify(Notification notification)
     {
-        AddToast(notification);
+        return AddToast(notification);
     }
 
     private void rootCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -39,7 +39,7 @@ public sealed partial class ToastPanel : UserControl
         Canvas.SetLeft(container, rootCanvas.ActualWidth - container.ActualWidth);
         Canvas.SetTop(container, rootCanvas.ActualHeight - container.ActualHeight);
     }
-    private void AddToast(Notification notification)
+    private Toast AddToast(Notification notification)
     {
         Button actionButton = null;
         if (notification.Action.HasValue)
@@ -47,7 +47,10 @@ public sealed partial class ToastPanel : UserControl
             actionButton = new Button() {
                 Content = notification.Action.Value.Text,
             };
-            actionButton.Click += (s, e) => notification.Action.Value.OnClick(s as Button, e);
+            actionButton.Click += (s, e) => {
+                var toast = (s as Button).FindAscendant<Toast>();
+                notification.Action.Value.OnClick(toast, e);
+            };
         }
         var toast = new Toast() {
             Message = notification.Message,
@@ -55,8 +58,13 @@ public sealed partial class ToastPanel : UserControl
             Variant = notification.Variant,
             IsOpen = true,
             ActionButton = actionButton,
+            TimeoutSeconds = notification.KeepOpen ? 0 : notification.TimeoutSeconds,
+        };
+        toast.OnClosed += (t) => {
+            container.Children.Remove(t);
         };
         container.Children.Add(toast);
+        return toast;
     }
 
     #region Tester
