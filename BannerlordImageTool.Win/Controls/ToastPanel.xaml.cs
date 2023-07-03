@@ -12,10 +12,11 @@ namespace BannerlordImageTool.Win.Controls;
 
 public sealed partial class ToastPanel : UserControl
 {
+    private Visibility DEBUG_BUTTONS_VISIBILITIES = Visibility.Collapsed;
     public ToastPanel()
     {
         this.InitializeComponent();
-        BindAllTestButtons();
+        BindDebugAutoTestButtons();
         AppServices.Get<INotificationService>().OnNotify += NotificationService_OnNotify;
     }
 
@@ -49,9 +50,9 @@ public sealed partial class ToastPanel : UserControl
 
     #region Tester
     const string AUTO_TEST_BTN_PREFIX = "btnAutoTest";
-    private void BindAllTestButtons()
+    private void BindDebugAutoTestButtons()
     {
-        testButtons.Children.Where(c => c is Button && (c as Button).Name.StartsWith(AUTO_TEST_BTN_PREFIX))
+        debugButtons.Children.Where(c => c is Button && (c as Button).Name.StartsWith(AUTO_TEST_BTN_PREFIX))
             .Cast<Button>()
             .ToList()
             .ForEach(b => b.Click += AutoTestButtonClick);

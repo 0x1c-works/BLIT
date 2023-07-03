@@ -17,6 +17,7 @@ public class Logging
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .WriteTo.Console()
+            .WriteTo.Debug()
             .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
             .CreateLogger();
     }

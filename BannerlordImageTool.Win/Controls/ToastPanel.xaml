@@ -25,7 +25,10 @@
                 </Style>
             </StackPanel.Resources>
         </StackPanel>
-        <StackPanel x:Name="testButtons" Canvas.Top="400">
+        <StackPanel
+            x:Name="debugButtons"
+            Canvas.Top="400"
+            Visibility="{x:Bind DEBUG_BUTTONS_VISIBILITIES}">
             <Button x:Name="btnAutoTestInfo" Content="info+1" />
             <Button x:Name="btnAutoTestWarning" Content="warn+1" />
             <Button x:Name="btnAutoTestError" Content="err+1" />
