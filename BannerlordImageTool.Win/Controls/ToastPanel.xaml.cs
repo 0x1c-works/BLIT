@@ -2,7 +2,6 @@ using BannerlordImageTool.Win.Services;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Serilog;
 using System;
 using System.Linq;
 

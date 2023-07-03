@@ -12,15 +12,6 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Assets\empty-asset.png" />
-    <None Remove="Controls\Toast.xaml" />
-    <None Remove="Controls\ToastPanel.xaml" />
-    <None Remove="Pages\BannerTexMergerPage.xaml" />
-    <None Remove="Pages\SettingsPage.xaml" />
-    <None Remove="Pages\Settings\BannerSpriteScanFoldersEditor.xaml" />
-    <None Remove="ViewModels\Settings\BannerSpriteScanFolderItem.xaml" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -30,6 +21,8 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Assets\empty-asset.png" />
+    <Content Include="Assets\transparent-bg.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -64,7 +57,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BannerlordImageTool.Banner\BannerlordImageTool.Banner.csproj" />
   </ItemGroup>
-  <ItemGroup>
+  <!--<ItemGroup>
     <Page Update="Controls\ToastPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -103,11 +96,7 @@
     <Page Update="Controls\Toast.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Pages\BannerIcons\Controls\" />
-    <Folder Include="ViewModels\BannerIcons\" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <!-- 
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution 

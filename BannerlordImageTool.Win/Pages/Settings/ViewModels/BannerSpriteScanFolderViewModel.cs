@@ -1,7 +1,7 @@
 ﻿using BannerlordImageTool.Win.Helpers;
 using Microsoft.UI.Xaml;
 
-namespace BannerlordImageTool.Win.ViewModels.Settings;
+namespace BannerlordImageTool.Win.Pages.Settings.ViewModels;
 
 public class BannerSpriteScanFolderViewModel : BindableBase
 {

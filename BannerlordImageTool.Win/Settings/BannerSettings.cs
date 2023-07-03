@@ -1,5 +1,4 @@
-﻿using Autofac;
-using MessagePack;
+﻿using MessagePack;
 using Serilog;
 using System;
 using System.Collections.Generic;

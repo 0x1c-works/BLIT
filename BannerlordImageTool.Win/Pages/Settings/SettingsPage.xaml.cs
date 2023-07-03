@@ -2,10 +2,8 @@
 // Licensed under the MIT License.
 
 using BannerlordImageTool.Win.Helpers;
-using BannerlordImageTool.Win.Settings;
-using BannerlordImageTool.Win.ViewModels.Settings;
+using BannerlordImageTool.Win.Pages.Settings.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using System.Diagnostics;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.

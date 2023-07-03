@@ -1,11 +1,10 @@
 ﻿using BannerlordImageTool.Win.Helpers;
 using BannerlordImageTool.Win.Services;
-using BannerlordImageTool.Win.Settings;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 
-namespace BannerlordImageTool.Win.ViewModels.Settings;
+namespace BannerlordImageTool.Win.Pages.Settings.ViewModels;
 
 public class BannerSettingsViewModel : BindableBase
 {

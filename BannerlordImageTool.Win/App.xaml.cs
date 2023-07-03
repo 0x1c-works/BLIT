@@ -3,7 +3,6 @@
 
 using BannerlordImageTool.Win.Helpers;
 using BannerlordImageTool.Win.Services;
-using BannerlordImageTool.Win.Settings;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.ApplicationModel.Resources;
 using Serilog;

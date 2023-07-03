@@ -12,16 +12,18 @@ public class AppServices
     public static IServiceProvider Configure()
     {
         var builder = new ContainerBuilder();
-        builder.RegisterType<FileDialogService>().AsImplementedInterfaces();
-        builder.RegisterType<ConfirmDialogService>().AsImplementedInterfaces();
-        builder.RegisterType<NotificationService>().AsImplementedInterfaces();
-
-        builder.RegisterType<SettingsService>().AsImplementedInterfaces();
+        // Singleton services
+        builder.RegisterType<FileDialogService>().AsImplementedInterfaces().SingleInstance();
+        builder.RegisterType<ConfirmDialogService>().AsImplementedInterfaces().SingleInstance();
+        builder.RegisterType<NotificationService>().AsImplementedInterfaces().SingleInstance();
 
         // Singleton data objects
         builder.RegisterType<GlobalSettings>().AsSelf().SingleInstance();
         builder.Register((ctx) => BannerSettings.Load()).AsSelf().SingleInstance();
         builder.RegisterType<BannerIconsPageViewModel>().AsSelf().SingleInstance();
+
+        // Scoped services
+        builder.RegisterType<SettingsService>().AsImplementedInterfaces();
 
         return new AutofacServiceProvider(builder.Build());
     }
