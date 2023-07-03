@@ -116,7 +116,8 @@ public sealed partial class BannerIconsEditor : Page
             progressToast = AppServices.Get<INotificationService>().Notify(new(
                 ToastVariant.Progressing,
                 Message: I18n.Current.GetString("TextExporting/Text"),
-                KeepOpen: true
+                KeepOpen: true,
+                IsClosable: false
             ));
             ViewModel.IsExporting = true;
             await work();

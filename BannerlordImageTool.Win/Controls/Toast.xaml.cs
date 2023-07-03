@@ -54,6 +54,11 @@ public sealed partial class Toast : UserControl
             ViewModel.IsOpen = value;
         }
     }
+    public bool IsClosable
+    {
+        get => ViewModel.IsClosable;
+        set => ViewModel.IsClosable = value;
+    }
     public Button ActionButton
     {
         get => ViewModel.ActionButton;
@@ -186,6 +191,12 @@ public class ToastViewModel : BindableBase
     {
         get => _actionButton;
         set => SetProperty(ref _actionButton, value);
+    }
+    private bool _isClosable = true;
+    public bool IsClosable
+    {
+        get => _isClosable;
+        set => SetProperty(ref _isClosable, value);
     }
 }
 public enum ToastVariant

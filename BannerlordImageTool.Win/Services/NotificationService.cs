@@ -1,4 +1,5 @@
 ﻿using BannerlordImageTool.Win.Controls;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -11,7 +12,35 @@ public record struct Notification(ToastVariant Variant,
                                   string Title = null,
                                   NotificationAction? Action = null,
                                   bool KeepOpen = false,
-                                  double TimeoutSeconds = 10.0);
+                                  double TimeoutSeconds = 10.0,
+                                  bool IsClosable = true)
+{
+    public Toast CreateToast()
+    {
+        Button actionButton = null;
+        if (Action.HasValue)
+        {
+            var action = Action.Value;
+            actionButton = new Button() {
+                Content = action.Text,
+            };
+            actionButton.Click += (s, e) => {
+                var toast = (s as Button).FindAscendant<Toast>();
+                action.OnClick(toast, e);
+            };
+        }
+        var toast = new Toast() {
+            Message = Message,
+            Title = Title,
+            Variant = Variant,
+            IsClosable = IsClosable,
+            IsOpen = true,
+            ActionButton = actionButton,
+            TimeoutSeconds = KeepOpen ? 0 : TimeoutSeconds,
+        };
+        return toast;
+    }
+}
 public delegate Toast NotifyHandler(Notification notification);
 
 public interface INotificationService

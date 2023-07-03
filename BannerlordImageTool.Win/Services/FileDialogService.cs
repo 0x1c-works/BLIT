@@ -1,5 +1,4 @@
 ﻿using BannerlordImageTool.Win.Helpers;
-using CommunityToolkit.WinUI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +7,6 @@ using System.Threading.Tasks;
 using Vanara.PInvoke;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using Windows.Storage.Pickers;
 
 namespace BannerlordImageTool.Win.Services;
 

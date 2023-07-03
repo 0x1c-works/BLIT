@@ -18,6 +18,7 @@
         x:Name="infoBar"
         ActionButton="{Binding ActionButton, Mode=OneWay}"
         DataContext="{x:Bind ViewModel, Mode=OneWay}"
+        IsClosable="{Binding IsClosable, Mode=OneWay}"
         IsIconVisible="{Binding Variant, Mode=OneWay, Converter={StaticResource VariantIsIconVisibleConverter}}"
         IsOpen="{Binding IsOpen, Mode=TwoWay}"
         Message="{Binding Message, Mode=OneWay}"

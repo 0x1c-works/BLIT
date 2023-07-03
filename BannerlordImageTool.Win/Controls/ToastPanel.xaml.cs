@@ -41,25 +41,7 @@ public sealed partial class ToastPanel : UserControl
     }
     private Toast AddToast(Notification notification)
     {
-        Button actionButton = null;
-        if (notification.Action.HasValue)
-        {
-            actionButton = new Button() {
-                Content = notification.Action.Value.Text,
-            };
-            actionButton.Click += (s, e) => {
-                var toast = (s as Button).FindAscendant<Toast>();
-                notification.Action.Value.OnClick(toast, e);
-            };
-        }
-        var toast = new Toast() {
-            Message = notification.Message,
-            Title = notification.Title,
-            Variant = notification.Variant,
-            IsOpen = true,
-            ActionButton = actionButton,
-            TimeoutSeconds = notification.KeepOpen ? 0 : notification.TimeoutSeconds,
-        };
+        var toast = notification.CreateToast();
         toast.OnClosed += (t) => {
             container.Children.Remove(t);
         };
