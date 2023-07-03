@@ -5,7 +5,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Serilog;
 using System;
-using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 

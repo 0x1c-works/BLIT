@@ -2,8 +2,6 @@ using BannerlordImageTool.Win.Services;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.Web.WebView2.Core;
 using System;
 using System.Linq;
 
