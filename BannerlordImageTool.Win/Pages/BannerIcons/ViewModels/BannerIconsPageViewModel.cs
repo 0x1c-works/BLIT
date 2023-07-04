@@ -15,13 +15,18 @@ using Windows.Storage;
 namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 public class BannerIconsPageViewModel : BindableBase
 {
-    public BannerIconsPageViewModel(ISettingsService settings, BannerGroupViewModel.Factory bannerGroupFactory)
+    public BannerIconsPageViewModel(
+        ISettingsService settings,
+        BannerGroupViewModel.Factory bannerGroupFactory,
+        BannerColorViewModel.Factory colorFactory)
     {
         _settings = settings;
         _bannerGroupFactory = bannerGroupFactory;
+        _colorFactory = colorFactory;
     }
-    readonly BannerGroupViewModel.Factory _bannerGroupFactory;
     readonly ISettingsService _settings;
+    readonly BannerGroupViewModel.Factory _bannerGroupFactory;
+    readonly BannerColorViewModel.Factory _colorFactory;
 
     public ObservableCollection<BannerGroupViewModel> Groups { get; } = new();
     public ObservableCollection<BannerColorViewModel> Colors { get; } = new();
@@ -142,7 +147,7 @@ public class BannerIconsPageViewModel : BindableBase
 
     public void AddColor()
     {
-        Colors.Add(new BannerColorViewModel() { ID = GetNextColorID() });
+        Colors.Add(_colorFactory(GetNextColorID()));
     }
     public void DeleteColors(IEnumerable<BannerColorViewModel> colors)
     {
@@ -213,7 +218,7 @@ public class BannerIconsPageViewModel : BindableBase
             }
             foreach (BannerColorViewModel.SaveData colorData in data.Colors)
             {
-                Colors.Add(colorData.Load());
+                Colors.Add(colorData.Load(_colorFactory));
             }
             // Update the selection if there was any
             SelectedGroup = HasSelectedGroup ? Groups.FirstOrDefault(g => g.GroupID == SelectedGroup.GroupID) : Groups.FirstOrDefault();

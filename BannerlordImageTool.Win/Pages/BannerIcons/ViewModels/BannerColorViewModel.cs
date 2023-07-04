@@ -7,6 +7,8 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 
 public class BannerColorViewModel : BindableBase
 {
+    public delegate BannerColorViewModel Factory(int id);
+
     int _id;
     Color _color;
     bool _isForSigil = true;
@@ -15,12 +17,20 @@ public class BannerColorViewModel : BindableBase
     public int ID
     {
         get => _id;
-        set => SetProperty(ref _id, value);
+        set
+        {
+            SetProperty(ref _id, value);
+            OnPropertyChanged(nameof(CanExport));
+        }
     }
     public Color Color
     {
         get => _color;
-        set => SetProperty(ref _color, value);
+        set
+        {
+            SetProperty(ref _color, value);
+            OnPropertyChanged(nameof(CanExport));
+        }
     }
     public bool IsForSigil
     {
@@ -34,6 +44,11 @@ public class BannerColorViewModel : BindableBase
     }
 
     public bool CanExport => ID >= 0 && Color.A > 0;
+
+    public BannerColorViewModel(int id)
+    {
+        ID = id;
+    }
 
     public BannerColor ToBannerColor()
     {
@@ -71,14 +86,13 @@ public class BannerColorViewModel : BindableBase
             IsForBackground = vm.IsForBackground;
         }
         public SaveData() { }
-        public BannerColorViewModel Load()
+        public BannerColorViewModel Load(Factory factory)
         {
-            return new BannerColorViewModel() {
-                ID = ID,
-                Color = Color,
-                IsForSigil = IsForSigil,
-                IsForBackground = IsForBackground,
-            };
+            BannerColorViewModel vm = factory(ID);
+            vm.Color = Color;
+            vm.IsForSigil = IsForSigil;
+            vm.IsForBackground = IsForBackground;
+            return vm;
         }
     }
 }

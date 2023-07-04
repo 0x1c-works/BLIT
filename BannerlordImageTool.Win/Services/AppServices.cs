@@ -28,9 +28,9 @@ public class AppServices
 
         // Scoped components
         builder.RegisterType<BannerIconsPageViewModel>().InstancePerLifetimeScope();
-        builder.RegisterType<BannerGroupViewModel>().InstancePerLifetimeScope().WithParameter(new TypedParameter(typeof(int), -1));
-        builder.RegisterType<BannerColorViewModel>().InstancePerLifetimeScope();
-        builder.RegisterType<BannerIconViewModel>().InstancePerLifetimeScope();
+        builder.RegisterType<BannerGroupViewModel>().InstancePerDependency();
+        builder.RegisterType<BannerColorViewModel>().InstancePerDependency();
+        builder.RegisterType<BannerIconViewModel>().InstancePerDependency();
 
         Container = builder.Build();
         return new AutofacServiceProvider(Container);
