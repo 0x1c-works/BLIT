@@ -9,6 +9,7 @@ using BannerlordImageTool.Win.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,18 +23,27 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class BannerIconsPage : Page
+public sealed partial class BannerIconsPage : Page, INotifyPropertyChanged
 {
     static readonly Guid GUID_EXPORT_DIALOG = new("0c5f39f0-1a31-4d85-a9ee-7ad0cfd690b6");
     static readonly Guid GUID_PROJECT_DIALOG = new("f86d402a-33de-4f62-8c2b-c5e75428c018");
 
     readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
-    BannerIconsPageViewModel ViewModel => AppServices.Get<BannerIconsPageViewModel>();
+    readonly IProjectService<BannerIconsPageViewModel> _project = AppServices.Get<IProjectService<BannerIconsPageViewModel>>();
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    BannerIconsPageViewModel ViewModel { get => _project.ViewModel; }
 
     public BannerIconsPage()
     {
         InitializeComponent();
-        ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        _project.ProjectChanged += OnProjectChanged;
+    }
+
+    void OnProjectChanged(BannerIconsPageViewModel obj)
+    {
+        PropertyChanged?.Invoke(this, new(nameof(ViewModel)));
     }
 
     void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -177,7 +187,7 @@ public sealed partial class BannerIconsPage : Page
 
     void btnNewProject_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.Reset();
+        NewProject();
     }
     async void btnSaveProject_Click(object sender, RoutedEventArgs e)
     {
@@ -192,12 +202,18 @@ public sealed partial class BannerIconsPage : Page
             return;
         }
 
+        NewProject();
         await ViewModel.Load(file);
     }
 
     async void btnSaveProjectAs_Click(object sender, RoutedEventArgs e)
     {
         await SaveProject(true);
+    }
+
+    void NewProject()
+    {
+        _project.NewProject().PropertyChanged += ViewModel_PropertyChanged;
     }
 
     async Task SaveProject(bool force)

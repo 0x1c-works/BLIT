@@ -32,7 +32,7 @@ public class BannerGroupViewModel : BindableBase
     public BannerIconViewModel SingleSelection => Icons.Where(icon => icon.IsSelected).FirstOrDefault();
     public bool HasSelection => Icons.Any(icon => icon.IsSelected);
 
-    internal BannerGroupViewModel()
+    public BannerGroupViewModel()
     {
         Icons.CollectionChanged += _icons_CollectionChanged;
     }

@@ -9,6 +9,7 @@ namespace BannerlordImageTool.Win.Services;
 
 public class AppServices
 {
+    public static IContainer Container { get; private set; }
     public static IServiceProvider Configure()
     {
         var builder = new ContainerBuilder();
@@ -17,15 +18,22 @@ public class AppServices
         builder.RegisterType<ConfirmDialogService>().AsImplementedInterfaces().SingleInstance();
         builder.RegisterType<NotificationService>().AsImplementedInterfaces().SingleInstance();
 
-        // Singleton data objects
-        builder.RegisterType<GlobalSettings>().AsSelf().SingleInstance();
-        builder.Register((ctx) => BannerSettings.Load()).AsSelf().SingleInstance();
-        builder.RegisterType<BannerIconsPageViewModel>().AsSelf().SingleInstance();
+        // Singleton components
+        builder.RegisterType<GlobalSettings>().SingleInstance();
+        builder.Register((ctx) => BannerSettings.Load()).SingleInstance();
+        builder.RegisterGeneric(typeof(ProjectService<>)).As(typeof(IProjectService<>)).SingleInstance();
 
         // Scoped services
         builder.RegisterType<SettingsService>().AsImplementedInterfaces();
 
-        return new AutofacServiceProvider(builder.Build());
+        // Scoped components
+        builder.RegisterType<BannerIconsPageViewModel>().InstancePerLifetimeScope();
+        builder.RegisterType<BannerGroupViewModel>().InstancePerLifetimeScope();
+        builder.RegisterType<BannerColorViewModel>().InstancePerLifetimeScope();
+        builder.RegisterType<BannerIconViewModel>().InstancePerLifetimeScope();
+
+        Container = builder.Build();
+        return new AutofacServiceProvider(Container);
     }
 
     public static T Get<T>()

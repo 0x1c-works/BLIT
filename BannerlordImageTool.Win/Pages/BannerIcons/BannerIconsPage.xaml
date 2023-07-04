@@ -194,7 +194,7 @@
                     </SplitView.Pane>
 
                     <!--  Pane Content  -->
-                    <Grid>
+                    <Grid DataContext="{x:Bind ViewModel.SelectedGroup}">
                         <local:BannerIconGroupEditor ViewModel="{x:Bind ViewModel.SelectedGroup, Mode=OneWay}" Visibility="{x:Bind ViewModel.HasSelectedGroup, Mode=OneWay}" />
                         <TextBlock
                             x:Uid="TextNoSelectedBannerGroup"

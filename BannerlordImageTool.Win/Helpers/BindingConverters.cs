@@ -2,7 +2,6 @@
 using System;
 
 namespace BannerlordImageTool.Win.Helpers;
-
 public class InvertBoolConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)

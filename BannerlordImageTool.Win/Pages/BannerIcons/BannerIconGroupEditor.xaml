@@ -138,6 +138,7 @@
             ItemsSource="{x:Bind ViewModel.Icons, Mode=OneWay}"
             SelectionChanged="GridView_SelectionChanged"
             SelectionMode="Extended" />
+        <!--  Icon Editor  -->
         <Grid
             Grid.Row="1"
             Grid.Column="1"
