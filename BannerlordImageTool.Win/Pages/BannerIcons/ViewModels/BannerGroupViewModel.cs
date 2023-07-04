@@ -14,8 +14,9 @@ public class BannerGroupViewModel : BindableBase
 {
     public delegate BannerGroupViewModel Factory(int groupID);
     public ObservableCollection<BannerIconViewModel> Icons { get; } = new();
-
     int _groupID = 7;
+    readonly BannerIconViewModel.Factory _iconFactory;
+
     public int GroupID
     {
         get => _groupID;
@@ -33,9 +34,10 @@ public class BannerGroupViewModel : BindableBase
     public BannerIconViewModel SingleSelection => Icons.Where(icon => icon.IsSelected).FirstOrDefault();
     public bool HasSelection => Icons.Any(icon => icon.IsSelected);
 
-    public BannerGroupViewModel(int groupID)
+    public BannerGroupViewModel(int groupID, BannerIconViewModel.Factory iconFactory)
     {
         GroupID = groupID;
+        _iconFactory = iconFactory;
         Icons.CollectionChanged += _icons_CollectionChanged;
     }
 
@@ -57,7 +59,7 @@ public class BannerGroupViewModel : BindableBase
                     icon.TexturePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)
                 )
             )
-            .Select(file => new BannerIconViewModel(this, file.Path));
+            .Select(file => _iconFactory(this, file.Path));
         foreach (BannerIconViewModel icon in icons)
         {
             Icons.Add(icon);
@@ -129,7 +131,7 @@ public class BannerGroupViewModel : BindableBase
             BannerGroupViewModel vm = factory(GroupID);
             foreach (BannerIconViewModel.SaveData icon in Icons)
             {
-                vm.Icons.Add(icon.Load(vm));
+                vm.Icons.Add(icon.Load(vm, vm._iconFactory));
             }
             return vm;
         }

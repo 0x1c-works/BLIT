@@ -8,11 +8,12 @@ using System.IO;
 namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 public class BannerIconViewModel : BindableBase
 {
-    readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
+    public delegate BannerIconViewModel Factory(BannerGroupViewModel groupVm, string texturePath);
     readonly BannerGroupViewModel _groupViewModel;
     string _texturePath;
     string _spritePath;
     int _cellIndex;
+    readonly ISettingsService _settings;
 
     public string TexturePath
     {
@@ -65,10 +66,12 @@ public class BannerIconViewModel : BindableBase
     public bool IsSelected { get; set; }
     public bool IsValid => !string.IsNullOrEmpty(TexturePath) && AtlasIndex >= 0;
 
-    public BannerIconViewModel(BannerGroupViewModel groupVm, string texturePath)
+    public BannerIconViewModel(BannerGroupViewModel groupVm, string texturePath, ISettingsService settings)
     {
         _groupViewModel = groupVm;
         _texturePath = texturePath;
+        this._settings = settings;
+        _settings = settings;
 
         _groupViewModel.PropertyChanged += _viewModel_PropertyChanged;
     }
@@ -134,12 +137,12 @@ public class BannerIconViewModel : BindableBase
         }
         public SaveData() { }
 
-        public BannerIconViewModel Load(BannerGroupViewModel groupVM)
+        public BannerIconViewModel Load(BannerGroupViewModel groupVM, Factory factory)
         {
-            return new BannerIconViewModel(groupVM, TexturePath) {
-                SpritePath = SpritePath,
-                CellIndex = CellIndex,
-            };
+            BannerIconViewModel vm = factory(groupVM, TexturePath);
+            vm.SpritePath = SpritePath;
+            vm.CellIndex = CellIndex;
+            return vm;
         }
     }
 }
