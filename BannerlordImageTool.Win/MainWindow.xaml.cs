@@ -36,36 +36,34 @@ public sealed partial class MainWindow : ThemedWindow
         Activated += MainWindow_Activated;
     }
 
-    private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+    void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
     {
-        if (args.WindowActivationState == WindowActivationState.Deactivated)
-        {
-            AppTitleText.Foreground = (SolidColorBrush)App.Current.Resources["WindowCaptionForegroundDisabled"];
-        }
-        else
-        {
-            AppTitleText.Foreground = (SolidColorBrush)App.Current.Resources["WindowCaptionForeground"];
-        }
+        AppTitleText.Foreground = args.WindowActivationState == WindowActivationState.Deactivated
+            ? (SolidColorBrush)App.Current.Resources["WindowCaptionForegroundDisabled"]
+            : (Brush)(SolidColorBrush)App.Current.Resources["WindowCaptionForeground"];
     }
 
-    private void AppNav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    void AppNav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
-        var item = args.SelectedItem as NavigationViewItem;
-        if (item is null) return;
+        if (args.SelectedItem is not NavigationViewItem item)
+        {
+            return;
+        }
+
         AppNav.Header = item.Content;
 
         if (args.IsSettingsSelected)
         {
-            AppContent.Navigate(typeof(SettingsPage));
+            _ = AppContent.Navigate(typeof(SettingsPage));
         }
         else
         {
             if (item is not null)
             {
                 var tag = item?.Tag as string;
-                if (TAGGED_PAGES.TryGetValue(tag, out var pageType))
+                if (TAGGED_PAGES.TryGetValue(tag, out Type pageType))
                 {
-                    AppContent.Navigate(pageType);
+                    _ = AppContent.Navigate(pageType);
                 }
             }
         }
@@ -77,13 +75,17 @@ public sealed partial class MainWindow : ThemedWindow
 
     public class ViewModel : INotifyPropertyChanged
     {
-        private StorageFolder _rootFolder;
+        StorageFolder _rootFolder;
         public StorageFolder RootFolder
         {
             get => _rootFolder;
             set
             {
-                if (_rootFolder?.Path == value?.Path) return;
+                if (_rootFolder?.Path == value?.Path)
+                {
+                    return;
+                }
+
                 _rootFolder = value;
                 OnPropertyChanged();
             }

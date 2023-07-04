@@ -15,78 +15,58 @@ using Windows.Storage;
 namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 public class BannerIconsPageViewModel : BindableBase
 {
-    private readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
+    readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
     public ObservableCollection<BannerGroupViewModel> Groups { get; } = new();
     public ObservableCollection<BannerColorViewModel> Colors { get; } = new();
     public StorageFile CurrentFile { get; set; }
 
-    private BannerGroupViewModel _selectedGroup;
+    BannerGroupViewModel _selectedGroup;
     public BannerGroupViewModel SelectedGroup
     {
         get => _selectedGroup;
         set
         {
-            SetProperty(ref _selectedGroup, value);
+            _ = SetProperty(ref _selectedGroup, value);
             OnPropertyChanged(nameof(HasSelectedGroup));
             OnPropertyChanged(nameof(ShowEmptyHint));
         }
     }
-    public bool HasSelectedGroup
-    {
-        get => SelectedGroup is not null;
-    }
-    public bool ShowEmptyHint
-    {
-        get => !HasSelectedGroup;
-    }
+    public bool HasSelectedGroup => SelectedGroup is not null;
+    public bool ShowEmptyHint => !HasSelectedGroup;
 
     public string OutputResolutionName
     {
-        get
-        {
-            switch (_settings.Banner.TextureOutputResolution)
-            {
-                case OutputResolution.Res2K: return "2K";
-                case OutputResolution.Res4K: return "4K";
-                default: return I18n.Current.GetString("PleaseSelect");
-            }
-        }
+        get => _settings.Banner.TextureOutputResolution switch {
+            OutputResolution.Res2K => "2K",
+            OutputResolution.Res4K => "4K",
+            _ => I18n.Current.GetString("PleaseSelect"),
+        };
         set
         {
-            if (Enum.TryParse<OutputResolution>(value, out var enumValue))
-            {
-                _settings.Banner.TextureOutputResolution = enumValue;
-            }
-            else
-            {
-                _settings.Banner.TextureOutputResolution = OutputResolution.INVALID;
-            }
+            _settings.Banner.TextureOutputResolution = Enum.TryParse<OutputResolution>(value, out OutputResolution enumValue) ? enumValue : OutputResolution.INVALID;
             OnPropertyChanged();
         }
     }
 
-    private bool _isExporting = false;
+    bool _isExporting = false;
     public bool IsExporting
     {
         get => _isExporting;
         set
         {
-            SetProperty(ref _isExporting, value);
+            _ = SetProperty(ref _isExporting, value);
             OnPropertyChanged(nameof(CanExport));
         }
     }
-    public bool CanExport
-    {
-        get => !_isExporting && !IsSavingOrLoading && (Groups.Any(g => g.CanExport) || Colors.Count > 0);
-    }
+    public bool CanExport => !_isExporting && !IsSavingOrLoading && (Groups.Any(g => g.CanExport) || Colors.Count > 0);
 
-    private bool _isSavingOrLoading = false;
+    bool _isSavingOrLoading = false;
     public bool IsSavingOrLoading
     {
         get => _isSavingOrLoading;
         set
         {
-            SetProperty(ref _isSavingOrLoading, value);
+            _ = SetProperty(ref _isSavingOrLoading, value);
             OnPropertyChanged(nameof(CanExport));
         }
     }
@@ -94,11 +74,11 @@ public class BannerIconsPageViewModel : BindableBase
     public BannerIconData ToBannerIconData()
     {
         var data = new BannerIconData();
-        foreach (var group in GetExportingGroups())
+        foreach (BannerGroupViewModel group in GetExportingGroups())
         {
             data.IconGroups.Add(group.ToBannerIconGroup());
         }
-        foreach (var color in GetExportingColors())
+        foreach (BannerColorViewModel color in GetExportingColors())
         {
             data.BannerColors.Add(color.ToBannerColor());
         }
@@ -127,30 +107,28 @@ public class BannerIconsPageViewModel : BindableBase
         var newGroup = new BannerGroupViewModel() { GroupID = GetNextGroupID() };
         newGroup.PropertyChanged += OnGroupPropertyChanged;
         Groups.Add(newGroup);
-        if (SelectedGroup is null)
-        {
-            SelectedGroup = Groups.Last();
-        }
+        SelectedGroup ??= Groups.Last();
         OnPropertyChanged(nameof(CanExport));
     }
 
     public void DeleteGroup(BannerGroupViewModel group)
     {
-        if (group is null) return;
+        if (group is null)
+        {
+            return;
+        }
+
         var index = Groups.IndexOf(group);
-        if (index < 0) return;
+        if (index < 0)
+        {
+            return;
+        }
+
         group.PropertyChanged -= OnGroupPropertyChanged;
-        Groups.Remove(group);
+        _ = Groups.Remove(group);
         if (group == SelectedGroup)
         {
-            if (Groups.Count > 0)
-            {
-                SelectedGroup = Groups[Math.Max(0, index - 1)];
-            }
-            else
-            {
-                SelectedGroup = null;
-            }
+            SelectedGroup = Groups.Count > 0 ? Groups[Math.Max(0, index - 1)] : null;
         }
         OnPropertyChanged(nameof(CanExport));
     }
@@ -161,10 +139,10 @@ public class BannerIconsPageViewModel : BindableBase
     }
     public void DeleteColors(IEnumerable<BannerColorViewModel> colors)
     {
-        var deleting = colors.ToArray();
-        foreach (var color in deleting)
+        BannerColorViewModel[] deleting = colors.ToArray();
+        foreach (BannerColorViewModel color in deleting)
         {
-            Colors.Remove(color);
+            _ = Colors.Remove(color);
         }
     }
     public int GetNextGroupID()
@@ -177,7 +155,7 @@ public class BannerIconsPageViewModel : BindableBase
         return Colors.Count > 0 ? Colors.Max(c => c.ID) + 1 : _settings.Banner.CustomColorStartID;
     }
 
-    private void OnGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
+    void OnGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         OnPropertyChanged(nameof(CanExport));
         if (e.PropertyName == nameof(BannerGroupViewModel.GroupID))
@@ -201,7 +179,7 @@ public class BannerIconsPageViewModel : BindableBase
         try
         {
             var data = new SaveData(this);
-            using var file = File.OpenWrite(filePath);
+            using FileStream file = File.OpenWrite(filePath);
             await MessagePackSerializer.SerializeAsync(file, data);
             CurrentFile = await StorageFile.GetFileFromPathAsync(filePath);
         }
@@ -216,28 +194,21 @@ public class BannerIconsPageViewModel : BindableBase
         try
         {
             IsSavingOrLoading = true;
-            using var file = File.OpenRead(openedFile.Path);
-            var data = await MessagePackSerializer.DeserializeAsync<SaveData>(file);
+            using FileStream file = File.OpenRead(openedFile.Path);
+            SaveData data = await MessagePackSerializer.DeserializeAsync<SaveData>(file);
             CurrentFile = openedFile;
             Groups.Clear();
             Colors.Clear();
-            foreach (var groupData in data.Groups)
+            foreach (BannerGroupViewModel.SaveData groupData in data.Groups)
             {
                 Groups.Add(groupData.Load());
             }
-            foreach (var colorData in data.Colors)
+            foreach (BannerColorViewModel.SaveData colorData in data.Colors)
             {
                 Colors.Add(colorData.Load());
             }
             // Update the selection if there was any
-            if (HasSelectedGroup)
-            {
-                SelectedGroup = Groups.FirstOrDefault(g => g.GroupID == SelectedGroup.GroupID);
-            }
-            else
-            {
-                SelectedGroup = Groups.FirstOrDefault();
-            }
+            SelectedGroup = HasSelectedGroup ? Groups.FirstOrDefault(g => g.GroupID == SelectedGroup.GroupID) : Groups.FirstOrDefault();
 
             OnPropertyChanged(nameof(CanExport));
         }

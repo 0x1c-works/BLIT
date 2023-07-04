@@ -5,22 +5,19 @@ namespace BannerlordImageTool.Win.Settings;
 
 public class GlobalSettings : BindableBase
 {
-    private StorageFolder _gameRootFolder;
+    StorageFolder _gameRootFolder;
 
     public StorageFolder GameRootFolder
     {
         get => _gameRootFolder;
         set
         {
-            SetProperty(ref _gameRootFolder, value);
+            _ = SetProperty(ref _gameRootFolder, value);
             OnPropertyChanged(nameof(GameRootFolderPath));
         }
     }
 
-    public string GameRootFolderPath
-    {
-        get => GameRootFolder?.Path ?? I18n.Current.GetString("NeedGameRootFolder");
-    }
+    public string GameRootFolderPath => GameRootFolder?.Path ?? I18n.Current.GetString("NeedGameRootFolder");
 
     public BannerSettings Banner { get; private set; } = new();
 

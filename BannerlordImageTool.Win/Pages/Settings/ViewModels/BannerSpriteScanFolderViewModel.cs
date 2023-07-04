@@ -5,26 +5,26 @@ namespace BannerlordImageTool.Win.Pages.Settings.ViewModels;
 
 public class BannerSpriteScanFolderViewModel : BindableBase
 {
-    private string _relativePath = "";
+    string _relativePath = "";
     public string RelativePath
     {
         get => _relativePath;
         set => SetProperty(ref _relativePath, value);
     }
-    private bool _isEditing;
+    bool _isEditing;
     public bool IsEditing
     {
         get => _isEditing;
         set
         {
-            SetProperty(ref _isEditing, value);
+            _ = SetProperty(ref _isEditing, value);
             OnPropertyChanged(nameof(EditVisibility));
             OnPropertyChanged(nameof(LabelVisibility));
         }
     }
 
-    public Visibility EditVisibility { get => IsEditing ? Visibility.Visible : Visibility.Collapsed; }
-    public Visibility LabelVisibility { get => IsEditing ? Visibility.Collapsed : Visibility.Visible; }
+    public Visibility EditVisibility => IsEditing ? Visibility.Visible : Visibility.Collapsed;
+    public Visibility LabelVisibility => IsEditing ? Visibility.Collapsed : Visibility.Visible;
 
     public BannerSpriteScanFolderViewModel(string relativePath)
     {

@@ -21,7 +21,7 @@ public record struct FileType(string DisplayName, string Extension)
 public static class CommonFileTypes
 {
     // App
-    public static readonly FileType BannerIconsProject = new FileType("Banner Icons Project", "bip");
+    public static readonly FileType BannerIconsProject = new("Banner Icons Project", "bip");
 
     // Images
     public static readonly FileType Png = new("PNG Images", "png");
@@ -34,6 +34,6 @@ public static class FileHelpers
         {
             path = Path.GetDirectoryName(path);
         }
-        Process.Start("explorer.exe", path);
+        _ = Process.Start("explorer.exe", path);
     }
 }

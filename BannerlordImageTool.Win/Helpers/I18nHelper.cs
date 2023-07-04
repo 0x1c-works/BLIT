@@ -4,11 +4,11 @@ namespace BannerlordImageTool.Win.Helpers;
 
 public class I18n
 {
-    public static I18n Current { get => App.Current.I18n; }
+    public static I18n Current => App.Current.I18n;
 
 
-    private ResourceLoader _resLoader;
-    private ResourceManager _resManager;
+    readonly ResourceLoader _resLoader;
+    readonly ResourceManager _resManager;
 
     internal I18n(ResourceLoader resLoader, ResourceManager resManager)
     {
@@ -29,15 +29,7 @@ public class I18n
     /// <returns></returns>
     public string GetStringByFullID(string fullID, ResourceContext context = null)
     {
-        ResourceCandidate candidate;
-        if (context is null)
-        {
-            candidate = _resManager.MainResourceMap.GetValue(fullID);
-        }
-        else
-        {
-            candidate = _resManager.MainResourceMap.GetValue(fullID, context);
-        }
+        ResourceCandidate candidate = context is null ? _resManager.MainResourceMap.GetValue(fullID) : _resManager.MainResourceMap.GetValue(fullID, context);
         return candidate.ValueAsString;
     }
 }

@@ -8,11 +8,11 @@ using System.IO;
 namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 public class BannerIconViewModel : BindableBase
 {
-    private readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
-    private BannerGroupViewModel _groupViewModel;
-    private string _texturePath;
-    private string _spritePath;
-    private int _cellIndex;
+    readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
+    readonly BannerGroupViewModel _groupViewModel;
+    string _texturePath;
+    string _spritePath;
+    int _cellIndex;
 
     public string TexturePath
     {
@@ -20,8 +20,12 @@ public class BannerIconViewModel : BindableBase
         set
         {
             var newPath = Path.GetFullPath(value);
-            if (newPath == _texturePath) return;
-            SetProperty(ref _texturePath, value);
+            if (newPath == _texturePath)
+            {
+                return;
+            }
+
+            _ = SetProperty(ref _texturePath, value);
         }
     }
     public string SpritePath
@@ -30,8 +34,12 @@ public class BannerIconViewModel : BindableBase
         set
         {
             var newPath = Path.GetFullPath(value);
-            if (newPath == _spritePath) return;
-            SetProperty(ref _spritePath, newPath);
+            if (newPath == _spritePath)
+            {
+                return;
+            }
+
+            _ = SetProperty(ref _spritePath, newPath);
         }
     }
     public int CellIndex
@@ -39,28 +47,23 @@ public class BannerIconViewModel : BindableBase
         get => _cellIndex;
         set
         {
-            if (value == _cellIndex) return;
-            SetProperty(ref _cellIndex, value);
+            if (value == _cellIndex)
+            {
+                return;
+            }
+
+            _ = SetProperty(ref _cellIndex, value);
             OnPropertyChanged(nameof(ID));
             OnPropertyChanged(nameof(AtlasName));
         }
     }
-    public int AtlasIndex
-    {
-        get => CellIndex / (TextureMerger.ROWS * TextureMerger.COLS);
-    }
+    public int AtlasIndex => CellIndex / (TextureMerger.ROWS * TextureMerger.COLS);
 
-    public string AtlasName
-    {
-        get => BannerUtils.GetAtlasName(_groupViewModel.GroupID, AtlasIndex);
-    }
-    public int ID
-    {
-        get => BannerUtils.GetIconID(_groupViewModel.GroupID, CellIndex);
-    }
+    public string AtlasName => BannerUtils.GetAtlasName(_groupViewModel.GroupID, AtlasIndex);
+    public int ID => BannerUtils.GetIconID(_groupViewModel.GroupID, CellIndex);
 
     public bool IsSelected { get; set; }
-    public bool IsValid { get => !string.IsNullOrEmpty(TexturePath) && AtlasIndex >= 0; }
+    public bool IsValid => !string.IsNullOrEmpty(TexturePath) && AtlasIndex >= 0;
 
     public BannerIconViewModel(BannerGroupViewModel groupVm, string texturePath)
     {
@@ -70,7 +73,7 @@ public class BannerIconViewModel : BindableBase
         _groupViewModel.PropertyChanged += _viewModel_PropertyChanged;
     }
 
-    private void _viewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    void _viewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(BannerGroupViewModel.GroupName))
         {
@@ -95,7 +98,11 @@ public class BannerIconViewModel : BindableBase
 
     public void AutoScanSprite()
     {
-        if (string.IsNullOrEmpty(TexturePath)) return;
+        if (string.IsNullOrEmpty(TexturePath))
+        {
+            return;
+        }
+
         var dir = Path.GetDirectoryName(TexturePath);
         var filename = Path.GetFileName(TexturePath);
         foreach (var relPath in _settings.Banner.SpriteScanFolders)

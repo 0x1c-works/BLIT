@@ -14,26 +14,34 @@ public class BannerSettings
     [Key(1)]
     public Banner.OutputResolution TextureOutputResolution { get; set; }
 
-    private int _customGroupStartID = 10000;
+    int _customGroupStartID = 10000;
     [Key(2)]
     public int CustomGroupStartID
     {
         get => _customGroupStartID;
         set
         {
-            if (_customGroupStartID == value) return;
+            if (_customGroupStartID == value)
+            {
+                return;
+            }
+
             _customGroupStartID = value;
             Save();
         }
     }
-    private int _customColorStartID = 500;
+    int _customColorStartID = 500;
     [Key(3)]
     public int CustomColorStartID
     {
         get => _customColorStartID;
         set
         {
-            if (_customColorStartID == value) return;
+            if (_customColorStartID == value)
+            {
+                return;
+            }
+
             _customColorStartID = value;
             Save();
         }

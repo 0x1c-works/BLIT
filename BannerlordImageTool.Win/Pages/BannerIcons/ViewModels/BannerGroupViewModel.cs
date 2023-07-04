@@ -12,48 +12,32 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 
 public class BannerGroupViewModel : BindableBase
 {
-    private ObservableCollection<BannerIconViewModel> _icons = new();
-    public ObservableCollection<BannerIconViewModel> Icons { get => _icons; }
+    public ObservableCollection<BannerIconViewModel> Icons { get; } = new();
 
-    private int _groupID = 7;
+    int _groupID = 7;
     public int GroupID
     {
         get => _groupID;
         set
         {
-            SetProperty(ref _groupID, value);
+            _ = SetProperty(ref _groupID, value);
             OnPropertyChanged(nameof(GroupName));
         }
     }
-    public string GroupName
-    {
-        get => BannerUtils.GetGroupName(GroupID);
-    }
+    public string GroupName => BannerUtils.GetGroupName(GroupID);
 
-    public bool CanExport
-    {
-        get => Icons.Count > 0;
-    }
+    public bool CanExport => Icons.Count > 0;
 
-    public IEnumerable<BannerIconViewModel> AllSelection
-    {
-        get => Icons.Where(icon => icon.IsSelected);
-    }
-    public BannerIconViewModel SingleSelection
-    {
-        get => Icons.Where(icon => icon.IsSelected).FirstOrDefault();
-    }
-    public bool HasSelection
-    {
-        get => Icons.Any(icon => icon.IsSelected);
-    }
+    public IEnumerable<BannerIconViewModel> AllSelection => Icons.Where(icon => icon.IsSelected);
+    public BannerIconViewModel SingleSelection => Icons.Where(icon => icon.IsSelected).FirstOrDefault();
+    public bool HasSelection => Icons.Any(icon => icon.IsSelected);
 
     internal BannerGroupViewModel()
     {
-        _icons.CollectionChanged += _icons_CollectionChanged;
+        Icons.CollectionChanged += _icons_CollectionChanged;
     }
 
-    private void _icons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    void _icons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.Action != NotifyCollectionChangedAction.Reset)
         {
@@ -65,16 +49,16 @@ public class BannerGroupViewModel : BindableBase
 
     public void AddIcons(IEnumerable<StorageFile> files)
     {
-        var icons = files
+        IEnumerable<BannerIconViewModel> icons = files
             .Where(file =>
-                !_icons.Any(icon =>
+                !Icons.Any(icon =>
                     icon.TexturePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)
                 )
             )
             .Select(file => new BannerIconViewModel(this, file.Path));
-        foreach (var icon in icons)
+        foreach (BannerIconViewModel icon in icons)
         {
-            _icons.Add(icon);
+            Icons.Add(icon);
             icon.AutoScanSprite();
         }
     }
@@ -83,7 +67,7 @@ public class BannerGroupViewModel : BindableBase
         var queue = new Queue<BannerIconViewModel>(icons);
         while (queue.Count > 0)
         {
-            var deleting = queue.Dequeue();
+            BannerIconViewModel deleting = queue.Dequeue();
             if (!Icons.Remove(deleting))
             {
                 // a more expensive way to ensure the icon is deleted
@@ -97,9 +81,9 @@ public class BannerGroupViewModel : BindableBase
     }
     public void RefreshCellIndex()
     {
-        for (int i = 0; i < _icons.Count; i++)
+        for (var i = 0; i < Icons.Count; i++)
         {
-            _icons[i].CellIndex = i;
+            Icons[i].CellIndex = i;
         }
     }
     public void NotifySelectionChange()
@@ -116,7 +100,7 @@ public class BannerGroupViewModel : BindableBase
             Name = GroupName,
             IsPattern = false,
         };
-        foreach (var icon in Icons)
+        foreach (BannerIconViewModel icon in Icons)
         {
             group.Icons.Add(icon.ToBannerIcon());
         }
@@ -141,7 +125,7 @@ public class BannerGroupViewModel : BindableBase
         public BannerGroupViewModel Load()
         {
             var vm = new BannerGroupViewModel() { GroupID = GroupID };
-            foreach (var icon in Icons)
+            foreach (BannerIconViewModel.SaveData icon in Icons)
             {
                 vm.Icons.Add(icon.Load(vm));
             }

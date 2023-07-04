@@ -8,24 +8,18 @@ namespace BannerlordImageTool.Win.Pages.Settings.ViewModels;
 
 public class BannerSettingsViewModel : BindableBase
 {
-    private readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
+    readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
     public ObservableCollection<BannerSpriteScanFolderViewModel> SpriteScanFolders { get; } = new();
-    private int _selectedScanFolderIndex;
+    int _selectedScanFolderIndex;
     public int SelectedSpriteScanFolderIndex
     {
         get => _selectedScanFolderIndex;
-        set
-        {
-            SetProperty(ref _selectedScanFolderIndex, value);
-        }
+        set => SetProperty(ref _selectedScanFolderIndex, value);
     }
-    public BannerSpriteScanFolderViewModel SelectedSpriteScanFolder
-    {
-        get => SelectedSpriteScanFolderIndex >= 0
+    public BannerSpriteScanFolderViewModel SelectedSpriteScanFolder => SelectedSpriteScanFolderIndex >= 0
             && SelectedSpriteScanFolderIndex < SpriteScanFolders.Count
                 ? SpriteScanFolders[SelectedSpriteScanFolderIndex]
                 : null;
-    }
 
     public int CustomGroupStartID
     {
@@ -48,7 +42,7 @@ public class BannerSettingsViewModel : BindableBase
 
     public BannerSettingsViewModel()
     {
-        foreach (var folderVM in _settings.Banner.SpriteScanFolders.Select(relPath => new BannerSpriteScanFolderViewModel(relPath)))
+        foreach (BannerSpriteScanFolderViewModel folderVM in _settings.Banner.SpriteScanFolders.Select(relPath => new BannerSpriteScanFolderViewModel(relPath)))
         {
             SpriteScanFolders.Add(folderVM);
         }
@@ -74,7 +68,7 @@ public class BannerSettingsViewModel : BindableBase
         };
     }
 
-    private void OnScanFolderPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    void OnScanFolderPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(BannerSpriteScanFolderViewModel.RelativePath))
         {

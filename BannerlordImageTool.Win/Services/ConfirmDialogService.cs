@@ -24,7 +24,7 @@ public class ConfirmDialogService : IConfirmDialogService
     }
     public Task<ContentDialogResult> Show(UIElement sender, Action<ContentDialog> customizer)
     {
-        var dialog = Create(sender);
+        ContentDialog dialog = Create(sender);
         customizer(dialog);
         return dialog.ShowAsync().AsTask();
     }

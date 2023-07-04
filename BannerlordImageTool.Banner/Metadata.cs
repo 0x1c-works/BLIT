@@ -16,7 +16,7 @@ public class BannerIconData
         var serializer = new XmlSerializer(typeof(XmlDoc));
         if (!string.IsNullOrEmpty(outDir))
         {
-            Directory.CreateDirectory(outDir);
+            _ = Directory.CreateDirectory(outDir);
         }
 
         using var writer = new FileStream(Path.Join(outDir, XML_FILE_NAME), FileMode.Create);

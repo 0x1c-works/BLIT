@@ -30,12 +30,8 @@ public static class NativeHelpers
         }
         try
         {
-            int hr = (int)Ole32.CoInitialize();
-            if (hr < HRESULT.S_OK)
-            {
-                throw new HRESULTException(hr, "Failed to initialize the COM components");
-            }
-            return func();
+            var hr = (int)Ole32.CoInitialize();
+            return hr < HRESULT.S_OK ? throw new HRESULTException(hr, "Failed to initialize the COM components") : func();
         }
         catch (COMException ex)
         {

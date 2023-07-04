@@ -7,10 +7,10 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 
 public class BannerColorViewModel : BindableBase
 {
-    private int _id;
-    private Color _color;
-    private bool _isForSigil = true;
-    private bool _isForBackground = true;
+    int _id;
+    Color _color;
+    bool _isForSigil = true;
+    bool _isForBackground = true;
 
     public int ID
     {
@@ -33,10 +33,7 @@ public class BannerColorViewModel : BindableBase
         set => SetProperty(ref _isForBackground, value);
     }
 
-    public bool CanExport
-    {
-        get => ID >= 0 && Color.A > 0;
-    }
+    public bool CanExport => ID >= 0 && Color.A > 0;
 
     public BannerColor ToBannerColor()
     {
@@ -50,7 +47,7 @@ public class BannerColorViewModel : BindableBase
 
     static string ColorToHex(Color color)
     {
-        return $"0xff{color.R.ToString("X2")}{color.G.ToString("X2")}{color.B.ToString("X2")}";
+        return $"0xff{color.R:X2}{color.G:X2}{color.B:X2}";
     }
 
     [MessagePackObject]

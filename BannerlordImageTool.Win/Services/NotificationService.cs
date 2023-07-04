@@ -20,12 +20,12 @@ public record struct Notification(ToastVariant Variant,
         Button actionButton = null;
         if (Action.HasValue)
         {
-            var action = Action.Value;
+            NotificationAction action = Action.Value;
             actionButton = new Button() {
                 Content = action.Text,
             };
             actionButton.Click += (s, e) => {
-                var toast = (s as Button).FindAscendant<Toast>();
+                Toast toast = (s as Button).FindAscendant<Toast>();
                 action.OnClick(toast, e);
             };
         }
