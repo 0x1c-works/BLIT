@@ -70,6 +70,6 @@ public sealed partial class BannerSpriteScanFoldersEditor : UserControl
             return;
         }
 
-        _ = ViewModel.SpriteScanFolders.Remove(ViewModel.SelectedSpriteScanFolder);
+        ViewModel.SpriteScanFolders.Remove(ViewModel.SelectedSpriteScanFolder);
     }
 }

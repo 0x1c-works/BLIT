@@ -26,7 +26,7 @@ public class BannerIconsPageViewModel : BindableBase
         get => _selectedGroup;
         set
         {
-            _ = SetProperty(ref _selectedGroup, value);
+            SetProperty(ref _selectedGroup, value);
             OnPropertyChanged(nameof(HasSelectedGroup));
             OnPropertyChanged(nameof(ShowEmptyHint));
         }
@@ -54,7 +54,7 @@ public class BannerIconsPageViewModel : BindableBase
         get => _isExporting;
         set
         {
-            _ = SetProperty(ref _isExporting, value);
+            SetProperty(ref _isExporting, value);
             OnPropertyChanged(nameof(CanExport));
         }
     }
@@ -66,7 +66,7 @@ public class BannerIconsPageViewModel : BindableBase
         get => _isSavingOrLoading;
         set
         {
-            _ = SetProperty(ref _isSavingOrLoading, value);
+            SetProperty(ref _isSavingOrLoading, value);
             OnPropertyChanged(nameof(CanExport));
         }
     }
@@ -125,7 +125,7 @@ public class BannerIconsPageViewModel : BindableBase
         }
 
         group.PropertyChanged -= OnGroupPropertyChanged;
-        _ = Groups.Remove(group);
+        Groups.Remove(group);
         if (group == SelectedGroup)
         {
             SelectedGroup = Groups.Count > 0 ? Groups[Math.Max(0, index - 1)] : null;
@@ -142,7 +142,7 @@ public class BannerIconsPageViewModel : BindableBase
         BannerColorViewModel[] deleting = colors.ToArray();
         foreach (BannerColorViewModel color in deleting)
         {
-            _ = Colors.Remove(color);
+            Colors.Remove(color);
         }
     }
     public int GetNextGroupID()

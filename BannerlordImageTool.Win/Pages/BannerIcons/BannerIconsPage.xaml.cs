@@ -81,7 +81,7 @@ public sealed partial class BannerIconsPage : Page
             await SpriteOrganizer.CollectToSpriteParts(outFolder.Path, ViewModel.ToIconSprites());
             var outDir = await ExportXML(outFolder);
 
-            _ = AppServices.Get<INotificationService>().Notify(new(
+            AppServices.Get<INotificationService>().Notify(new(
                 ToastVariant.Success,
                 Message: string.Format(I18n.Current.GetString("ExportSuccess"), outDir),
                 Action: new(
@@ -99,7 +99,7 @@ public sealed partial class BannerIconsPage : Page
 
         await DoExportAsync(async () => {
             var outDir = await ExportXML(outFolder);
-            _ = AppServices.Get<INotificationService>().Notify(new(
+            AppServices.Get<INotificationService>().Notify(new(
                 ToastVariant.Success,
                 Message: string.Format(I18n.Current.GetString("SaveXMLSuccess"), Path.Join(outDir, "banner_icons.xml")),
                 Action: new(
@@ -129,7 +129,7 @@ public sealed partial class BannerIconsPage : Page
         }
         catch (Exception ex)
         {
-            _ = AppServices.Get<INotificationService>().Notify(new(
+            AppServices.Get<INotificationService>().Notify(new(
                 ToastVariant.Error,
                 Message: ex.Message,
                 Title: string.Format(

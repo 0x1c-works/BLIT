@@ -28,12 +28,20 @@ public static class CommonFileTypes
 }
 public static class FileHelpers
 {
+    static bool IsDirectory(string path)
+    {
+        return File.GetAttributes(path).HasFlag(FileAttributes.Directory);
+    }
+    static string GetDirectory(string path)
+    {
+        return IsDirectory(path) ? path : Path.GetDirectoryName(path);
+    }
     public static void OpenFolderInExplorer(string path)
     {
-        if (!File.GetAttributes(path).HasFlag(FileAttributes.Directory))
-        {
-            path = Path.GetDirectoryName(path);
-        }
-        _ = Process.Start("explorer.exe", path);
+        Process.Start("explorer.exe", GetDirectory(path));
+    }
+    public static void EnsureDirectory(ref string path)
+    {
+        path = Directory.CreateDirectory(path).FullName;
     }
 }

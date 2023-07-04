@@ -20,7 +20,7 @@ public class BannerGroupViewModel : BindableBase
         get => _groupID;
         set
         {
-            _ = SetProperty(ref _groupID, value);
+            SetProperty(ref _groupID, value);
             OnPropertyChanged(nameof(GroupName));
         }
     }

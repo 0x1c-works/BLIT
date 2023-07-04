@@ -14,7 +14,7 @@ public class SpriteOrganizer
     {
         if (!string.IsNullOrEmpty(outDir))
         {
-            _ = Directory.CreateDirectory(outDir);
+            outDir = Directory.CreateDirectory(outDir).FullName;
         }
 
         await Task.WhenAll(icons.Select(icon => ResizeAndSave(outDir, icon)));
@@ -24,13 +24,13 @@ public class SpriteOrganizer
     {
         var doc = new XmlDocument();
         XmlElement root = doc.CreateElement("Config");
-        _ = doc.AppendChild(root);
+        doc.AppendChild(root);
         foreach (IconSprite? icon in icons.Where(icon => icon.AlwaysLoad).DistinctBy(icon => icon.GroupID))
         {
             XmlElement node = doc.CreateElement("SpriteCategory");
             node.SetAttribute("Name", GetAtlasID(icon.GroupID));
-            _ = node.AppendChild(doc.CreateElement("AlwaysLoad"));
-            _ = root.AppendChild(node);
+            node.AppendChild(doc.CreateElement("AlwaysLoad"));
+            root.AppendChild(node);
         }
         using var writer = XmlWriter.Create(
             Path.Join(EnsureSpriteFolder(outDir), "Config.xml"),
@@ -44,15 +44,13 @@ public class SpriteOrganizer
     static string EnsureSpriteFolder(string outDir)
     {
         var dir = Path.Join(outDir, SPRITE_SUB_FOLDER);
-        _ = Directory.CreateDirectory(dir);
-        return dir;
+        return Directory.CreateDirectory(dir).FullName;
     }
 
     static string EnsureGroupFolder(string outDir, int groupID)
     {
         var dir = Path.Join(EnsureSpriteFolder(outDir), GetAtlasID(groupID));
-        _ = Directory.CreateDirectory(dir);
-        return dir;
+        return Directory.CreateDirectory(dir).FullName;
     }
 
     static async Task ResizeAndSave(string outDir, IconSprite icon)

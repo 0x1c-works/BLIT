@@ -150,7 +150,7 @@ public abstract class ThemedWindow : Window
 
             // Enable the system backdrop.
             // Note: Be sure to have "using WinRT;" to support the Window.As<...>() call.
-            _ = m_micaController.AddSystemBackdropTarget(AsSystemBackdropTarget());
+            m_micaController.AddSystemBackdropTarget(AsSystemBackdropTarget());
             m_micaController.SetSystemBackdropConfiguration(m_configurationSource);
             return true; // succeeded
         }
@@ -176,7 +176,7 @@ public abstract class ThemedWindow : Window
 
             // Enable the system backdrop.
             // Note: Be sure to have "using WinRT;" to support the Window.As<...>() call.
-            _ = m_acrylicController.AddSystemBackdropTarget(AsSystemBackdropTarget());
+            m_acrylicController.AddSystemBackdropTarget(AsSystemBackdropTarget());
             m_acrylicController.SetSystemBackdropConfiguration(m_configurationSource);
             return true; // succeeded
         }

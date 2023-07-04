@@ -31,7 +31,7 @@ public class SpriteUnpacker
             var dir = Path.GetDirectoryName(outputFile);
             if (!string.IsNullOrEmpty(dir))
             {
-                _ = Directory.CreateDirectory(dir);
+                Directory.CreateDirectory(dir);
             }
 
             UnpackSingle(sourceFile, outputFile, row.Region);

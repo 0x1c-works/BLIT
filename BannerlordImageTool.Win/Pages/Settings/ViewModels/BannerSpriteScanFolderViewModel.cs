@@ -17,7 +17,7 @@ public class BannerSpriteScanFolderViewModel : BindableBase
         get => _isEditing;
         set
         {
-            _ = SetProperty(ref _isEditing, value);
+            SetProperty(ref _isEditing, value);
             OnPropertyChanged(nameof(EditVisibility));
             OnPropertyChanged(nameof(LabelVisibility));
         }

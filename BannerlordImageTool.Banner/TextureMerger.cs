@@ -25,8 +25,7 @@ public class TextureMerger
     static string EnsureOutFolder(string outDir)
     {
         var dir = Path.Join(outDir, TEXTURE_SUB_FOLDER);
-        _ = Directory.CreateDirectory(dir);
-        return dir;
+        return Directory.CreateDirectory(dir).FullName;
     }
 
     public void Merge(string outDir, int groupID, string[] sourceFileNames)

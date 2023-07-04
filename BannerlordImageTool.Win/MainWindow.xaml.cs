@@ -54,7 +54,7 @@ public sealed partial class MainWindow : ThemedWindow
 
         if (args.IsSettingsSelected)
         {
-            _ = AppContent.Navigate(typeof(SettingsPage));
+            AppContent.Navigate(typeof(SettingsPage));
         }
         else
         {
@@ -63,7 +63,7 @@ public sealed partial class MainWindow : ThemedWindow
                 var tag = item?.Tag as string;
                 if (TAGGED_PAGES.TryGetValue(tag, out Type pageType))
                 {
-                    _ = AppContent.Navigate(pageType);
+                    AppContent.Navigate(pageType);
                 }
             }
         }

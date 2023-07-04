@@ -42,7 +42,7 @@ public sealed partial class ToastPanel : UserControl
     {
         Toast toast = notification.CreateToast();
         toast.OnClosed += (t) => {
-            _ = container.Children.Remove(t);
+            container.Children.Remove(t);
         };
         container.Children.Add(toast);
         return toast;

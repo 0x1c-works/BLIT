@@ -101,7 +101,7 @@ public sealed partial class Toast : UserControl
         {
             CancellationToken cancelToken = _cancelTimeout.Token;
             // close the toast after timeout
-            _ = Task.Delay(TimeSpan.FromSeconds(TimeoutSeconds), cancelToken)
+            Task.Delay(TimeSpan.FromSeconds(TimeoutSeconds), cancelToken)
                 .ContinueWith(t => {
                     if (!IsOpen)
                     {
@@ -117,7 +117,7 @@ public sealed partial class Toast : UserControl
             // update the toast's progress bar during the countdown
             var timeRemaining = TimeoutSeconds;
             var total = TimeoutSeconds;
-            _ = Task.Run(async () => {
+            Task.Run(async () => {
                 if (timeRemaining < 0)
                 {
                     return;
@@ -125,7 +125,7 @@ public sealed partial class Toast : UserControl
 
                 var UpdateProgress = new Func<double, Task>(async (t) => {
                     var progress = t / total * 100;
-                    _ = await DispatcherQueue.EnqueueAsync(() => ViewModel.Progress = progress);
+                    await DispatcherQueue.EnqueueAsync(() => ViewModel.Progress = progress);
                 });
                 await UpdateProgress(timeRemaining);
                 DateTime prevTime = DateTime.Now;
@@ -160,7 +160,7 @@ public class ToastViewModel : BindableBase
         get => _variant;
         set
         {
-            _ = SetProperty(ref _variant, value);
+            SetProperty(ref _variant, value);
             OnPropertyChanged(nameof(ProgressBarVisibility));
         }
     }
@@ -188,7 +188,7 @@ public class ToastViewModel : BindableBase
         get => _progress;
         set
         {
-            _ = SetProperty(ref _progress, value);
+            SetProperty(ref _progress, value);
             OnPropertyChanged(nameof(ProgressBarVisibility));
         }
     }
@@ -219,7 +219,7 @@ public class ToastVariantIsIconVisibleConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        return value is not ToastVariant ? true : (object)((ToastVariant)value != ToastVariant.Progressing);
+        return value is not ToastVariant v ? true : (object)(v != ToastVariant.Progressing);
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)
@@ -231,9 +231,9 @@ public class ToastVariantSeverityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        return value is not ToastVariant
+        return value is not ToastVariant v
             ? InfoBarSeverity.Informational
-            : value switch {
+            : v switch {
                 ToastVariant.Warning => InfoBarSeverity.Warning,
                 ToastVariant.Error => InfoBarSeverity.Error,
                 ToastVariant.Success => InfoBarSeverity.Success,
@@ -250,7 +250,7 @@ public class ToastProgressBarIndeterminateConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        return value is not double || (double)value < 0;
+        return value is not double v || v < 0;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)

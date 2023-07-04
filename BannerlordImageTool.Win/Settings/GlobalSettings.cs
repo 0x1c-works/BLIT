@@ -12,7 +12,7 @@ public class GlobalSettings : BindableBase
         get => _gameRootFolder;
         set
         {
-            _ = SetProperty(ref _gameRootFolder, value);
+            SetProperty(ref _gameRootFolder, value);
             OnPropertyChanged(nameof(GameRootFolderPath));
         }
     }

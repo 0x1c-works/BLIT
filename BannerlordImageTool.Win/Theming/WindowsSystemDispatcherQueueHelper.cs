@@ -30,7 +30,7 @@ class WindowsSystemDispatcherQueueHelper
             options.threadType = 2;    // DQTYPE_THREAD_CURRENT
             options.apartmentType = 2; // DQTAT_COM_STA
 
-            _ = CreateDispatcherQueueController(options, ref m_dispatcherQueueController);
+            CreateDispatcherQueueController(options, ref m_dispatcherQueueController);
         }
     }
 }

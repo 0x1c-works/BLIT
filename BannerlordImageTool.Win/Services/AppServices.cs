@@ -13,17 +13,17 @@ public class AppServices
     {
         var builder = new ContainerBuilder();
         // Singleton services
-        _ = builder.RegisterType<FileDialogService>().AsImplementedInterfaces().SingleInstance();
-        _ = builder.RegisterType<ConfirmDialogService>().AsImplementedInterfaces().SingleInstance();
-        _ = builder.RegisterType<NotificationService>().AsImplementedInterfaces().SingleInstance();
+        builder.RegisterType<FileDialogService>().AsImplementedInterfaces().SingleInstance();
+        builder.RegisterType<ConfirmDialogService>().AsImplementedInterfaces().SingleInstance();
+        builder.RegisterType<NotificationService>().AsImplementedInterfaces().SingleInstance();
 
         // Singleton data objects
-        _ = builder.RegisterType<GlobalSettings>().AsSelf().SingleInstance();
-        _ = builder.Register((ctx) => BannerSettings.Load()).AsSelf().SingleInstance();
-        _ = builder.RegisterType<BannerIconsPageViewModel>().AsSelf().SingleInstance();
+        builder.RegisterType<GlobalSettings>().AsSelf().SingleInstance();
+        builder.Register((ctx) => BannerSettings.Load()).AsSelf().SingleInstance();
+        builder.RegisterType<BannerIconsPageViewModel>().AsSelf().SingleInstance();
 
         // Scoped services
-        _ = builder.RegisterType<SettingsService>().AsImplementedInterfaces();
+        builder.RegisterType<SettingsService>().AsImplementedInterfaces();
 
         return new AutofacServiceProvider(builder.Build());
     }

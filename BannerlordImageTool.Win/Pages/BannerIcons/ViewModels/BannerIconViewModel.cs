@@ -25,7 +25,7 @@ public class BannerIconViewModel : BindableBase
                 return;
             }
 
-            _ = SetProperty(ref _texturePath, value);
+            SetProperty(ref _texturePath, value);
         }
     }
     public string SpritePath
@@ -39,7 +39,7 @@ public class BannerIconViewModel : BindableBase
                 return;
             }
 
-            _ = SetProperty(ref _spritePath, newPath);
+            SetProperty(ref _spritePath, newPath);
         }
     }
     public int CellIndex
@@ -52,7 +52,7 @@ public class BannerIconViewModel : BindableBase
                 return;
             }
 
-            _ = SetProperty(ref _cellIndex, value);
+            SetProperty(ref _cellIndex, value);
             OnPropertyChanged(nameof(ID));
             OnPropertyChanged(nameof(AtlasName));
         }
