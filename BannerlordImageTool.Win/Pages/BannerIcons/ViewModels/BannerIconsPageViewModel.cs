@@ -171,6 +171,7 @@ public class BannerIconsPageViewModel : BindableBase
         IsExporting = false;
         SelectedGroup = null;
         CurrentFile = null;
+        IsSavingOrLoading = false;
     }
 
     public async Task Save(string filePath)
