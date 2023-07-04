@@ -28,7 +28,7 @@ public class AppServices
 
         // Scoped components
         builder.RegisterType<BannerIconsPageViewModel>().InstancePerLifetimeScope();
-        builder.RegisterType<BannerGroupViewModel>().InstancePerLifetimeScope();
+        builder.RegisterType<BannerGroupViewModel>().InstancePerLifetimeScope().WithParameter(new TypedParameter(typeof(int), -1));
         builder.RegisterType<BannerColorViewModel>().InstancePerLifetimeScope();
         builder.RegisterType<BannerIconViewModel>().InstancePerLifetimeScope();
 

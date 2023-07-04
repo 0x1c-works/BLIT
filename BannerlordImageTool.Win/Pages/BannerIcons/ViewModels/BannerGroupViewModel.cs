@@ -12,6 +12,7 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 
 public class BannerGroupViewModel : BindableBase
 {
+    public delegate BannerGroupViewModel Factory(int groupID);
     public ObservableCollection<BannerIconViewModel> Icons { get; } = new();
 
     int _groupID = 7;
@@ -32,8 +33,9 @@ public class BannerGroupViewModel : BindableBase
     public BannerIconViewModel SingleSelection => Icons.Where(icon => icon.IsSelected).FirstOrDefault();
     public bool HasSelection => Icons.Any(icon => icon.IsSelected);
 
-    public BannerGroupViewModel()
+    public BannerGroupViewModel(int groupID)
     {
+        GroupID = groupID;
         Icons.CollectionChanged += _icons_CollectionChanged;
     }
 
@@ -122,9 +124,9 @@ public class BannerGroupViewModel : BindableBase
         }
         public SaveData() { }
 
-        public BannerGroupViewModel Load()
+        public BannerGroupViewModel Load(Factory factory)
         {
-            var vm = new BannerGroupViewModel() { GroupID = GroupID };
+            BannerGroupViewModel vm = factory(GroupID);
             foreach (BannerIconViewModel.SaveData icon in Icons)
             {
                 vm.Icons.Add(icon.Load(vm));

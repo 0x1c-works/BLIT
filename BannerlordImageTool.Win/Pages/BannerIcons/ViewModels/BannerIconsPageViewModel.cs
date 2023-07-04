@@ -15,7 +15,14 @@ using Windows.Storage;
 namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 public class BannerIconsPageViewModel : BindableBase
 {
-    readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
+    public BannerIconsPageViewModel(ISettingsService settings, BannerGroupViewModel.Factory bannerGroupFactory)
+    {
+        _settings = settings;
+        _bannerGroupFactory = bannerGroupFactory;
+    }
+    readonly BannerGroupViewModel.Factory _bannerGroupFactory;
+    readonly ISettingsService _settings;
+
     public ObservableCollection<BannerGroupViewModel> Groups { get; } = new();
     public ObservableCollection<BannerColorViewModel> Colors { get; } = new();
     public StorageFile CurrentFile { get; set; }
@@ -58,7 +65,6 @@ public class BannerIconsPageViewModel : BindableBase
             OnPropertyChanged(nameof(CanExport));
         }
     }
-    public bool CanExport => !_isExporting && !IsSavingOrLoading && (Groups.Any(g => g.CanExport) || Colors.Count > 0);
 
     bool _isSavingOrLoading = false;
     public bool IsSavingOrLoading
@@ -70,6 +76,7 @@ public class BannerIconsPageViewModel : BindableBase
             OnPropertyChanged(nameof(CanExport));
         }
     }
+    public bool CanExport => !_isExporting && !IsSavingOrLoading && (Groups.Any(g => g.CanExport) || Colors.Count > 0);
 
     public BannerIconData ToBannerIconData()
     {
@@ -104,7 +111,7 @@ public class BannerIconsPageViewModel : BindableBase
 
     public void AddGroup()
     {
-        var newGroup = new BannerGroupViewModel() { GroupID = GetNextGroupID() };
+        BannerGroupViewModel newGroup = _bannerGroupFactory(GetNextGroupID());
         newGroup.PropertyChanged += OnGroupPropertyChanged;
         Groups.Add(newGroup);
         SelectedGroup ??= Groups.Last();
@@ -202,7 +209,7 @@ public class BannerIconsPageViewModel : BindableBase
             Colors.Clear();
             foreach (BannerGroupViewModel.SaveData groupData in data.Groups)
             {
-                Groups.Add(groupData.Load());
+                Groups.Add(groupData.Load(_bannerGroupFactory));
             }
             foreach (BannerColorViewModel.SaveData colorData in data.Colors)
             {
