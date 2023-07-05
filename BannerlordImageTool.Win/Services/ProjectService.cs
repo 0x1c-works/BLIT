@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using BannerlordImageTool.Win.Helpers;
 using Serilog;
 using System;
 using System.ComponentModel;
@@ -18,9 +17,9 @@ public interface IStreamReadWrite
 public interface IProjectService<T> where T : IProject
 {
     event Action<T> ProjectChanged;
-    ILifetimeScope Scope { get; }
     T Current { get; }
     StorageFile CurrentFile { get; }
+    string Name { get; }
 
     Task<T> NewProject(Func<T, Task> onLoad = null);
     Task Save(string filePath);
@@ -32,9 +31,9 @@ public interface IProject : INotifyPropertyChanged, IStreamReadWrite
     void AfterLoaded();
 }
 
-class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T : IProject
+class ProjectService<T> : IProjectService<T>, IDisposable where T : IProject
 {
-    public ILifetimeScope Scope { get; private set; }
+    ILifetimeScope _scope;
 
     public event Action<T> ProjectChanged;
 
@@ -42,28 +41,28 @@ class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T 
     public T Current
     {
         get => _vm;
-        set => SetProperty(ref _vm, value);
+        set
+        {
+            _vm = value;
+            ProjectChanged?.Invoke(value);
+        }
     }
     public StorageFile CurrentFile { get; private set; }
-
-    public ProjectService()
+    public string Name
     {
-        PropertyChanged += OnPropertyChanged;
-    }
-
-    void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(Current))
+        get
         {
-            ProjectChanged?.Invoke(Current);
+            var path = CurrentFile?.Path;
+            if (string.IsNullOrEmpty(path)) return "";
+            return Path.GetFileName(path);
         }
     }
 
     public async Task<T> NewProject(Func<T, Task> onLoad = null)
     {
         Dispose();
-        Scope = AppServices.Container.BeginLifetimeScope(typeof(T).Name);
-        T vm = Scope.Resolve<T>();
+        _scope = AppServices.Container.BeginLifetimeScope(typeof(T).Name);
+        T vm = _scope.Resolve<T>();
         if (onLoad != null)
         {
             await onLoad(vm);
@@ -87,7 +86,7 @@ class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T 
 
     public void Dispose()
     {
-        Log.Debug("Project {Project} (scope {Scope}) is disposed", Current, Scope?.Tag ?? "(new)");
-        Scope?.Dispose();
+        Log.Debug("Project {Project} (scope {Scope}) is disposed", Current, _scope?.Tag ?? "(new)");
+        _scope?.Dispose();
     }
 }
