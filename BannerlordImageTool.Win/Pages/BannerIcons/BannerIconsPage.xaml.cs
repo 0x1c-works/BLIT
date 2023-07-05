@@ -23,7 +23,7 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class BannerIconsPage : Page, INotifyPropertyChanged
+public sealed partial class BannerIconsPage : Page
 {
     static readonly Guid GUID_EXPORT_DIALOG = new("0c5f39f0-1a31-4d85-a9ee-7ad0cfd690b6");
     static readonly Guid GUID_PROJECT_DIALOG = new("f86d402a-33de-4f62-8c2b-c5e75428c018");
@@ -31,8 +31,6 @@ public sealed partial class BannerIconsPage : Page, INotifyPropertyChanged
     readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
     readonly IFileDialogService _fileDialog = AppServices.Get<IFileDialogService>();
     readonly IProjectService<BannerIconsPageViewModel> _project = AppServices.Get<IProjectService<BannerIconsPageViewModel>>();
-
-    public event PropertyChangedEventHandler PropertyChanged;
 
     BannerIconsPageViewModel ViewModel { get => _project.ViewModel; }
 
@@ -45,7 +43,7 @@ public sealed partial class BannerIconsPage : Page, INotifyPropertyChanged
     void OnProjectChanged(BannerIconsPageViewModel vm)
     {
         vm.PropertyChanged += ViewModel_PropertyChanged;
-        PropertyChanged?.Invoke(this, new(nameof(ViewModel)));
+        Bindings.Update();
     }
 
     void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)

@@ -208,15 +208,19 @@ public class BannerIconsPageViewModel : BindableBase, IProject
             {
                 Colors.Add(colorData.Load(_colorFactory));
             }
-            // Update the selection if there is any
-            SelectedGroup = HasSelectedGroup ? Groups.FirstOrDefault(g => g.GroupID == SelectedGroup.GroupID) : Groups.FirstOrDefault();
-            OnPropertyChanged(nameof(CanExport));
         }
         catch (Exception ex) { Log.Error(ex, "error in loading the banner project"); }
         finally
         {
             IsSavingOrLoading = false;
         }
+    }
+
+    public void AfterLoaded()
+    {
+        // Update the selection if there is any
+        SelectedGroup = HasSelectedGroup ? Groups.FirstOrDefault(g => g.GroupID == SelectedGroup.GroupID) : Groups.FirstOrDefault();
+        OnPropertyChanged(nameof(CanExport));
     }
 
     [MessagePackObject]

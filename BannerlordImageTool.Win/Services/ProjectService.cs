@@ -29,6 +29,7 @@ public interface IProjectService<T> where T : IProject
 
 public interface IProject : INotifyPropertyChanged, IStreamReadWrite
 {
+    void AfterLoaded();
 }
 
 class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T : IProject
@@ -68,6 +69,7 @@ class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T 
             await onLoad(vm);
         }
         ViewModel = vm;
+        vm.AfterLoaded();
         return ViewModel;
     }
     public async Task Save(string filePath)
