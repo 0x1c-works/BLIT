@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using BannerlordImageTool.Win.ViewModels.Settings;
+using BannerlordImageTool.Win.Pages.Settings.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -25,50 +25,51 @@ public sealed partial class BannerSpriteScanFoldersEditor : UserControl
 
     public BannerSpriteScanFoldersEditor()
     {
-        this.InitializeComponent();
+        InitializeComponent();
     }
 
-    private void btnAdd_Click(object sender, RoutedEventArgs e)
+    void btnAdd_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.SpriteScanFolders.Add(new BannerSpriteScanFolderViewModel());
         ViewModel.SelectedSpriteScanFolderIndex = ViewModel.SpriteScanFolders.Count - 1;
     }
 
-    private void btnEdit_Click(object sender, RoutedEventArgs e)
+    void btnEdit_Click(object sender, RoutedEventArgs e)
     {
         EditSelectedFolder();
     }
 
-    private void btnDelete_Click(object sender, RoutedEventArgs e)
+    void btnDelete_Click(object sender, RoutedEventArgs e)
     {
         DeleteSelectedFolder();
     }
 
-    private void listViewBannerSrpiteScanFolders_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    void listViewBannerSrpiteScanFolders_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (e.AddedItems.Count == 0)
-        {
-            ViewModel.SelectedSpriteScanFolderIndex = -1;
-        }
-        else
-        {
-            ViewModel.SelectedSpriteScanFolderIndex = listViewBannerSrpiteScanFolders.SelectedIndex;
-        }
+        ViewModel.SelectedSpriteScanFolderIndex = e.AddedItems.Count == 0 ? -1 : listViewBannerSrpiteScanFolders.SelectedIndex;
     }
 
-    private void listViewBannerSrpiteScanFolders_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+    void listViewBannerSrpiteScanFolders_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
     {
         EditSelectedFolder();
     }
 
     void EditSelectedFolder()
     {
-        if (ViewModel.SelectedSpriteScanFolder is null) return;
+        if (ViewModel.SelectedSpriteScanFolder is null)
+        {
+            return;
+        }
+
         ViewModel.SelectedSpriteScanFolder.IsEditing = true;
     }
     void DeleteSelectedFolder()
     {
-        if (ViewModel.SelectedSpriteScanFolder is null) return;
+        if (ViewModel.SelectedSpriteScanFolder is null)
+        {
+            return;
+        }
+
         ViewModel.SpriteScanFolders.Remove(ViewModel.SelectedSpriteScanFolder);
     }
 }

@@ -14,7 +14,7 @@ public class TextureMerger
         {OutputResolution.Res4K,1024 },
     };
 
-    private OutputResolution _resolution;
+    readonly OutputResolution _resolution;
 
     public TextureMerger(OutputResolution resolution)
     {
@@ -25,8 +25,7 @@ public class TextureMerger
     static string EnsureOutFolder(string outDir)
     {
         var dir = Path.Join(outDir, TEXTURE_SUB_FOLDER);
-        Directory.CreateDirectory(dir);
-        return dir;
+        return Directory.CreateDirectory(dir).FullName;
     }
 
     public void Merge(string outDir, int groupID, string[] sourceFileNames)
@@ -42,7 +41,7 @@ public class TextureMerger
         }
     }
 
-    private string[] MakeSingleTexture(string outBasePath, int texIndex, string[] sourceFileNames)
+    string[] MakeSingleTexture(string outBasePath, int texIndex, string[] sourceFileNames)
     {
         var index = 0;
         using var tex = new MagickImageCollection();
@@ -52,14 +51,18 @@ public class TextureMerger
             while (index < ROWS * COLS)
             {
                 var processedCount = MakeRow(tex, sourceFileNames.Skip(index).Take(COLS));
-                if (processedCount == 0) break;
+                if (processedCount == 0)
+                {
+                    break;
+                }
+
                 index += processedCount;
             }
             if (tex.Count > 0)
             {
                 // output tex
-                var outputFile = ($"{outBasePath}_{texIndex + 1:d2}.psd");
-                var output = tex.AppendVertically();
+                var outputFile = $"{outBasePath}_{texIndex + 1:d2}.psd";
+                IMagickImage<ushort> output = tex.AppendVertically();
                 output.BackgroundColor = new MagickColor(0, 0, 0, 0);
                 output.Extent(GetTextureGeometry(), Gravity.Northwest);
                 output.Write(outputFile);
@@ -73,9 +76,12 @@ public class TextureMerger
         }
     }
 
-    private int MakeRow(MagickImageCollection tex, IEnumerable<string> files)
+    int MakeRow(MagickImageCollection tex, IEnumerable<string> files)
     {
-        if (!files.Any()) return 0;
+        if (!files.Any())
+        {
+            return 0;
+        }
 
         using var row = new MagickImageCollection();
         var count = 0;
@@ -86,34 +92,30 @@ public class TextureMerger
         }
         if (row.Count > 0)
         {
-            var rowTex = row.AppendHorizontally();
+            IMagickImage<ushort> rowTex = row.AppendHorizontally();
             rowTex.BackgroundColor = MagickColor.FromRgba(0, 0, 0, 0);
             tex.Add(rowTex);
         }
         return count;
     }
 
-    private MagickGeometry GetTextureGeometry()
+    MagickGeometry GetTextureGeometry()
     {
-        if (!CELL_SIZES.TryGetValue(_resolution, out var size))
-        {
-            throw new ArgumentException($"unsupported output resolution: {_resolution}");
-        }
-        return new MagickGeometry(size * COLS, size * ROWS);
+        return !CELL_SIZES.TryGetValue(_resolution, out var size)
+            ? throw new ArgumentException($"unsupported output resolution: {_resolution}")
+            : new MagickGeometry(size * COLS, size * ROWS);
     }
 
-    private MagickGeometry GetCellGeometry()
+    MagickGeometry GetCellGeometry()
     {
-        if (!CELL_SIZES.TryGetValue(_resolution, out var size))
-        {
-            throw new ArgumentException($"unsupported output resolution: {_resolution}");
-        }
-        return new MagickGeometry(size);
+        return !CELL_SIZES.TryGetValue(_resolution, out var size)
+            ? throw new ArgumentException($"unsupported output resolution: {_resolution}")
+            : new MagickGeometry(size);
     }
 
-    private IMagickImage<ushort> ResizeCell(IMagickImage<ushort> image)
+    IMagickImage<ushort> ResizeCell(IMagickImage<ushort> image)
     {
-        var geo = GetCellGeometry();
+        MagickGeometry geo = GetCellGeometry();
         image.Resize(geo);
         image.Crop(geo, Gravity.Center);
         image.RePage();

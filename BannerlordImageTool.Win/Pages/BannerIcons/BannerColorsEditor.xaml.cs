@@ -2,8 +2,8 @@
 // Licensed under the MIT License.
 
 using BannerlordImageTool.Win.Helpers;
+using BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 using BannerlordImageTool.Win.Services;
-using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -19,69 +19,81 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons;
 
 public sealed partial class BannerColorsEditor : UserControl
 {
-    public DataViewModel DataViewModel
+    public BannerIconsPageViewModel PageViewModel
     {
-        get => GetValue(DataViewModelProperty) as DataViewModel;
-        set => SetValue(DataViewModelProperty, value);
+        get => GetValue(DataViewModelProperty) as BannerIconsPageViewModel;
+        set
+        {
+            SetValue(DataViewModelProperty, value);
+            Bindings.Update();
+        }
     }
     public static readonly DependencyProperty DataViewModelProperty = DependencyProperty.Register(
-        nameof(DataViewModel), typeof(DataViewModel), typeof(BannerColorsEditor), new PropertyMetadata(null));
+        nameof(PageViewModel), typeof(BannerIconsPageViewModel), typeof(BannerColorsEditor), new PropertyMetadata(null));
 
-    EditorViewModel editorViewModel;
+    readonly EditorViewModel editorViewModel;
 
     public BannerColorsEditor()
     {
-        this.InitializeComponent();
+        InitializeComponent();
         editorViewModel = new EditorViewModel(dataGrid);
     }
 
-    private async void btnChangeColor_Click(object sender, RoutedEventArgs e)
+    async void btnChangeColor_Click(object sender, RoutedEventArgs e)
     {
         var tag = (sender as Button)?.Tag;
-        if (tag is null || tag is not ColorViewModel vm) return;
-        var dialog = AppServices.Get<IConfirmDialogService>().Create(this);
+        if (tag is null || tag is not BannerColorViewModel vm)
+        {
+            return;
+        }
+
+        ContentDialog dialog = AppServices.Get<IConfirmDialogService>().Create(this);
         dialog.Title = I18n.Current.GetString("DialogSelectColor/Title");
         dialog.PrimaryButtonText = I18n.Current.GetString("ButtonOK/Content");
         dialog.SecondaryButtonText = I18n.Current.GetString("ButtonCancel/Content");
         dialog.DefaultButton = ContentDialogButton.Primary;
         var colorPicker = new CP() { Color = vm.Color };
         dialog.Content = colorPicker;
-        var result = await dialog.ShowAsync().AsTask();
+        ContentDialogResult result = await dialog.ShowAsync().AsTask();
         if (result == ContentDialogResult.Primary)
         {
             vm.Color = colorPicker.Color;
         }
     }
 
-    private void menuItemAdd_Click(object sender, RoutedEventArgs e)
+    void menuItemAdd_Click(object sender, RoutedEventArgs e)
     {
         AddNewColor();
     }
 
-    private async void menuItemDelete_Click(object sender, RoutedEventArgs e)
+    async void menuItemDelete_Click(object sender, RoutedEventArgs e)
     {
         await DeleteSelectedColors();
     }
 
-    private void btnAdd_Click(object sender, RoutedEventArgs e)
+    void btnAdd_Click(object sender, RoutedEventArgs e)
     {
         AddNewColor();
     }
 
-    private async void btnDelete_Click(object sender, RoutedEventArgs e)
+    async void btnDelete_Click(object sender, RoutedEventArgs e)
     {
         await DeleteSelectedColors();
     }
 
     void AddNewColor()
     {
-        DataViewModel.AddColor();
+        PageViewModel.AddColor();
     }
 
     async Task DeleteSelectedColors()
     {
-        var selection = editorViewModel.Selection;
-        if (!selection.Any()) return;
+        IEnumerable<BannerColorViewModel> selection = editorViewModel.Selection;
+        if (!selection.Any())
+        {
+            return;
+        }
+
         if (await AppServices.Get<IConfirmDialogService>().ShowDanger(
             this,
             I18n.Current.GetString("DialogDeleteColor/Title"),
@@ -91,18 +103,15 @@ public sealed partial class BannerColorsEditor : UserControl
             return;
         }
 
-        DataViewModel.DeleteColors(selection);
+        PageViewModel.DeleteColors(selection);
     }
 
     class EditorViewModel : BindableBase
     {
-        private DataGrid _dataGrid;
+        readonly DataGrid _dataGrid;
 
-        public IEnumerable<ColorViewModel> Selection
-        {
-            get => _dataGrid.SelectedItems.Cast<ColorViewModel>().Where(m => m is not null);
-        }
-        public bool HasSelection { get => Selection.Any(); }
+        public IEnumerable<BannerColorViewModel> Selection => _dataGrid.SelectedItems.Cast<BannerColorViewModel>().Where(m => m is not null);
+        public bool HasSelection => Selection.Any();
 
         public EditorViewModel(DataGrid dataGrid)
         {
@@ -110,7 +119,7 @@ public sealed partial class BannerColorsEditor : UserControl
             _dataGrid.SelectionChanged += _dataGrid_SelectionChanged;
         }
 
-        private void _dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        void _dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             OnPropertyChanged(nameof(HasSelection));
         }

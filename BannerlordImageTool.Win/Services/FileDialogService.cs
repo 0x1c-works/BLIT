@@ -24,20 +24,20 @@ public class FileDialogService : IFileDialogService
     public async Task<StorageFolder> OpenFolder(Guid stateGuid)
     {
         return await NativeHelpers.RunCom(async () => {
-            var ofd = CreateFileOpenDialog(stateGuid, Shell32.FILEOPENDIALOGOPTIONS.FOS_PICKFOLDERS);
+            Shell32.IFileOpenDialog ofd = CreateFileOpenDialog(stateGuid, Shell32.FILEOPENDIALOGOPTIONS.FOS_PICKFOLDERS);
 
             if (IsUserCancelled(ofd.Show(NativeHelpers.GetHwnd())))
             {
                 // User closes the dialog by clicking "Cancel".
                 return null;
             }
-            var selectedFolder = ofd.GetFolder();
+            Shell32.IShellItem selectedFolder = ofd.GetFolder();
             var path = selectedFolder.GetDisplayName(Shell32.SIGDN.SIGDN_FILESYSPATH);
             if (string.IsNullOrEmpty(path))
             {
                 throw new InvalidOperationException("failed to get the selected folder's path");
             }
-            var folder = await StorageFolder.GetFolderFromPathAsync(path);
+            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
             if (folder is not null)
             {
                 StorageApplicationPermissions.FutureAccessList.AddOrReplace(stateGuid.ToString(), folder);
@@ -53,13 +53,13 @@ public class FileDialogService : IFileDialogService
     public async Task<StorageFile> OpenFile(Guid stateGuid, string suggestedPath, FileType[] fileTypes)
     {
         return await NativeHelpers.RunCom(async () => {
-            var fd = CreateFileOpenDialog(stateGuid);
+            Shell32.IFileOpenDialog fd = CreateFileOpenDialog(stateGuid);
             fd.SetFileTypes((uint)fileTypes.Length, fileTypes.Select(ft => ft.ToFilterSpec()).ToArray());
 
             // Locate the suggested file if exists
             if (ParseFilePath(suggestedPath, out var dir, out var fileName))
             {
-                var folderItem = Shell32.SHCreateItemFromParsingName<Shell32.IShellItem>(dir);
+                Shell32.IShellItem folderItem = Shell32.SHCreateItemFromParsingName<Shell32.IShellItem>(dir);
                 fd.SetFolder(folderItem);
                 fd.SetFileName(fileName);
             }
@@ -73,21 +73,21 @@ public class FileDialogService : IFileDialogService
             {
                 throw new InvalidOperationException("failed to get the file path");
             }
-            var file = await StorageFile.GetFileFromPathAsync(path);
+            StorageFile file = await StorageFile.GetFileFromPathAsync(path);
             return file;
         });
     }
     public async Task<IReadOnlyList<StorageFile>> OpenFiles(Guid stateGuid, FileType[] fileTypes)
     {
         return await NativeHelpers.RunCom(async () => {
-            var fd = CreateFileOpenDialog(stateGuid, Shell32.FILEOPENDIALOGOPTIONS.FOS_ALLOWMULTISELECT);
+            Shell32.IFileOpenDialog fd = CreateFileOpenDialog(stateGuid, Shell32.FILEOPENDIALOGOPTIONS.FOS_ALLOWMULTISELECT);
             fd.SetFileTypes((uint)fileTypes.Length, fileTypes.Select(ft => ft.ToFilterSpec()).ToArray());
 
             if (IsUserCancelled(fd.Show(NativeHelpers.GetHwnd())))
             {
                 return null;
             }
-            var results = fd.GetResults();
+            Shell32.IShellItemArray results = fd.GetResults();
             var count = results.GetCount();
             var files = new StorageFile[count];
 
@@ -103,9 +103,9 @@ public class FileDialogService : IFileDialogService
             return files;
         });
     }
-    private Shell32.IFileOpenDialog CreateFileOpenDialog(Guid stateGuid, Shell32.FILEOPENDIALOGOPTIONS opts = 0)
+    Shell32.IFileOpenDialog CreateFileOpenDialog(Guid stateGuid, Shell32.FILEOPENDIALOGOPTIONS opts = 0)
     {
-        var hr = Ole32.CoCreateInstance(typeof(Shell32.CFileOpenDialog).GUID,
+        HRESULT hr = Ole32.CoCreateInstance(typeof(Shell32.CFileOpenDialog).GUID,
                                         null,
                                         Ole32.CLSCTX.CLSCTX_INPROC_SERVER,
                                         typeof(Shell32.IFileOpenDialog).GUID,
@@ -121,7 +121,7 @@ public class FileDialogService : IFileDialogService
         fd.SetOptions(fd.GetOptions() | Shell32.FILEOPENDIALOGOPTIONS.FOS_FORCEFILESYSTEM | opts);
         return fd;
     }
-    private bool IsUserCancelled(HRESULT hr)
+    bool IsUserCancelled(HRESULT hr)
     {
         return hr == HRESULT.HRESULT_FROM_WIN32(Win32Error.ERROR_CANCELLED);
     }
@@ -132,7 +132,7 @@ public class FileDialogService : IFileDialogService
     {
 
         return NativeHelpers.RunCom(() => {
-            var hr = Ole32.CoCreateInstance(typeof(Shell32.CFileSaveDialog).GUID,
+            HRESULT hr = Ole32.CoCreateInstance(typeof(Shell32.CFileSaveDialog).GUID,
                                             null,
                                             Ole32.CLSCTX.CLSCTX_INPROC_SERVER,
                                             typeof(Shell32.IFileSaveDialog).GUID,
@@ -154,7 +154,7 @@ public class FileDialogService : IFileDialogService
 
             if (overwritingFilePath != null && ParseFilePath(overwritingFilePath, out var dir, out var fileName))
             {
-                var folder = Shell32.SHCreateItemFromParsingName<Shell32.IShellItem>(dir);
+                Shell32.IShellItem folder = Shell32.SHCreateItemFromParsingName<Shell32.IShellItem>(dir);
                 fd.SetFolder(folder);
                 fd.SetFileName(fileName);
             }
@@ -165,14 +165,10 @@ public class FileDialogService : IFileDialogService
                 fd.SetFileName(Path.GetFileNameWithoutExtension(suggestedFileName));
             }
 
-            if (IsUserCancelled(fd.Show(NativeHelpers.GetHwnd())))
-            {
-                return null;
-            }
-            return fd.GetResult().GetDisplayName(Shell32.SIGDN.SIGDN_FILESYSPATH);
+            return IsUserCancelled(fd.Show(NativeHelpers.GetHwnd())) ? null : fd.GetResult().GetDisplayName(Shell32.SIGDN.SIGDN_FILESYSPATH);
         });
     }
-    private bool ParseFilePath(string filePath, out string dir, out string fileName)
+    bool ParseFilePath(string filePath, out string dir, out string fileName)
     {
         dir = null;
         fileName = null;

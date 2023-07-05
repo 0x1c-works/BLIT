@@ -8,14 +8,15 @@ using System.Collections.Specialized;
 using System.Linq;
 using Windows.Storage;
 
-namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
+namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 
-public class GroupViewModel : BindableBase
+public class BannerGroupViewModel : BindableBase
 {
-    private ObservableCollection<IconViewModel> _icons = new();
-    public ObservableCollection<IconViewModel> Icons { get => _icons; }
+    public delegate BannerGroupViewModel Factory(int groupID);
+    public ObservableCollection<BannerIconViewModel> Icons { get; } = new();
+    int _groupID = 7;
+    readonly Lazy<BannerIconViewModel.Factory> _iconFactory;
 
-    private int _groupID = 7;
     public int GroupID
     {
         get => _groupID;
@@ -25,35 +26,22 @@ public class GroupViewModel : BindableBase
             OnPropertyChanged(nameof(GroupName));
         }
     }
-    public string GroupName
+    public string GroupName => BannerUtils.GetGroupName(GroupID);
+
+    public bool CanExport => Icons.Count > 0;
+
+    public IEnumerable<BannerIconViewModel> AllSelection => Icons.Where(icon => icon.IsSelected);
+    public BannerIconViewModel SingleSelection => Icons.Where(icon => icon.IsSelected).FirstOrDefault();
+    public bool HasSelection => Icons.Any(icon => icon.IsSelected);
+
+    public BannerGroupViewModel(int groupID, Lazy<BannerIconViewModel.Factory> iconFactory)
     {
-        get => BannerUtils.GetGroupName(GroupID);
+        GroupID = groupID;
+        _iconFactory = iconFactory;
+        Icons.CollectionChanged += _icons_CollectionChanged;
     }
 
-    public bool CanExport
-    {
-        get => Icons.Count > 0;
-    }
-
-    public IEnumerable<IconViewModel> AllSelection
-    {
-        get => Icons.Where(icon => icon.IsSelected);
-    }
-    public IconViewModel SingleSelection
-    {
-        get => Icons.Where(icon => icon.IsSelected).FirstOrDefault();
-    }
-    public bool HasSelection
-    {
-        get => Icons.Any(icon => icon.IsSelected);
-    }
-
-    internal GroupViewModel()
-    {
-        _icons.CollectionChanged += _icons_CollectionChanged;
-    }
-
-    private void _icons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    void _icons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.Action != NotifyCollectionChangedAction.Reset)
         {
@@ -65,25 +53,25 @@ public class GroupViewModel : BindableBase
 
     public void AddIcons(IEnumerable<StorageFile> files)
     {
-        var icons = files
+        IEnumerable<BannerIconViewModel> icons = files
             .Where(file =>
-                !_icons.Any(icon =>
+                !Icons.Any(icon =>
                     icon.TexturePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)
                 )
             )
-            .Select(file => new IconViewModel(this, file.Path));
-        foreach (var icon in icons)
+            .Select(file => _iconFactory.Value(this, file.Path));
+        foreach (BannerIconViewModel icon in icons)
         {
-            _icons.Add(icon);
+            Icons.Add(icon);
             icon.AutoScanSprite();
         }
     }
-    public void DeleteIcons(IEnumerable<IconViewModel> icons)
+    public void DeleteIcons(IEnumerable<BannerIconViewModel> icons)
     {
-        var queue = new Queue<IconViewModel>(icons);
+        var queue = new Queue<BannerIconViewModel>(icons);
         while (queue.Count > 0)
         {
-            var deleting = queue.Dequeue();
+            BannerIconViewModel deleting = queue.Dequeue();
             if (!Icons.Remove(deleting))
             {
                 // a more expensive way to ensure the icon is deleted
@@ -97,9 +85,9 @@ public class GroupViewModel : BindableBase
     }
     public void RefreshCellIndex()
     {
-        for (int i = 0; i < _icons.Count; i++)
+        for (var i = 0; i < Icons.Count; i++)
         {
-            _icons[i].CellIndex = i;
+            Icons[i].CellIndex = i;
         }
     }
     public void NotifySelectionChange()
@@ -116,7 +104,7 @@ public class GroupViewModel : BindableBase
             Name = GroupName,
             IsPattern = false,
         };
-        foreach (var icon in Icons)
+        foreach (BannerIconViewModel icon in Icons)
         {
             group.Icons.Add(icon.ToBannerIcon());
         }
@@ -129,21 +117,21 @@ public class GroupViewModel : BindableBase
         [Key(0)]
         public int GroupID;
         [Key(1)]
-        public IconViewModel.SaveData[] Icons = new IconViewModel.SaveData[] { };
+        public BannerIconViewModel.SaveData[] Icons = new BannerIconViewModel.SaveData[] { };
 
-        public SaveData(GroupViewModel vm)
+        public SaveData(BannerGroupViewModel vm)
         {
             GroupID = vm.GroupID;
-            Icons = vm.Icons.Select(icon => new IconViewModel.SaveData(icon)).ToArray();
+            Icons = vm.Icons.Select(icon => new BannerIconViewModel.SaveData(icon)).ToArray();
         }
         public SaveData() { }
 
-        public GroupViewModel Load()
+        public BannerGroupViewModel Load(Factory factory)
         {
-            var vm = new GroupViewModel() { GroupID = GroupID };
-            foreach (var icon in Icons)
+            BannerGroupViewModel vm = factory(GroupID);
+            foreach (BannerIconViewModel.SaveData icon in Icons)
             {
-                vm.Icons.Add(icon.Load(vm));
+                vm.Icons.Add(icon.Load(vm, vm._iconFactory.Value));
             }
             return vm;
         }

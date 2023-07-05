@@ -3,24 +3,34 @@ using BannerlordImageTool.Win.Helpers;
 using MessagePack;
 using Windows.UI;
 
-namespace BannerlordImageTool.Win.ViewModels.BannerIcons;
+namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 
-public class ColorViewModel : BindableBase
+public class BannerColorViewModel : BindableBase
 {
-    private int _id;
-    private Color _color;
-    private bool _isForSigil = true;
-    private bool _isForBackground = true;
+    public delegate BannerColorViewModel Factory(int id);
+
+    int _id;
+    Color _color;
+    bool _isForSigil = true;
+    bool _isForBackground = true;
 
     public int ID
     {
         get => _id;
-        set => SetProperty(ref _id, value);
+        set
+        {
+            SetProperty(ref _id, value);
+            OnPropertyChanged(nameof(CanExport));
+        }
     }
     public Color Color
     {
         get => _color;
-        set => SetProperty(ref _color, value);
+        set
+        {
+            SetProperty(ref _color, value);
+            OnPropertyChanged(nameof(CanExport));
+        }
     }
     public bool IsForSigil
     {
@@ -33,9 +43,11 @@ public class ColorViewModel : BindableBase
         set => SetProperty(ref _isForBackground, value);
     }
 
-    public bool CanExport
+    public bool CanExport => ID >= 0 && Color.A > 0;
+
+    public BannerColorViewModel(int id)
     {
-        get => ID >= 0 && Color.A > 0;
+        ID = id;
     }
 
     public BannerColor ToBannerColor()
@@ -50,7 +62,7 @@ public class ColorViewModel : BindableBase
 
     static string ColorToHex(Color color)
     {
-        return $"0xff{color.R.ToString("X2")}{color.G.ToString("X2")}{color.B.ToString("X2")}";
+        return $"0xff{color.R:X2}{color.G:X2}{color.B:X2}";
     }
 
     [MessagePackObject]
@@ -66,7 +78,7 @@ public class ColorViewModel : BindableBase
         [Key(3)]
         public bool IsForBackground;
 
-        public SaveData(ColorViewModel vm)
+        public SaveData(BannerColorViewModel vm)
         {
             ID = vm.ID;
             Color = vm.Color;
@@ -74,14 +86,13 @@ public class ColorViewModel : BindableBase
             IsForBackground = vm.IsForBackground;
         }
         public SaveData() { }
-        public ColorViewModel Load()
+        public BannerColorViewModel Load(Factory factory)
         {
-            return new ColorViewModel() {
-                ID = ID,
-                Color = Color,
-                IsForSigil = IsForSigil,
-                IsForBackground = IsForBackground,
-            };
+            BannerColorViewModel vm = factory(ID);
+            vm.Color = Color;
+            vm.IsForSigil = IsForSigil;
+            vm.IsForBackground = IsForBackground;
+            return vm;
         }
     }
 }

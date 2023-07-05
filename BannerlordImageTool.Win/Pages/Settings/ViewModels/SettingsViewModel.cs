@@ -1,6 +1,6 @@
 ﻿using BannerlordImageTool.Win.Helpers;
 
-namespace BannerlordImageTool.Win.ViewModels.Settings;
+namespace BannerlordImageTool.Win.Pages.Settings.ViewModels;
 
 public class SettingsViewModel : BindableBase
 {

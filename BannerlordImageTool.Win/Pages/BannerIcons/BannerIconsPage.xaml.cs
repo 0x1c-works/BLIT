@@ -4,12 +4,12 @@
 using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Controls;
 using BannerlordImageTool.Win.Helpers;
+using BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 using BannerlordImageTool.Win.Services;
-using BannerlordImageTool.Win.Settings;
-using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,20 +23,30 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class BannerIconsEditor : Page
+public sealed partial class BannerIconsPage : Page
 {
-    static readonly Guid GUID_EXPORT_DIALOG = new Guid("0c5f39f0-1a31-4d85-a9ee-7ad0cfd690b6");
-    static readonly Guid GUID_PROJECT_DIALOG = new Guid("f86d402a-33de-4f62-8c2b-c5e75428c018");
+    static readonly Guid GUID_EXPORT_DIALOG = new("0c5f39f0-1a31-4d85-a9ee-7ad0cfd690b6");
+    static readonly Guid GUID_PROJECT_DIALOG = new("f86d402a-33de-4f62-8c2b-c5e75428c018");
 
-    DataViewModel ViewModel { get => App.Current.BannerViewModel; }
+    readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
+    readonly IFileDialogService _fileDialog = AppServices.Get<IFileDialogService>();
+    readonly IProjectService<BannerIconsPageViewModel> _project = AppServices.Get<IProjectService<BannerIconsPageViewModel>>();
 
-    public BannerIconsEditor()
+    BannerIconsPageViewModel ViewModel { get => _project.Current; }
+
+    public BannerIconsPage()
     {
-        this.InitializeComponent();
-        ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        InitializeComponent();
+        _project.ProjectChanged += OnProjectChanged;
     }
 
-    private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    void OnProjectChanged(BannerIconsPageViewModel vm)
+    {
+        vm.PropertyChanged += ViewModel_PropertyChanged;
+        Bindings.Update();
+    }
+
+    void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(ViewModel.SelectedGroup))
         {
@@ -58,22 +68,21 @@ public sealed partial class BannerIconsEditor : Page
 
     }
 
-    private void btnAddGroup_Click(object sender, RoutedEventArgs e)
+    void btnAddGroup_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.AddGroup();
     }
 
-    private void listViewGroups_ItemClick(object sender, ItemClickEventArgs e)
+    async void btnExportAll_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.SelectedGroup = e.ClickedItem as GroupViewModel;
-    }
+        StorageFolder outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
+        if (outFolder == null)
+        {
+            return;
+        }
 
-    private async void btnExportAll_Click(object sender, RoutedEventArgs e)
-    {
-        var outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
-        if (outFolder == null) return;
         await DoExportAsync(async () => {
-            TextureMerger merger = new TextureMerger(GlobalSettings.Current.Banner.TextureOutputResolution);
+            var merger = new TextureMerger(_settings.Banner.TextureOutputResolution);
             await Task.WhenAll(ViewModel.GetExportingGroups().Select(g =>
                 Task.Factory.StartNew(() => {
                     merger.Merge(outFolder.Path, g.GroupID, g.Icons.Select(icon => icon.TexturePath).ToArray());
@@ -90,10 +99,14 @@ public sealed partial class BannerIconsEditor : Page
                     (s, e) => FileHelpers.OpenFolderInExplorer(outDir))));
         });
     }
-    private async void btnExportXML_Click(object sender, RoutedEventArgs e)
+    async void btnExportXML_Click(object sender, RoutedEventArgs e)
     {
-        var outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
-        if (outFolder == null) return;
+        StorageFolder outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
+        if (outFolder == null)
+        {
+            return;
+        }
+
         await DoExportAsync(async () => {
             var outDir = await ExportXML(outFolder);
             AppServices.Get<INotificationService>().Notify(new(
@@ -107,7 +120,11 @@ public sealed partial class BannerIconsEditor : Page
 
     async Task DoExportAsync(Func<Task> work)
     {
-        if (ViewModel.IsExporting) return;
+        if (ViewModel.IsExporting)
+        {
+            return;
+        }
+
         Toast progressToast = null;
         try
         {
@@ -141,10 +158,7 @@ public sealed partial class BannerIconsEditor : Page
 
     async Task<string> ExportXML(StorageFolder outFolder)
     {
-        if (outFolder is null)
-        {
-            outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
-        }
+        outFolder ??= await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
         if (outFolder is not null)
         {
             ViewModel.ToBannerIconData().SaveToXml(outFolder.Path);
@@ -154,10 +168,14 @@ public sealed partial class BannerIconsEditor : Page
         return null;
     }
 
-    private async void btnDeleteGroup_Click(object sender, RoutedEventArgs e)
+    async void btnDeleteGroup_Click(object sender, RoutedEventArgs e)
     {
-        if (ViewModel.SelectedGroup is null) return;
-        var result = await AppServices.Get<IConfirmDialogService>().ShowDanger(
+        if (ViewModel.SelectedGroup is null)
+        {
+            return;
+        }
+
+        ContentDialogResult result = await AppServices.Get<IConfirmDialogService>().ShowDanger(
             this,
             I18n.Current.GetString("DialogDeleteBannerGroup/Title"),
             string.Format(I18n.Current.GetString("DialogDeleteBannerGroup/Content"), ViewModel.SelectedGroup.GroupID));
@@ -167,39 +185,44 @@ public sealed partial class BannerIconsEditor : Page
         }
     }
 
-    private void btnNewProject_Click(object sender, RoutedEventArgs e)
+    void btnNewProject_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.Reset();
+        _project.NewProject();
     }
-    private async void btnSaveProject_Click(object sender, RoutedEventArgs e)
+    void btnSaveProject_Click(object sender, RoutedEventArgs e)
     {
-        await SaveProject(false);
-    }
-
-    private async void btnOpenProject_Click(object sender, RoutedEventArgs e)
-    {
-        var file = await AppServices.Get<IFileDialogService>().OpenFile(GUID_PROJECT_DIALOG, new[] { CommonFileTypes.BannerIconsProject });
-        if (file is null) return;
-        await ViewModel.Load(file);
+        Save(false);
     }
 
-    private async void btnSaveProjectAs_Click(object sender, RoutedEventArgs e)
+    async void btnOpenProject_Click(object sender, RoutedEventArgs e)
     {
-        await SaveProject(true);
+        StorageFile openedFile = await _fileDialog.OpenFile(GUID_PROJECT_DIALOG, new[] { CommonFileTypes.BannerIconsProject });
+        if (openedFile is null)
+        {
+            return;
+        }
+        await _project.Load(openedFile);
     }
 
-    async Task SaveProject(bool force)
+    void btnSaveProjectAs_Click(object sender, RoutedEventArgs e)
     {
-        string filePath = ViewModel.CurrentFile?.Path;
+        Save(true);
+    }
+
+    async void Save(bool force)
+    {
+        var filePath = _project.CurrentFile?.Path;
         if (force || string.IsNullOrEmpty(filePath))
         {
-            filePath = AppServices.Get<IFileDialogService>().SaveFile(GUID_PROJECT_DIALOG,
-                                                                     new[] { CommonFileTypes.BannerIconsProject },
-                                                                     "banner_icons",
-                                                                     filePath);
+            filePath = _fileDialog.SaveFile(GUID_PROJECT_DIALOG,
+                                            new[] { CommonFileTypes.BannerIconsProject },
+                                            "banner_icons",
+                                            filePath);
         }
-        if (string.IsNullOrEmpty(filePath)) return;
-
-        await ViewModel.Save(filePath);
+        if (string.IsNullOrEmpty(filePath))
+        {
+            return;
+        }
+        await _project.Save(filePath);
     }
 }

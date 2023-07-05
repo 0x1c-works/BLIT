@@ -6,10 +6,7 @@ namespace BannerlordImageTool.Win.Helpers;
 
 public class Logging
 {
-    public static string Folder
-    {
-        get => Path.Combine(ApplicationData.Current.LocalFolder.Path, "logs");
-    }
+    public static string Folder => Path.Combine(ApplicationData.Current.LocalFolder.Path, "logs");
     public static void Initialize()
     {
 

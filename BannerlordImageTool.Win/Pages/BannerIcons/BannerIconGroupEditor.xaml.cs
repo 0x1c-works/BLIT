@@ -2,8 +2,8 @@
 // Licensed under the MIT License.
 
 using BannerlordImageTool.Win.Helpers;
+using BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 using BannerlordImageTool.Win.Services;
-using BannerlordImageTool.Win.ViewModels.BannerIcons;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -16,30 +16,34 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons;
 
 public sealed partial class BannerIconGroupEditor : UserControl
 {
-    static readonly Guid GUID_TEXTURE_DIALOG = new Guid("8a8429ec-b674-40d8-82f0-ad42be0d6e8f");
-    static readonly Guid GUID_SPRITE_DIALOG = new Guid("7fb7d0f4-e50d-4fa3-a890-ae0775bca3d8");
+    static readonly Guid GUID_TEXTURE_DIALOG = new("8a8429ec-b674-40d8-82f0-ad42be0d6e8f");
+    static readonly Guid GUID_SPRITE_DIALOG = new("7fb7d0f4-e50d-4fa3-a890-ae0775bca3d8");
 
-    public GroupViewModel ViewModel
+    public BannerGroupViewModel ViewModel
     {
-        get => GetValue(ViewModelProperty) as GroupViewModel;
+        get => GetValue(ViewModelProperty) as BannerGroupViewModel;
         set => SetValue(ViewModelProperty, value);
     }
 
     public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
         nameof(ViewModel),
-        typeof(GroupViewModel),
-        typeof(BannerIconsEditor),
-        new PropertyMetadata(default(GroupViewModel)));
+        typeof(BannerGroupViewModel),
+        typeof(BannerIconsPage),
+        new PropertyMetadata(default(BannerGroupViewModel)));
 
     public BannerIconGroupEditor()
     {
-        this.InitializeComponent();
+        InitializeComponent();
     }
 
-    private async void btnDeleteSelectedTextures_Click(object sender, RoutedEventArgs e)
+    async void btnDeleteSelectedTextures_Click(object sender, RoutedEventArgs e)
     {
-        if (!ViewModel.HasSelection) return;
-        var result = await AppServices.Get<IConfirmDialogService>().ShowDanger(
+        if (!ViewModel.HasSelection)
+        {
+            return;
+        }
+
+        ContentDialogResult result = await AppServices.Get<IConfirmDialogService>().ShowDanger(
             this,
             I18n.Current.GetString("DialogDeleteBannerIcon/Title"),
             string.Format(I18n.Current.GetString("DialogDeleteBannerIcon/Content"), ViewModel.AllSelection.Count()));
@@ -51,21 +55,25 @@ public sealed partial class BannerIconGroupEditor : UserControl
 
     async void btnOpenTextures_Click(object sender, RoutedEventArgs e)
     {
-        var files = await AppServices.Get<IFileDialogService>().OpenFiles(GUID_TEXTURE_DIALOG, new[] { CommonFileTypes.Png });
+        System.Collections.Generic.IReadOnlyList<Windows.Storage.StorageFile> files = await AppServices.Get<IFileDialogService>().OpenFiles(GUID_TEXTURE_DIALOG, new[] { CommonFileTypes.Png });
 
-        if (files.Count == 0) return;
+        if (files.Count == 0)
+        {
+            return;
+        }
+
         ViewModel.AddIcons(files);
     }
 
-    private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         var changed = false;
-        foreach (var item in e.AddedItems.Where(item => item is IconViewModel).Cast<IconViewModel>())
+        foreach (BannerIconViewModel item in e.AddedItems.Where(item => item is BannerIconViewModel).Cast<BannerIconViewModel>())
         {
             item.IsSelected = true;
             changed = true;
         }
-        foreach (var item in e.RemovedItems.Where(item => item is IconViewModel).Cast<IconViewModel>())
+        foreach (BannerIconViewModel item in e.RemovedItems.Where(item => item is BannerIconViewModel).Cast<BannerIconViewModel>())
         {
             item.IsSelected = false;
             changed = true;
@@ -76,21 +84,29 @@ public sealed partial class BannerIconGroupEditor : UserControl
         }
     }
 
-    private async void btnSelectSprite_Click(object sender, RoutedEventArgs e)
+    async void btnSelectSprite_Click(object sender, RoutedEventArgs e)
     {
-        var file = await AppServices.Get<IFileDialogService>().OpenFile(GUID_SPRITE_DIALOG,
+        Windows.Storage.StorageFile file = await AppServices.Get<IFileDialogService>().OpenFile(GUID_SPRITE_DIALOG,
                                                                        ViewModel.SingleSelection.SpritePath,
                                                                        new[] { CommonFileTypes.Png });
-        if (file is null || ViewModel.SingleSelection is null) return;
+        if (file is null || ViewModel.SingleSelection is null)
+        {
+            return;
+        }
+
         ViewModel.SingleSelection.SpritePath = file.Path;
     }
 
-    private async void btnSelectTexture_Click(object sender, RoutedEventArgs e)
+    async void btnSelectTexture_Click(object sender, RoutedEventArgs e)
     {
-        var file = await AppServices.Get<IFileDialogService>().OpenFile(GUID_TEXTURE_DIALOG,
+        Windows.Storage.StorageFile file = await AppServices.Get<IFileDialogService>().OpenFile(GUID_TEXTURE_DIALOG,
                                                                        ViewModel.SingleSelection.TexturePath,
                                                                        new[] { CommonFileTypes.Png });
-        if (file is null || ViewModel.SingleSelection is null) return;
+        if (file is null || ViewModel.SingleSelection is null)
+        {
+            return;
+        }
+
         ViewModel.SingleSelection.TexturePath = file.Path;
     }
 

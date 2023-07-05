@@ -12,35 +12,35 @@ namespace BannerlordImageTool.Win.Controls;
 
 public sealed partial class ToastPanel : UserControl
 {
-    private Visibility DEBUG_BUTTONS_VISIBILITIES = Visibility.Collapsed;
+    Visibility DebugButtonVisibility { get; } = Visibility.Collapsed;
     public ToastPanel()
     {
-        this.InitializeComponent();
+        InitializeComponent();
         BindDebugAutoTestButtons();
         AppServices.Get<INotificationService>().OnNotify += NotificationService_OnNotify;
     }
 
-    private Toast NotificationService_OnNotify(Notification notification)
+    Toast NotificationService_OnNotify(Notification notification)
     {
         return AddToast(notification);
     }
 
-    private void rootCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+    void rootCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         UpdateContainerPosition();
     }
-    private void container_SizeChanged(object sender, SizeChangedEventArgs e)
+    void container_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         UpdateContainerPosition();
     }
-    private void UpdateContainerPosition()
+    void UpdateContainerPosition()
     {
         Canvas.SetLeft(container, rootCanvas.ActualWidth - container.ActualWidth);
         Canvas.SetTop(container, rootCanvas.ActualHeight - container.ActualHeight);
     }
-    private Toast AddToast(Notification notification)
+    Toast AddToast(Notification notification)
     {
-        var toast = notification.CreateToast();
+        Toast toast = notification.CreateToast();
         toast.OnClosed += (t) => {
             container.Children.Remove(t);
         };
@@ -50,22 +50,22 @@ public sealed partial class ToastPanel : UserControl
 
     #region Tester
     const string AUTO_TEST_BTN_PREFIX = "btnAutoTest";
-    private void BindDebugAutoTestButtons()
+    void BindDebugAutoTestButtons()
     {
         debugButtons.Children.Where(c => c is Button && (c as Button).Name.StartsWith(AUTO_TEST_BTN_PREFIX))
             .Cast<Button>()
             .ToList()
             .ForEach(b => b.Click += AutoTestButtonClick);
     }
-    private void AutoTestButtonClick(object sender, RoutedEventArgs e)
+    void AutoTestButtonClick(object sender, RoutedEventArgs e)
     {
         var variantName = (sender as Button).Name.Replace(AUTO_TEST_BTN_PREFIX, "");
-        if (Enum.TryParse<ToastVariant>(variantName, out var variant))
+        if (Enum.TryParse<ToastVariant>(variantName, out ToastVariant variant))
         {
             AddTestToast(variant);
         }
     }
-    private void AddTestToast(ToastVariant variant)
+    void AddTestToast(ToastVariant variant)
     {
         var toast = new Toast() {
             Title = "Test Notification",
@@ -76,11 +76,11 @@ public sealed partial class ToastPanel : UserControl
         container.Children.Add(toast);
     }
 
-    private void btnTestTimeout_Click(object sender, RoutedEventArgs e)
+    void btnTestTimeout_Click(object sender, RoutedEventArgs e)
     {
         var btn = new Button() { Content = "Refresh", };
         btn.Click += (s, e) => {
-            var toast = (s as Button).FindAscendant<Toast>();
+            Toast toast = (s as Button).FindAscendant<Toast>();
             if (toast != null)
             {
                 toast.TimeoutSeconds = 2;
@@ -97,7 +97,7 @@ public sealed partial class ToastPanel : UserControl
         container.Children.Add(toast);
     }
 
-    private void btnTestNoTimeout_Click(object sender, RoutedEventArgs e)
+    void btnTestNoTimeout_Click(object sender, RoutedEventArgs e)
     {
         var toast = new Toast() {
             Title = "Timeout 0s Test",

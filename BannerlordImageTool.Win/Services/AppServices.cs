@@ -1,18 +1,51 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
+using BannerlordImageTool.Win.Settings;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace BannerlordImageTool.Win.Services;
 
 public class AppServices
 {
+    public static IContainer Container { get; private set; }
     public static IServiceProvider Configure()
     {
-        var service = new ServiceCollection();
-        service.AddSingleton<IFileDialogService, FileDialogService>();
-        service.AddSingleton<IConfirmDialogService, ConfirmDialogService>();
-        service.AddSingleton<INotificationService, NotificationService>();
-        return service.BuildServiceProvider();
+        var builder = new ContainerBuilder();
+        // Singleton services
+        builder.RegisterType<FileDialogService>().AsImplementedInterfaces().SingleInstance();
+        builder.RegisterType<ConfirmDialogService>().AsImplementedInterfaces().SingleInstance();
+        builder.RegisterType<NotificationService>().AsImplementedInterfaces().SingleInstance();
+
+        // Singleton components
+        builder.RegisterType<GlobalSettings>().SingleInstance();
+        builder.Register((ctx) => BannerSettings.Load()).SingleInstance();
+        RegisterProjectService<BannerIconsPageViewModel>(builder);
+
+        // Scoped services
+        builder.RegisterType<SettingsService>().AsImplementedInterfaces();
+
+        // Scoped components
+        builder.RegisterType<BannerIconsPageViewModel>().InstancePerLifetimeScope();
+        builder.RegisterType<BannerGroupViewModel>().InstancePerDependency();
+        builder.RegisterType<BannerColorViewModel>().InstancePerDependency();
+        builder.RegisterType<BannerIconViewModel>().InstancePerDependency();
+
+        Container = builder.Build();
+        return new AutofacServiceProvider(Container);
     }
 
-    public static T Get<T>() => App.Current.Services.GetService<T>();
+    public static T Get<T>()
+    {
+        return App.Current.Services.GetService<T>();
+    }
+
+    static void RegisterProjectService<T>(ContainerBuilder builder) where T : IProject
+    {
+        builder.RegisterType<ProjectService<T>>()
+            .As<IProjectService<T>>()
+            .SingleInstance()
+            .OnActivated(async (e) => await e.Instance.NewProject());
+    }
 }

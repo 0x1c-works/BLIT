@@ -5,11 +5,7 @@ namespace BannerlordImageTool.Win.Settings;
 
 public class GlobalSettings : BindableBase
 {
-    public static GlobalSettings Current
-    {
-        get => App.Current.Settings;
-    }
-    private StorageFolder _gameRootFolder;
+    StorageFolder _gameRootFolder;
 
     public StorageFolder GameRootFolder
     {
@@ -21,10 +17,7 @@ public class GlobalSettings : BindableBase
         }
     }
 
-    public string GameRootFolderPath
-    {
-        get => GameRootFolder?.Path ?? I18n.Current.GetString("NeedGameRootFolder");
-    }
+    public string GameRootFolderPath => GameRootFolder?.Path ?? I18n.Current.GetString("NeedGameRootFolder");
 
     public BannerSettings Banner { get; private set; } = new();
 
@@ -33,11 +26,9 @@ public class GlobalSettings : BindableBase
         Banner = BannerSettings.Load();
     }
 
-
     static class Keys
     {
         public const string BannerSpriteScanFolders = "banner_sprite_scan_folders";
     }
-
 }
 

@@ -11,12 +11,4 @@
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.3.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EditorConfigFiles Remove="E:\gamework\mb2\BannerlordImageTool\BannerlordImageTool.Sprite\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="E:\gamework\mb2\BannerlordImageTool\BannerlordImageTool.Sprite\.editorconfig" />
-  </ItemGroup>
-
 </Project>
