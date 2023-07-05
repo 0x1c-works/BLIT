@@ -19,7 +19,7 @@ public interface IProjectService<T> where T : IProject
 {
     event Action<T> ProjectChanged;
     ILifetimeScope Scope { get; }
-    T ViewModel { get; }
+    T Current { get; }
     StorageFile CurrentFile { get; }
 
     Task<T> NewProject(Func<T, Task> onLoad = null);
@@ -39,7 +39,7 @@ class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T 
     public event Action<T> ProjectChanged;
 
     T _vm;
-    public T ViewModel
+    public T Current
     {
         get => _vm;
         set => SetProperty(ref _vm, value);
@@ -53,9 +53,9 @@ class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T 
 
     void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(ViewModel))
+        if (e.PropertyName == nameof(Current))
         {
-            ProjectChanged?.Invoke(ViewModel);
+            ProjectChanged?.Invoke(Current);
         }
     }
 
@@ -68,14 +68,14 @@ class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T 
         {
             await onLoad(vm);
         }
-        ViewModel = vm;
+        Current = vm;
         vm.AfterLoaded();
-        return ViewModel;
+        return Current;
     }
     public async Task Save(string filePath)
     {
         using Stream s = File.OpenWrite(filePath);
-        await ViewModel.Write(s);
+        await Current.Write(s);
         CurrentFile = await StorageFile.GetFileFromPathAsync(filePath);
     }
     public async Task Load(StorageFile file)
@@ -87,7 +87,7 @@ class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T 
 
     public void Dispose()
     {
-        Log.Debug("Project {Project} (scope {Scope}) is disposed", ViewModel, Scope?.Tag ?? "(new)");
+        Log.Debug("Project {Project} (scope {Scope}) is disposed", Current, Scope?.Tag ?? "(new)");
         Scope?.Dispose();
     }
 }

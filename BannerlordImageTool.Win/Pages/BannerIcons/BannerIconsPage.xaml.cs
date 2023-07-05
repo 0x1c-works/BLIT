@@ -32,7 +32,7 @@ public sealed partial class BannerIconsPage : Page
     readonly IFileDialogService _fileDialog = AppServices.Get<IFileDialogService>();
     readonly IProjectService<BannerIconsPageViewModel> _project = AppServices.Get<IProjectService<BannerIconsPageViewModel>>();
 
-    BannerIconsPageViewModel ViewModel { get => _project.ViewModel; }
+    BannerIconsPageViewModel ViewModel { get => _project.Current; }
 
     public BannerIconsPage()
     {
