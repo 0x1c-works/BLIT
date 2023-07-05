@@ -21,7 +21,7 @@ public class AppServices
         // Singleton components
         builder.RegisterType<GlobalSettings>().SingleInstance();
         builder.Register((ctx) => BannerSettings.Load()).SingleInstance();
-        builder.RegisterGeneric(typeof(ProjectService<>)).As(typeof(IProjectService<>)).SingleInstance();
+        RegisterProjectService<BannerIconsPageViewModel>(builder);
 
         // Scoped services
         builder.RegisterType<SettingsService>().AsImplementedInterfaces();
@@ -39,5 +39,13 @@ public class AppServices
     public static T Get<T>()
     {
         return App.Current.Services.GetService<T>();
+    }
+
+    static void RegisterProjectService<T>(ContainerBuilder builder) where T : IProject
+    {
+        builder.RegisterType<ProjectService<T>>()
+            .As<IProjectService<T>>()
+            .SingleInstance()
+            .OnActivated(async (e) => await e.Instance.NewProject());
     }
 }

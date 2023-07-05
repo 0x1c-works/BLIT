@@ -140,7 +140,7 @@ public sealed partial class Toast : UserControl
                     }
                     catch (Exception ex)
                     {
-                        Log.Error("Toast countdown error: {Exception}", ex);
+                        Log.Error(ex, "Toast countdown error", ex);
                         break;
                     }
                 }

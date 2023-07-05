@@ -35,7 +35,7 @@ public static class NativeHelpers
         }
         catch (COMException ex)
         {
-            Log.Error("COMException during opening folder: {Exception}", ex);
+            Log.Error(ex, "COMException during opening folder: {Exception}");
             throw;
         }
         finally

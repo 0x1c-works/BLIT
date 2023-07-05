@@ -1,4 +1,5 @@
-﻿using BannerlordImageTool.Banner;
+﻿using Autofac;
+using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Helpers;
 using BannerlordImageTool.Win.Services;
 using MessagePack;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
-public class BannerIconsPageViewModel : BindableBase
+public class BannerIconsPageViewModel : BindableBase, IProject
 {
     public BannerIconsPageViewModel(
         ISettingsService settings,
@@ -21,11 +22,12 @@ public class BannerIconsPageViewModel : BindableBase
         BannerColorViewModel.Factory colorFactory)
     {
         _settings = settings;
-        _bannerGroupFactory = bannerGroupFactory;
+        _groupFactory = bannerGroupFactory;
         _colorFactory = colorFactory;
     }
+
     readonly ISettingsService _settings;
-    readonly BannerGroupViewModel.Factory _bannerGroupFactory;
+    readonly BannerGroupViewModel.Factory _groupFactory;
     readonly BannerColorViewModel.Factory _colorFactory;
 
     public ObservableCollection<BannerGroupViewModel> Groups { get; } = new();
@@ -116,7 +118,7 @@ public class BannerIconsPageViewModel : BindableBase
 
     public void AddGroup()
     {
-        BannerGroupViewModel newGroup = _bannerGroupFactory(GetNextGroupID());
+        BannerGroupViewModel newGroup = _groupFactory(GetNextGroupID());
         newGroup.PropertyChanged += OnGroupPropertyChanged;
         Groups.Add(newGroup);
         SelectedGroup ??= Groups.Last();
@@ -176,25 +178,12 @@ public class BannerIconsPageViewModel : BindableBase
         }
     }
 
-    public void Reset()
+    public async Task Write(Stream s)
     {
-        Groups.Clear();
-        Colors.Clear();
-        IsExporting = false;
-        SelectedGroup = null;
-        CurrentFile = null;
-        IsSavingOrLoading = false;
-    }
-
-    public async Task Save(string filePath)
-    {
-        IsSavingOrLoading = true;
         try
         {
-            var data = new SaveData(this);
-            using FileStream file = File.OpenWrite(filePath);
-            await MessagePackSerializer.SerializeAsync(file, data);
-            CurrentFile = await StorageFile.GetFileFromPathAsync(filePath);
+            IsSavingOrLoading = true;
+            await MessagePackSerializer.SerializeAsync(s, new SaveData(this));
         }
         catch (Exception ex) { Log.Error(ex, "error in saving the banner project"); }
         finally
@@ -202,27 +191,25 @@ public class BannerIconsPageViewModel : BindableBase
             IsSavingOrLoading = false;
         }
     }
-    public async Task Load(StorageFile openedFile)
+
+    public async Task Read(Stream s)
     {
         try
         {
             IsSavingOrLoading = true;
-            using FileStream file = File.OpenRead(openedFile.Path);
-            SaveData data = await MessagePackSerializer.DeserializeAsync<SaveData>(file);
-            CurrentFile = openedFile;
+            SaveData data = await MessagePackSerializer.DeserializeAsync<SaveData>(s);
             Groups.Clear();
             Colors.Clear();
             foreach (BannerGroupViewModel.SaveData groupData in data.Groups)
             {
-                Groups.Add(groupData.Load(_bannerGroupFactory));
+                Groups.Add(groupData.Load(_groupFactory));
             }
             foreach (BannerColorViewModel.SaveData colorData in data.Colors)
             {
                 Colors.Add(colorData.Load(_colorFactory));
             }
-            // Update the selection if there was any
+            // Update the selection if there is any
             SelectedGroup = HasSelectedGroup ? Groups.FirstOrDefault(g => g.GroupID == SelectedGroup.GroupID) : Groups.FirstOrDefault();
-
             OnPropertyChanged(nameof(CanExport));
         }
         catch (Exception ex) { Log.Error(ex, "error in loading the banner project"); }

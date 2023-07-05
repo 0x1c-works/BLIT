@@ -29,6 +29,7 @@ public sealed partial class BannerIconsPage : Page, INotifyPropertyChanged
     static readonly Guid GUID_PROJECT_DIALOG = new("f86d402a-33de-4f62-8c2b-c5e75428c018");
 
     readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
+    readonly IFileDialogService _fileDialog = AppServices.Get<IFileDialogService>();
     readonly IProjectService<BannerIconsPageViewModel> _project = AppServices.Get<IProjectService<BannerIconsPageViewModel>>();
 
     public event PropertyChangedEventHandler PropertyChanged;
@@ -41,12 +42,13 @@ public sealed partial class BannerIconsPage : Page, INotifyPropertyChanged
         _project.ProjectChanged += OnProjectChanged;
     }
 
-    void OnProjectChanged(BannerIconsPageViewModel obj)
+    void OnProjectChanged(BannerIconsPageViewModel vm)
     {
+        vm.PropertyChanged += ViewModel_PropertyChanged;
         PropertyChanged?.Invoke(this, new(nameof(ViewModel)));
     }
 
-    void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(ViewModel.SelectedGroup))
         {
@@ -187,50 +189,42 @@ public sealed partial class BannerIconsPage : Page, INotifyPropertyChanged
 
     void btnNewProject_Click(object sender, RoutedEventArgs e)
     {
-        NewProject();
+        _project.NewProject();
     }
-    async void btnSaveProject_Click(object sender, RoutedEventArgs e)
+    void btnSaveProject_Click(object sender, RoutedEventArgs e)
     {
-        await SaveProject(false);
+        Save(false);
     }
 
     async void btnOpenProject_Click(object sender, RoutedEventArgs e)
     {
-        StorageFile file = await AppServices.Get<IFileDialogService>().OpenFile(GUID_PROJECT_DIALOG, new[] { CommonFileTypes.BannerIconsProject });
-        if (file is null)
+        StorageFile openedFile = await _fileDialog.OpenFile(GUID_PROJECT_DIALOG, new[] { CommonFileTypes.BannerIconsProject });
+        if (openedFile is null)
         {
             return;
         }
-
-        NewProject();
-        await ViewModel.Load(file);
+        await _project.Load(openedFile);
     }
 
-    async void btnSaveProjectAs_Click(object sender, RoutedEventArgs e)
+    void btnSaveProjectAs_Click(object sender, RoutedEventArgs e)
     {
-        await SaveProject(true);
+        Save(true);
     }
 
-    void NewProject()
+    async void Save(bool force)
     {
-        _project.NewProject().PropertyChanged += ViewModel_PropertyChanged;
-    }
-
-    async Task SaveProject(bool force)
-    {
-        var filePath = ViewModel.CurrentFile?.Path;
+        var filePath = _project.CurrentFile?.Path;
         if (force || string.IsNullOrEmpty(filePath))
         {
-            filePath = AppServices.Get<IFileDialogService>().SaveFile(GUID_PROJECT_DIALOG,
-                                                                     new[] { CommonFileTypes.BannerIconsProject },
-                                                                     "banner_icons",
-                                                                     filePath);
+            filePath = _fileDialog.SaveFile(GUID_PROJECT_DIALOG,
+                                            new[] { CommonFileTypes.BannerIconsProject },
+                                            "banner_icons",
+                                            filePath);
         }
         if (string.IsNullOrEmpty(filePath))
         {
             return;
         }
-
-        await ViewModel.Save(filePath);
+        await _project.Save(filePath);
     }
 }

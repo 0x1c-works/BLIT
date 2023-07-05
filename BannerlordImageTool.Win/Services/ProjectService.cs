@@ -2,41 +2,55 @@
 using BannerlordImageTool.Win.Helpers;
 using Serilog;
 using System;
+using System.ComponentModel;
+using System.IO;
+using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace BannerlordImageTool.Win.Services;
 
-public interface IProjectService<T> where T : BindableBase
+public interface IStreamReadWrite
 {
-    T ViewModel { get; }
-    T NewProject();
-
-    event Action<T> ProjectChanged;
+    Task Write(Stream s);
+    Task Read(Stream s);
 }
 
-class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T : BindableBase
+public interface IProjectService<T> where T : IProject
 {
-    ILifetimeScope _scope;
+    event Action<T> ProjectChanged;
+    ILifetimeScope Scope { get; }
+    T ViewModel { get; }
+    StorageFile CurrentFile { get; }
 
-    T _vm;
+    Task<T> NewProject(Func<T, Task> onLoad = null);
+    Task Save(string filePath);
+    Task Load(StorageFile file);
+}
+
+public interface IProject : INotifyPropertyChanged, IStreamReadWrite
+{
+}
+
+class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T : IProject
+{
+    public ILifetimeScope Scope { get; private set; }
+
     public event Action<T> ProjectChanged;
 
+    T _vm;
     public T ViewModel
     {
         get => _vm;
-        set
-        {
-            if (_vm == value) return;
-            SetProperty(ref _vm, value);
-        }
+        set => SetProperty(ref _vm, value);
     }
+    public StorageFile CurrentFile { get; private set; }
 
     public ProjectService()
     {
         PropertyChanged += OnPropertyChanged;
-        NewProject();
     }
 
-    void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(ViewModel))
         {
@@ -44,17 +58,34 @@ class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T 
         }
     }
 
-    public T NewProject()
+    public async Task<T> NewProject(Func<T, Task> onLoad = null)
     {
         Dispose();
-        _scope = AppServices.Container.BeginLifetimeScope(typeof(T).Name);
-        ViewModel = _scope.Resolve<T>();
+        Scope = AppServices.Container.BeginLifetimeScope(typeof(T).Name);
+        T vm = Scope.Resolve<T>();
+        if (onLoad != null)
+        {
+            await onLoad(vm);
+        }
+        ViewModel = vm;
         return ViewModel;
+    }
+    public async Task Save(string filePath)
+    {
+        using Stream s = File.OpenWrite(filePath);
+        await ViewModel.Write(s);
+        CurrentFile = await StorageFile.GetFileFromPathAsync(filePath);
+    }
+    public async Task Load(StorageFile file)
+    {
+        using Stream s = await file.OpenStreamForReadAsync();
+        await NewProject(vm => vm.Read(s));
+        CurrentFile = file;
     }
 
     public void Dispose()
     {
-        Log.Debug("Project {Project} (scope {Scope}) is disposed", ViewModel, _scope?.Tag ?? "(new)");
-        _scope?.Dispose();
+        Log.Debug("Project {Project} (scope {Scope}) is disposed", ViewModel, Scope?.Tag ?? "(new)");
+        Scope?.Dispose();
     }
 }

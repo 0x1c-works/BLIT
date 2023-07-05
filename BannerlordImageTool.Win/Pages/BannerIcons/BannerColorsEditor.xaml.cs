@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CP = CommunityToolkit.WinUI.UI.Controls.ColorPicker;
@@ -17,17 +18,23 @@ using CP = CommunityToolkit.WinUI.UI.Controls.ColorPicker;
 
 namespace BannerlordImageTool.Win.Pages.BannerIcons;
 
-public sealed partial class BannerColorsEditor : UserControl
+public sealed partial class BannerColorsEditor : UserControl, INotifyPropertyChanged
 {
     public BannerIconsPageViewModel PageViewModel
     {
         get => GetValue(DataViewModelProperty) as BannerIconsPageViewModel;
-        set => SetValue(DataViewModelProperty, value);
+        set
+        {
+            SetValue(DataViewModelProperty, value);
+            PropertyChanged?.Invoke(this, new(nameof(PageViewModel)));
+        }
     }
     public static readonly DependencyProperty DataViewModelProperty = DependencyProperty.Register(
         nameof(PageViewModel), typeof(BannerIconsPageViewModel), typeof(BannerColorsEditor), new PropertyMetadata(null));
 
     readonly EditorViewModel editorViewModel;
+
+    public event PropertyChangedEventHandler PropertyChanged;
 
     public BannerColorsEditor()
     {
