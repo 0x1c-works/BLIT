@@ -262,6 +262,9 @@
   <data name="PivotBannerGroupsEditor.Header" xml:space="preserve">
     <value>自定义图案</value>
   </data>
+  <data name="Placeholder.NewProject" xml:space="preserve">
+    <value>(新项目)</value>
+  </data>
   <data name="PleaseSelect" xml:space="preserve">
     <value>选择</value>
   </data>

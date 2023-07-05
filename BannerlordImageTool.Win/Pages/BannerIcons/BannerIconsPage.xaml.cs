@@ -37,13 +37,16 @@ public sealed partial class BannerIconsPage : Page
     public BannerIconsPage()
     {
         InitializeComponent();
-        _project.ProjectChanged += OnProjectChanged;
+        _project.PropertyChanged += OnProjectPropertyChanged;
     }
 
-    void OnProjectChanged(BannerIconsPageViewModel vm)
+    void OnProjectPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        vm.PropertyChanged += ViewModel_PropertyChanged;
-        Bindings.Update();
+        if (e.PropertyName == nameof(_project.Current))
+        {
+            _project.Current.PropertyChanged += ViewModel_PropertyChanged;
+            Bindings.Update();
+        }
     }
 
     void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)

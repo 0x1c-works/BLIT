@@ -46,6 +46,25 @@
                     Icon="Flag"
                     Tag="BannerIcons" />
             </NavigationView.MenuItems>
+            <NavigationView.HeaderTemplate>
+                <DataTemplate x:DataType="local:NavPageHeaderInfo">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock
+                            VerticalAlignment="Bottom"
+                            Style="{ThemeResource HeaderTextBlockStyle}"
+                            Text="{x:Bind Title}" />
+                        <TextBlock
+                            Margin="10,0,0,0"
+                            VerticalAlignment="Bottom"
+                            Style="{ThemeResource SubheaderTextBlockStyle}"
+                            Text="{x:Bind SubTitle}" />
+                        <TextBlock
+                            VerticalAlignment="Bottom"
+                            Text="*"
+                            Visibility="{x:Bind IsModified}" />
+                    </StackPanel>
+                </DataTemplate>
+            </NavigationView.HeaderTemplate>
             <Frame x:Name="AppContent" Padding="0" />
         </NavigationView>
         <ctrls:ToastPanel Grid.Row="1" />

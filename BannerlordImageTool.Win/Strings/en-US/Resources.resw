@@ -262,6 +262,9 @@
   <data name="PivotBannerGroupsEditor.Header" xml:space="preserve">
     <value>BANNER GROUPS</value>
   </data>
+  <data name="Placeholder.NewProject" xml:space="preserve">
+    <value>(New project)</value>
+  </data>
   <data name="PleaseSelect" xml:space="preserve">
     <value>Select</value>
   </data>

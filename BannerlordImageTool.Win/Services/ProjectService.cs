@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using BannerlordImageTool.Win.Helpers;
 using Serilog;
 using System;
 using System.ComponentModel;
@@ -14,9 +15,8 @@ public interface IStreamReadWrite
     Task Read(Stream s);
 }
 
-public interface IProjectService<T> where T : IProject
+public interface IProjectService<T> : INotifyPropertyChanged where T : IProject
 {
-    event Action<T> ProjectChanged;
     T Current { get; }
     StorageFile CurrentFile { get; }
     string Name { get; }
@@ -31,23 +31,26 @@ public interface IProject : INotifyPropertyChanged, IStreamReadWrite
     void AfterLoaded();
 }
 
-class ProjectService<T> : IProjectService<T>, IDisposable where T : IProject
+class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T : IProject
 {
     ILifetimeScope _scope;
-
-    public event Action<T> ProjectChanged;
 
     T _vm;
     public T Current
     {
         get => _vm;
-        set
+        set => SetProperty(ref _vm, value);
+    }
+    StorageFile _file;
+    public StorageFile CurrentFile
+    {
+        get => _file;
+        private set
         {
-            _vm = value;
-            ProjectChanged?.Invoke(value);
+            SetProperty(ref _file, value);
+            OnPropertyChanged(nameof(Name));
         }
     }
-    public StorageFile CurrentFile { get; private set; }
     public string Name
     {
         get
