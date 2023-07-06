@@ -13,7 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
+namespace BannerlordImageTool.Win.Pages.BannerIcons.Models;
 public class BannerIconsProject : BindableBase, IProject
 {
     public BannerIconsProject(
@@ -57,7 +57,7 @@ public class BannerIconsProject : BindableBase, IProject
         };
         set
         {
-            _settings.Banner.TextureOutputResolution = Enum.TryParse<OutputResolution>(value, out OutputResolution enumValue) ? enumValue : OutputResolution.INVALID;
+            _settings.Banner.TextureOutputResolution = Enum.TryParse(value, out OutputResolution enumValue) ? enumValue : OutputResolution.INVALID;
             OnPropertyChanged();
         }
     }

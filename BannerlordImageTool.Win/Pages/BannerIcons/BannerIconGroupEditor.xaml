@@ -9,7 +9,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BannerlordImageTool.Win.Pages.BannerIcons"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="using:BannerlordImageTool.Win.Pages.BannerIcons.ViewModels"
+    xmlns:vm="using:BannerlordImageTool.Win.Pages.BannerIcons.Models"
     mc:Ignorable="d">
     <UserControl.Resources>
         <DataTemplate x:Key="IconTextureTemplate" x:DataType="vm:BannerIconEntry">

@@ -8,7 +8,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using Windows.Storage;
 
-namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
+namespace BannerlordImageTool.Win.Pages.BannerIcons.Models;
 
 public class BannerGroupEntry : BindableBase
 {

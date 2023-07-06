@@ -3,7 +3,7 @@
 
 using BannerlordImageTool.Win.Helpers;
 using BannerlordImageTool.Win.Pages.BannerIcons;
-using BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
+using BannerlordImageTool.Win.Pages.BannerIcons.Models;
 using BannerlordImageTool.Win.Pages.Settings;
 using BannerlordImageTool.Win.Services;
 using BannerlordImageTool.Win.Theming;

@@ -3,7 +3,7 @@ using BannerlordImageTool.Win.Helpers;
 using MessagePack;
 using Windows.UI;
 
-namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
+namespace BannerlordImageTool.Win.Pages.BannerIcons.Models;
 
 public class BannerColorEntry : BindableBase
 {

@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using BannerlordImageTool.Win.Helpers;
-using BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
+using BannerlordImageTool.Win.Pages.BannerIcons.Models;
 using BannerlordImageTool.Win.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

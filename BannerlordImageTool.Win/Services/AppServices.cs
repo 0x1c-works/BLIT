@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
+using BannerlordImageTool.Win.Pages.BannerIcons.Models;
 using BannerlordImageTool.Win.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using System;

@@ -5,7 +5,7 @@ using MessagePack;
 using System.ComponentModel;
 using System.IO;
 
-namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
+namespace BannerlordImageTool.Win.Pages.BannerIcons.Models;
 public class BannerIconEntry : BindableBase
 {
     public delegate BannerIconEntry Factory(BannerGroupEntry groupVm, string texturePath);
@@ -70,7 +70,7 @@ public class BannerIconEntry : BindableBase
     {
         _groupViewModel = groupVm;
         _texturePath = texturePath;
-        this._settings = settings;
+        _settings = settings;
         _settings = settings;
 
         _groupViewModel.PropertyChanged += _viewModel_PropertyChanged;

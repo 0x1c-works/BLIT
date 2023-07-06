@@ -56,8 +56,7 @@ class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T 
         get
         {
             var path = CurrentFile?.Path;
-            if (string.IsNullOrEmpty(path)) return "";
-            return Path.GetFileName(path);
+            return string.IsNullOrEmpty(path) ? "" : Path.GetFileName(path);
         }
     }
 
