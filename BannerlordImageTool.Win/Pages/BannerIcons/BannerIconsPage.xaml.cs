@@ -30,9 +30,9 @@ public sealed partial class BannerIconsPage : Page
 
     readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
     readonly IFileDialogService _fileDialog = AppServices.Get<IFileDialogService>();
-    readonly IProjectService<BannerIconsPageViewModel> _project = AppServices.Get<IProjectService<BannerIconsPageViewModel>>();
+    readonly IProjectService<BannerIconsProject> _project = AppServices.Get<IProjectService<BannerIconsProject>>();
 
-    BannerIconsPageViewModel ViewModel { get => _project.Current; }
+    BannerIconsProject ViewModel { get => _project.Current; }
 
     public BannerIconsPage()
     {

@@ -19,17 +19,17 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons;
 
 public sealed partial class BannerColorsEditor : UserControl
 {
-    public BannerIconsPageViewModel PageViewModel
+    public BannerIconsProject ViewModel
     {
-        get => GetValue(DataViewModelProperty) as BannerIconsPageViewModel;
+        get => GetValue(ViewModelProperty) as BannerIconsProject;
         set
         {
-            SetValue(DataViewModelProperty, value);
+            SetValue(ViewModelProperty, value);
             Bindings.Update();
         }
     }
-    public static readonly DependencyProperty DataViewModelProperty = DependencyProperty.Register(
-        nameof(PageViewModel), typeof(BannerIconsPageViewModel), typeof(BannerColorsEditor), new PropertyMetadata(null));
+    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        nameof(ViewModel), typeof(BannerIconsProject), typeof(BannerColorsEditor), new PropertyMetadata(null));
 
     readonly EditorViewModel editorViewModel;
 
@@ -42,7 +42,7 @@ public sealed partial class BannerColorsEditor : UserControl
     async void btnChangeColor_Click(object sender, RoutedEventArgs e)
     {
         var tag = (sender as Button)?.Tag;
-        if (tag is null || tag is not BannerColorViewModel vm)
+        if (tag is null || tag is not BannerColorEntry vm)
         {
             return;
         }
@@ -83,12 +83,12 @@ public sealed partial class BannerColorsEditor : UserControl
 
     void AddNewColor()
     {
-        PageViewModel.AddColor();
+        ViewModel.AddColor();
     }
 
     async Task DeleteSelectedColors()
     {
-        IEnumerable<BannerColorViewModel> selection = editorViewModel.Selection;
+        IEnumerable<BannerColorEntry> selection = editorViewModel.Selection;
         if (!selection.Any())
         {
             return;
@@ -103,14 +103,14 @@ public sealed partial class BannerColorsEditor : UserControl
             return;
         }
 
-        PageViewModel.DeleteColors(selection);
+        ViewModel.DeleteColors(selection);
     }
 
     class EditorViewModel : BindableBase
     {
         readonly DataGrid _dataGrid;
 
-        public IEnumerable<BannerColorViewModel> Selection => _dataGrid.SelectedItems.Cast<BannerColorViewModel>().Where(m => m is not null);
+        public IEnumerable<BannerColorEntry> Selection => _dataGrid.SelectedItems.Cast<BannerColorEntry>().Where(m => m is not null);
         public bool HasSelection => Selection.Any();
 
         public EditorViewModel(DataGrid dataGrid)

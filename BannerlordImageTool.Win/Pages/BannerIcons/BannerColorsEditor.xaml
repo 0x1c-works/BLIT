@@ -42,7 +42,7 @@
             VerticalAlignment="Stretch"
             AlternatingRowBackground="{StaticResource AlternativeRowBackgroundBrush}"
             AutoGenerateColumns="False"
-            ItemsSource="{x:Bind PageViewModel.Colors, Mode=OneWay}"
+            ItemsSource="{x:Bind ViewModel.Colors, Mode=OneWay}"
             SelectionMode="Extended">
             <controls:DataGrid.Columns>
                 <controls:DataGridTextColumn

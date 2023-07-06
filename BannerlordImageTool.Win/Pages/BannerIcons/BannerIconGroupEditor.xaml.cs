@@ -19,17 +19,17 @@ public sealed partial class BannerIconGroupEditor : UserControl
     static readonly Guid GUID_TEXTURE_DIALOG = new("8a8429ec-b674-40d8-82f0-ad42be0d6e8f");
     static readonly Guid GUID_SPRITE_DIALOG = new("7fb7d0f4-e50d-4fa3-a890-ae0775bca3d8");
 
-    public BannerGroupViewModel ViewModel
+    public BannerGroupEntry ViewModel
     {
-        get => GetValue(ViewModelProperty) as BannerGroupViewModel;
+        get => GetValue(ViewModelProperty) as BannerGroupEntry;
         set => SetValue(ViewModelProperty, value);
     }
 
     public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
         nameof(ViewModel),
-        typeof(BannerGroupViewModel),
+        typeof(BannerGroupEntry),
         typeof(BannerIconsPage),
-        new PropertyMetadata(default(BannerGroupViewModel)));
+        new PropertyMetadata(default(BannerGroupEntry)));
 
     public BannerIconGroupEditor()
     {
@@ -68,12 +68,12 @@ public sealed partial class BannerIconGroupEditor : UserControl
     void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         var changed = false;
-        foreach (BannerIconViewModel item in e.AddedItems.Where(item => item is BannerIconViewModel).Cast<BannerIconViewModel>())
+        foreach (BannerIconEntry item in e.AddedItems.Where(item => item is BannerIconEntry).Cast<BannerIconEntry>())
         {
             item.IsSelected = true;
             changed = true;
         }
-        foreach (BannerIconViewModel item in e.RemovedItems.Where(item => item is BannerIconViewModel).Cast<BannerIconViewModel>())
+        foreach (BannerIconEntry item in e.RemovedItems.Where(item => item is BannerIconEntry).Cast<BannerIconEntry>())
         {
             item.IsSelected = false;
             changed = true;

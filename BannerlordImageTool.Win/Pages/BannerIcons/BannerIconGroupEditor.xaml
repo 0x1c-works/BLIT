@@ -12,7 +12,7 @@
     xmlns:vm="using:BannerlordImageTool.Win.Pages.BannerIcons.ViewModels"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <DataTemplate x:Key="IconTextureTemplate" x:DataType="vm:BannerIconViewModel">
+        <DataTemplate x:Key="IconTextureTemplate" x:DataType="vm:BannerIconEntry">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />

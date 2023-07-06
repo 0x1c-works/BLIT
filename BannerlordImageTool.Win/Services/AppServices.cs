@@ -21,16 +21,16 @@ public class AppServices
         // Singleton components
         builder.RegisterType<GlobalSettings>().SingleInstance();
         builder.Register((ctx) => BannerSettings.Load()).SingleInstance();
-        RegisterProjectService<BannerIconsPageViewModel>(builder);
+        RegisterProjectService<BannerIconsProject>(builder);
 
         // Scoped services
         builder.RegisterType<SettingsService>().AsImplementedInterfaces();
 
         // Scoped components
-        builder.RegisterType<BannerIconsPageViewModel>().InstancePerLifetimeScope();
-        builder.RegisterType<BannerGroupViewModel>().InstancePerDependency();
-        builder.RegisterType<BannerColorViewModel>().InstancePerDependency();
-        builder.RegisterType<BannerIconViewModel>().InstancePerDependency();
+        builder.RegisterType<BannerIconsProject>().InstancePerLifetimeScope();
+        builder.RegisterType<BannerGroupEntry>().InstancePerDependency();
+        builder.RegisterType<BannerColorEntry>().InstancePerDependency();
+        builder.RegisterType<BannerIconEntry>().InstancePerDependency();
 
         Container = builder.Build();
         return new AutofacServiceProvider(Container);

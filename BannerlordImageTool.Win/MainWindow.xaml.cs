@@ -75,7 +75,7 @@ public sealed partial class MainWindow : ThemedWindow
 
     record NavPage(Type Type, Action<NavigationView, NavigationViewItem> OnLoad);
     static readonly Dictionary<string, NavPage> TAGGED_PAGES = new() {
-        {"BannerIcons",new(typeof(BannerIconsPage), OnProjectPageLoad<BannerIconsPageViewModel>)},
+        {"BannerIcons",new(typeof(BannerIconsPage), OnProjectPageLoad<BannerIconsProject>)},
     };
     static void OnProjectPageLoad<T>(NavigationView view, NavigationViewItem item) where T : IProject
     {

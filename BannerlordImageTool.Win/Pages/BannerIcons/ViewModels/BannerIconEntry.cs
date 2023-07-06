@@ -6,10 +6,10 @@ using System.ComponentModel;
 using System.IO;
 
 namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
-public class BannerIconViewModel : BindableBase
+public class BannerIconEntry : BindableBase
 {
-    public delegate BannerIconViewModel Factory(BannerGroupViewModel groupVm, string texturePath);
-    readonly BannerGroupViewModel _groupViewModel;
+    public delegate BannerIconEntry Factory(BannerGroupEntry groupVm, string texturePath);
+    readonly BannerGroupEntry _groupViewModel;
     string _texturePath;
     string _spritePath;
     int _cellIndex;
@@ -66,7 +66,7 @@ public class BannerIconViewModel : BindableBase
     public bool IsSelected { get; set; }
     public bool IsValid => !string.IsNullOrEmpty(TexturePath) && AtlasIndex >= 0;
 
-    public BannerIconViewModel(BannerGroupViewModel groupVm, string texturePath, ISettingsService settings)
+    public BannerIconEntry(BannerGroupEntry groupVm, string texturePath, ISettingsService settings)
     {
         _groupViewModel = groupVm;
         _texturePath = texturePath;
@@ -78,7 +78,7 @@ public class BannerIconViewModel : BindableBase
 
     void _viewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(BannerGroupViewModel.GroupName))
+        if (e.PropertyName == nameof(BannerGroupEntry.GroupName))
         {
             OnPropertyChanged(nameof(AtlasName));
             OnPropertyChanged(nameof(ID));
@@ -129,7 +129,7 @@ public class BannerIconViewModel : BindableBase
         [Key(2)]
         public int CellIndex;
 
-        public SaveData(BannerIconViewModel vm)
+        public SaveData(BannerIconEntry vm)
         {
             TexturePath = vm.TexturePath;
             SpritePath = vm.SpritePath;
@@ -137,9 +137,9 @@ public class BannerIconViewModel : BindableBase
         }
         public SaveData() { }
 
-        public BannerIconViewModel Load(BannerGroupViewModel groupVM, Factory factory)
+        public BannerIconEntry Load(BannerGroupEntry groupVM, Factory factory)
         {
-            BannerIconViewModel vm = factory(groupVM, TexturePath);
+            BannerIconEntry vm = factory(groupVM, TexturePath);
             vm.SpritePath = SpritePath;
             vm.CellIndex = CellIndex;
             return vm;

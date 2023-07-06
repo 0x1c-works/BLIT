@@ -5,9 +5,9 @@ using Windows.UI;
 
 namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
 
-public class BannerColorViewModel : BindableBase
+public class BannerColorEntry : BindableBase
 {
-    public delegate BannerColorViewModel Factory(int id);
+    public delegate BannerColorEntry Factory(int id);
 
     int _id;
     Color _color;
@@ -45,7 +45,7 @@ public class BannerColorViewModel : BindableBase
 
     public bool CanExport => ID >= 0 && Color.A > 0;
 
-    public BannerColorViewModel(int id)
+    public BannerColorEntry(int id)
     {
         ID = id;
     }
@@ -78,7 +78,7 @@ public class BannerColorViewModel : BindableBase
         [Key(3)]
         public bool IsForBackground;
 
-        public SaveData(BannerColorViewModel vm)
+        public SaveData(BannerColorEntry vm)
         {
             ID = vm.ID;
             Color = vm.Color;
@@ -86,9 +86,9 @@ public class BannerColorViewModel : BindableBase
             IsForBackground = vm.IsForBackground;
         }
         public SaveData() { }
-        public BannerColorViewModel Load(Factory factory)
+        public BannerColorEntry Load(Factory factory)
         {
-            BannerColorViewModel vm = factory(ID);
+            BannerColorEntry vm = factory(ID);
             vm.Color = Color;
             vm.IsForSigil = IsForSigil;
             vm.IsForBackground = IsForBackground;

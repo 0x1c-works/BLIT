@@ -13,7 +13,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:Key="GroupItemTemplate" x:DataType="vm:BannerGroupViewModel">
+        <DataTemplate x:Key="GroupItemTemplate" x:DataType="vm:BannerGroupEntry">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -204,7 +204,7 @@
                 </SplitView>
             </PivotItem>
             <PivotItem x:Uid="PivotBannerColorsEditor">
-                <local:BannerColorsEditor PageViewModel="{x:Bind ViewModel, Mode=OneWay}" />
+                <local:BannerColorsEditor ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
             </PivotItem>
         </Pivot>
     </Grid>
