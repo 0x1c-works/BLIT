@@ -178,7 +178,7 @@
                                     x:Name="btnDeleteGroup"
                                     Click="btnDeleteGroup_Click"
                                     Icon="Delete"
-                                    IsEnabled="{x:Bind ViewModel.HasSelectedGroup, Mode=OneWay}"
+                                    IsEnabled="{x:Bind HasSelectedGroup, Mode=OneWay}"
                                     Label="Delete Group"
                                     LabelPosition="Collapsed" />
                             </StackPanel>
@@ -189,17 +189,18 @@
                                 IsItemClickEnabled="True"
                                 ItemTemplate="{StaticResource GroupItemTemplate}"
                                 ItemsSource="{x:Bind ViewModel.Groups, Mode=OneWay}"
-                                SelectedItem="{x:Bind ViewModel.SelectedGroup, Mode=TwoWay}" />
+                                SelectionChanged="listViewGroups_SelectionChanged" />
+                            <!--  SelectedItem="{x:Bind ViewModel.SelectedGroup, Mode=TwoWay}" />  -->
                         </Grid>
                     </SplitView.Pane>
 
                     <!--  Pane Content  -->
-                    <Grid DataContext="{x:Bind ViewModel.SelectedGroup}">
-                        <local:BannerIconGroupEditor ViewModel="{x:Bind ViewModel.SelectedGroup, Mode=OneWay}" Visibility="{x:Bind ViewModel.HasSelectedGroup, Mode=OneWay}" />
+                    <Grid>
+                        <local:BannerIconGroupEditor ViewModel="{x:Bind SelectedGroup, Mode=OneWay}" Visibility="{x:Bind HasSelectedGroup, Mode=OneWay}" />
                         <TextBlock
                             x:Uid="TextNoSelectedBannerGroup"
                             Padding="16"
-                            Visibility="{x:Bind ViewModel.ShowEmptyHint, Mode=OneWay}" />
+                            Visibility="{x:Bind ShouldShowEmptyHint, Mode=OneWay}" />
                     </Grid>
                 </SplitView>
             </PivotItem>

@@ -34,20 +34,6 @@ public class BannerIconsProject : BindableBase, IProject
     public ObservableCollection<BannerColorEntry> Colors { get; } = new();
     public StorageFile CurrentFile { get; set; }
 
-    BannerGroupEntry _selectedGroup;
-    public BannerGroupEntry SelectedGroup
-    {
-        get => _selectedGroup;
-        set
-        {
-            SetProperty(ref _selectedGroup, value);
-            OnPropertyChanged(nameof(HasSelectedGroup));
-            OnPropertyChanged(nameof(ShowEmptyHint));
-        }
-    }
-    public bool HasSelectedGroup => SelectedGroup is not null;
-    public bool ShowEmptyHint => !HasSelectedGroup;
-
     public string OutputResolutionName
     {
         get => _settings.Banner.TextureOutputResolution switch {
@@ -121,7 +107,6 @@ public class BannerIconsProject : BindableBase, IProject
         BannerGroupEntry newGroup = _groupFactory(GetNextGroupID());
         newGroup.PropertyChanged += OnGroupPropertyChanged;
         Groups.Add(newGroup);
-        SelectedGroup ??= Groups.Last();
         OnPropertyChanged(nameof(CanExport));
     }
 
@@ -140,10 +125,6 @@ public class BannerIconsProject : BindableBase, IProject
 
         group.PropertyChanged -= OnGroupPropertyChanged;
         Groups.Remove(group);
-        if (group == SelectedGroup)
-        {
-            SelectedGroup = Groups.Count > 0 ? Groups[Math.Max(0, index - 1)] : null;
-        }
         OnPropertyChanged(nameof(CanExport));
     }
 
@@ -218,8 +199,6 @@ public class BannerIconsProject : BindableBase, IProject
 
     public void AfterLoaded()
     {
-        // Update the selection if there is any
-        SelectedGroup = HasSelectedGroup ? Groups.FirstOrDefault(g => g.GroupID == SelectedGroup.GroupID) : Groups.FirstOrDefault();
         OnPropertyChanged(nameof(CanExport));
     }
 

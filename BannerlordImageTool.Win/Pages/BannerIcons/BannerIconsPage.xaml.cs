@@ -33,6 +33,9 @@ public sealed partial class BannerIconsPage : Page
     readonly IProjectService<BannerIconsProject> _project = AppServices.Get<IProjectService<BannerIconsProject>>();
 
     BannerIconsProject ViewModel { get => _project.Current; }
+    BannerGroupEntry SelectedGroup { get => listViewGroups.SelectedItem as BannerGroupEntry; }
+    bool HasSelectedGroup { get => SelectedGroup is not null; }
+    bool ShouldShowEmptyHint { get => !HasSelectedGroup; }
 
     public BannerIconsPage()
     {
@@ -44,16 +47,7 @@ public sealed partial class BannerIconsPage : Page
     {
         if (e.PropertyName == nameof(_project.Current))
         {
-            _project.Current.PropertyChanged += ViewModel_PropertyChanged;
             Bindings.Update();
-        }
-    }
-
-    void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(ViewModel.SelectedGroup))
-        {
-            listViewGroups.SelectedItem = ViewModel.SelectedGroup;
         }
     }
 
@@ -69,11 +63,6 @@ public sealed partial class BannerIconsPage : Page
     void btnImport_Click(object sender, RoutedEventArgs e)
     {
 
-    }
-
-    void btnAddGroup_Click(object sender, RoutedEventArgs e)
-    {
-        ViewModel.AddGroup();
     }
 
     async void btnExportAll_Click(object sender, RoutedEventArgs e)
@@ -171,9 +160,15 @@ public sealed partial class BannerIconsPage : Page
         return null;
     }
 
+    void btnAddGroup_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.AddGroup();
+        listViewGroups.SelectedItem = ViewModel.Groups.Last();
+    }
+
     async void btnDeleteGroup_Click(object sender, RoutedEventArgs e)
     {
-        if (ViewModel.SelectedGroup is null)
+        if (!HasSelectedGroup)
         {
             return;
         }
@@ -181,10 +176,20 @@ public sealed partial class BannerIconsPage : Page
         ContentDialogResult result = await AppServices.Get<IConfirmDialogService>().ShowDanger(
             this,
             I18n.Current.GetString("DialogDeleteBannerGroup/Title"),
-            string.Format(I18n.Current.GetString("DialogDeleteBannerGroup/Content"), ViewModel.SelectedGroup.GroupID));
-        if (result == ContentDialogResult.Primary)
+            string.Format(I18n.Current.GetString("DialogDeleteBannerGroup/Content"), SelectedGroup.GroupID));
+        if (result != ContentDialogResult.Primary)
         {
-            ViewModel.DeleteGroup(ViewModel.SelectedGroup);
+            return;
+        }
+        var selectedIndex = listViewGroups.SelectedIndex;
+        ViewModel.DeleteGroup(SelectedGroup);
+        if (listViewGroups.Items.Count > 0)
+        {
+            listViewGroups.SelectedIndex = Math.Min(selectedIndex, listViewGroups.Items.Count - 1);
+        }
+        else
+        {
+            listViewGroups.SelectedItem = null;
         }
     }
 
@@ -205,6 +210,7 @@ public sealed partial class BannerIconsPage : Page
             return;
         }
         await _project.Load(openedFile);
+        listViewGroups.SelectedItem = ViewModel.Groups.FirstOrDefault();
     }
 
     void btnSaveProjectAs_Click(object sender, RoutedEventArgs e)
@@ -227,5 +233,9 @@ public sealed partial class BannerIconsPage : Page
             return;
         }
         await _project.Save(filePath);
+    }
+    void listViewGroups_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        Bindings.Update();
     }
 }
