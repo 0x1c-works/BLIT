@@ -24,14 +24,14 @@ public class FileDialogService : IFileDialogService
     public async Task<StorageFolder> OpenFolder(Guid stateGuid)
     {
         return await NativeHelpers.RunCom(async () => {
-            Shell32.IFileOpenDialog ofd = CreateFileOpenDialog(stateGuid, Shell32.FILEOPENDIALOGOPTIONS.FOS_PICKFOLDERS);
+            Shell32.IFileOpenDialog fd = CreateFileOpenDialog(stateGuid, Shell32.FILEOPENDIALOGOPTIONS.FOS_PICKFOLDERS);
 
-            if (IsUserCancelled(ofd.Show(NativeHelpers.GetHwnd())))
+            if (IsUserCancelled(fd.Show(HWND.NULL)))
             {
                 // User closes the dialog by clicking "Cancel".
                 return null;
             }
-            Shell32.IShellItem selectedFolder = ofd.GetFolder();
+            Shell32.IShellItem selectedFolder = fd.GetFolder();
             var path = selectedFolder.GetDisplayName(Shell32.SIGDN.SIGDN_FILESYSPATH);
             if (string.IsNullOrEmpty(path))
             {
@@ -83,7 +83,7 @@ public class FileDialogService : IFileDialogService
             Shell32.IFileOpenDialog fd = CreateFileOpenDialog(stateGuid, Shell32.FILEOPENDIALOGOPTIONS.FOS_ALLOWMULTISELECT);
             fd.SetFileTypes((uint)fileTypes.Length, fileTypes.Select(ft => ft.ToFilterSpec()).ToArray());
 
-            if (IsUserCancelled(fd.Show(NativeHelpers.GetHwnd())))
+            if (IsUserCancelled(fd.Show(HWND.NULL)))
             {
                 return null;
             }
