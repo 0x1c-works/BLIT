@@ -30,10 +30,6 @@ public class BannerGroupEntry : BindableBase
 
     public bool CanExport => Icons.Count > 0;
 
-    public IEnumerable<BannerIconEntry> AllSelection => Icons.Where(icon => icon.IsSelected);
-    public BannerIconEntry SingleSelection => Icons.Where(icon => icon.IsSelected).FirstOrDefault();
-    public bool HasSelection => Icons.Any(icon => icon.IsSelected);
-
     public BannerGroupEntry(int groupID, Lazy<BannerIconEntry.Factory> iconFactory)
     {
         GroupID = groupID;
@@ -89,12 +85,6 @@ public class BannerGroupEntry : BindableBase
         {
             Icons[i].CellIndex = i;
         }
-    }
-    public void NotifySelectionChange()
-    {
-        OnPropertyChanged(nameof(AllSelection));
-        OnPropertyChanged(nameof(SingleSelection));
-        OnPropertyChanged(nameof(HasSelection));
     }
 
     public BannerIconGroup ToBannerIconGroup()

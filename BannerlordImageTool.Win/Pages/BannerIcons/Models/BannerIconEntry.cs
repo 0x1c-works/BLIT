@@ -63,7 +63,6 @@ public class BannerIconEntry : BindableBase
     public string AtlasName => BannerUtils.GetAtlasName(_groupViewModel.GroupID, AtlasIndex);
     public int ID => BannerUtils.GetIconID(_groupViewModel.GroupID, CellIndex);
 
-    public bool IsSelected { get; set; }
     public bool IsValid => !string.IsNullOrEmpty(TexturePath) && AtlasIndex >= 0;
 
     public BannerIconEntry(BannerGroupEntry groupVm, string texturePath, ISettingsService settings)

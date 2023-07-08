@@ -7,6 +7,7 @@ using BannerlordImageTool.Win.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -31,6 +32,11 @@ public sealed partial class BannerIconGroupEditor : UserControl
         typeof(BannerIconsPage),
         new PropertyMetadata(default(BannerGroupEntry)));
 
+    IEnumerable<BannerIconEntry> SelectedIcons { get => gridIcons.SelectedItems.Cast<BannerIconEntry>(); }
+    bool HasSelectedIcons { get => gridIcons.SelectedItems.Count > 0; }
+    BannerIconEntry FirstSelectedIcon { get => SelectedIcons.FirstOrDefault(); }
+
+
     public BannerIconGroupEditor()
     {
         InitializeComponent();
@@ -38,7 +44,7 @@ public sealed partial class BannerIconGroupEditor : UserControl
 
     async void btnDeleteSelectedTextures_Click(object sender, RoutedEventArgs e)
     {
-        if (!ViewModel.HasSelection)
+        if (!HasSelectedIcons)
         {
             return;
         }
@@ -46,16 +52,16 @@ public sealed partial class BannerIconGroupEditor : UserControl
         ContentDialogResult result = await AppServices.Get<IConfirmDialogService>().ShowDanger(
             this,
             I18n.Current.GetString("DialogDeleteBannerIcon/Title"),
-            string.Format(I18n.Current.GetString("DialogDeleteBannerIcon/Content"), ViewModel.AllSelection.Count()));
+            string.Format(I18n.Current.GetString("DialogDeleteBannerIcon/Content"), SelectedIcons.Count()));
         if (result == ContentDialogResult.Primary)
         {
-            ViewModel.DeleteIcons(ViewModel.AllSelection);
+            ViewModel.DeleteIcons(SelectedIcons);
         }
     }
 
     async void btnOpenTextures_Click(object sender, RoutedEventArgs e)
     {
-        System.Collections.Generic.IReadOnlyList<Windows.Storage.StorageFile> files = await AppServices.Get<IFileDialogService>().OpenFiles(GUID_TEXTURE_DIALOG, new[] { CommonFileTypes.Png });
+        IReadOnlyList<Windows.Storage.StorageFile> files = await AppServices.Get<IFileDialogService>().OpenFiles(GUID_TEXTURE_DIALOG, new[] { CommonFileTypes.Png });
 
         if (files.Count == 0)
         {
@@ -67,47 +73,36 @@ public sealed partial class BannerIconGroupEditor : UserControl
 
     void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        var changed = false;
-        foreach (BannerIconEntry item in e.AddedItems.Where(item => item is BannerIconEntry).Cast<BannerIconEntry>())
-        {
-            item.IsSelected = true;
-            changed = true;
-        }
-        foreach (BannerIconEntry item in e.RemovedItems.Where(item => item is BannerIconEntry).Cast<BannerIconEntry>())
-        {
-            item.IsSelected = false;
-            changed = true;
-        }
+        var changed = e.AddedItems.Any() || e.RemovedItems.Any();
         if (changed)
         {
-            ViewModel.NotifySelectionChange();
+            Bindings.Update();
         }
     }
 
     async void btnSelectSprite_Click(object sender, RoutedEventArgs e)
     {
         Windows.Storage.StorageFile file = await AppServices.Get<IFileDialogService>().OpenFile(GUID_SPRITE_DIALOG,
-                                                                       ViewModel.SingleSelection.SpritePath,
+                                                                       FirstSelectedIcon.SpritePath,
                                                                        new[] { CommonFileTypes.Png });
-        if (file is null || ViewModel.SingleSelection is null)
+        if (file is null || FirstSelectedIcon is null)
         {
             return;
         }
 
-        ViewModel.SingleSelection.SpritePath = file.Path;
+        FirstSelectedIcon.SpritePath = file.Path;
     }
 
     async void btnSelectTexture_Click(object sender, RoutedEventArgs e)
     {
         Windows.Storage.StorageFile file = await AppServices.Get<IFileDialogService>().OpenFile(GUID_TEXTURE_DIALOG,
-                                                                       ViewModel.SingleSelection.TexturePath,
+                                                                       FirstSelectedIcon.TexturePath,
                                                                        new[] { CommonFileTypes.Png });
-        if (file is null || ViewModel.SingleSelection is null)
+        if (file is null || FirstSelectedIcon is null)
         {
             return;
         }
 
-        ViewModel.SingleSelection.TexturePath = file.Path;
+        FirstSelectedIcon.TexturePath = file.Path;
     }
-
 }

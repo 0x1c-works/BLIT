@@ -120,7 +120,7 @@
                 VerticalAlignment="Center"
                 Click="btnDeleteSelectedTextures_Click"
                 Icon="Delete"
-                IsEnabled="{x:Bind ViewModel.HasSelection, Mode=OneWay, FallbackValue=False}">
+                IsEnabled="{x:Bind HasSelectedIcons, Mode=OneWay, FallbackValue=False}">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="Delete" />
                 </AppBarButton.KeyboardAccelerators>
@@ -128,6 +128,7 @@
         </StackPanel>
         <!--  Texture Grid  -->
         <GridView
+            x:Name="gridIcons"
             Grid.Row="1"
             Padding="16"
             AllowDrop="True"
@@ -153,14 +154,33 @@
                     Grid.ColumnSpan="2"
                     Padding="16"
                     Background="{ThemeResource CardStrokeColorDefaultBrush}">
-                    <TextBlock
-                        x:Uid="TextTextureProperties"
-                        VerticalAlignment="Center"
-                        FontWeight="Bold">
-                        Texture Properties
-                    </TextBlock>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock
+                            x:Uid="TextTextureProperties"
+                            VerticalAlignment="Center"
+                            FontWeight="Bold" />
+                        <StackPanel
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal"
+                            Visibility="{x:Bind HasSelectedIcons}">
+                            <TextBlock
+                                VerticalAlignment="Bottom"
+                                Style="{StaticResource CaptionStyle}"
+                                Text="{x:Bind ViewModel.GroupName}" />
+                            <TextBlock
+                                Margin="5,0,0,0"
+                                VerticalAlignment="Bottom"
+                                Style="{StaticResource CaptionStyle}">
+                                / #
+                            </TextBlock>
+                            <TextBlock
+                                VerticalAlignment="Bottom"
+                                Style="{StaticResource CaptionStyle}"
+                                Text="{x:Bind FirstSelectedIcon.ID}" />
+                        </StackPanel>
+                    </StackPanel>
                 </Border>
-                <ScrollViewer Grid.Row="1" DataContext="{x:Bind ViewModel.SingleSelection, Mode=OneWay}">
+                <ScrollViewer Grid.Row="1" DataContext="{x:Bind FirstSelectedIcon, Mode=OneWay}">
                     <Grid Padding="16" RowSpacing="8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition
@@ -197,7 +217,7 @@
                                 Grid.Column="0"
                                 VerticalAlignment="Top"
                                 Click="btnSelectSprite_Click"
-                                IsEnabled="{x:Bind ViewModel.HasSelection, Mode=OneWay}" />
+                                IsEnabled="{x:Bind HasSelectedIcons, Mode=OneWay}" />
                             <TextBlock
                                 Grid.Row="0"
                                 Grid.Column="1"
@@ -249,7 +269,7 @@
                                 Grid.Column="0"
                                 VerticalAlignment="Top"
                                 Click="btnSelectTexture_Click"
-                                IsEnabled="{x:Bind ViewModel.HasSelection, Mode=OneWay}" />
+                                IsEnabled="{x:Bind HasSelectedIcons, Mode=OneWay}" />
                             <TextBlock
                                 Grid.Row="0"
                                 Grid.Column="1"
