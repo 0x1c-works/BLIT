@@ -10,7 +10,7 @@ public class BannerColorEntry : BindableBase
     public delegate BannerColorEntry Factory(int id);
 
     int _id;
-    Color _color;
+    Color _color = Color.FromArgb(255, 255, 255, 255);
     bool _isForSigil = true;
     bool _isForBackground = true;
 

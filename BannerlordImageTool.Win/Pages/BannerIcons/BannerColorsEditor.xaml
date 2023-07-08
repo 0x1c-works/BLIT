@@ -7,6 +7,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:BannerlordImageTool.Win.Helpers"
     xmlns:local="using:BannerlordImageTool.Win.Pages.BannerIcons"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:BannerlordImageTool.Win.Pages.BannerIcons.Models"
@@ -23,19 +24,18 @@
             <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefault}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Padding" Value="10,2" />
+            <!--<Setter Property="Opacity" Value=".5" />-->
         </Style>
         <Style
             x:Key="FlagPillSigilStyle"
             BasedOn="{StaticResource FlagPillBaseStyle}"
             TargetType="Border">
-            <Setter Property="Opacity" Value=".5" />
             <Setter Property="Background" Value="#00a8fc" />
         </Style>
         <Style
             x:Key="FlagPillBackgroundStyle"
             BasedOn="{StaticResource FlagPillBaseStyle}"
             TargetType="Border">
-            <Setter Property="Opacity" Value=".5" />
             <Setter Property="Background" Value="#ce2285" />
         </Style>
     </UserControl.Resources>
@@ -61,24 +61,28 @@
                     x:Uid="AppButtonDeleteColors"
                     Click="btnDelete_Click"
                     Icon="Delete"
-                    IsEnabled="{x:Bind editorViewModel.HasSelection, Mode=OneWay}" />
+                    IsEnabled="{x:Bind HasSelectedColor, Mode=OneWay}" />
             </StackPanel>
             <ListView
                 x:Name="listViewColors"
                 Grid.Row="1"
                 IsItemClickEnabled="False"
                 ItemsSource="{x:Bind ViewModel.Colors}"
+                SelectionChanged="listViewColors_SelectionChanged"
                 SelectionMode="Extended">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="vm:BannerColorEntry">
-                        <Grid Margin="0,3" ColumnSpacing="10">
+                        <Grid
+                            Height="50"
+                            Margin="0,3"
+                            ColumnSpacing="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="50" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Rectangle>
                                 <Rectangle.Fill>
-                                    <SolidColorBrush Color="{Binding Color, Mode=OneWay, FallbackValue='Transparent'}" />
+                                    <SolidColorBrush Color="{Binding Color, Mode=OneWay, FallbackValue='#FFFFFF'}" />
                                 </Rectangle.Fill>
                             </Rectangle>
                             <StackPanel Grid.Column="1" Spacing="5">
@@ -90,10 +94,10 @@
                                     <TextBlock Style="{ThemeResource ItemLabelStyle}" Text="{x:Bind ID}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Spacing="10">
-                                    <Border Style="{StaticResource FlagPillSigilStyle}" Visibility="{x:Bind IsForSigil}">
+                                    <Border Style="{StaticResource FlagPillSigilStyle}" Visibility="{x:Bind IsForSigil, Mode=OneWay}">
                                         <TextBlock x:Uid="TextColorForSigil" />
                                     </Border>
-                                    <Border Style="{StaticResource FlagPillBackgroundStyle}" Visibility="{x:Bind IsForBackground}">
+                                    <Border Style="{StaticResource FlagPillBackgroundStyle}" Visibility="{x:Bind IsForBackground, Mode=OneWay}">
                                         <TextBlock x:Uid="TextColorForBackground" />
                                     </Border>
                                 </StackPanel>
@@ -103,6 +107,53 @@
                 </ListView.ItemTemplate>
             </ListView>
             <!--  Color Editor  -->
+        </Grid>
+        <Grid
+            Grid.Column="1"
+            Width="400"
+            Padding="32,0"
+            HorizontalAlignment="Left"
+            RowSpacing="20"
+            Visibility="{x:Bind HasSelectedColor}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel
+                Grid.ColumnSpan="2"
+                Orientation="Horizontal"
+                Spacing="5">
+                <TextBlock
+                    Margin="0"
+                    Padding="0"
+                    VerticalAlignment="Bottom"
+                    Style="{ThemeResource SubheaderTextBlockStyle}"
+                    Text="{x:Bind SelectedColorIDs, Mode=OneWay}" />
+                <TextBlock
+                    VerticalAlignment="Bottom"
+                    FontWeight="Light"
+                    Style="{ThemeResource FlyoutPickerTitleTextBlockStyle}"
+                    Text="{x:Bind MoreColorsText, Mode=OneWay}" />
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <ToggleSwitch Header="{x:Bind helpers:I18n.Current.GetString('TextColorForSigil/Text')}" IsOn="{x:Bind IsForSigil, Mode=TwoWay}" />
+            </StackPanel>
+            <StackPanel
+                Grid.Row="1"
+                Grid.Column="1"
+                Orientation="Horizontal">
+                <ToggleSwitch Header="{x:Bind helpers:I18n.Current.GetString('TextColorForBackground/Text')}" IsOn="{x:Bind IsForBackground, Mode=TwoWay}" />
+            </StackPanel>
+            <ColorPicker
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                Visibility="{x:Bind IsSingleSelected, Mode=OneWay}"
+                Color="{x:Bind FirstSelectedColor.Color, Mode=TwoWay}" />
         </Grid>
     </Grid>
 </UserControl>
