@@ -36,7 +36,7 @@ public sealed partial class BannerColorsEditor : UserControl
     public BannerColorsEditor()
     {
         InitializeComponent();
-        editorViewModel = new EditorViewModel(dataGrid);
+        //editorViewModel = new EditorViewModel(dataGrid);
     }
 
     async void btnChangeColor_Click(object sender, RoutedEventArgs e)
@@ -88,7 +88,8 @@ public sealed partial class BannerColorsEditor : UserControl
 
     async Task DeleteSelectedColors()
     {
-        IEnumerable<BannerColorEntry> selection = editorViewModel.Selection;
+        //IEnumerable<BannerColorEntry> selection = editorViewModel.Selection;
+        IEnumerable<BannerColorEntry> selection = listViewColors.SelectedItems.Cast<BannerColorEntry>();
         if (!selection.Any())
         {
             return;

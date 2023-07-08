@@ -290,6 +290,12 @@
   <data name="TextChange.Text" xml:space="preserve">
     <value>更改</value>
   </data>
+  <data name="TextColorForBackground.Text" xml:space="preserve">
+    <value>背景色</value>
+  </data>
+  <data name="TextColorForSigil.Text" xml:space="preserve">
+    <value>纹章色</value>
+  </data>
   <data name="TextConfirmDeleteSelection.Text" xml:space="preserve">
     <value>所有选中的项目都将被移除，是否继续？</value>
   </data>
