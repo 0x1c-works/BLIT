@@ -187,6 +187,9 @@
   <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">
     <value>Yes, delete them</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="ColorGridColumnBackground.Header" xml:space="preserve">
     <value>Background</value>
   </data>
@@ -198,6 +201,13 @@
   </data>
   <data name="ColorGridColumnSigil.Header" xml:space="preserve">
     <value>Sigil</value>
+  </data>
+  <data name="DialogChangeLanguage.Content" xml:space="preserve">
+    <value>The app needs to restart after changing the language.
+If you prefer not to, the changes will be applied next time when you launch this app.</value>
+  </data>
+  <data name="DialogChangeLanguage.Title" xml:space="preserve">
+    <value>Language Changed</value>
   </data>
   <data name="DialogDeleteBannerGroup.Content" xml:space="preserve">
     <value>Are you sure to delete banner group "{0}"?</value>
@@ -253,6 +263,9 @@
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
   <data name="Open" xml:space="preserve">
     <value>Open</value>
   </data>
@@ -276,6 +289,9 @@
   </data>
   <data name="TextAdvancedSettingsTitle" xml:space="preserve">
     <value>Advanced</value>
+  </data>
+  <data name="TextAppearanceTitle.Text" xml:space="preserve">
+    <value>Appearance</value>
   </data>
   <data name="TextBannerGroupListTitle.Text" xml:space="preserve">
     <value>BANNER ICON GROUPS</value>
@@ -321,6 +337,9 @@ Note that 1 to 6 are used by the vanilla game.</value>
   <data name="TextExporting.Text" xml:space="preserve">
     <value>Exporting, please wait...
 It may take a while if there are a lot of assets</value>
+  </data>
+  <data name="TextLanguage.Text" xml:space="preserve">
+    <value>Language (will restart the app)</value>
   </data>
   <data name="TextNoSelectedBannerGroup.Text" xml:space="preserve">
     <value>Please select or create a new banner group.</value>

@@ -187,6 +187,9 @@
   <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">
     <value>是，删除它们</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
   <data name="ColorGridColumnBackground.Header" xml:space="preserve">
     <value>背景色</value>
   </data>
@@ -198,6 +201,13 @@
   </data>
   <data name="ColorGridColumnSigil.Header" xml:space="preserve">
     <value>纹章色</value>
+  </data>
+  <data name="DialogChangeLanguage.Content" xml:space="preserve">
+    <value>变更语言需要重启应用。
+如果取消，新的语言将会在下次启动应用时生效。</value>
+  </data>
+  <data name="DialogChangeLanguage.Title" xml:space="preserve">
+    <value>语言变更</value>
   </data>
   <data name="DialogDeleteBannerGroup.Content" xml:space="preserve">
     <value>是否要删除图案分组“{0}”？</value>
@@ -253,6 +263,9 @@
   <data name="No" xml:space="preserve">
     <value>否</value>
   </data>
+  <data name="OK" xml:space="preserve">
+    <value>确定</value>
+  </data>
   <data name="Open" xml:space="preserve">
     <value>打开</value>
   </data>
@@ -276,6 +289,9 @@
   </data>
   <data name="TextAdvancedSettingsTitle" xml:space="preserve">
     <value>高级</value>
+  </data>
+  <data name="TextAppearanceTitle.Text" xml:space="preserve">
+    <value>外观</value>
   </data>
   <data name="TextBannerGroupListTitle.Text" xml:space="preserve">
     <value>旗帜图案分组</value>
@@ -321,6 +337,9 @@
   <data name="TextExporting.Text" xml:space="preserve">
     <value>正在导出，请稍候...
 资源较多时可能会花费较长时间</value>
+  </data>
+  <data name="TextLanguage.Text" xml:space="preserve">
+    <value>语言 (需要重启应用)</value>
   </data>
   <data name="TextNoSelectedBannerGroup.Text" xml:space="preserve">
     <value>请选中或新建一个图案分组</value>
