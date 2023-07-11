@@ -319,7 +319,8 @@
 注意：1 到 6 为原版游戏所使用。</value>
   </data>
   <data name="TextExporting.Text" xml:space="preserve">
-    <value>正在导出...</value>
+    <value>正在导出，请稍候...
+资源较多时可能会花费较长时间</value>
   </data>
   <data name="TextNoSelectedBannerGroup.Text" xml:space="preserve">
     <value>请选中或新建一个图案分组</value>

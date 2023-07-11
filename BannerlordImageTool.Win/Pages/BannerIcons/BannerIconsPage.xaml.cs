@@ -31,6 +31,7 @@ public sealed partial class BannerIconsPage : Page
     readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
     readonly IFileDialogService _fileDialog = AppServices.Get<IFileDialogService>();
     readonly IProjectService<BannerIconsProject> _project = AppServices.Get<IProjectService<BannerIconsProject>>();
+    readonly ILoadingService _loading = AppServices.Get<ILoadingService>();
 
     BannerIconsProject ViewModel { get => _project.Current; }
     BannerGroupEntry SelectedGroup { get => listViewGroups.SelectedItem as BannerGroupEntry; }
@@ -117,15 +118,9 @@ public sealed partial class BannerIconsPage : Page
             return;
         }
 
-        Toast progressToast = null;
+        _loading.Show(I18n.Current.GetString("TextExporting/Text"));
         try
         {
-            progressToast = AppServices.Get<INotificationService>().Notify(new(
-                ToastVariant.Progressing,
-                Message: I18n.Current.GetString("TextExporting/Text"),
-                KeepOpen: true,
-                IsClosable: false
-            ));
             ViewModel.IsExporting = true;
             await work();
         }
@@ -140,11 +135,8 @@ public sealed partial class BannerIconsPage : Page
         }
         finally
         {
+            _loading.Hide();
             ViewModel.IsExporting = false;
-            if (progressToast != null)
-            {
-                progressToast.IsOpen = false;
-            }
         }
     }
 

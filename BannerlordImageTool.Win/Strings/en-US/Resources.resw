@@ -319,7 +319,8 @@ Larger IDs are recommended to prevent collision.
 Note that 1 to 6 are used by the vanilla game.</value>
   </data>
   <data name="TextExporting.Text" xml:space="preserve">
-    <value>Exporting...</value>
+    <value>Exporting, please wait...
+It may take a while if there are a lot of assets</value>
   </data>
   <data name="TextNoSelectedBannerGroup.Text" xml:space="preserve">
     <value>Please select or create a new banner group.</value>

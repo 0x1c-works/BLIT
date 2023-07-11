@@ -17,6 +17,7 @@ public class AppServices
         builder.RegisterType<FileDialogService>().AsImplementedInterfaces().SingleInstance();
         builder.RegisterType<ConfirmDialogService>().AsImplementedInterfaces().SingleInstance();
         builder.RegisterType<NotificationService>().AsImplementedInterfaces().SingleInstance();
+        builder.RegisterType<LoadingService>().AsImplementedInterfaces().SingleInstance();
 
         // Singleton components
         builder.RegisterType<GlobalSettings>().SingleInstance();

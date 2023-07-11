@@ -67,6 +67,7 @@
             </NavigationView.HeaderTemplate>
             <Frame x:Name="AppContent" Padding="0" />
         </NavigationView>
+        <ctrls:LoadingOverlay Grid.Row="1" />
         <ctrls:ToastPanel Grid.Row="1" />
     </Grid>
 </theming:ThemedWindow>
