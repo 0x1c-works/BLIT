@@ -284,6 +284,9 @@
   <data name="PleaseSelect" xml:space="preserve">
     <value>选择</value>
   </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>请稍侯...</value>
+  </data>
   <data name="SaveXMLSuccess" xml:space="preserve">
     <value>成功保存到：{0}</value>
   </data>

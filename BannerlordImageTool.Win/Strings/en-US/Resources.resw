@@ -284,6 +284,9 @@ If you prefer not to, the changes will be applied next time when you launch this
   <data name="PleaseSelect" xml:space="preserve">
     <value>Select</value>
   </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Please wait...</value>
+  </data>
   <data name="SaveXMLSuccess" xml:space="preserve">
     <value>Successfully saved to {0}.</value>
   </data>

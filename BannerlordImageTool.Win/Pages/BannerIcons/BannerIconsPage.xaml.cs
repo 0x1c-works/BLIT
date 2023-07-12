@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using BannerlordImageTool.Banner;
 using BannerlordImageTool.Win.Controls;
 using BannerlordImageTool.Win.Helpers;
 using BannerlordImageTool.Win.Pages.BannerIcons.Models;
@@ -75,15 +74,7 @@ public sealed partial class BannerIconsPage : Page
         }
 
         await DoExportAsync(async () => {
-            var merger = new TextureMerger(_settings.Banner.TextureOutputResolution);
-            await Task.WhenAll(ViewModel.GetExportingGroups().Select(g =>
-                Task.Factory.StartNew(() => {
-                    merger.Merge(outFolder.Path, g.GroupID, g.Icons.Select(icon => icon.TexturePath).ToArray());
-                })
-            ));
-            await SpriteOrganizer.CollectToSpriteParts(outFolder.Path, ViewModel.ToIconSprites());
-            var outDir = await ExportXML(outFolder);
-
+            var outDir = await ViewModel.ExportAll(outFolder);
             AppServices.Get<INotificationService>().Notify(new(
                 ToastVariant.Success,
                 Message: string.Format(I18n.Current.GetString("ExportSuccess"), outDir),
@@ -100,14 +91,15 @@ public sealed partial class BannerIconsPage : Page
             return;
         }
 
-        await DoExportAsync(async () => {
-            var outDir = await ExportXML(outFolder);
+        await DoExportAsync(() => {
+            var outDir = ViewModel.ExportXML(outFolder);
             AppServices.Get<INotificationService>().Notify(new(
                 ToastVariant.Success,
                 Message: string.Format(I18n.Current.GetString("SaveXMLSuccess"), Path.Join(outDir, "banner_icons.xml")),
                 Action: new(
                     I18n.Current.GetString("ButtonOpenFolder/Content"),
                     (s, e) => FileHelpers.OpenFolderInExplorer(outDir))));
+            return Task.CompletedTask;
         });
     }
 
@@ -138,18 +130,6 @@ public sealed partial class BannerIconsPage : Page
             _loading.Hide();
             ViewModel.IsExporting = false;
         }
-    }
-
-    async Task<string> ExportXML(StorageFolder outFolder)
-    {
-        outFolder ??= await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
-        if (outFolder is not null)
-        {
-            ViewModel.ToBannerIconData().SaveToXml(outFolder.Path);
-            SpriteOrganizer.GenerateConfigXML(outFolder.Path, ViewModel.ToIconSprites());
-            return outFolder.Path;
-        }
-        return null;
     }
 
     void btnAddGroup_Click(object sender, RoutedEventArgs e)
@@ -196,6 +176,7 @@ public sealed partial class BannerIconsPage : Page
 
     async void btnOpenProject_Click(object sender, RoutedEventArgs e)
     {
+        _loading.Show(I18n.Current.GetString("PleaseWait"));
         StorageFile openedFile = await _fileDialog.OpenFile(GUID_PROJECT_DIALOG, new[] { CommonFileTypes.BannerIconsProject });
         if (openedFile is null)
         {
@@ -203,6 +184,9 @@ public sealed partial class BannerIconsPage : Page
         }
         await _project.Load(openedFile);
         listViewGroups.SelectedItem = ViewModel.Groups.FirstOrDefault();
+        // wait for the UI to update
+        await Task.Delay(200);
+        _loading.Hide();
     }
 
     void btnSaveProjectAs_Click(object sender, RoutedEventArgs e)
@@ -224,7 +208,11 @@ public sealed partial class BannerIconsPage : Page
         {
             return;
         }
+        _loading.Show(I18n.Current.GetString("PleaseWait"));
         await _project.Save(filePath);
+        // wait for the UI to update
+        await Task.Delay(200);
+        _loading.Hide();
     }
     void listViewGroups_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
