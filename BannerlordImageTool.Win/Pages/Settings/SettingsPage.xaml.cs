@@ -4,6 +4,8 @@
 using BannerlordImageTool.Win.Helpers;
 using BannerlordImageTool.Win.Pages.Settings.ViewModels;
 using BannerlordImageTool.Win.Services;
+using BannerlordImageTool.Win.Settings;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.AppLifecycle;
 using System;
@@ -25,13 +27,14 @@ public sealed partial class SettingsPage : Page
         new Tuple<string, string>("¼òÌåÖÐÎÄ", "zh"),
     };
     SettingsViewModel ViewModel { get; } = new();
+    GlobalSettings _globalSettings = AppServices.Get<GlobalSettings>();
 
     public SettingsPage()
     {
         InitializeComponent();
     }
 
-    void btnOpenLogFolder_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    void btnOpenLogFolder_Click(object sender, RoutedEventArgs e)
     {
         FileHelpers.OpenFolderInExplorer(Logging.Folder);
     }
@@ -54,7 +57,7 @@ public sealed partial class SettingsPage : Page
         }
     }
 
-    void cboLanguage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    void cboLanguage_Loaded(object sender, RoutedEventArgs e)
     {
         var current = CurrentLang;
         Tuple<string, string> item = Languages.FirstOrDefault(item => item.Item2 == current);
@@ -66,4 +69,14 @@ public sealed partial class SettingsPage : Page
     }
 
     string CurrentLang { get => Windows.ApplicationModel.Resources.Core.ResourceContext.GetForViewIndependentUse().Languages[0]; }
+
+    void toggleTheme_Loaded(object sender, RoutedEventArgs e)
+    {
+        ((ToggleSwitch)sender).IsOn = !ThemeHelper.IsDarkTheme;
+    }
+
+    void toggleTheme_Toggled(object sender, RoutedEventArgs e)
+    {
+        ThemeHelper.RootTheme = ((ToggleSwitch)sender).IsOn ? ElementTheme.Light : ElementTheme.Dark;
+    }
 }

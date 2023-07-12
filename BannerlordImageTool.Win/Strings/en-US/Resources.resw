@@ -342,10 +342,13 @@ Note that 1 to 6 are used by the vanilla game.</value>
 It may take a while if there are a lot of assets</value>
   </data>
   <data name="TextLanguage.Text" xml:space="preserve">
-    <value>Language (will restart the app)</value>
+    <value>Language</value>
   </data>
   <data name="TextNoSelectedBannerGroup.Text" xml:space="preserve">
     <value>Please select or create a new banner group.</value>
+  </data>
+  <data name="TextRequireRestart.Text" xml:space="preserve">
+    <value>*will restart the app</value>
   </data>
   <data name="TextTexturePreview.Text" xml:space="preserve">
     <value>Texture Preview</value>
@@ -353,11 +356,20 @@ It may take a while if there are a lot of assets</value>
   <data name="TextTextureProperties.Text" xml:space="preserve">
     <value>Texture Properties</value>
   </data>
+  <data name="TextTheme.Text" xml:space="preserve">
+    <value>Theme</value>
+  </data>
   <data name="TextUISprite.Text" xml:space="preserve">
     <value>UI Sprite</value>
   </data>
   <data name="TextViewLogFiles.Text" xml:space="preserve">
     <value>View log files</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Light</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>

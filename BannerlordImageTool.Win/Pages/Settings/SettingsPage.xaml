@@ -17,6 +17,10 @@
             <Setter Property="Margin" Value="0,16,0,0" />
             <Setter Property="Spacing" Value="8" />
         </Style>
+        <Style x:Key="SectionGridStyle" TargetType="Grid">
+            <Setter Property="RowSpacing" Value="10" />
+            <Setter Property="ColumnSpacing" Value="16" />
+        </Style>
     </Page.Resources>
 
     <Grid Margin="32" Background="Transparent">
@@ -28,67 +32,146 @@
                     <Button x:Name="btnPickGameFolder" x:Uid="ButtonBrowse" Content="Browse..."/>
                 </StackPanel>-->
 
-                <StackPanel>
-                    <TextBlock x:Uid="TextBannerSettingsTitle" Style="{StaticResource SectionTitleStyle}">Banner Settings</TextBlock>
-                    <local:BannerSpriteScanFoldersEditor ViewModel="{Binding BannerSettings, Mode=OneWay}" />
+                <Grid Style="{StaticResource SectionGridStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        x:Uid="TextBannerSettingsTitle"
+                        Grid.ColumnSpan="2"
+                        Style="{StaticResource SectionTitleStyle}">
+                        Banner Settings
+                    </TextBlock>
+                    <!--  Scan folders  -->
+                    <local:BannerSpriteScanFoldersEditor
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        ViewModel="{Binding BannerSettings, Mode=OneWay}" />
 
-                    <StackPanel Style="{StaticResource HorizontalBlockStyle}">
-                        <StackPanel Spacing="8">
-                            <TextBlock x:Uid="TextCustomBannerGroupStartID" Style="{StaticResource ItemLabelStyle}" />
-                            <TextBlock x:Uid="TextCustomBannerGroupStartIDExplain" Style="{StaticResource CaptionStyle}" />
-                        </StackPanel>
-                        <NumberBox
-                            Width="200"
-                            VerticalAlignment="Top"
-                            AcceptsExpression="True"
-                            Maximum="99999"
-                            Minimum="1"
-                            SpinButtonPlacementMode="Compact"
-                            Value="{Binding BannerSettings.CustomGroupStartID, Mode=TwoWay}" />
+                    <!--  Group start ID  -->
+                    <StackPanel
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Spacing="8">
+                        <TextBlock x:Uid="TextCustomBannerGroupStartID" Style="{StaticResource ItemLabelStyle}" />
+                        <TextBlock x:Uid="TextCustomBannerGroupStartIDExplain" Style="{StaticResource CaptionStyle}" />
                     </StackPanel>
-                    <StackPanel Style="{StaticResource HorizontalBlockStyle}">
-                        <StackPanel Spacing="8">
-                            <TextBlock x:Uid="TextCustomBannerColorStartID" Style="{StaticResource ItemLabelStyle}" />
-                            <TextBlock x:Uid="TextCustomBannerColorStartIDExplain" Style="{StaticResource CaptionStyle}" />
-                        </StackPanel>
-                        <NumberBox
-                            Width="200"
-                            VerticalAlignment="Top"
-                            AcceptsExpression="True"
-                            Maximum="9999999"
-                            Minimum="0"
-                            SpinButtonPlacementMode="Compact"
-                            Value="{Binding BannerSettings.CustomColorStartID, Mode=TwoWay}" />
+                    <NumberBox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Width="200"
+                        VerticalAlignment="Top"
+                        AcceptsExpression="True"
+                        Maximum="99999"
+                        Minimum="1"
+                        SpinButtonPlacementMode="Compact"
+                        Value="{Binding BannerSettings.CustomGroupStartID, Mode=TwoWay}" />
+                    <!--  Color start ID  -->
+                    <StackPanel
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Spacing="8">
+                        <TextBlock x:Uid="TextCustomBannerColorStartID" Style="{StaticResource ItemLabelStyle}" />
+                        <TextBlock x:Uid="TextCustomBannerColorStartIDExplain" Style="{StaticResource CaptionStyle}" />
                     </StackPanel>
-                </StackPanel>
+                    <NumberBox
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Width="200"
+                        VerticalAlignment="Top"
+                        AcceptsExpression="True"
+                        Maximum="9999999"
+                        Minimum="0"
+                        SpinButtonPlacementMode="Compact"
+                        Value="{Binding BannerSettings.CustomColorStartID, Mode=TwoWay}" />
+                </Grid>
 
-                <StackPanel>
-                    <TextBlock x:Uid="TextAppearanceTitle" Style="{StaticResource SectionTitleStyle}">Appearance</TextBlock>
-                    <StackPanel Style="{StaticResource HorizontalBlockStyle}">
+                <Grid Style="{StaticResource SectionGridStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        x:Uid="TextAppearanceTitle"
+                        Grid.ColumnSpan="2"
+                        Style="{StaticResource SectionTitleStyle}">
+                        Appearance
+                    </TextBlock>
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Spacing="8">
                         <TextBlock x:Uid="TextLanguage" Style="{StaticResource ItemLabelStyle}" />
-                        <ComboBox
-                            x:Name="cboLanguage"
-                            Width="200"
-                            DisplayMemberPath="Item1"
-                            ItemsSource="{x:Bind Languages}"
-                            Loaded="cboLanguage_Loaded"
-                            SelectedValuePath="Item2"
-                            SelectionChanged="cboLanguage_SelectionChanged" />
+                        <TextBlock x:Uid="TextRequireRestart" Style="{StaticResource CaptionStyle}" />
                     </StackPanel>
-                </StackPanel>
+                    <ComboBox
+                        x:Name="cboLanguage"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Width="200"
+                        DisplayMemberPath="Item1"
+                        ItemsSource="{x:Bind Languages}"
+                        Loaded="cboLanguage_Loaded"
+                        SelectedValuePath="Item2"
+                        SelectionChanged="cboLanguage_SelectionChanged" />
+                    <TextBlock
+                        x:Uid="TextTheme"
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource ItemLabelStyle}" />
+                    <ToggleSwitch
+                        x:Name="toggleTheme"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Loaded="toggleTheme_Loaded"
+                        OffContent="Dark"
+                        OnContent="Light"
+                        Toggled="toggleTheme_Toggled" />
+                </Grid>
 
-                <StackPanel>
-                    <TextBlock x:Uid="TextAdvancedSettingsTitle" Style="{StaticResource SectionTitleStyle}">Advanced</TextBlock>
-                    <StackPanel Style="{StaticResource HorizontalBlockStyle}">
-                        <TextBlock x:Uid="TextViewLogFiles" Style="{StaticResource ItemLabelStyle}" />
-                        <Button
-                            x:Name="btnOpenLogFolder"
-                            x:Uid="ButtonOpenFolder"
-                            Click="btnOpenLogFolder_Click">
-                            Open log folder
-                        </Button>
-                    </StackPanel>
-                </StackPanel>
+                <Grid Style="{StaticResource SectionGridStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        x:Uid="TextAdvancedSettingsTitle"
+                        Grid.ColumnSpan="2"
+                        Style="{StaticResource SectionTitleStyle}">
+                        Advanced
+                    </TextBlock>
+                    <TextBlock
+                        x:Uid="TextViewLogFiles"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource ItemLabelStyle}" />
+                    <Button
+                        x:Name="btnOpenLogFolder"
+                        x:Uid="ButtonOpenFolder"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Click="btnOpenLogFolder_Click">
+                        Open log folder
+                    </Button>
+                </Grid>
             </StackPanel>
         </ScrollViewer>
     </Grid>
