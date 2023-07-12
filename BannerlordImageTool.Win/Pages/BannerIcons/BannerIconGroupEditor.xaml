@@ -214,12 +214,14 @@
                             <Button
                                 x:Name="btnSelectSprite"
                                 x:Uid="ButtonChangeEllipses"
+                                HorizontalAlignment="Stretch"
                                 VerticalAlignment="Top"
                                 Click="btnSelectSprite_Click"
                                 IsEnabled="{x:Bind HasSelectedIcons, Mode=OneWay}" />
                             <Button
                                 x:Name="btnReimportSprite"
                                 x:Uid="ButtonReimport"
+                                HorizontalAlignment="Stretch"
                                 VerticalAlignment="Top"
                                 Click="btnReimportSprite_Click"
                                 IsEnabled="{x:Bind CanReimportSprite, Mode=OneWay}" />
