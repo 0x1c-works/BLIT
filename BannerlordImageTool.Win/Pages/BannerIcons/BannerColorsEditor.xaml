@@ -7,8 +7,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:BannerlordImageTool.Win.Helpers"
     xmlns:local="using:BannerlordImageTool.Win.Pages.BannerIcons"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:BannerlordImageTool.Win.Pages.BannerIcons.Models"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -16,106 +18,142 @@
             x:Key="AlternativeRowBackgroundBrush"
             Opacity=".1"
             Color="Black" />
+        <Style x:Key="FlagPillBaseStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefault}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefault}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="10,2" />
+            <!--<Setter Property="Opacity" Value=".5" />-->
+        </Style>
+        <Style
+            x:Key="FlagPillSigilStyle"
+            BasedOn="{StaticResource FlagPillBaseStyle}"
+            TargetType="Border">
+            <Setter Property="Background" Value="#00a8fc" />
+        </Style>
+        <Style
+            x:Key="FlagPillBackgroundStyle"
+            BasedOn="{StaticResource FlagPillBaseStyle}"
+            TargetType="Border">
+            <Setter Property="Background" Value="#ce2285" />
+        </Style>
     </UserControl.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <AppBarButton
-                x:Name="btnAdd"
-                x:Uid="AppButtonAddColor"
-                Click="btnAdd_Click"
-                Icon="Add" />
-            <AppBarButton
-                x:Name="btnDelete"
-                x:Uid="AppButtonDeleteColors"
-                Click="btnDelete_Click"
-                Icon="Delete"
-                IsEnabled="{x:Bind editorViewModel.HasSelection, Mode=OneWay}" />
-        </StackPanel>
-        <controls:DataGrid
-            x:Name="dataGrid"
-            Grid.Row="1"
-            VerticalAlignment="Stretch"
-            AlternatingRowBackground="{StaticResource AlternativeRowBackgroundBrush}"
-            AutoGenerateColumns="False"
-            ItemsSource="{x:Bind PageViewModel.Colors, Mode=OneWay}"
-            SelectionMode="Extended">
-            <controls:DataGrid.Columns>
-                <controls:DataGridTextColumn
-                    x:Uid="ColorGridColumnID"
-                    Binding="{Binding ID, Mode=TwoWay}"
-                    Header="ID"
-                    Tag="ID" />
-                <controls:DataGridTemplateColumn
-                    x:Uid="ColorGridColumnColor"
-                    Header="Color"
-                    Tag="Color">
-                    <controls:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Rectangle>
-                                    <Rectangle.Fill>
-                                        <SolidColorBrush Color="{Binding Color, Mode=OneWay, FallbackValue='Transparent'}" />
-                                    </Rectangle.Fill>
-                                </Rectangle>
-                            </Grid>
-                        </DataTemplate>
-                    </controls:DataGridTemplateColumn.CellTemplate>
-                    <controls:DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <Button
-                                x:Name="btnChangeColor"
-                                Grid.Column="1"
-                                Click="btnChangeColor_Click"
-                                Tag="{Binding}">
-                                <Button.Content>
-                                    <Grid ColumnSpacing="8">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="24" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Rectangle RadiusX="4" RadiusY="4">
-                                            <Rectangle.Fill>
-                                                <SolidColorBrush Color="{Binding Color, Mode=OneWay, FallbackValue='Transparent'}" />
-                                            </Rectangle.Fill>
-                                        </Rectangle>
-                                        <TextBlock x:Uid="TextChange" Grid.Column="1" />
-                                    </Grid>
-                                </Button.Content>
-                            </Button>
-                        </DataTemplate>
-                    </controls:DataGridTemplateColumn.CellEditingTemplate>
-                </controls:DataGridTemplateColumn>
-                <controls:DataGridCheckBoxColumn
-                    x:Uid="ColorGridColumnSigil"
-                    Binding="{Binding IsForSigil, Mode=TwoWay}"
-                    Header="Sigil"
-                    Tag="Sigil" />
-                <controls:DataGridCheckBoxColumn
-                    x:Uid="ColorGridColumnBackground"
-                    Binding="{Binding IsForBackground, Mode=TwoWay}"
-                    Header="Background"
-                    Tag="Background" />
-            </controls:DataGrid.Columns>
-            <controls:DataGrid.ContextFlyout>
-                <MenuFlyout>
-                    <MenuFlyoutItem
-                        x:Name="menuItemAdd"
-                        x:Uid="MenuItemAdd"
-                        Click="menuItemAdd_Click"
-                        Icon="Add" />
-                    <MenuFlyoutItem
-                        x:Name="menuItemDelete"
-                        x:Uid="MenuItemDelete"
-                        Click="menuItemDelete_Click"
-                        Icon="Delete"
-                        IsEnabled="{x:Bind editorViewModel.HasSelection, Mode=OneWay}" />
-                </MenuFlyout>
-            </controls:DataGrid.ContextFlyout>
-        </controls:DataGrid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Background="{ThemeResource CardStrokeColorDefault}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <AppBarButton
+                    x:Name="btnAdd"
+                    x:Uid="AppButtonAddColor"
+                    Click="btnAdd_Click"
+                    Icon="Add" />
+                <AppBarButton
+                    x:Name="btnDelete"
+                    x:Uid="AppButtonDeleteColors"
+                    Click="btnDelete_Click"
+                    Icon="Delete"
+                    IsEnabled="{x:Bind HasSelectedColor, Mode=OneWay}" />
+            </StackPanel>
+            <ListView
+                x:Name="listViewColors"
+                Grid.Row="1"
+                IsItemClickEnabled="False"
+                ItemsSource="{x:Bind ViewModel.Colors}"
+                SelectionChanged="listViewColors_SelectionChanged"
+                SelectionMode="Extended">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:BannerColorEntry">
+                        <Grid
+                            Height="50"
+                            Margin="0,3"
+                            ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Rectangle>
+                                <Rectangle.Fill>
+                                    <SolidColorBrush Color="{Binding Color, Mode=OneWay, FallbackValue='#FFFFFF'}" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <StackPanel Grid.Column="1" Spacing="5">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock
+                                        VerticalAlignment="Bottom"
+                                        Style="{ThemeResource CaptionStyle}"
+                                        Text="ID" />
+                                    <TextBlock Style="{ThemeResource ItemLabelStyle}" Text="{x:Bind ID}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Border Style="{StaticResource FlagPillSigilStyle}" Visibility="{x:Bind IsForSigil, Mode=OneWay}">
+                                        <TextBlock x:Uid="TextColorForSigil" />
+                                    </Border>
+                                    <Border Style="{StaticResource FlagPillBackgroundStyle}" Visibility="{x:Bind IsForBackground, Mode=OneWay}">
+                                        <TextBlock x:Uid="TextColorForBackground" />
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <!--  Color Editor  -->
+        </Grid>
+        <Grid
+            Grid.Column="1"
+            Width="400"
+            Padding="32,0"
+            HorizontalAlignment="Left"
+            RowSpacing="20"
+            Visibility="{x:Bind HasSelectedColor}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel
+                Grid.ColumnSpan="2"
+                Orientation="Horizontal"
+                Spacing="5">
+                <TextBlock
+                    Margin="0"
+                    Padding="0"
+                    VerticalAlignment="Bottom"
+                    Style="{ThemeResource SubheaderTextBlockStyle}"
+                    Text="{x:Bind SelectedColorIDs, Mode=OneWay}" />
+                <TextBlock
+                    VerticalAlignment="Bottom"
+                    FontWeight="Light"
+                    Style="{ThemeResource FlyoutPickerTitleTextBlockStyle}"
+                    Text="{x:Bind MoreColorsText, Mode=OneWay}" />
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <ToggleSwitch Header="{x:Bind helpers:I18n.Current.GetString('TextColorForSigil/Text')}" IsOn="{x:Bind IsForSigil, Mode=TwoWay}" />
+            </StackPanel>
+            <StackPanel
+                Grid.Row="1"
+                Grid.Column="1"
+                Orientation="Horizontal">
+                <ToggleSwitch Header="{x:Bind helpers:I18n.Current.GetString('TextColorForBackground/Text')}" IsOn="{x:Bind IsForBackground, Mode=TwoWay}" />
+            </StackPanel>
+            <ColorPicker
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                Visibility="{x:Bind IsSingleSelected, Mode=OneWay}"
+                Color="{x:Bind FirstSelectedColor.Color, Mode=TwoWay}" />
+        </Grid>
     </Grid>
 </UserControl>

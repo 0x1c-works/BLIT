@@ -1,8 +1,11 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
+using BannerlordImageTool.Win.Helpers;
 using BannerlordImageTool.Win.Pages.BannerIcons;
+using BannerlordImageTool.Win.Pages.BannerIcons.Models;
 using BannerlordImageTool.Win.Pages.Settings;
+using BannerlordImageTool.Win.Services;
 using BannerlordImageTool.Win.Theming;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -50,7 +53,7 @@ public sealed partial class MainWindow : ThemedWindow
             return;
         }
 
-        AppNav.Header = item.Content;
+        AppNav.Header = new NavPageHeaderInfo(item.Content.ToString());
 
         if (args.IsSettingsSelected)
         {
@@ -61,17 +64,35 @@ public sealed partial class MainWindow : ThemedWindow
             if (item is not null)
             {
                 var tag = item?.Tag as string;
-                if (TAGGED_PAGES.TryGetValue(tag, out Type pageType))
+                if (TAGGED_PAGES.TryGetValue(tag, out NavPage page))
                 {
-                    AppContent.Navigate(pageType);
+                    AppContent.Navigate(page.Type);
+                    page.OnLoad?.Invoke(AppNav, item);
                 }
             }
         }
     }
 
-    static readonly Dictionary<string, Type> TAGGED_PAGES = new() {
-        {"BannerIcons",typeof(BannerIconsPage) },
+    record NavPage(Type Type, Action<NavigationView, NavigationViewItem> OnLoad);
+    static readonly Dictionary<string, NavPage> TAGGED_PAGES = new() {
+        {"BannerIcons",new(typeof(BannerIconsPage), OnProjectPageLoad<BannerIconsProject>)},
     };
+    static void OnProjectPageLoad<T>(NavigationView view, NavigationViewItem item) where T : IProject
+    {
+        IProjectService<T> project = AppServices.Get<IProjectService<T>>();
+        void UpdateHeader()
+        {
+            view.Header = new NavPageHeaderInfo(item.Content.ToString(), project?.Name, false);
+        }
+        UpdateHeader();
+        project.PropertyChanged += (s, e) => {
+            if (e.PropertyName == nameof(project.Name))
+            {
+                UpdateHeader();
+            }
+        };
+    }
+
 
     public class ViewModel : INotifyPropertyChanged
     {
@@ -98,4 +119,8 @@ public sealed partial class MainWindow : ThemedWindow
             PropertyChanged?.Invoke(this, new(prop));
         }
     }
+}
+public record NavPageHeaderInfo(string Title, string SubTitle = null, bool IsModified = false)
+{
+    public string SubTitle { get; init; } = string.IsNullOrWhiteSpace(SubTitle) ? I18n.Current.GetString("Placeholder/NewProject") : SubTitle;
 }

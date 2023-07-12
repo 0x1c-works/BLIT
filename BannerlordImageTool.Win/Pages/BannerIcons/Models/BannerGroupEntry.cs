@@ -8,14 +8,14 @@ using System.Collections.Specialized;
 using System.Linq;
 using Windows.Storage;
 
-namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
+namespace BannerlordImageTool.Win.Pages.BannerIcons.Models;
 
-public class BannerGroupViewModel : BindableBase
+public class BannerGroupEntry : BindableBase
 {
-    public delegate BannerGroupViewModel Factory(int groupID);
-    public ObservableCollection<BannerIconViewModel> Icons { get; } = new();
+    public delegate BannerGroupEntry Factory(int groupID);
+    public ObservableCollection<BannerIconEntry> Icons { get; } = new();
     int _groupID = 7;
-    readonly Lazy<BannerIconViewModel.Factory> _iconFactory;
+    readonly Lazy<BannerIconEntry.Factory> _iconFactory;
 
     public int GroupID
     {
@@ -30,11 +30,7 @@ public class BannerGroupViewModel : BindableBase
 
     public bool CanExport => Icons.Count > 0;
 
-    public IEnumerable<BannerIconViewModel> AllSelection => Icons.Where(icon => icon.IsSelected);
-    public BannerIconViewModel SingleSelection => Icons.Where(icon => icon.IsSelected).FirstOrDefault();
-    public bool HasSelection => Icons.Any(icon => icon.IsSelected);
-
-    public BannerGroupViewModel(int groupID, Lazy<BannerIconViewModel.Factory> iconFactory)
+    public BannerGroupEntry(int groupID, Lazy<BannerIconEntry.Factory> iconFactory)
     {
         GroupID = groupID;
         _iconFactory = iconFactory;
@@ -53,25 +49,29 @@ public class BannerGroupViewModel : BindableBase
 
     public void AddIcons(IEnumerable<StorageFile> files)
     {
-        IEnumerable<BannerIconViewModel> icons = files
-            .Where(file =>
-                !Icons.Any(icon =>
-                    icon.TexturePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)
-                )
-            )
+        bool IsIconAdded(BannerIconEntry icon, StorageFile file) => icon.TexturePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase);
+
+        IEnumerable<BannerIconEntry> newIcons = files
+            .Where(file => !Icons.Any(icon => IsIconAdded(icon, file)))
             .Select(file => _iconFactory.Value(this, file.Path));
-        foreach (BannerIconViewModel icon in icons)
+        IEnumerable<BannerIconEntry> existingIcons = Icons.Where(icon => files.Any(file => IsIconAdded(icon, file)));
+        foreach (BannerIconEntry icon in newIcons)
         {
             Icons.Add(icon);
             icon.AutoScanSprite();
         }
+        foreach (BannerIconEntry icon in existingIcons)
+        {
+            icon.ReloadSprite();
+            icon.ReloadTexture();
+        }
     }
-    public void DeleteIcons(IEnumerable<BannerIconViewModel> icons)
+    public void DeleteIcons(IEnumerable<BannerIconEntry> icons)
     {
-        var queue = new Queue<BannerIconViewModel>(icons);
+        var queue = new Queue<BannerIconEntry>(icons);
         while (queue.Count > 0)
         {
-            BannerIconViewModel deleting = queue.Dequeue();
+            BannerIconEntry deleting = queue.Dequeue();
             if (!Icons.Remove(deleting))
             {
                 // a more expensive way to ensure the icon is deleted
@@ -90,12 +90,6 @@ public class BannerGroupViewModel : BindableBase
             Icons[i].CellIndex = i;
         }
     }
-    public void NotifySelectionChange()
-    {
-        OnPropertyChanged(nameof(AllSelection));
-        OnPropertyChanged(nameof(SingleSelection));
-        OnPropertyChanged(nameof(HasSelection));
-    }
 
     public BannerIconGroup ToBannerIconGroup()
     {
@@ -104,7 +98,7 @@ public class BannerGroupViewModel : BindableBase
             Name = GroupName,
             IsPattern = false,
         };
-        foreach (BannerIconViewModel icon in Icons)
+        foreach (BannerIconEntry icon in Icons)
         {
             group.Icons.Add(icon.ToBannerIcon());
         }
@@ -117,19 +111,19 @@ public class BannerGroupViewModel : BindableBase
         [Key(0)]
         public int GroupID;
         [Key(1)]
-        public BannerIconViewModel.SaveData[] Icons = new BannerIconViewModel.SaveData[] { };
+        public BannerIconEntry.SaveData[] Icons = new BannerIconEntry.SaveData[] { };
 
-        public SaveData(BannerGroupViewModel vm)
+        public SaveData(BannerGroupEntry vm)
         {
             GroupID = vm.GroupID;
-            Icons = vm.Icons.Select(icon => new BannerIconViewModel.SaveData(icon)).ToArray();
+            Icons = vm.Icons.Select(icon => new BannerIconEntry.SaveData(icon)).ToArray();
         }
         public SaveData() { }
 
-        public BannerGroupViewModel Load(Factory factory)
+        public BannerGroupEntry Load(Factory factory)
         {
-            BannerGroupViewModel vm = factory(GroupID);
-            foreach (BannerIconViewModel.SaveData icon in Icons)
+            BannerGroupEntry vm = factory(GroupID);
+            foreach (BannerIconEntry.SaveData icon in Icons)
             {
                 vm.Icons.Add(icon.Load(vm, vm._iconFactory.Value));
             }

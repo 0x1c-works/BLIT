@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AndMore" xml:space="preserve">
+    <value>and {0} more</value>
+  </data>
   <data name="AppButtonAddColor.Label" xml:space="preserve">
     <value>Add</value>
   </data>
@@ -166,6 +169,9 @@
   <data name="ButtonCancel.Content" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="ButtonChangeEllipses.Content" xml:space="preserve">
+    <value>Change...</value>
+  </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
     <value>Delete</value>
   </data>
@@ -178,11 +184,14 @@
   <data name="ButtonOpenFolder.Content" xml:space="preserve">
     <value>Open folder</value>
   </data>
-  <data name="ButtonSelectEllipses.Content" xml:space="preserve">
-    <value>Select...</value>
+  <data name="ButtonReimport.Content" xml:space="preserve">
+    <value>Reimport</value>
   </data>
   <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">
     <value>Yes, delete them</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
   <data name="ColorGridColumnBackground.Header" xml:space="preserve">
     <value>Background</value>
@@ -195,6 +204,13 @@
   </data>
   <data name="ColorGridColumnSigil.Header" xml:space="preserve">
     <value>Sigil</value>
+  </data>
+  <data name="DialogChangeLanguage.Content" xml:space="preserve">
+    <value>The app needs to restart after changing the language.
+If you prefer not to, the changes will be applied next time when you launch this app.</value>
+  </data>
+  <data name="DialogChangeLanguage.Title" xml:space="preserve">
+    <value>Language Changed</value>
   </data>
   <data name="DialogDeleteBannerGroup.Content" xml:space="preserve">
     <value>Are you sure to delete banner group "{0}"?</value>
@@ -250,6 +266,9 @@
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
   <data name="Open" xml:space="preserve">
     <value>Open</value>
   </data>
@@ -262,14 +281,26 @@
   <data name="PivotBannerGroupsEditor.Header" xml:space="preserve">
     <value>BANNER GROUPS</value>
   </data>
+  <data name="Placeholder.NewProject" xml:space="preserve">
+    <value>(New project)</value>
+  </data>
   <data name="PleaseSelect" xml:space="preserve">
     <value>Select</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Please wait...</value>
   </data>
   <data name="SaveXMLSuccess" xml:space="preserve">
     <value>Successfully saved to {0}.</value>
   </data>
+  <data name="TargetPathNotFound" xml:space="preserve">
+    <value>Target path is not found: {0}</value>
+  </data>
   <data name="TextAdvancedSettingsTitle" xml:space="preserve">
     <value>Advanced</value>
+  </data>
+  <data name="TextAppearanceTitle.Text" xml:space="preserve">
+    <value>Appearance</value>
   </data>
   <data name="TextBannerGroupListTitle.Text" xml:space="preserve">
     <value>BANNER ICON GROUPS</value>
@@ -286,6 +317,12 @@ The relative paths are based on the texture import location.</value>
   </data>
   <data name="TextChange.Text" xml:space="preserve">
     <value>Change</value>
+  </data>
+  <data name="TextColorForBackground.Text" xml:space="preserve">
+    <value>Background</value>
+  </data>
+  <data name="TextColorForSigil.Text" xml:space="preserve">
+    <value>Sigil</value>
   </data>
   <data name="TextConfirmDeleteSelection.Text" xml:space="preserve">
     <value>All selected items will be removed. Do you want to continue?</value>
@@ -307,10 +344,17 @@ Larger IDs are recommended to prevent collision.
 Note that 1 to 6 are used by the vanilla game.</value>
   </data>
   <data name="TextExporting.Text" xml:space="preserve">
-    <value>Exporting...</value>
+    <value>Exporting, please wait...
+It may take a while if there are a lot of assets</value>
+  </data>
+  <data name="TextLanguage.Text" xml:space="preserve">
+    <value>Language</value>
   </data>
   <data name="TextNoSelectedBannerGroup.Text" xml:space="preserve">
     <value>Please select or create a new banner group.</value>
+  </data>
+  <data name="TextRequireRestart.Text" xml:space="preserve">
+    <value>*will restart the app</value>
   </data>
   <data name="TextTexturePreview.Text" xml:space="preserve">
     <value>Texture Preview</value>
@@ -318,11 +362,20 @@ Note that 1 to 6 are used by the vanilla game.</value>
   <data name="TextTextureProperties.Text" xml:space="preserve">
     <value>Texture Properties</value>
   </data>
+  <data name="TextTheme.Text" xml:space="preserve">
+    <value>Theme</value>
+  </data>
   <data name="TextUISprite.Text" xml:space="preserve">
     <value>UI Sprite</value>
   </data>
   <data name="TextViewLogFiles.Text" xml:space="preserve">
     <value>View log files</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Light</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>

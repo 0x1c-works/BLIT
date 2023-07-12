@@ -21,20 +21,29 @@
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush">Transparent</SolidColorBrush>
 
             <SolidColorBrush x:Key="Danger">#AA3232</SolidColorBrush>
+            <SolidColorBrush x:Key="Warn">#FFBB00</SolidColorBrush>
             <AcrylicBrush
                 x:Key="DangerBackground"
                 TintColor="Red"
                 TintLuminosityOpacity=".3"
                 TintOpacity=".4" />
+            <AcrylicBrush
+                x:Key="WarnBackground"
+                TintColor="Orange"
+                TintLuminosityOpacity=".7"
+                TintOpacity=".8" />
             <Style x:Key="DangerButton" TargetType="Button">
                 <Setter Property="Background" Value="{StaticResource DangerBackground}" />
                 <Setter Property="Foreground" Value="White" />
                 <Setter Property="FontWeight" Value="SemiBold" />
                 <Setter Property="CornerRadius" Value="2" />
             </Style>
-            <!--<SymbolIcon x:Key="DangerIcon" Symbol="">
-
-            </SymbolIcon>-->
+            <Style x:Key="WarnButton" TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource WarnBackground}" />
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="CornerRadius" Value="2" />
+            </Style>
             <brushes:TilesBrush x:Key="TransparentCheckBrush" TextureUri="/Assets/transparent-bg.png" />
             <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
                 <Setter Property="FontSize" Value="20" />

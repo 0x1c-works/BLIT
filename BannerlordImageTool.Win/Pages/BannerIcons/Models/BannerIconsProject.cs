@@ -13,13 +13,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace BannerlordImageTool.Win.Pages.BannerIcons.ViewModels;
-public class BannerIconsPageViewModel : BindableBase, IProject
+namespace BannerlordImageTool.Win.Pages.BannerIcons.Models;
+public class BannerIconsProject : BindableBase, IProject
 {
-    public BannerIconsPageViewModel(
+    public BannerIconsProject(
         ISettingsService settings,
-        BannerGroupViewModel.Factory bannerGroupFactory,
-        BannerColorViewModel.Factory colorFactory)
+        BannerGroupEntry.Factory bannerGroupFactory,
+        BannerColorEntry.Factory colorFactory)
     {
         _settings = settings;
         _groupFactory = bannerGroupFactory;
@@ -27,26 +27,12 @@ public class BannerIconsPageViewModel : BindableBase, IProject
     }
 
     readonly ISettingsService _settings;
-    readonly BannerGroupViewModel.Factory _groupFactory;
-    readonly BannerColorViewModel.Factory _colorFactory;
+    readonly BannerGroupEntry.Factory _groupFactory;
+    readonly BannerColorEntry.Factory _colorFactory;
 
-    public ObservableCollection<BannerGroupViewModel> Groups { get; } = new();
-    public ObservableCollection<BannerColorViewModel> Colors { get; } = new();
+    public ObservableCollection<BannerGroupEntry> Groups { get; } = new();
+    public ObservableCollection<BannerColorEntry> Colors { get; } = new();
     public StorageFile CurrentFile { get; set; }
-
-    BannerGroupViewModel _selectedGroup;
-    public BannerGroupViewModel SelectedGroup
-    {
-        get => _selectedGroup;
-        set
-        {
-            SetProperty(ref _selectedGroup, value);
-            OnPropertyChanged(nameof(HasSelectedGroup));
-            OnPropertyChanged(nameof(ShowEmptyHint));
-        }
-    }
-    public bool HasSelectedGroup => SelectedGroup is not null;
-    public bool ShowEmptyHint => !HasSelectedGroup;
 
     public string OutputResolutionName
     {
@@ -57,7 +43,7 @@ public class BannerIconsPageViewModel : BindableBase, IProject
         };
         set
         {
-            _settings.Banner.TextureOutputResolution = Enum.TryParse<OutputResolution>(value, out OutputResolution enumValue) ? enumValue : OutputResolution.INVALID;
+            _settings.Banner.TextureOutputResolution = Enum.TryParse(value, out OutputResolution enumValue) ? enumValue : OutputResolution.INVALID;
             OnPropertyChanged();
         }
     }
@@ -88,11 +74,11 @@ public class BannerIconsPageViewModel : BindableBase, IProject
     public BannerIconData ToBannerIconData()
     {
         var data = new BannerIconData();
-        foreach (BannerGroupViewModel group in GetExportingGroups())
+        foreach (BannerGroupEntry group in GetExportingGroups())
         {
             data.IconGroups.Add(group.ToBannerIconGroup());
         }
-        foreach (BannerColorViewModel color in GetExportingColors())
+        foreach (BannerColorEntry color in GetExportingColors())
         {
             data.BannerColors.Add(color.ToBannerColor());
         }
@@ -107,25 +93,24 @@ public class BannerIconsPageViewModel : BindableBase, IProject
         });
     }
 
-    public IOrderedEnumerable<BannerGroupViewModel> GetExportingGroups()
+    public IOrderedEnumerable<BannerGroupEntry> GetExportingGroups()
     {
         return Groups.Where(g => g?.CanExport ?? false).OrderBy(g => g.GroupID);
     }
-    public IOrderedEnumerable<BannerColorViewModel> GetExportingColors()
+    public IOrderedEnumerable<BannerColorEntry> GetExportingColors()
     {
         return Colors.Where(c => c?.CanExport ?? false).OrderBy(c => c.ID);
     }
 
     public void AddGroup()
     {
-        BannerGroupViewModel newGroup = _groupFactory(GetNextGroupID());
+        BannerGroupEntry newGroup = _groupFactory(GetNextGroupID());
         newGroup.PropertyChanged += OnGroupPropertyChanged;
         Groups.Add(newGroup);
-        SelectedGroup ??= Groups.Last();
         OnPropertyChanged(nameof(CanExport));
     }
 
-    public void DeleteGroup(BannerGroupViewModel group)
+    public void DeleteGroup(BannerGroupEntry group)
     {
         if (group is null)
         {
@@ -140,10 +125,6 @@ public class BannerIconsPageViewModel : BindableBase, IProject
 
         group.PropertyChanged -= OnGroupPropertyChanged;
         Groups.Remove(group);
-        if (group == SelectedGroup)
-        {
-            SelectedGroup = Groups.Count > 0 ? Groups[Math.Max(0, index - 1)] : null;
-        }
         OnPropertyChanged(nameof(CanExport));
     }
 
@@ -151,10 +132,10 @@ public class BannerIconsPageViewModel : BindableBase, IProject
     {
         Colors.Add(_colorFactory(GetNextColorID()));
     }
-    public void DeleteColors(IEnumerable<BannerColorViewModel> colors)
+    public void DeleteColors(IEnumerable<BannerColorEntry> colors)
     {
-        BannerColorViewModel[] deleting = colors.ToArray();
-        foreach (BannerColorViewModel color in deleting)
+        BannerColorEntry[] deleting = colors.ToArray();
+        foreach (BannerColorEntry color in deleting)
         {
             Colors.Remove(color);
         }
@@ -172,7 +153,7 @@ public class BannerIconsPageViewModel : BindableBase, IProject
     void OnGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         OnPropertyChanged(nameof(CanExport));
-        if (e.PropertyName == nameof(BannerGroupViewModel.GroupID))
+        if (e.PropertyName == nameof(BannerGroupEntry.GroupID))
         {
 
         }
@@ -200,11 +181,11 @@ public class BannerIconsPageViewModel : BindableBase, IProject
             SaveData data = await MessagePackSerializer.DeserializeAsync<SaveData>(s);
             Groups.Clear();
             Colors.Clear();
-            foreach (BannerGroupViewModel.SaveData groupData in data.Groups)
+            foreach (BannerGroupEntry.SaveData groupData in data.Groups)
             {
                 Groups.Add(groupData.Load(_groupFactory));
             }
-            foreach (BannerColorViewModel.SaveData colorData in data.Colors)
+            foreach (BannerColorEntry.SaveData colorData in data.Colors)
             {
                 Colors.Add(colorData.Load(_colorFactory));
             }
@@ -218,23 +199,45 @@ public class BannerIconsPageViewModel : BindableBase, IProject
 
     public void AfterLoaded()
     {
-        // Update the selection if there is any
-        SelectedGroup = HasSelectedGroup ? Groups.FirstOrDefault(g => g.GroupID == SelectedGroup.GroupID) : Groups.FirstOrDefault();
         OnPropertyChanged(nameof(CanExport));
     }
+
+    public async Task<string> ExportAll(StorageFolder outFolder)
+    {
+        var merger = new TextureMerger(_settings.Banner.TextureOutputResolution);
+        await Task.WhenAll(GetExportingGroups().Select(g =>
+            Task.Factory.StartNew(() => {
+                merger.Merge(outFolder.Path, g.GroupID, g.Icons.Select(icon => icon.TexturePath).ToArray());
+            })
+        ));
+        await SpriteOrganizer.CollectToSpriteParts(outFolder.Path, ToIconSprites());
+        return ExportXML(outFolder);
+
+    }
+    public string ExportXML(StorageFolder outFolder)
+    {
+        if (outFolder is not null)
+        {
+            ToBannerIconData().SaveToXml(outFolder.Path);
+            SpriteOrganizer.GenerateConfigXML(outFolder.Path, ToIconSprites());
+            return outFolder.Path;
+        }
+        return null;
+    }
+
 
     [MessagePackObject]
     public class SaveData
     {
         [Key(0)]
-        public BannerGroupViewModel.SaveData[] Groups = new BannerGroupViewModel.SaveData[] { };
+        public BannerGroupEntry.SaveData[] Groups = new BannerGroupEntry.SaveData[] { };
         [Key(1)]
-        public BannerColorViewModel.SaveData[] Colors = new BannerColorViewModel.SaveData[] { };
+        public BannerColorEntry.SaveData[] Colors = new BannerColorEntry.SaveData[] { };
 
-        public SaveData(BannerIconsPageViewModel vm)
+        public SaveData(BannerIconsProject vm)
         {
-            Groups = vm.Groups.Select(g => new BannerGroupViewModel.SaveData(g)).ToArray();
-            Colors = vm.Colors.Select(g => new BannerColorViewModel.SaveData(g)).ToArray();
+            Groups = vm.Groups.Select(g => new BannerGroupEntry.SaveData(g)).ToArray();
+            Colors = vm.Colors.Select(g => new BannerColorEntry.SaveData(g)).ToArray();
         }
         public SaveData() { }
     }

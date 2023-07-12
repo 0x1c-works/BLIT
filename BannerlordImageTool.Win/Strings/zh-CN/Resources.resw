@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AndMore" xml:space="preserve">
+    <value>及另{0}个</value>
+  </data>
   <data name="AppButtonAddColor.Label" xml:space="preserve">
     <value>新颜色</value>
   </data>
@@ -166,6 +169,9 @@
   <data name="ButtonCancel.Content" xml:space="preserve">
     <value>取消</value>
   </data>
+  <data name="ButtonChangeEllipses.Content" xml:space="preserve">
+    <value>更改...</value>
+  </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
     <value>删除</value>
   </data>
@@ -178,11 +184,14 @@
   <data name="ButtonOpenFolder.Content" xml:space="preserve">
     <value>打开文件夹</value>
   </data>
-  <data name="ButtonSelectEllipses.Content" xml:space="preserve">
-    <value>选择...</value>
+  <data name="ButtonReimport.Content" xml:space="preserve">
+    <value>重新导入</value>
   </data>
   <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">
     <value>是，删除它们</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
   </data>
   <data name="ColorGridColumnBackground.Header" xml:space="preserve">
     <value>背景色</value>
@@ -195,6 +204,13 @@
   </data>
   <data name="ColorGridColumnSigil.Header" xml:space="preserve">
     <value>纹章色</value>
+  </data>
+  <data name="DialogChangeLanguage.Content" xml:space="preserve">
+    <value>变更语言需要重启应用。
+如果取消，新的语言将会在下次启动应用时生效。</value>
+  </data>
+  <data name="DialogChangeLanguage.Title" xml:space="preserve">
+    <value>语言变更</value>
   </data>
   <data name="DialogDeleteBannerGroup.Content" xml:space="preserve">
     <value>是否要删除图案分组“{0}”？</value>
@@ -250,6 +266,9 @@
   <data name="No" xml:space="preserve">
     <value>否</value>
   </data>
+  <data name="OK" xml:space="preserve">
+    <value>确定</value>
+  </data>
   <data name="Open" xml:space="preserve">
     <value>打开</value>
   </data>
@@ -262,14 +281,26 @@
   <data name="PivotBannerGroupsEditor.Header" xml:space="preserve">
     <value>自定义图案</value>
   </data>
+  <data name="Placeholder.NewProject" xml:space="preserve">
+    <value>(新项目)</value>
+  </data>
   <data name="PleaseSelect" xml:space="preserve">
     <value>选择</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>请稍侯...</value>
   </data>
   <data name="SaveXMLSuccess" xml:space="preserve">
     <value>成功保存到：{0}</value>
   </data>
+  <data name="TargetPathNotFound" xml:space="preserve">
+    <value>找不到目标路径: {0}</value>
+  </data>
   <data name="TextAdvancedSettingsTitle" xml:space="preserve">
     <value>高级</value>
+  </data>
+  <data name="TextAppearanceTitle.Text" xml:space="preserve">
+    <value>外观</value>
   </data>
   <data name="TextBannerGroupListTitle.Text" xml:space="preserve">
     <value>旗帜图案分组</value>
@@ -286,6 +317,12 @@
   </data>
   <data name="TextChange.Text" xml:space="preserve">
     <value>更改</value>
+  </data>
+  <data name="TextColorForBackground.Text" xml:space="preserve">
+    <value>背景色</value>
+  </data>
+  <data name="TextColorForSigil.Text" xml:space="preserve">
+    <value>纹章色</value>
   </data>
   <data name="TextConfirmDeleteSelection.Text" xml:space="preserve">
     <value>所有选中的项目都将被移除，是否继续？</value>
@@ -307,10 +344,17 @@
 注意：1 到 6 为原版游戏所使用。</value>
   </data>
   <data name="TextExporting.Text" xml:space="preserve">
-    <value>正在导出...</value>
+    <value>正在导出，请稍候...
+资源较多时可能会花费较长时间</value>
+  </data>
+  <data name="TextLanguage.Text" xml:space="preserve">
+    <value>语言</value>
   </data>
   <data name="TextNoSelectedBannerGroup.Text" xml:space="preserve">
     <value>请选中或新建一个图案分组</value>
+  </data>
+  <data name="TextRequireRestart.Text" xml:space="preserve">
+    <value>*需要重启应用</value>
   </data>
   <data name="TextTexturePreview.Text" xml:space="preserve">
     <value>贴图预览</value>
@@ -318,11 +362,20 @@
   <data name="TextTextureProperties.Text" xml:space="preserve">
     <value>贴图属性</value>
   </data>
+  <data name="TextTheme.Text" xml:space="preserve">
+    <value>主题</value>
+  </data>
   <data name="TextUISprite.Text" xml:space="preserve">
     <value>UI 图标</value>
   </data>
   <data name="TextViewLogFiles.Text" xml:space="preserve">
     <value>查看日志文件</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>暗色</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>亮色</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>是</value>
