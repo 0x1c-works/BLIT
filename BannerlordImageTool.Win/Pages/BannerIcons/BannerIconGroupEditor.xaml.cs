@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -15,8 +16,10 @@ using System.Linq;
 
 namespace BannerlordImageTool.Win.Pages.BannerIcons;
 
-public sealed partial class BannerIconGroupEditor : UserControl
+public sealed partial class BannerIconGroupEditor : UserControl, INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler PropertyChanged;
+
     static readonly Guid GUID_TEXTURE_DIALOG = new("8a8429ec-b674-40d8-82f0-ad42be0d6e8f");
     static readonly Guid GUID_SPRITE_DIALOG = new("7fb7d0f4-e50d-4fa3-a890-ae0775bca3d8");
 
@@ -33,9 +36,10 @@ public sealed partial class BannerIconGroupEditor : UserControl
         new PropertyMetadata(default(BannerGroupEntry)));
 
     IEnumerable<BannerIconEntry> SelectedIcons { get => gridIcons.SelectedItems.Cast<BannerIconEntry>(); }
-    bool HasSelectedIcons { get => gridIcons.SelectedItems.Count > 0; }
+    bool HasSelectedIcons { get => gridIcons.SelectedItems.Any(); }
     BannerIconEntry FirstSelectedIcon { get => SelectedIcons.FirstOrDefault(); }
-
+    bool CanReimportSprite { get => HasSelectedIcons && ImageHelper.IsValidImage(FirstSelectedIcon.SpritePath); }
+    bool CanReimportTexture { get => HasSelectedIcons && ImageHelper.IsValidImage(FirstSelectedIcon.TexturePath); }
 
     public BannerIconGroupEditor()
     {
@@ -91,8 +95,8 @@ public sealed partial class BannerIconGroupEditor : UserControl
         }
 
         FirstSelectedIcon.SpritePath = file.Path;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanReimportSprite)));
     }
-
     async void btnSelectTexture_Click(object sender, RoutedEventArgs e)
     {
         Windows.Storage.StorageFile file = await AppServices.Get<IFileDialogService>().OpenFile(GUID_TEXTURE_DIALOG,
@@ -102,7 +106,17 @@ public sealed partial class BannerIconGroupEditor : UserControl
         {
             return;
         }
-
         FirstSelectedIcon.TexturePath = file.Path;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanReimportTexture)));
+    }
+    void btnReimportSprite_Click(object sender, RoutedEventArgs e)
+    {
+        FirstSelectedIcon.ReloadSprite();
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanReimportSprite)));
+    }
+    void btnReimportTexture_Click(object sender, RoutedEventArgs e)
+    {
+        FirstSelectedIcon.ReloadTexture();
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanReimportSprite)));
     }
 }

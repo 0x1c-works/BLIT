@@ -49,17 +49,21 @@ public class BannerGroupEntry : BindableBase
 
     public void AddIcons(IEnumerable<StorageFile> files)
     {
-        IEnumerable<BannerIconEntry> icons = files
-            .Where(file =>
-                !Icons.Any(icon =>
-                    icon.TexturePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase)
-                )
-            )
+        bool IsIconAdded(BannerIconEntry icon, StorageFile file) => icon.TexturePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase);
+
+        IEnumerable<BannerIconEntry> newIcons = files
+            .Where(file => !Icons.Any(icon => IsIconAdded(icon, file)))
             .Select(file => _iconFactory.Value(this, file.Path));
-        foreach (BannerIconEntry icon in icons)
+        IEnumerable<BannerIconEntry> existingIcons = Icons.Where(icon => files.Any(file => IsIconAdded(icon, file)));
+        foreach (BannerIconEntry icon in newIcons)
         {
             Icons.Add(icon);
             icon.AutoScanSprite();
+        }
+        foreach (BannerIconEntry icon in existingIcons)
+        {
+            icon.ReloadSprite();
+            icon.ReloadTexture();
         }
     }
     public void DeleteIcons(IEnumerable<BannerIconEntry> icons)

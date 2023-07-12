@@ -169,6 +169,9 @@
   <data name="ButtonCancel.Content" xml:space="preserve">
     <value>取消</value>
   </data>
+  <data name="ButtonChangeEllipses.Content" xml:space="preserve">
+    <value>更改...</value>
+  </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
     <value>删除</value>
   </data>
@@ -181,8 +184,8 @@
   <data name="ButtonOpenFolder.Content" xml:space="preserve">
     <value>打开文件夹</value>
   </data>
-  <data name="ButtonSelectEllipses.Content" xml:space="preserve">
-    <value>选择...</value>
+  <data name="ButtonReimport.Content" xml:space="preserve">
+    <value>重新导入</value>
   </data>
   <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">
     <value>是，删除它们</value>
@@ -289,6 +292,9 @@
   </data>
   <data name="SaveXMLSuccess" xml:space="preserve">
     <value>成功保存到：{0}</value>
+  </data>
+  <data name="TargetPathNotFound" xml:space="preserve">
+    <value>找不到目标路径: {0}</value>
   </data>
   <data name="TextAdvancedSettingsTitle" xml:space="preserve">
     <value>高级</value>

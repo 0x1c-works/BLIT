@@ -9,6 +9,7 @@ namespace BannerlordImageTool.Win.Pages.BannerIcons.Models;
 public class BannerIconEntry : BindableBase
 {
     public delegate BannerIconEntry Factory(BannerGroupEntry groupVm, string texturePath);
+
     readonly BannerGroupEntry _groupViewModel;
     string _texturePath;
     string _spritePath;
@@ -20,27 +21,31 @@ public class BannerIconEntry : BindableBase
         get => _texturePath;
         set
         {
-            var newPath = Path.GetFullPath(value);
+            var newPath = ImageHelper.IsValidImage(value) ? Path.GetFullPath(value) : ImageHelper.BAD_IMAGE_PATH;
             if (newPath == _texturePath)
             {
-                return;
+                ReloadTexture();
             }
-
-            SetProperty(ref _texturePath, value);
+            else
+            {
+                SetProperty(ref _texturePath, newPath);
+            }
         }
     }
     public string SpritePath
     {
-        get => _spritePath ?? "";
+        get => _spritePath;
         set
         {
-            var newPath = Path.GetFullPath(value);
+            var newPath = ImageHelper.IsValidImage(value) ? Path.GetFullPath(value) : ImageHelper.BAD_IMAGE_PATH;
             if (newPath == _spritePath)
             {
-                return;
+                ReloadSprite();
             }
-
-            SetProperty(ref _spritePath, newPath);
+            else
+            {
+                SetProperty(ref _spritePath, newPath);
+            }
         }
     }
     public int CellIndex
@@ -63,7 +68,7 @@ public class BannerIconEntry : BindableBase
     public string AtlasName => BannerUtils.GetAtlasName(_groupViewModel.GroupID, AtlasIndex);
     public int ID => BannerUtils.GetIconID(_groupViewModel.GroupID, CellIndex);
 
-    public bool IsValid => !string.IsNullOrEmpty(TexturePath) && AtlasIndex >= 0;
+    public bool IsValid => ImageHelper.IsValidImage(TexturePath) && AtlasIndex >= 0;
 
     public BannerIconEntry(BannerGroupEntry groupVm, string texturePath, ISettingsService settings)
     {
@@ -82,6 +87,21 @@ public class BannerIconEntry : BindableBase
             OnPropertyChanged(nameof(AtlasName));
             OnPropertyChanged(nameof(ID));
         }
+    }
+
+    public void ReloadSprite()
+    {
+        if (string.IsNullOrEmpty(SpritePath)) return;
+        var oldPath = SpritePath;
+        SpritePath = oldPath + "1";
+        SpritePath = oldPath;
+    }
+    public void ReloadTexture()
+    {
+        if (string.IsNullOrEmpty(TexturePath)) return;
+        var oldPath = TexturePath;
+        TexturePath = oldPath + "1";
+        TexturePath = oldPath;
     }
 
     public BannerIcon ToBannerIcon()

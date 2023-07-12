@@ -31,6 +31,7 @@ public sealed partial class BannerIconsPage : Page
     readonly IFileDialogService _fileDialog = AppServices.Get<IFileDialogService>();
     readonly IProjectService<BannerIconsProject> _project = AppServices.Get<IProjectService<BannerIconsProject>>();
     readonly ILoadingService _loading = AppServices.Get<ILoadingService>();
+    readonly INotificationService _notification = AppServices.Get<INotificationService>();
 
     BannerIconsProject ViewModel { get => _project.Current; }
     BannerGroupEntry SelectedGroup { get => listViewGroups.SelectedItem as BannerGroupEntry; }
@@ -67,15 +68,12 @@ public sealed partial class BannerIconsPage : Page
 
     async void btnExportAll_Click(object sender, RoutedEventArgs e)
     {
-        StorageFolder outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
-        if (outFolder == null)
-        {
-            return;
-        }
+        StorageFolder outFolder = await SelectOutFolder();
+        if (outFolder == null) return;
 
         await DoExportAsync(async () => {
             var outDir = await ViewModel.ExportAll(outFolder);
-            AppServices.Get<INotificationService>().Notify(new(
+            _notification.Notify(new(
                 ToastVariant.Success,
                 Message: string.Format(I18n.Current.GetString("ExportSuccess"), outDir),
                 Action: new(
@@ -85,15 +83,12 @@ public sealed partial class BannerIconsPage : Page
     }
     async void btnExportXML_Click(object sender, RoutedEventArgs e)
     {
-        StorageFolder outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
-        if (outFolder == null)
-        {
-            return;
-        }
+        StorageFolder outFolder = await SelectOutFolder();
+        if (outFolder == null) return;
 
         await DoExportAsync(() => {
             var outDir = ViewModel.ExportXML(outFolder);
-            AppServices.Get<INotificationService>().Notify(new(
+            _notification.Notify(new(
                 ToastVariant.Success,
                 Message: string.Format(I18n.Current.GetString("SaveXMLSuccess"), Path.Join(outDir, "banner_icons.xml")),
                 Action: new(
@@ -101,6 +96,21 @@ public sealed partial class BannerIconsPage : Page
                     (s, e) => FileHelpers.OpenFolderInExplorer(outDir))));
             return Task.CompletedTask;
         });
+    }
+
+    async Task<StorageFolder> SelectOutFolder()
+    {
+        StorageFolder outFolder = null;
+        try
+        {
+            outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
+        }
+        catch (NotFoundException ex)
+        {
+            _notification.Notify(new(ToastVariant.Error,
+                                     string.Format(I18n.Current.GetString("TargetPathNotFound"), ex.FaultPath)));
+        }
+        return outFolder;
     }
 
     async Task DoExportAsync(Func<Task> work)
@@ -176,12 +186,12 @@ public sealed partial class BannerIconsPage : Page
 
     async void btnOpenProject_Click(object sender, RoutedEventArgs e)
     {
-        _loading.Show(I18n.Current.GetString("PleaseWait"));
         StorageFile openedFile = await _fileDialog.OpenFile(GUID_PROJECT_DIALOG, new[] { CommonFileTypes.BannerIconsProject });
         if (openedFile is null)
         {
             return;
         }
+        _loading.Show(I18n.Current.GetString("PleaseWait"));
         await _project.Load(openedFile);
         listViewGroups.SelectedItem = ViewModel.Groups.FirstOrDefault();
         // wait for the UI to update

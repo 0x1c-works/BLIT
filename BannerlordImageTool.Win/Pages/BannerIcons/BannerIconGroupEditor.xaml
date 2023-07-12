@@ -181,7 +181,10 @@
                     </StackPanel>
                 </Border>
                 <ScrollViewer Grid.Row="1" DataContext="{x:Bind FirstSelectedIcon, Mode=OneWay}">
-                    <Grid Padding="16" RowSpacing="8">
+                    <Grid
+                        Padding="16"
+                        ColumnSpacing="16"
+                        RowSpacing="8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition
                                 Width="Auto"
@@ -192,106 +195,108 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" MinHeight="256" />
                         </Grid.RowDefinitions>
 
                         <!--  UI Sprite  -->
-                        <TextBlock x:Uid="TextUISprite" Grid.Row="1">UI Sprite</TextBlock>
-                        <Grid
+                        <TextBlock
+                            x:Uid="TextUISprite"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Style="{ThemeResource ItemLabelStyle}">
+                            UI Sprite
+                        </TextBlock>
+                        <StackPanel
                             Grid.Row="1"
-                            Grid.Column="1"
-                            ColumnSpacing="8"
-                            RowSpacing="4">
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
+                            Grid.Column="0"
+                            Spacing="8">
                             <Button
                                 x:Name="btnSelectSprite"
-                                x:Uid="ButtonSelectEllipses"
-                                Grid.Row="0"
-                                Grid.Column="0"
+                                x:Uid="ButtonChangeEllipses"
                                 VerticalAlignment="Top"
                                 Click="btnSelectSprite_Click"
                                 IsEnabled="{x:Bind HasSelectedIcons, Mode=OneWay}" />
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Style="{StaticResource FilenNameStyle}"
-                                Text="{Binding SpritePath, Mode=OneWay}" />
-                            <Grid
-                                Grid.Row="1"
-                                Grid.ColumnSpan="2"
-                                HorizontalAlignment="Left"
+                            <Button
+                                x:Name="btnReimportSprite"
+                                x:Uid="ButtonReimport"
                                 VerticalAlignment="Top"
-                                BorderBrush="{ThemeResource AccentControlElevationBorderBrush}"
-                                BorderThickness="4">
-                                <Rectangle
-                                    Width="256"
-                                    Height="256"
-                                    Fill="{StaticResource TransparentCheckBrush}" />
-                                <Image
-                                    Width="256"
-                                    Height="256"
-                                    Source="{Binding SpritePath, Mode=OneWay, FallbackValue='/Assets/empty-asset.png'}" />
-                            </Grid>
+                                Click="btnReimportSprite_Click"
+                                IsEnabled="{x:Bind CanReimportSprite, Mode=OneWay}" />
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Style="{StaticResource FilenNameStyle}"
+                            Text="{Binding SpritePath, Mode=OneWay}" />
+                        <Grid
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            BorderBrush="{ThemeResource AccentControlElevationBorderBrush}"
+                            BorderThickness="4">
+                            <Rectangle
+                                Width="256"
+                                Height="256"
+                                Fill="{StaticResource TransparentCheckBrush}" />
+                            <Image
+                                Width="256"
+                                Height="256"
+                                Source="{Binding SpritePath, Mode=OneWay, FallbackValue='/Assets/empty-asset.png'}" />
                         </Grid>
 
                         <!--  Texture Preview  -->
                         <TextBlock
                             x:Uid="TextTexturePreview"
                             Grid.Row="2"
+                            Grid.Column="0"
+                            Style="{ThemeResource ItemLabelStyle}"
                             TextWrapping="Wrap">
                             Texture Preview
                         </TextBlock>
 
-                        <Grid
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            ColumnSpacing="8"
-                            RowSpacing="4">
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
+                        <StackPanel
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Spacing="8">
                             <Button
                                 x:Name="btnSelectTexture"
-                                x:Uid="ButtonSelectEllipses"
-                                Grid.Row="0"
-                                Grid.Column="0"
+                                x:Uid="ButtonChangeEllipses"
+                                HorizontalAlignment="Stretch"
                                 VerticalAlignment="Top"
                                 Click="btnSelectTexture_Click"
                                 IsEnabled="{x:Bind HasSelectedIcons, Mode=OneWay}" />
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Style="{StaticResource FilenNameStyle}"
-                                Text="{Binding TexturePath, Mode=OneWay}" />
-                            <Grid
-                                Grid.Row="1"
-                                Grid.ColumnSpan="2"
-                                Width="Auto"
-                                Height="Auto"
-                                HorizontalAlignment="Left"
+                            <Button
+                                x:Name="btnReimportTexture"
+                                x:Uid="ButtonReimport"
+                                HorizontalAlignment="Stretch"
                                 VerticalAlignment="Top"
-                                BorderBrush="{ThemeResource AccentControlElevationBorderBrush}"
-                                BorderThickness="4">
-                                <Rectangle Fill="{StaticResource TransparentCheckBrush}" />
-                                <Image
-                                    MinWidth="256"
-                                    MinHeight="256"
-                                    MaxWidth="512"
-                                    MaxHeight="512"
-                                    Source="{Binding TexturePath, Mode=OneWay}" />
-                            </Grid>
+                                Click="btnReimportTexture_Click"
+                                IsEnabled="{x:Bind CanReimportTexture, Mode=OneWay}" />
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Style="{StaticResource FilenNameStyle}"
+                            Text="{Binding TexturePath, Mode=OneWay}" />
+                        <Grid
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Width="Auto"
+                            Height="Auto"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            BorderBrush="{ThemeResource AccentControlElevationBorderBrush}"
+                            BorderThickness="4">
+                            <Rectangle Fill="{StaticResource TransparentCheckBrush}" />
+                            <Image
+                                x:Name="imgTexture"
+                                MinWidth="256"
+                                MinHeight="256"
+                                MaxWidth="512"
+                                MaxHeight="512"
+                                Source="{Binding TexturePath, Mode=OneWay, FallbackValue='/Assets/empty-asset.png'}" />
                         </Grid>
                     </Grid>
                 </ScrollViewer>

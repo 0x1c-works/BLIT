@@ -169,6 +169,9 @@
   <data name="ButtonCancel.Content" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="ButtonChangeEllipses.Content" xml:space="preserve">
+    <value>Change...</value>
+  </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
     <value>Delete</value>
   </data>
@@ -181,8 +184,8 @@
   <data name="ButtonOpenFolder.Content" xml:space="preserve">
     <value>Open folder</value>
   </data>
-  <data name="ButtonSelectEllipses.Content" xml:space="preserve">
-    <value>Select...</value>
+  <data name="ButtonReimport.Content" xml:space="preserve">
+    <value>Reimport</value>
   </data>
   <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">
     <value>Yes, delete them</value>
@@ -289,6 +292,9 @@ If you prefer not to, the changes will be applied next time when you launch this
   </data>
   <data name="SaveXMLSuccess" xml:space="preserve">
     <value>Successfully saved to {0}.</value>
+  </data>
+  <data name="TargetPathNotFound" xml:space="preserve">
+    <value>Target path is not found: {0}</value>
   </data>
   <data name="TextAdvancedSettingsTitle" xml:space="preserve">
     <value>Advanced</value>

@@ -19,6 +19,15 @@ public interface IFileDialogService
     string SaveFile(Guid stateGuid, FileType[] fileTypes, string suggestedFileName = null, string overwritingFilePath = null);
 }
 
+public class NotFoundException : Exception
+{
+    public string FaultPath { get; }
+    public NotFoundException(string faultPath) : base($"path not found: {faultPath}")
+    {
+        FaultPath = faultPath;
+    }
+}
+
 public class FileDialogService : IFileDialogService
 {
     public async Task<StorageFolder> OpenFolder(Guid stateGuid)
@@ -35,8 +44,13 @@ public class FileDialogService : IFileDialogService
             var path = selectedFolder.GetDisplayName(Shell32.SIGDN.SIGDN_FILESYSPATH);
             if (string.IsNullOrEmpty(path))
             {
-                throw new InvalidOperationException("failed to get the selected folder's path");
+                throw new NotFoundException("(failed)");
             }
+            if (!Directory.Exists(path))
+            {
+                throw new NotFoundException(path);
+            }
+
             StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
             if (folder is not null)
             {
@@ -85,7 +99,7 @@ public class FileDialogService : IFileDialogService
 
             if (IsUserCancelled(fd.Show(HWND.NULL)))
             {
-                return null;
+                return new StorageFile[0];
             }
             Shell32.IShellItemArray results = fd.GetResults();
             var count = results.GetCount();
