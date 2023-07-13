@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "BLIT.CLI": {
+      "commandName": "Project"
+    }
+  }
+}

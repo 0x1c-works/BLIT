@@ -1,0 +1,89 @@
+<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+<!--  Licensed under the MIT License.  -->
+
+<UserControl
+    x:Class="BLIT.Win.Pages.Settings.BannerSpriteScanFoldersEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BLIT.Win.Pages.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:BLIT.Win.Pages.Settings.ViewModels"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="BannerSpriteScanFolderItemTemplate" x:DataType="vm:BannerSpriteScanFolderViewModel">
+            <local:BannerSpriteScanFolderItem ViewModel="{x:Bind Mode=OneWay}" />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid RowSpacing="8">
+        <Grid.Resources>
+            <Style TargetType="TextBlock">
+                <Setter Property="TextWrapping" Value="Wrap" />
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock
+            x:Uid="TextBannerSpriteScanFolders"
+            Grid.Row="0"
+            Grid.Column="0"
+            Style="{StaticResource ItemLabelStyle}" />
+        <TextBlock
+            x:Uid="TextBannerSpriteScanFoldersExplain"
+            Grid.Row="1"
+            Grid.Column="0"
+            FontSize="12"
+            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+        <SplitView
+            Grid.Row="2"
+            HorizontalAlignment="Left"
+            DisplayMode="Inline"
+            IsPaneOpen="True"
+            OpenPaneLength="80"
+            PaneBackground="Transparent"
+            PanePlacement="Right">
+            <SplitView.Pane>
+                <StackPanel Padding="8,0" Spacing="8">
+                    <StackPanel.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <Button
+                        x:Name="btnAdd"
+                        x:Uid="ButtonAdd"
+                        Click="btnAdd_Click"
+                        Content="Add" />
+                    <Button
+                        x:Name="btnEdit"
+                        x:Uid="ButtonEdit"
+                        Click="btnEdit_Click"
+                        Content="Edit" />
+                    <Button
+                        x:Name="btnDelete"
+                        x:Uid="ButtonDelete"
+                        Click="btnDelete_Click"
+                        Content="Delete" />
+                </StackPanel>
+            </SplitView.Pane>
+
+            <ListView
+                x:Name="listViewBannerSrpiteScanFolders"
+                Width="300"
+                Height="200"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                DoubleTapped="listViewBannerSrpiteScanFolders_DoubleTapped"
+                ItemTemplate="{StaticResource BannerSpriteScanFolderItemTemplate}"
+                ItemsSource="{x:Bind ViewModel.SpriteScanFolders}"
+                SelectionChanged="listViewBannerSrpiteScanFolders_SelectionChanged"
+                SelectionMode="Single" />
+        </SplitView>
+    </Grid>
+</UserControl>

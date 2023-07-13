@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "BLIT.Win (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "BLIT.Win (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
