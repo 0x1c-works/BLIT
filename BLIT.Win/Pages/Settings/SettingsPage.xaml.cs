@@ -7,10 +7,12 @@ using BLIT.Win.Services;
 using BLIT.Win.Settings;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.Windows.AppLifecycle;
 using System;
 using System.Linq;
+using Windows.ApplicationModel;
 using Windows.Globalization;
+
+using AppLifecycleInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -28,6 +30,14 @@ public sealed partial class SettingsPage : Page
     };
     SettingsViewModel ViewModel { get; } = new();
     GlobalSettings _globalSettings = AppServices.Get<GlobalSettings>();
+    string AppVersion
+    {
+        get
+        {
+            PackageVersion ver = Package.Current.Id.Version;
+            return $"{ver.Major}.{ver.Minor}.{ver.Build}";
+        }
+    }
 
     public SettingsPage()
     {
@@ -41,7 +51,6 @@ public sealed partial class SettingsPage : Page
 
     async void cboLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        var old = (e.RemovedItems.FirstOrDefault() as Tuple<string, string>)?.Item2;
         var selected = (e.AddedItems.FirstOrDefault() as Tuple<string, string>)?.Item2;
         if (selected == CurrentLang || CurrentLang.StartsWith(selected)) { return; }
         ApplicationLanguages.PrimaryLanguageOverride = selected;
@@ -53,7 +62,7 @@ public sealed partial class SettingsPage : Page
         {
             // FIXME: WinUI3 seems not able to change language at runtime. So I have to restart the app as a workaround.
             //        See: https://github.com/microsoft/microsoft-ui-xaml/issues/5940
-            AppInstance.Restart("");
+            AppLifecycleInstance.Restart("");
         }
     }
 
