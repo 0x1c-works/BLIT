@@ -25,12 +25,12 @@
             <Image
                 Width="18"
                 Margin="8,0"
-                Source="ms-appx:///Assets/icon.png" />
+                Source="ms-appx:///Assets/Square44x44Logo.scale-100.png" />
             <TextBlock
                 x:Name="AppTitleText"
                 x:Uid="AppTitle"
                 VerticalAlignment="Center"
-                Style="{StaticResource CaptionTextBlockStyle}" />
+                Style="{StaticResource BodyTextBlockStyle}" />
         </StackPanel>
         <NavigationView
             x:Name="AppNav"

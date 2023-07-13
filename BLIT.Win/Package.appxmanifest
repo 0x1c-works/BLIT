@@ -8,12 +8,12 @@
 
   <Identity
     Name="5cf8d578-b9b0-42eb-b761-d77d3686a904"
-    Publisher="CN=chen"
-    Version="1.0.0.0" />
+    Publisher="CN=WizcasTestCert"
+    Version="0.1.0.0" />
 
   <Properties>
-    <DisplayName>BLIT.Win</DisplayName>
-    <PublisherDisplayName>chen</PublisherDisplayName>
+    <DisplayName>BLIT</DisplayName>
+    <PublisherDisplayName>XingChenMods</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -32,12 +32,15 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="BLIT.Win"
-        Description="BLIT.Win"
+        DisplayName="BLIT"
+        Description="Bannerlord Image Tool"
         BackgroundColor="transparent"
-        Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+        Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"  ShortName="BLIT">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo"/>
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile >
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
     </Application>
@@ -45,5 +48,7 @@
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
+    <Capability Name="internetClient"/>
+    <uap:Capability Name="picturesLibrary"/>
   </Capabilities>
 </Package>
