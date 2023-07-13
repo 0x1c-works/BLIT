@@ -24,7 +24,6 @@
             <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefault}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Padding" Value="10,2" />
-            <!--<Setter Property="Opacity" Value=".5" />-->
         </Style>
         <Style
             x:Key="FlagPillSigilStyle"
@@ -91,7 +90,7 @@
                                         VerticalAlignment="Bottom"
                                         Style="{ThemeResource CaptionStyle}"
                                         Text="ID" />
-                                    <TextBlock Style="{ThemeResource ItemLabelStyle}" Text="{x:Bind ID}" />
+                                    <TextBlock Style="{ThemeResource ItemLabelStyle}" Text="{x:Bind ID, Mode=TwoWay}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Spacing="10">
                                     <Border Style="{StaticResource FlagPillSigilStyle}" Visibility="{x:Bind IsForSigil, Mode=OneWay}">
@@ -124,10 +123,25 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Spacing="16">
+                <TextBlock VerticalAlignment="Center" Style="{ThemeResource SubtitleTextBlockStyle}">ID</TextBlock>
+                <NumberBox
+                    x:Name="numColorID"
+                    Grid.ColumnSpan="2"
+                    Margin="8,0"
+                    VerticalAlignment="Center"
+                    AcceptsExpression="True"
+                    FontSize="24"
+                    Maximum="99999999"
+                    SpinButtonPlacementMode="Compact"
+                    Visibility="{x:Bind IsSingleSelected, Mode=OneWay}"
+                    Value="{x:Bind FirstSelectedColor.ID, Mode=TwoWay}" />
+            </StackPanel>
             <StackPanel
                 Grid.ColumnSpan="2"
                 Orientation="Horizontal"
-                Spacing="5">
+                Spacing="5"
+                Visibility="{x:Bind IsMultipleSelection, Mode=OneWay}">
                 <TextBlock
                     Margin="0"
                     Padding="0"

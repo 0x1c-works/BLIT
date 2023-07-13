@@ -13,6 +13,8 @@ namespace BLIT.Win.Pages.BannerIcons.Models;
 public class BannerGroupEntry : BindableBase
 {
     public delegate BannerGroupEntry Factory(int groupID);
+
+    BannerIconsProject _project;
     public ObservableCollection<BannerIconEntry> Icons { get; } = new();
     int _groupID = 7;
     readonly Lazy<BannerIconEntry.Factory> _iconFactory;
@@ -22,6 +24,7 @@ public class BannerGroupEntry : BindableBase
         get => _groupID;
         set
         {
+            value = _project.ValidateGroupID(_groupID, value);
             SetProperty(ref _groupID, value);
             OnPropertyChanged(nameof(GroupName));
         }
@@ -30,8 +33,9 @@ public class BannerGroupEntry : BindableBase
 
     public bool CanExport => Icons.Count > 0;
 
-    public BannerGroupEntry(int groupID, Lazy<BannerIconEntry.Factory> iconFactory)
+    public BannerGroupEntry(BannerIconsProject project, int groupID, Lazy<BannerIconEntry.Factory> iconFactory)
     {
+        _project = project;
         GroupID = groupID;
         _iconFactory = iconFactory;
         Icons.CollectionChanged += _icons_CollectionChanged;
