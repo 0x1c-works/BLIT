@@ -25,7 +25,7 @@
             <Image
                 Width="18"
                 Margin="8,0"
-                Source="ms-appx:///Assets/Square44x44Logo.scale-200.png" />
+                Source="ms-appx:///Assets/icon.png" />
             <TextBlock
                 x:Name="AppTitleText"
                 x:Uid="AppTitle"

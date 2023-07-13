@@ -11,6 +11,8 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <LangVersion>10.0</LangVersion>
+    <StartupObject></StartupObject>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\LoadingOverlay.xaml" />
@@ -26,6 +28,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\empty-asset.png" />
     <Content Include="Assets\transparent-bg.png" />
+    <Content Include="icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
