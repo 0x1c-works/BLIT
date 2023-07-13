@@ -1,0 +1,317 @@
+<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+<!--  Licensed under the MIT License.  -->
+
+<UserControl
+    x:Class="BLIT.Win.Pages.BannerIcons.BannerIconGroupEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BLIT.Win.Pages.BannerIcons"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:BLIT.Win.Pages.BannerIcons.Models"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <DataTemplate x:Key="IconTextureTemplate" x:DataType="vm:BannerIconEntry">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Rectangle
+                    Width="128"
+                    Height="128"
+                    Fill="{StaticResource TransparentCheckBrush}" />
+                <Image
+                    Grid.ColumnSpan="2"
+                    Width="128"
+                    Height="128"
+                    Stretch="Uniform">
+                    <Image.Source>
+                        <BitmapImage DecodePixelWidth="128" UriSource="{x:Bind TexturePath, Mode=OneWay}" />
+                    </Image.Source>
+                </Image>
+                <Grid Grid.ColumnSpan="2" VerticalAlignment="Top">
+                    <Grid.Background>
+                        <SolidColorBrush Opacity=".5" Color="Black" />
+                    </Grid.Background>
+
+                    <TextBlock
+                        FontSize="10"
+                        Foreground="White"
+                        HorizontalTextAlignment="Center"
+                        Text="{x:Bind AtlasName, Mode=OneWay}" />
+                </Grid>
+                <StackPanel
+                    Padding="4,1"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    BorderBrush="DarkGray"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    FlowDirection="RightToLeft"
+                    Orientation="Horizontal"
+                    Spacing="2">
+                    <StackPanel.Background>
+                        <AcrylicBrush
+                            Opacity=".6"
+                            TintColor="LightGray"
+                            TintLuminosityOpacity=".5"
+                            TintOpacity=".9" />
+                    </StackPanel.Background>
+                    <TextBlock
+                        FontWeight="Bold"
+                        Foreground="Black"
+                        LineHeight="8"
+                        Text="{x:Bind ID, Mode=OneWay}" />
+                    <TextBlock
+                        Foreground="Black"
+                        LineHeight="8"
+                        Text="#" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+        <Style x:Key="FilenNameStyle" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="TextAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <!--  Icon Group Toolbar  -->
+        <StackPanel
+            x:Name="toolBar"
+            Grid.ColumnSpan="2"
+            Padding="16,0"
+            Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"
+            Orientation="Horizontal">
+            <TextBlock x:Uid="LabelBannerGroupID" VerticalAlignment="Center" />
+            <NumberBox
+                x:Name="BannerGroupId"
+                Margin="8,0"
+                VerticalAlignment="Center"
+                AcceptsExpression="True"
+                Maximum="99999999"
+                SpinButtonPlacementMode="Compact"
+                Value="{x:Bind ViewModel.GroupID, Mode=TwoWay}" />
+            <AppBarSeparator />
+            <AppBarButton
+                x:Name="btnOpenTextures"
+                x:Uid="AppButtonAddTextures"
+                VerticalAlignment="Center"
+                Click="btnOpenTextures_Click"
+                Icon="Add">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="A" />
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
+            <AppBarButton
+                x:Name="btnDeleteSelectedTextures"
+                x:Uid="AppButtonDeleteTextures"
+                VerticalAlignment="Center"
+                Click="btnDeleteSelectedTextures_Click"
+                Icon="Delete"
+                IsEnabled="{x:Bind HasSelectedIcons, Mode=OneWay, FallbackValue=False}">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Delete" />
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
+        </StackPanel>
+        <!--  Texture Grid  -->
+        <GridView
+            x:Name="gridIcons"
+            Grid.Row="1"
+            Padding="16"
+            AllowDrop="True"
+            CanDragItems="True"
+            CanReorderItems="True"
+            IsItemClickEnabled="True"
+            ItemTemplate="{StaticResource IconTextureTemplate}"
+            ItemsSource="{x:Bind ViewModel.Icons, Mode=OneWay}"
+            SelectionChanged="GridView_SelectionChanged"
+            SelectionMode="Extended" />
+        <!--  Icon Editor  -->
+        <Grid
+            Grid.Row="1"
+            Grid.Column="1"
+            Padding="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Border
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Padding="16"
+                    Background="{ThemeResource CardStrokeColorDefaultBrush}">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock
+                            x:Uid="TextTextureProperties"
+                            VerticalAlignment="Center"
+                            FontWeight="Bold" />
+                        <StackPanel
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal"
+                            Visibility="{x:Bind HasSelectedIcons}">
+                            <TextBlock
+                                VerticalAlignment="Bottom"
+                                Style="{StaticResource CaptionStyle}"
+                                Text="{x:Bind ViewModel.GroupName}" />
+                            <TextBlock
+                                Margin="5,0,0,0"
+                                VerticalAlignment="Bottom"
+                                Style="{StaticResource CaptionStyle}">
+                                / #
+                            </TextBlock>
+                            <TextBlock
+                                VerticalAlignment="Bottom"
+                                Style="{StaticResource CaptionStyle}"
+                                Text="{x:Bind FirstSelectedIcon.ID}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+                <ScrollViewer Grid.Row="1" DataContext="{x:Bind FirstSelectedIcon, Mode=OneWay}">
+                    <Grid
+                        Padding="16"
+                        ColumnSpacing="16"
+                        RowSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="Auto"
+                                MinWidth="110"
+                                MaxWidth="200" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" MinHeight="256" />
+                        </Grid.RowDefinitions>
+
+                        <!--  UI Sprite  -->
+                        <TextBlock
+                            x:Uid="TextUISprite"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Style="{ThemeResource ItemLabelStyle}">
+                            UI Sprite
+                        </TextBlock>
+                        <StackPanel
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Spacing="8">
+                            <Button
+                                x:Name="btnSelectSprite"
+                                x:Uid="ButtonChangeEllipses"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Top"
+                                Click="btnSelectSprite_Click"
+                                IsEnabled="{x:Bind HasSelectedIcons, Mode=OneWay}" />
+                            <Button
+                                x:Name="btnReimportSprite"
+                                x:Uid="ButtonReimport"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Top"
+                                Click="btnReimportSprite_Click"
+                                IsEnabled="{x:Bind CanReimportSprite, Mode=OneWay}" />
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Style="{StaticResource FilenNameStyle}"
+                            Text="{Binding SpritePath, Mode=OneWay}" />
+                        <Grid
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            BorderBrush="{ThemeResource AccentControlElevationBorderBrush}"
+                            BorderThickness="4">
+                            <Rectangle
+                                Width="256"
+                                Height="256"
+                                Fill="{StaticResource TransparentCheckBrush}" />
+                            <Image
+                                Width="256"
+                                Height="256"
+                                Source="{Binding SpritePath, Mode=OneWay, FallbackValue='/Assets/empty-asset.png'}" />
+                        </Grid>
+
+                        <!--  Texture Preview  -->
+                        <TextBlock
+                            x:Uid="TextTexturePreview"
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Style="{ThemeResource ItemLabelStyle}"
+                            TextWrapping="Wrap">
+                            Texture Preview
+                        </TextBlock>
+
+                        <StackPanel
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Spacing="8">
+                            <Button
+                                x:Name="btnSelectTexture"
+                                x:Uid="ButtonChangeEllipses"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Top"
+                                Click="btnSelectTexture_Click"
+                                IsEnabled="{x:Bind HasSelectedIcons, Mode=OneWay}" />
+                            <Button
+                                x:Name="btnReimportTexture"
+                                x:Uid="ButtonReimport"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Top"
+                                Click="btnReimportTexture_Click"
+                                IsEnabled="{x:Bind CanReimportTexture, Mode=OneWay}" />
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Style="{StaticResource FilenNameStyle}"
+                            Text="{Binding TexturePath, Mode=OneWay}" />
+                        <Grid
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Width="Auto"
+                            Height="Auto"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            BorderBrush="{ThemeResource AccentControlElevationBorderBrush}"
+                            BorderThickness="4">
+                            <Rectangle Fill="{StaticResource TransparentCheckBrush}" />
+                            <Image
+                                x:Name="imgTexture"
+                                MinWidth="256"
+                                MinHeight="256"
+                                MaxWidth="512"
+                                MaxHeight="512"
+                                Source="{Binding TexturePath, Mode=OneWay, FallbackValue='/Assets/empty-asset.png'}" />
+                        </Grid>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+        <controls:GridSplitter
+            Grid.Row="1"
+            Grid.Column="1"
+            Width="16"
+            HorizontalAlignment="Left">
+            <controls:GridSplitter.RenderTransform>
+                <TranslateTransform X="-8" />
+            </controls:GridSplitter.RenderTransform>
+        </controls:GridSplitter>
+    </Grid>
+</UserControl>

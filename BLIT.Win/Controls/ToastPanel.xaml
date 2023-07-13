@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<UserControl
+    x:Class="BLIT.Win.Controls.ToastPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BLIT.Win.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Canvas
+        x:Name="rootCanvas"
+        Grid.Row="1"
+        SizeChanged="rootCanvas_SizeChanged">
+        <StackPanel
+            x:Name="container"
+            Width="300"
+            Canvas.ZIndex="99"
+            Orientation="Vertical"
+            SizeChanged="container_SizeChanged">
+            <StackPanel.Resources>
+                <Style x:Key="ChildStyle" TargetType="InfoBar">
+                    <Setter Property="VerticalAlignment" Value="Bottom" />
+                    <!--<Setter Property="Severity" Value="Error" />-->
+                </Style>
+            </StackPanel.Resources>
+        </StackPanel>
+        <StackPanel
+            x:Name="debugButtons"
+            Canvas.Top="400"
+            Visibility="{x:Bind DebugButtonVisibility}">
+            <Button x:Name="btnAutoTestInfo" Content="info+1" />
+            <Button x:Name="btnAutoTestWarning" Content="warn+1" />
+            <Button x:Name="btnAutoTestError" Content="err+1" />
+            <Button x:Name="btnAutoTestSuccess" Content="success+1" />
+            <Button x:Name="btnAutoTestProgressing" Content="wip+1" />
+            <Button
+                x:Name="btnTestTimeout"
+                Click="btnTestTimeout_Click"
+                Content="timeout 2s" />
+            <Button
+                x:Name="btnTestNoTimeout"
+                Click="btnTestNoTimeout_Click"
+                Content="timeout 0s" />
+        </StackPanel>
+    </Canvas>
+</UserControl>
