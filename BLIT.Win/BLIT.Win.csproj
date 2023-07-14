@@ -25,9 +25,12 @@
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <PackageCertificateThumbprint>37C2D1AEF12A1DBA64870CEAAC5E593583835A80</PackageCertificateThumbprint>
   </PropertyGroup>
+
   <ItemGroup>
-    <None Remove="Assets\icon.scale-100.png" />
-    <None Remove="Controls\LoadingOverlay.xaml" />
+    <Compile Remove="dist\**" />
+    <EmbeddedResource Remove="dist\**" />
+    <None Remove="dist\**" />
+    <Page Remove="dist\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -128,4 +131,7 @@
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
+  <ItemGroup>
+    <PRIResource Remove="dist\**" />
+  </ItemGroup>
 </Project>
