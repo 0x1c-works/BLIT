@@ -14,10 +14,8 @@ A tool for processing the modding images of Mount &amp; Blade 2 Bannerlord
 > **Note**
 > The GUI tool is only for Windows. I don't have any plans to support MacOS nor Linux.
 
-> **Warning**
-> This tool is still working in progress.
-
 ## Features
+
 - [x] Packing single images into banner texture PSDs
 	- [x] CLI support
 	- [x] GUI support
