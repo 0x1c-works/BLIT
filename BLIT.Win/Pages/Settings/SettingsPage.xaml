@@ -1,4 +1,4 @@
-<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+﻿<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
 <!--  Licensed under the MIT License.  -->
 
 <Page
@@ -152,7 +152,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <TextBlock
-                        x:Uid="TextAdvancedSettingsTitle"
+                        x:Uid="TextAdvanceSettingsTitle"
                         Grid.ColumnSpan="2"
                         Style="{StaticResource SectionTitleStyle}">
                         Advanced
@@ -171,6 +171,44 @@
                         Click="btnOpenLogFolder_Click">
                         Open log folder
                     </Button>
+                </Grid>
+                <Grid Style="{StaticResource SectionGridStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        x:Uid="TextAboutTitle"
+                        Grid.ColumnSpan="2"
+                        Style="{StaticResource SectionTitleStyle}">
+                        About
+                    </TextBlock>
+                    <TextBlock
+                        x:Uid="TextVersion"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Style="{ThemeResource ItemLabelStyle}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Text="{x:Bind AppVersion}"
+                        TextAlignment="Right" />
+                    <TextBlock
+                        x:Uid="TextCreator"
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Style="{ThemeResource ItemLabelStyle}" />
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        TextAlignment="Right">
+                        陈小一 ㊙️ Wizcas Chen
+                    </TextBlock>
                 </Grid>
             </StackPanel>
         </ScrollViewer>

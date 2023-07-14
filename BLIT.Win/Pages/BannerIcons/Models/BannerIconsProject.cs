@@ -16,6 +16,15 @@ using Windows.Storage;
 namespace BLIT.Win.Pages.BannerIcons.Models;
 public class BannerIconsProject : BindableBase, IProject
 {
+    /// <summary>
+    /// 0 - 6 is occpuied by the native game
+    /// </summary>
+    public const int MIN_GROUP_ID = 7;
+    /// <summary>
+    /// 0-193 is occupied by the native game
+    /// </summary>
+    public const int MIN_COLOR_ID = 194;
+
     public BannerIconsProject(
         ISettingsService settings,
         BannerGroupEntry.Factory bannerGroupFactory,
@@ -148,6 +157,27 @@ public class BannerIconsProject : BindableBase, IProject
     public int GetNextColorID()
     {
         return Colors.Count > 0 ? Colors.Max(c => c.ID) + 1 : _settings.Banner.CustomColorStartID;
+    }
+
+    public int ValidateGroupID(int oldID, int newID)
+    {
+        return ValidateID(oldID, newID, MIN_GROUP_ID, (id) => Groups.Any(g => g.GroupID == id), GetNextGroupID);
+    }
+    public int ValidateColorID(int oldID, int newID)
+    {
+        return ValidateID(oldID, newID, MIN_COLOR_ID, (id) => Colors.Any(g => g.ID == id), GetNextColorID);
+    }
+    int ValidateID(int oldID, int newID, int minValidID, Func<int, bool> isIDOccupied, Func<int> getNextID)
+    {
+        if (oldID == newID) return newID;
+
+        var direction = newID - oldID > 0;
+        while (isIDOccupied(newID))
+        {
+            newID += direction ? 1 : -1;
+        }
+        if (newID < minValidID) { newID = getNextID(); }
+        return newID;
     }
 
     void OnGroupPropertyChanged(object sender, PropertyChangedEventArgs e)

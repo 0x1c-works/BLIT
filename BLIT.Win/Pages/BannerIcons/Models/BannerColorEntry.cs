@@ -9,6 +9,7 @@ public class BannerColorEntry : BindableBase
 {
     public delegate BannerColorEntry Factory(int id);
 
+    BannerIconsProject _project;
     int _id;
     Color _color = Color.FromArgb(255, 255, 255, 255);
     bool _isForSigil = true;
@@ -19,6 +20,7 @@ public class BannerColorEntry : BindableBase
         get => _id;
         set
         {
+            value = _project.ValidateColorID(_id, value);
             SetProperty(ref _id, value);
             OnPropertyChanged(nameof(CanExport));
         }
@@ -45,8 +47,9 @@ public class BannerColorEntry : BindableBase
 
     public bool CanExport => ID >= 0 && Color.A > 0;
 
-    public BannerColorEntry(int id)
+    public BannerColorEntry(BannerIconsProject project, int id)
     {
+        _project = project;
         ID = id;
     }
 

@@ -53,7 +53,7 @@ public sealed partial class MainWindow : ThemedWindow
             return;
         }
 
-        AppNav.Header = new NavPageHeaderInfo(item.Content.ToString());
+        AppNav.Header = new NavPageHeaderInfo(item.Content.ToString()) { HasSubTitle = false };
 
         if (args.IsSettingsSelected)
         {
@@ -122,5 +122,6 @@ public sealed partial class MainWindow : ThemedWindow
 }
 public record NavPageHeaderInfo(string Title, string SubTitle = null, bool IsModified = false)
 {
+    public bool HasSubTitle { get; set; } = true;
     public string SubTitle { get; init; } = string.IsNullOrWhiteSpace(SubTitle) ? I18n.Current.GetString("Placeholder/NewProject") : SubTitle;
 }

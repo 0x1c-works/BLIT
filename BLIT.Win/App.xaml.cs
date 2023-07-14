@@ -30,6 +30,7 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
+        ThemeHelper.OnAppStart();
         Logging.Initialize();
         Services = AppServices.Configure();
 

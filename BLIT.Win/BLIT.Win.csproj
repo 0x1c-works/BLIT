@@ -11,8 +11,22 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <LangVersion>10.0</LangVersion>
+    <StartupObject></StartupObject>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxPackageDir>E:\gamework\mb2\BLIT\BLIT.Win\dist</AppxPackageDir>
+    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Never</AppxBundle>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <PackageCertificateThumbprint>37C2D1AEF12A1DBA64870CEAAC5E593583835A80</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Assets\icon.scale-100.png" />
     <None Remove="Controls\LoadingOverlay.xaml" />
   </ItemGroup>
 

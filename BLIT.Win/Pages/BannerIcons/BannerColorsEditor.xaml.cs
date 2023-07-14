@@ -35,6 +35,7 @@ public sealed partial class BannerColorsEditor : UserControl
     public BannerColorEntry FirstSelectedColor { get => SelectedColors.FirstOrDefault(); }
     public bool HasSelectedColor { get => SelectedColors.Any(); }
     public bool IsSingleSelected { get => listViewColors.SelectedItems.Count == 1; }
+    public bool IsMultipleSelection { get => SelectedColors.Count() > 1; }
     public bool IsForSigil
     {
         get => GetMultiSelectionFlag(c => c.IsForSigil);

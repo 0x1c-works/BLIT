@@ -61,21 +61,17 @@ public static class ThemeHelper
         }
     }
 
+    public static void OnAppStart()
+    {
+        Application.Current.RequestedTheme = ElementThemeToApplicationTheme(GetSavedTheme());
+    }
+
     public static void Initialize()
     {
 #if !UNPACKAGED
         // Save reference as this might be null when the user is in another app
         CurrentApplicationWindow = App.Current.MainWindow;
-        var savedTheme = ApplicationData.Current.LocalSettings.Values[THEME_PREFERENCE_KEY]?.ToString();
-
-        if (savedTheme != null)
-        {
-            RootTheme = Enum.Parse<ElementTheme>(savedTheme);
-        }
-        else
-        {
-            RootTheme = ElementTheme.Dark;
-        }
+        RootTheme = GetSavedTheme();
 #endif
     }
 
@@ -89,5 +85,15 @@ public static class ThemeHelper
             }
             return RootTheme == ElementTheme.Dark;
         }
+    }
+
+    static ElementTheme GetSavedTheme()
+    {
+        var savedTheme = ApplicationData.Current.LocalSettings.Values[THEME_PREFERENCE_KEY]?.ToString();
+        return savedTheme != null ? Enum.Parse<ElementTheme>(savedTheme) : RootTheme = ElementTheme.Dark;
+    }
+    static ApplicationTheme ElementThemeToApplicationTheme(ElementTheme theme)
+    {
+        return theme == ElementTheme.Light ? ApplicationTheme.Light : ApplicationTheme.Dark;
     }
 }
