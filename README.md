@@ -11,7 +11,7 @@ A tool for processing the modding images of Mount &amp; Blade 2 Bannerlord
 
 ## Requirements
 - Windows 10 version 1809 (10.0.17763.0) or later
-> **Info**
+> **Note**
 > The GUI tool is only for Windows. I don't have any plans to support MacOS nor Linux.__
 
 > **Warning**
