@@ -1,6 +1,6 @@
 <div align="center">
 <h1><b>BLIT</b></h1>
-<img src="images/icon.png" alt="Logo" />
+<img src="docs/images/icon.png" alt="Logo" />
 <p style="font-size:1.2rem;">
 A tool for processing the modding images of Mount &amp; Blade 2 Bannerlord
 </p>
