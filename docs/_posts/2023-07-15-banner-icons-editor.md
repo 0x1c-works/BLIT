@@ -1,7 +1,9 @@
 ---
-layout: page
+layout: single
 title: Banner Icons Editor
 permalink: /banner-icons-editor
+toc: true
+toc_sticky: true
 ---
 
 ## Overview
@@ -19,9 +21,9 @@ Your work will be saved as **Bannerlord Icon Project**s, or `bip` files, which c
 
 ---
 
-## [0] First-time Setup
+## [0] First-Run Setup
 
-To better managing your Banner assets, you will need to tweak the banner settings on your first run for features like sprite searching and start IDs for groups and colors. BLIT will remember your settings.
+To better managing your banner assets, you will need to tweak the banner settings on your first run for features like sprite searching as well as start IDs for groups and colors. BLIT will remember your settings.
 
 First, in the navigation pane, click **Settings**.
 
@@ -29,7 +31,7 @@ First, in the navigation pane, click **Settings**.
 
 BLIT scans for corresponding sprites for banner textures via *relative* scan paths, which are relative to the location of the texture files.
 
-For example, if you have banner assets stored in this directory structure:
+For instance, if you have banner assets stored in a directory structure like this:
 
      ```plain
      MyWork
@@ -41,12 +43,12 @@ For example, if you have banner assets stored in this directory structure:
 
 Then you should add `..\Sprites` as the search path. When importing the texture `AwesomeBanner.png`, BLIT will search for the sprite at `MyWork\Sprites\AwesomeBanner.png`.
 
-**Note that** BLIT will search for the sprite with **the ***same*** file name of the texture**.
+**Note that** BLIT will search for the sprite with **the *same* file name of the texture**.
 
 ![Relative Scan Paths](/assets/images/banner-editor-tutorial/relative-path-setting.png)
 
-> **Warning**
-> BLIT DO NOT support scanning for sprites in the same directory of textures, because you can't have two files with the same name in the same directory.
+> BLIT DO NOT support scanning for sprites in the directory of textures (i.e. `.\`), because you can't have two files with the same name in the same directory.
+{: .notice--warning}
 
 ### Start IDs
 
@@ -88,18 +90,25 @@ You can always set the sprites and textures manually for each icon.
 
 ## [2] Manage Custom Color
 
-<div style="background: #aa0000; padding: 4px .5em; margin: 2em 0;" id="custom-color-heads-up">
-  <p><b style="font-size:20px;">⚠️ DANGER!</b></p>
-  <p>
-    <b> DO NOT </b> add any custom color if you don't plan to use a banner enhancement mod (such as <a href="https://www.nexusmods.com/mountandblade2bannerlord/mods/4944" target="_blank">Banner Editor</a>)!!!
-  </p>
-  <p>
-    Due to a bug of the <code>BannerManager.GetColorId</code> method in the game, custom colors will crash the game as well as corrupt the save files.
-  </p>
-  <p>
-    I have reported this bug to TaleWorlds but the fix is still in progress.
-    You can help bump it in this <a href="https://forums.taleworlds.com/index.php?threads/custom-colors-can-be-selected-from-disabled-mods-and-will-corrupt-game-saves.457487/post-9865176" target="_blank">thread</a>.
-  </p>
+{% capture color-warning %}
+
+**DO NOT** add any custom color if you:
+
+- Haven't patched the native `BannerManager.GetColorId` method, or;
+- Don't use a banner enhancement mod that supports custom colors (such as [Banner Editor](https://www.nexusmods.com/mountandblade2bannerlord/mods/4944))
+
+Otherwise, it will **crash your game and corrupt the saved games**!!!
+
+> I have reported this bug to TaleWorlds but the fix is still in progress.
+You can help bump it in this [thread](https://forums.taleworlds.com/index.php?threads/custom-colors-can-be-selected-from-disabled-mods-and-will-corrupt-game-saves.457487/post-9865176).
+>
+> For more technical details, or if you want to patch it in your own mod, please refer to [How To Support Custom Colors](/how-to-support-custom-colors).
+
+{% endcapture %}
+
+<div class="notice--danger">
+  <h4 class="text-center">☣️ DANGER! ☣️</h4><br />
+  {{ color-warning | markdownify }}
 </div>
 
 To manage custom colors, click **BANNER COLORS** under the banner editor's toolbar:
