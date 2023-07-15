@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Generating Custom Banner Assets
-permalink: /generating-custom-banner-assets
+title: Banner Icons Editor
+permalink: /banner-icons-editor
 ---
 
 ## Overview
