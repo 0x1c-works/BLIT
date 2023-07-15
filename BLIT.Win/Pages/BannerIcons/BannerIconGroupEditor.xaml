@@ -156,7 +156,7 @@
                     Background="{ThemeResource CardStrokeColorDefaultBrush}">
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <TextBlock
-                            x:Uid="TextTextureProperties"
+                            x:Uid="TextIconDetails"
                             VerticalAlignment="Center"
                             FontWeight="Bold" />
                         <StackPanel
