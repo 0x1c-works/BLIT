@@ -353,6 +353,9 @@
     <value>正在导出，请稍候...
 资源较多时可能会花费较长时间</value>
   </data>
+  <data name="TextIconDetails.Text" xml:space="preserve">
+    <value>图案详情</value>
+  </data>
   <data name="TextLanguage.Text" xml:space="preserve">
     <value>语言</value>
   </data>
@@ -364,9 +367,6 @@
   </data>
   <data name="TextTexturePreview.Text" xml:space="preserve">
     <value>贴图预览</value>
-  </data>
-  <data name="TextTextureProperties.Text" xml:space="preserve">
-    <value>贴图属性</value>
   </data>
   <data name="TextTheme.Text" xml:space="preserve">
     <value>主题</value>

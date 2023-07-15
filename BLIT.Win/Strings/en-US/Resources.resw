@@ -353,6 +353,9 @@ Note that 1 to 6 are used by the vanilla game.</value>
     <value>Exporting, please wait...
 It may take a while if there are a lot of assets</value>
   </data>
+  <data name="TextIconDetails.Text" xml:space="preserve">
+    <value>Icon Details</value>
+  </data>
   <data name="TextLanguage.Text" xml:space="preserve">
     <value>Language</value>
   </data>
@@ -364,9 +367,6 @@ It may take a while if there are a lot of assets</value>
   </data>
   <data name="TextTexturePreview.Text" xml:space="preserve">
     <value>Texture Preview</value>
-  </data>
-  <data name="TextTextureProperties.Text" xml:space="preserve">
-    <value>Texture Properties</value>
   </data>
   <data name="TextTheme.Text" xml:space="preserve">
     <value>Theme</value>
