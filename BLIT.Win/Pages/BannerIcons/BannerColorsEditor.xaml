@@ -123,7 +123,10 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal" Spacing="16">
+            <StackPanel
+                Orientation="Horizontal"
+                Spacing="16"
+                Visibility="{x:Bind IsSingleSelected, Mode=OneWay}">
                 <TextBlock VerticalAlignment="Center" Style="{ThemeResource SubtitleTextBlockStyle}">ID</TextBlock>
                 <NumberBox
                     x:Name="numColorID"
@@ -134,7 +137,6 @@
                     FontSize="24"
                     Maximum="99999999"
                     SpinButtonPlacementMode="Compact"
-                    Visibility="{x:Bind IsSingleSelected, Mode=OneWay}"
                     Value="{x:Bind FirstSelectedColor.ID, Mode=TwoWay}" />
             </StackPanel>
             <StackPanel

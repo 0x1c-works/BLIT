@@ -33,13 +33,11 @@ BLIT scans for corresponding sprites for banner textures via *relative* scan pat
 
 For instance, if you have banner assets stored in a directory structure like this:
 
-     ```plain
      MyWork
      ├── Textures
      │   └── AwesomeBanner.png
      └── Sprites
          └── AwesomeBanner.png
-     ```
 
 Then you should add `..\Sprites` as the search path. When importing the texture `AwesomeBanner.png`, BLIT will search for the sprite at `MyWork\Sprites\AwesomeBanner.png`.
 
@@ -56,33 +54,37 @@ Each banner icon group must have a unique ID, so do the banner colors. To avoid 
 
 ![Start IDs](/assets/images/banner-editor-tutorial/banner-start-ids.png)
 
-For example, if you set the group start ID as `10000`, whenever you create the first group for a new project, its ID is `10000`.
+For example, if you set the group start ID as `10000`, whenever you create the first group in a new project, its ID will be `10000`.
 
-Please keep an eye on the hints below each setting about the restrictions.
+Please keep an eye on the hints of each setting about the restrictions.
 
 ---
 
 ## [1] Import Banner Icons
 
-Go to **Banner Icons** via the navigation pane. When opened, it will create an empty project for you, containing no groups or colors.
+Go to **Banner Icons** via the navigation pane. When opened, it creates an empty project for you, containing no groups or colors.
 
-To import banner icons, you have to create a group first:
+To import banner icons, you need to create a banner icon group first:
 
 ![Add group](/assets/images/banner-editor-tutorial/banner-1-add-group.png)
 
-You'll notice that with the new group selected, the group editor shows up. Click **Add textures** and select your banner textures.
-
-You can select multiple files at once.
+You'll notice that with the new group selected, the group editor shows up. Click **Add textures** and select your banner textures. You can, of course, import mulitple textures in a batch.
 
 ![Add group](/assets/images/banner-editor-tutorial/banner-2-add-textures.png)
 
-The imported icon textures will show in the list, each of which is assigned with an **Icon ID**. The Icon IDs are comprised of the group ID and the texture index in the group.
+The imported icon textures will show in the list, each of which is assigned with an **Icon ID**.
+
+> The Icon IDs are comprised of the group ID and the texture index in the group.
+
+You can also find what the texture's file name would be for each icon at the top of a texture tile. Since every banner texture can hold only 16 icons, there could be more than one texture files (suffixed with `_01`, `_02`, etc.) for an icon group.
 
 ![Add group](/assets/images/banner-editor-tutorial/banner-3-textures.png)
 
-When an icon is selected, its detail will show up in the right pane, where you can inspect the texture and the sprite in a larger view. If you have set the [relative scan paths](#relative-scan-paths) correctly and have the sprite files with the same names as the texture files, BLIT will automatically set the sprite for the icons.
+When an icon is selected, its detail will show up in the right pane, where you can inspect the texture and the sprite in a larger view. If you have set the [relative scan paths](#relative-scan-paths) correctly and have named the sprite files same as the texture files, BLIT will automatically set the sprite for the icons.
 
-You can always set the sprites and textures manually for each icon.
+You can always pick sprites and textures manually for each icon by clicking **Change...**. If an image has changed, you'll need to click **Reimport** to refresh it.
+
+> Alternatively, you can add the existing textures again by clicking **Add textures**, if there are many images to be refreshed.
 
 ![Icon Details](/assets/images/banner-editor-tutorial/banner-4-icon-details.png)
 
@@ -115,13 +117,17 @@ To manage custom colors, click **BANNER COLORS** under the banner editor's toolb
 
 ![Banner colors](/assets/images/banner-editor-tutorial/banner-5-goto-colors.png)
 
-Editing colors should be pretty straightforward: click **Add** to add a new color, and click **Delete** to remove the selected color.
+Editing colors should be pretty straightforward: clicking **Add** to add a new color; **Delete** to remove the selected color.
 
 For each color, you can toggle the **Sigil** and **Background** switches to determine whether this color can be used in the sigil or background palettes in game.
 
-You can also change the color ID manually, as long as it's unique. BLIT will prevent color IDs from being identical in a single project.
+You can also change the color ID manually, as long as it's unique. BLIT will prevent color IDs from being duplicated in a single project.
 
 ![Color editor](/assets/images/banner-editor-tutorial/banner-6-color-editor.png)
+
+You can delete multiple colors by muti-selection (via <kbd>Shift</kbd> or <kbd>Ctrl</kbd>). When more than one color are selected, however, you won't be able to edit the ID nor the color.
+
+![Color Multi Selection](/assets/images/banner-editor-tutorial/banner-9-multi-colors.png)
 
 ---
 
@@ -135,35 +141,33 @@ Click the **Export All** button in the toolbar and select a destination folder t
 
 A complete export will generate the following outputs:
 
-```plain
-(Target Folder)
-├─banner_icons.xml
-├─AssetSources
-│  └─BannerIcons
-└─GUI
-    └─SpriteParts
-        ├─Config.xml
-        └─ui_<GROUP ID>
-```
+    (Target Folder)
+    ├─banner_icons.xml
+    ├─AssetSources
+    │  └─BannerIcons
+    └─GUI
+        └─SpriteParts
+            ├─Config.xml
+            └─ui_<GROUP ID>
 
-| File/Folder                   | Description                                                                                                                                                                                                                |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| banner_icons.xml              | Put it in the **ModuleData** folder of your mod.                                                                                                                                                                           |
-| AssetSources                  | The merged banner textures (PSD files), which can be imported via Bannerlord Modding Kit directly.                                                                                                                         |
-| GUI/SpriteParts/ui_<GROUP ID> | The sprite folders for packing into sprite sheets.                                                                                                                                                                         |
-| GUI/SpriteParts/Config.xml    | The config files to set the banner sprites as `<AlwaysLoad>` so that you don't have to manually load the sprite sheets in code. <br/><br/> You probably need to merge its content with your existing `Config.xml`, if any. |
+| File/Folder                | Description                                                                                                                                                                                                                                        |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| banner_icons.xml           | Put it in the **ModuleData** folder of your mod.                                                                                                                                                                                                   |
+| AssetSources               | The merged banner textures (PSD files), which can be imported by Bannerlord Modding Kit directly.                                                                                                                                                  |
+| GUI/SpriteParts/ui_*       | The sprite folders for sprite sheet generation.                                                                                                                                                                                                    |
+| GUI/SpriteParts/Config.xml | The config file for setting the banner sprites as `<AlwaysLoad>` so that you don't have to manually load the sprite sheets in code. Use it wisely. <br/><br/> You will probably need to merge its content with your existing `Config.xml`, if any. |
 
 ### Export XML Only
 
-If you have only changed the banner colors and won't want to wait for all the textures to be packed again, you can click *Export XML**. This will only export the `banner_icons.xml` file.
+If you have only changed the banner colors and won't want to wait for all the textures to be packed again (it could take a long time!), you can click **Export XML**. This will only export the `banner_icons.xml` file.
 
-Note that by exporting XML only, you'll also need to choose a *folder* as the destination.
+Note that when exporting XML, you also need to choose a *folder* instead of a file as the destination.
 
 ### Texture Resolution
 
-By default, each merged texture will be in 2K resolution, i.e. 2048x2048 pixels. Since each texture is 4x4, each icon texture will be 512x512 pixels.
+By default, each merged texture will be in 2K resolution, i.e. 2048x2048 pixels. Since each texture is 4x4, the packed icon textures will be 512x512 pixels.
 
-This is the recommended configuration, since banners are usually not big enough to make the resolution matter noticable. Smaller textures will also save the RAM and vRAM.
+This is the recommended configuration, as banners are typically too small for the resolution to be noticable. Smaller textures will reduce the size of your mod as well as conserve RAM and vRAM.
 
 However, if you do wish a larger texture, you can select the 4K resolution before exporting. This will enlarge the merged textures to 4096x4096.
 

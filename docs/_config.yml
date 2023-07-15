@@ -28,6 +28,25 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: wizcas
 github_username: wizcas
 
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      author_profile: true
+
+author:
+  name: "BLIT"
+  avatar: "/assets/logo/logo.png"
+  bio: "Bannerlord Image Tool for modders"
+  links:
+    - label: "Download"
+      icon: "fas fa-fw fa-download"
+      url: "https://github.com/0x1c-works/BLIT/releases"
+    - label: "GitHub Repo"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/0x1c-works/BLIT"
+
 # Build settings
 # theme: minima
 remote_theme: "mmistakes/minimal-mistakes@4.24.0"
