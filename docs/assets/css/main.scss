@@ -1,0 +1,27 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+search: false
+---
+
+@charset "utf-8";
+
+/* Variables */
+$serif: Georgia, Times, serif;
+$sans-serif: "Cabin", "Fira Sans", -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial,
+  sans-serif;
+$monospace: "Ubuntu Mono", "Fira Code", "Roboto Mono", Monaco, Consolas, "Lucida Console", monospace;
+
+$type-size-5: 0.875em !default; // ~14px
+
+/* Main style */
+@import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
+@import "minimal-mistakes"; // main partials
+
+/* Overrides */
+.page__content {
+  p,
+  li,
+  dl {
+    font-size: $type-size-5;
+  }
+}

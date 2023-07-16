@@ -1,9 +1,10 @@
 ---
 layout: single
 title: Banner Icons Editor
-permalink: /banner-icons-editor
+permalink: /banner-icons-editor/
 toc: true
 toc_sticky: true
+excerpt: "A tutorial on how to use the Banner Icons Editor."
 ---
 
 ## Overview
@@ -102,7 +103,7 @@ You can always pick sprites and textures manually for each icon by clicking **Ch
 Otherwise, it will **crash your game and corrupt the saved games**!!!
 
 > I have reported this bug to TaleWorlds but the fix is still in progress.
-You can help bump it in this [thread](https://forums.taleworlds.com/index.php?threads/custom-colors-can-be-selected-from-disabled-mods-and-will-corrupt-game-saves.457487/post-9865176).
+You can help bump it in this [thread](https://forums.taleworlds.com/index.php?threads/game-crash-if-banner-color-ids-are-not-continuous-from-194.459436/).
 >
 > For more technical details, or if you want to patch it in your own mod, please refer to [How To Support Custom Colors](/how-to-support-custom-colors).
 
