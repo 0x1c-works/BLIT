@@ -12,4 +12,23 @@ export default {
     { locale: "en", text: "English" },
     { locale: "zh", text: "中文" },
   ],
+  head: (
+    <>
+      <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    </>
+  ),
+  footer: {
+    text: (
+      <span class="nx-text-xs">
+        {" "}
+        <code>AGPLv3</code> {new Date().getFullYear()} © 0x1C Works with ❤️
+      </span>
+    ),
+  },
+  search: {
+    placeholder: "Search...",
+  },
+  useNextSeoProps() {
+    return { titleTemplate: "%s - BLIT the Bannerlord Image Tool" };
+  },
 };
