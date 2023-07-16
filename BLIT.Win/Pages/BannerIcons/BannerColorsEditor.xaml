@@ -112,98 +112,101 @@
             </ListView>
             <!--  Color Editor  -->
         </Grid>
-        <Grid
-            Grid.Column="1"
-            Padding="32,16"
-            HorizontalAlignment="Left"
-            RowSpacing="20"
-            Visibility="{x:Bind HasSelectedColor}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Border
-                Grid.Row="0"
-                Grid.ColumnSpan="3"
-                Style="{StaticResource ColorWarningBoxStyle}">
-                <StackPanel Spacing="8">
-                    <TextBlock
-                        x:Uid="TextWarningHeader"
-                        Foreground="White"
-                        Style="{ThemeResource SubtitleTextBlockStyle}">
-                        Warning!
-                    </TextBlock>
-                    <TextBlock
-                        x:Uid="TextColorWarning"
-                        Foreground="White"
-                        TextWrapping="WrapWholeWords">
-                        Custom colors may crash game without patching.
-                    </TextBlock>
-                    <HyperlinkButton
-                        x:Uid="LinkColorWarning"
-                        Background="DarkRed"
-                        Foreground="White"
-                        NavigateUri="https://blit.0x1.best/banner-icons-editor/#2-manage-custom-color:~:text=DO%20NOT%20add%20any%20custom%20color%20if%20you%3A">
-                        How to resolve?
-                    </HyperlinkButton>
-                </StackPanel>
-            </Border>
-            <StackPanel
-                Grid.Row="1"
-                Orientation="Horizontal"
-                Spacing="16"
-                Visibility="{x:Bind IsSingleSelected, Mode=OneWay}">
-                <TextBlock VerticalAlignment="Center" Style="{ThemeResource SubtitleTextBlockStyle}">ID</TextBlock>
-                <NumberBox
-                    x:Name="numColorID"
-                    Grid.ColumnSpan="2"
-                    Margin="8,0"
-                    VerticalAlignment="Center"
-                    AcceptsExpression="True"
-                    FontSize="24"
-                    Maximum="99999999"
-                    SpinButtonPlacementMode="Compact"
-                    Value="{x:Bind FirstSelectedColor.ID, Mode=TwoWay}" />
-            </StackPanel>
-            <StackPanel
-                Grid.Row="1"
-                Grid.ColumnSpan="2"
-                Orientation="Horizontal"
-                Spacing="5"
-                Visibility="{x:Bind IsMultipleSelection, Mode=OneWay}">
-                <TextBlock
-                    Margin="0"
-                    Padding="0"
-                    VerticalAlignment="Bottom"
-                    Style="{ThemeResource SubheaderTextBlockStyle}"
-                    Text="{x:Bind SelectedColorIDs, Mode=OneWay}" />
-                <TextBlock
-                    VerticalAlignment="Bottom"
-                    FontWeight="Light"
-                    Style="{ThemeResource FlyoutPickerTitleTextBlockStyle}"
-                    Text="{x:Bind MoreColorsText, Mode=OneWay}" />
-            </StackPanel>
-            <StackPanel Grid.Row="2" Orientation="Horizontal">
-                <ToggleSwitch Header="{x:Bind helpers:I18n.Current.GetString('TextColorForSigil/Text')}" IsOn="{x:Bind IsForSigil, Mode=TwoWay}" />
-            </StackPanel>
-            <StackPanel
-                Grid.Row="2"
-                Grid.Column="1"
-                Orientation="Horizontal">
-                <ToggleSwitch Header="{x:Bind helpers:I18n.Current.GetString('TextColorForBackground/Text')}" IsOn="{x:Bind IsForBackground, Mode=TwoWay}" />
-            </StackPanel>
-            <ColorPicker
-                Grid.Row="3"
-                Grid.ColumnSpan="2"
-                Visibility="{x:Bind IsSingleSelected, Mode=OneWay}"
-                Color="{x:Bind FirstSelectedColor.Color, Mode=TwoWay}" />
+        <Grid Grid.Column="1">
+            <ScrollViewer>
+                <Grid
+                    Padding="32,16"
+                    HorizontalAlignment="Left"
+                    RowSpacing="20"
+                    Visibility="{x:Bind HasSelectedColor}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border
+                        Grid.Row="0"
+                        Grid.ColumnSpan="3"
+                        Style="{StaticResource ColorWarningBoxStyle}">
+                        <StackPanel Spacing="8">
+                            <TextBlock
+                                x:Uid="TextWarningHeader"
+                                Foreground="White"
+                                Style="{ThemeResource SubtitleTextBlockStyle}">
+                                Warning!
+                            </TextBlock>
+                            <TextBlock
+                                x:Uid="TextColorWarning"
+                                Foreground="White"
+                                TextWrapping="WrapWholeWords">
+                                Custom colors may crash game without patching.
+                            </TextBlock>
+                            <HyperlinkButton
+                                x:Uid="LinkColorWarning"
+                                Background="DarkRed"
+                                Foreground="White"
+                                NavigateUri="https://blit.0x1.best/banner-icons-editor/#2-manage-custom-color:~:text=DO%20NOT%20add%20any%20custom%20color%20if%20you%3A">
+                                How to resolve?
+                            </HyperlinkButton>
+                        </StackPanel>
+                    </Border>
+                    <StackPanel
+                        Grid.Row="1"
+                        Orientation="Horizontal"
+                        Spacing="16"
+                        Visibility="{x:Bind IsSingleSelected, Mode=OneWay}">
+                        <TextBlock VerticalAlignment="Center" Style="{ThemeResource SubtitleTextBlockStyle}">ID</TextBlock>
+                        <NumberBox
+                            x:Name="numColorID"
+                            Grid.ColumnSpan="2"
+                            Margin="8,0"
+                            VerticalAlignment="Center"
+                            AcceptsExpression="True"
+                            FontSize="24"
+                            Maximum="99999999"
+                            SpinButtonPlacementMode="Compact"
+                            Value="{x:Bind FirstSelectedColor.ID, Mode=TwoWay}" />
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Orientation="Horizontal"
+                        Spacing="5"
+                        Visibility="{x:Bind IsMultipleSelection, Mode=OneWay}">
+                        <TextBlock
+                            Margin="0"
+                            Padding="0"
+                            VerticalAlignment="Bottom"
+                            Style="{ThemeResource SubheaderTextBlockStyle}"
+                            Text="{x:Bind SelectedColorIDs, Mode=OneWay}" />
+                        <TextBlock
+                            VerticalAlignment="Bottom"
+                            FontWeight="Light"
+                            Style="{ThemeResource FlyoutPickerTitleTextBlockStyle}"
+                            Text="{x:Bind MoreColorsText, Mode=OneWay}" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                        <ToggleSwitch Header="{x:Bind helpers:I18n.Current.GetString('TextColorForSigil/Text')}" IsOn="{x:Bind IsForSigil, Mode=TwoWay}" />
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Orientation="Horizontal">
+                        <ToggleSwitch Header="{x:Bind helpers:I18n.Current.GetString('TextColorForBackground/Text')}" IsOn="{x:Bind IsForBackground, Mode=TwoWay}" />
+                    </StackPanel>
+                    <ColorPicker
+                        Grid.Row="3"
+                        Grid.ColumnSpan="2"
+                        Visibility="{x:Bind IsSingleSelected, Mode=OneWay}"
+                        Color="{x:Bind FirstSelectedColor.Color, Mode=TwoWay}" />
+                </Grid>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </UserControl>
