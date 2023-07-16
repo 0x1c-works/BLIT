@@ -352,7 +352,7 @@
     <value>自定义颜色起始ID：</value>
   </data>
   <data name="TextCustomBannerColorStartIDExplain.Text" xml:space="preserve">
-    <value>取值范围从 0 到 9999999。
+    <value>取值范围从 194 到 999999。
 推荐使用较大的ID，以避免和其他MOD冲突。
 注意：0 到 193 为原版游戏所使用。</value>
   </data>
@@ -360,7 +360,7 @@
     <value>自定义图案分组起始ID：</value>
   </data>
   <data name="TextCustomBannerGroupStartIDExplain.Text" xml:space="preserve">
-    <value>取值范围为 1 到 99999。
+    <value>取值范围为 7 到 99999。
 推荐使用较大的ID，以避免和其他MOD冲突。
 注意：1 到 6 为原版游戏所使用。</value>
   </data>

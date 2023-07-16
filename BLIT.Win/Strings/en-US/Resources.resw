@@ -352,7 +352,7 @@ The relative paths are based on the texture import location.</value>
     <value>Custom color start ID:</value>
   </data>
   <data name="TextCustomBannerColorStartIDExplain.Text" xml:space="preserve">
-    <value>Ranged from 0 to 9999999.
+    <value>Ranged from 194 to 999999.
 Larger IDs are recommended to prevent collision.
 Note that 0 to 193 are used by the vanilla game.</value>
   </data>
@@ -360,7 +360,7 @@ Note that 0 to 193 are used by the vanilla game.</value>
     <value>Custom group start ID:</value>
   </data>
   <data name="TextCustomBannerGroupStartIDExplain.Text" xml:space="preserve">
-    <value>Ranged from 1 to 99999.
+    <value>Ranged from 7 to 99999.
 Larger IDs are recommended to prevent collision.
 Note that 1 to 6 are used by the vanilla game.</value>
   </data>
