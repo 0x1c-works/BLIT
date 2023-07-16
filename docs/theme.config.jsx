@@ -19,7 +19,7 @@ export default {
   ),
   footer: {
     text: (
-      <span class="nx-text-xs">
+      <span className="nx-text-xs">
         {" "}
         <code>AGPLv3</code> {new Date().getFullYear()} © 0x1C Works with ❤️
       </span>
