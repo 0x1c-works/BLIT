@@ -1,0 +1,7 @@
+main:
+  - title: About
+    url: /about/
+  - title: Download
+    url: "https://github.com/0x1c-works/BLIT/releases"
+  - title: GitHub
+    url: "https://github.com/0x1c-works/BLIT"
