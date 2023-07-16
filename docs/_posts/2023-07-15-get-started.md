@@ -4,12 +4,12 @@ title: Get Started
 permalink: /get-started/
 ---
 
-# Requirements
+## Requirements
 
 - Windows 10 version 1809 (10.0.17763.0) or later
 - Windows App Runtime 1.2
 
-# Install
+## Install
 
 1. Download the latest release from [here](https://github.com/0x1c-works/BLIT/releases).
 2. Extract the zip file.
@@ -26,6 +26,6 @@ permalink: /get-started/
    1. Right click on the `.cer` file and "Install Certificate".
    2. Run the `BLIT.Win_<VERSION>_x64.msix` file.
 
-# Next
+## Next
 
 - [Generate custom banner assets](/banner-icons-editor/)
