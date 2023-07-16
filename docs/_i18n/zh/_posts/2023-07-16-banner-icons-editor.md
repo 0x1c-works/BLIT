@@ -1,10 +1,10 @@
 ---
 layout: single
 title: 旗帜图案编辑器
-permalink: /banner-icons-editor/
+permalink: /zh-banner-icons-editor/
+excerpt: 如何使用"旗帜图案编辑器"生成可导入的自定义旗帜图案
 toc: true
 toc_sticky: true
-excerpt: 如何使用"旗帜图案编辑器"生成可导入的自定义旗帜图案
 ---
 
 ## 介绍
