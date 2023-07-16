@@ -28,4 +28,4 @@ permalink: /get-started/
 
 # Next
 
-- [Generate custom banner assets](/generating-custom-banner-assets)
+- [Generate custom banner assets](/banner-icons-editor/)

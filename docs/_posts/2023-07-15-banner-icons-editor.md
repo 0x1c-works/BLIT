@@ -1,7 +1,7 @@
 ---
 layout: single
 title: Banner Icons Editor
-permalink: /banner-icons-editor
+permalink: /banner-icons-editor/
 toc: true
 toc_sticky: true
 ---
