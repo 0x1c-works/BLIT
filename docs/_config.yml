@@ -28,6 +28,7 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: wizcas
 github_username: wizcas
 logo: "/assets/logo/logo.png"
+name: "BLIT with ❤️"
 
 repository: 0x1c-works/BLIT
 

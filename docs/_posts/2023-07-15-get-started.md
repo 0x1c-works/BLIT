@@ -2,12 +2,14 @@
 layout: single
 title: Get Started
 permalink: /get-started/
+excerpt: How to install and run BLIT
 ---
 
 ## Requirements
 
 - Windows 10 version 1809 (10.0.17763.0) or later
 - Windows App Runtime 1.2
+  > *It should be installed along with BLIT.*
 
 ## Install
 
@@ -25,6 +27,7 @@ permalink: /get-started/
 4. **Alternatively**, you can install it manually without PowerShell:
    1. Right click on the `.cer` file and "Install Certificate".
    2. Run the `BLIT.Win_<VERSION>_x64.msix` file.
+5. After installation, you should find BLIT in your start menu.
 
 ## Next
 

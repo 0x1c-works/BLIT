@@ -4,6 +4,7 @@ title: Banner Icons Editor
 permalink: /banner-icons-editor/
 toc: true
 toc_sticky: true
+excerpt: "A tutorial on how to use the Banner Icons Editor."
 ---
 
 ## Overview
