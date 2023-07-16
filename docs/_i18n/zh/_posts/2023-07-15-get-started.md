@@ -1,7 +1,7 @@
 ---
 layout: single
 title: 入门指南
-permalink: /get-started/
+permalink: /zh-get-started/
 excerpt: 如何安装和运行 BLIT
 ---
 
