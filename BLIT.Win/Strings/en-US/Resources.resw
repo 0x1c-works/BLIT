@@ -156,6 +156,9 @@
   <data name="AppNavMenuBanner.Content" xml:space="preserve">
     <value>Banner Icons</value>
   </data>
+  <data name="AppNavMenuHelp.Content" xml:space="preserve">
+    <value>Help</value>
+  </data>
   <data name="AppTitle.Text" xml:space="preserve">
     <value>BLIT - Bannerlord Image Tool</value>
     <comment>The main window's title</comment>
@@ -254,6 +257,15 @@ If you prefer not to, the changes will be applied next time when you launch this
   <data name="LabelTextureResolution.Text" xml:space="preserve">
     <value>Texture Resolution</value>
   </data>
+  <data name="LinkColorWarning.Content" xml:space="preserve">
+    <value>How to resolve?</value>
+  </data>
+  <data name="LinkColorWarning.NavigateUri" xml:space="preserve">
+    <value>https://blit.0x1.best/banner-icons-editor/#2-manage-custom-color:~:text=DO%20NOT%20add%20any%20custom%20color%20if%20you%3A</value>
+  </data>
+  <data name="LinkHelpWebsite" xml:space="preserve">
+    <value>https://blit.0x1.best</value>
+  </data>
   <data name="MenuItemAdd.Text" xml:space="preserve">
     <value>Add</value>
   </data>
@@ -327,6 +339,9 @@ The relative paths are based on the texture import location.</value>
   <data name="TextColorForSigil.Text" xml:space="preserve">
     <value>Sigil</value>
   </data>
+  <data name="TextColorWarning.Text" xml:space="preserve">
+    <value>Using custom colors without patching may crash the game or corrupt the saved games.</value>
+  </data>
   <data name="TextConfirmDeleteSelection.Text" xml:space="preserve">
     <value>All selected items will be removed. Do you want to continue?</value>
   </data>
@@ -337,7 +352,7 @@ The relative paths are based on the texture import location.</value>
     <value>Custom color start ID:</value>
   </data>
   <data name="TextCustomBannerColorStartIDExplain.Text" xml:space="preserve">
-    <value>Ranged from 0 to 9999999.
+    <value>Ranged from 194 to 999999.
 Larger IDs are recommended to prevent collision.
 Note that 0 to 193 are used by the vanilla game.</value>
   </data>
@@ -345,7 +360,7 @@ Note that 0 to 193 are used by the vanilla game.</value>
     <value>Custom group start ID:</value>
   </data>
   <data name="TextCustomBannerGroupStartIDExplain.Text" xml:space="preserve">
-    <value>Ranged from 1 to 99999.
+    <value>Ranged from 7 to 99999.
 Larger IDs are recommended to prevent collision.
 Note that 1 to 6 are used by the vanilla game.</value>
   </data>
@@ -379,6 +394,9 @@ It may take a while if there are a lot of assets</value>
   </data>
   <data name="TextViewLogFiles.Text" xml:space="preserve">
     <value>View log files</value>
+  </data>
+  <data name="TextWarningHeader.Text" xml:space="preserve">
+    <value>Warning!</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
     <value>Dark</value>

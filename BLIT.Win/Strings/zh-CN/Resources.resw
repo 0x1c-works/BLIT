@@ -156,6 +156,9 @@
   <data name="AppNavMenuBanner.Content" xml:space="preserve">
     <value>自定义旗帜</value>
   </data>
+  <data name="AppNavMenuHelp.Content" xml:space="preserve">
+    <value>帮助</value>
+  </data>
   <data name="AppTitle.Text" xml:space="preserve">
     <value>BLIT - 战团MOD图片助手</value>
     <comment>The main window's title</comment>
@@ -254,6 +257,15 @@
   <data name="LabelTextureResolution.Text" xml:space="preserve">
     <value>贴图分辨率</value>
   </data>
+  <data name="LinkColorWarning.Content" xml:space="preserve">
+    <value>如何解决?</value>
+  </data>
+  <data name="LinkColorWarning.NavigateUri" xml:space="preserve">
+    <value>https://blit.0x1.best/banner-icons-editor/#2-manage-custom-color:~:text=DO%20NOT%20add%20any%20custom%20color%20if%20you%3A</value>
+  </data>
+  <data name="LinkHelpWebsite" xml:space="preserve">
+    <value>https://blit.0x1.best</value>
+  </data>
   <data name="MenuItemAdd.Text" xml:space="preserve">
     <value>添加</value>
   </data>
@@ -327,6 +339,9 @@
   <data name="TextColorForSigil.Text" xml:space="preserve">
     <value>纹章色</value>
   </data>
+  <data name="TextColorWarning.Text" xml:space="preserve">
+    <value>在原版游戏中使用自定义颜色，可能导致游戏崩溃或存档损坏。</value>
+  </data>
   <data name="TextConfirmDeleteSelection.Text" xml:space="preserve">
     <value>所有选中的项目都将被移除，是否继续？</value>
   </data>
@@ -337,7 +352,7 @@
     <value>自定义颜色起始ID：</value>
   </data>
   <data name="TextCustomBannerColorStartIDExplain.Text" xml:space="preserve">
-    <value>取值范围从 0 到 9999999。
+    <value>取值范围从 194 到 999999。
 推荐使用较大的ID，以避免和其他MOD冲突。
 注意：0 到 193 为原版游戏所使用。</value>
   </data>
@@ -345,7 +360,7 @@
     <value>自定义图案分组起始ID：</value>
   </data>
   <data name="TextCustomBannerGroupStartIDExplain.Text" xml:space="preserve">
-    <value>取值范围为 1 到 99999。
+    <value>取值范围为 7 到 99999。
 推荐使用较大的ID，以避免和其他MOD冲突。
 注意：1 到 6 为原版游戏所使用。</value>
   </data>
@@ -379,6 +394,9 @@
   </data>
   <data name="TextViewLogFiles.Text" xml:space="preserve">
     <value>查看日志文件</value>
+  </data>
+  <data name="TextWarningHeader.Text" xml:space="preserve">
+    <value>警告!</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
     <value>暗色</value>

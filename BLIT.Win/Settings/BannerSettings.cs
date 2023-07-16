@@ -14,7 +14,7 @@ public class BannerSettings
     [Key(1)]
     public Banner.OutputResolution TextureOutputResolution { get; set; }
 
-    int _customGroupStartID = 10000;
+    int _customGroupStartID = 7;
     [Key(2)]
     public int CustomGroupStartID
     {
@@ -30,7 +30,7 @@ public class BannerSettings
             Save();
         }
     }
-    int _customColorStartID = 500;
+    int _customColorStartID = 194;
     [Key(3)]
     public int CustomColorStartID
     {

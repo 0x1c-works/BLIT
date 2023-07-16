@@ -70,7 +70,7 @@
                         VerticalAlignment="Top"
                         AcceptsExpression="True"
                         Maximum="99999"
-                        Minimum="1"
+                        Minimum="7"
                         SpinButtonPlacementMode="Compact"
                         Value="{Binding BannerSettings.CustomGroupStartID, Mode=TwoWay}" />
                     <!--  Color start ID  -->
@@ -87,8 +87,8 @@
                         Width="200"
                         VerticalAlignment="Top"
                         AcceptsExpression="True"
-                        Maximum="9999999"
-                        Minimum="0"
+                        Maximum="999999"
+                        Minimum="194"
                         SpinButtonPlacementMode="Compact"
                         Value="{Binding BannerSettings.CustomColorStartID, Mode=TwoWay}" />
                 </Grid>
