@@ -172,6 +172,9 @@
   <data name="ButtonChangeEllipses.Content" xml:space="preserve">
     <value>更改...</value>
   </data>
+  <data name="ButtonColorWarning.Content" xml:space="preserve">
+    <value>如何解决?</value>
+  </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
     <value>删除</value>
   </data>
@@ -327,6 +330,9 @@
   <data name="TextColorForSigil.Text" xml:space="preserve">
     <value>纹章色</value>
   </data>
+  <data name="TextColorWarning.Text" xml:space="preserve">
+    <value>在原版游戏中使用自定义颜色，可能导致游戏崩溃或存档损坏。</value>
+  </data>
   <data name="TextConfirmDeleteSelection.Text" xml:space="preserve">
     <value>所有选中的项目都将被移除，是否继续？</value>
   </data>
@@ -379,6 +385,9 @@
   </data>
   <data name="TextViewLogFiles.Text" xml:space="preserve">
     <value>查看日志文件</value>
+  </data>
+  <data name="TextWarningHeader.Text" xml:space="preserve">
+    <value>警告!</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
     <value>暗色</value>

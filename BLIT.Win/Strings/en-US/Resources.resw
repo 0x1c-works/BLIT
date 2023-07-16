@@ -172,6 +172,9 @@
   <data name="ButtonChangeEllipses.Content" xml:space="preserve">
     <value>Change...</value>
   </data>
+  <data name="ButtonColorWarning.Content" xml:space="preserve">
+    <value>How to resolve?</value>
+  </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
     <value>Delete</value>
   </data>
@@ -327,6 +330,9 @@ The relative paths are based on the texture import location.</value>
   <data name="TextColorForSigil.Text" xml:space="preserve">
     <value>Sigil</value>
   </data>
+  <data name="TextColorWarning.Text" xml:space="preserve">
+    <value>Using custom colors without patching may crash the game or corrupt the saved games.</value>
+  </data>
   <data name="TextConfirmDeleteSelection.Text" xml:space="preserve">
     <value>All selected items will be removed. Do you want to continue?</value>
   </data>
@@ -379,6 +385,9 @@ It may take a while if there are a lot of assets</value>
   </data>
   <data name="TextViewLogFiles.Text" xml:space="preserve">
     <value>View log files</value>
+  </data>
+  <data name="TextWarningHeader.Text" xml:space="preserve">
+    <value>Warning!</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
     <value>Dark</value>
