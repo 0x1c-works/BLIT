@@ -172,9 +172,6 @@
   <data name="ButtonChangeEllipses.Content" xml:space="preserve">
     <value>Change...</value>
   </data>
-  <data name="ButtonColorWarning.Content" xml:space="preserve">
-    <value>How to resolve?</value>
-  </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
     <value>Delete</value>
   </data>
@@ -256,6 +253,18 @@ If you prefer not to, the changes will be applied next time when you launch this
   </data>
   <data name="LabelTextureResolution.Text" xml:space="preserve">
     <value>Texture Resolution</value>
+  </data>
+  <data name="LinkColorWarning.Content" xml:space="preserve">
+    <value>How to resolve?</value>
+  </data>
+  <data name="LinkColorWarning.NavigateUri" xml:space="preserve">
+    <value>https://blit.0x1.best/banner-icons-editor/#2-manage-custom-color:~:text=DO%20NOT%20add%20any%20custom%20color%20if%20you%3A</value>
+  </data>
+  <data name="LinkVisitWebsite.Content" xml:space="preserve">
+    <value>Visit the website</value>
+  </data>
+  <data name="LinkVisitWebsite.NavigateUri" xml:space="preserve">
+    <value>https://blit.0x1.best</value>
   </data>
   <data name="MenuItemAdd.Text" xml:space="preserve">
     <value>Add</value>
@@ -358,6 +367,9 @@ Note that 1 to 6 are used by the vanilla game.</value>
   <data name="TextExporting.Text" xml:space="preserve">
     <value>Exporting, please wait...
 It may take a while if there are a lot of assets</value>
+  </data>
+  <data name="TextHelpTitle.Text" xml:space="preserve">
+    <value>Help</value>
   </data>
   <data name="TextIconDetails.Text" xml:space="preserve">
     <value>Icon Details</value>

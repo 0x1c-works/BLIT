@@ -172,9 +172,6 @@
   <data name="ButtonChangeEllipses.Content" xml:space="preserve">
     <value>更改...</value>
   </data>
-  <data name="ButtonColorWarning.Content" xml:space="preserve">
-    <value>如何解决?</value>
-  </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
     <value>删除</value>
   </data>
@@ -256,6 +253,18 @@
   </data>
   <data name="LabelTextureResolution.Text" xml:space="preserve">
     <value>贴图分辨率</value>
+  </data>
+  <data name="LinkColorWarning.Content" xml:space="preserve">
+    <value>如何解决?</value>
+  </data>
+  <data name="LinkColorWarning.NavigateUri" xml:space="preserve">
+    <value>https://blit.0x1.best/banner-icons-editor/#2-manage-custom-color:~:text=DO%20NOT%20add%20any%20custom%20color%20if%20you%3A</value>
+  </data>
+  <data name="LinkVisitWebsite.Content" xml:space="preserve">
+    <value>访问网站</value>
+  </data>
+  <data name="LinkVisitWebsite.NavigateUri" xml:space="preserve">
+    <value>https://blit.0x1.best</value>
   </data>
   <data name="MenuItemAdd.Text" xml:space="preserve">
     <value>添加</value>
@@ -358,6 +367,9 @@
   <data name="TextExporting.Text" xml:space="preserve">
     <value>正在导出，请稍候...
 资源较多时可能会花费较长时间</value>
+  </data>
+  <data name="TextHelpTitle.Text" xml:space="preserve">
+    <value>帮助</value>
   </data>
   <data name="TextIconDetails.Text" xml:space="preserve">
     <value>图案详情</value>

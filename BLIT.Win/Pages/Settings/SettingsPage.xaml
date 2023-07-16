@@ -26,6 +26,25 @@
     <Grid Margin="32" Background="Transparent">
         <ScrollViewer>
             <StackPanel DataContext="{x:Bind ViewModel}" Spacing="20">
+                <Grid Style="{StaticResource SectionGridStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        x:Uid="TextHelpTitle"
+                        VerticalAlignment="Bottom"
+                        Style="{StaticResource SectionTitleStyle}">
+                        Help
+                    </TextBlock>
+                    <HyperlinkButton
+                        x:Uid="LinkVisitWebsite"
+                        Grid.Column="1"
+                        VerticalAlignment="Bottom" />
+                </Grid>
                 <!--<TextBlock x:Uid="LabelGameRootFolder">Game root folder:</TextBlock>
                 <StackPanel Orientation="Horizontal" Margin="0,8" Spacing="8">
                     <TextBlock Text="{Binding GameRootFolderPath}" VerticalAlignment="Center"/>
