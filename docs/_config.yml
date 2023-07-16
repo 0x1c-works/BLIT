@@ -28,7 +28,7 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: wizcas
 github_username: wizcas
 logo: "/assets/logo/logo.png"
-name: "BLIT with ❤️"
+name: "0x1C Works with ❤️"
 
 repository: 0x1c-works/BLIT
 
@@ -52,6 +52,7 @@ minimal_mistakes_skin: dirt
 plugins:
   - jekyll-feed
   - jekyll-include-cache
+  - jekyll-multiple-languages-plugin
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to
@@ -71,3 +72,11 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+
+languages:
+  - en
+  - zh
+exclude_from_localizations:
+  - javascript
+  - css
+  - images

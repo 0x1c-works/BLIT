@@ -1,0 +1,11 @@
+{
+  "index": {
+    "title": "Welcome",
+    "theme": {
+      "breadcrumb": false
+    }
+  },
+  "installation": "Install BLIT",
+  "banner-icon-editor": "Banner Icon Editor",
+  "about": "About BLIT"
+}
