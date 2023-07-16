@@ -1,3 +1,5 @@
+import { FileTree } from "nextra/components";
+
 ## First-Run Setup
 
 To better managing your banner assets, you will need to tweak the banner settings on your first run for features like sprite searching as well as start IDs for groups and colors. BLIT will remember your settings.
@@ -10,13 +12,16 @@ BLIT scans for corresponding sprites for banner textures via _relative_ scan pat
 
 For instance, if you have banner assets stored in a directory structure like this:
 
-```
-MyWork
-├── Textures
-│   └── AwesomeBanner.png
-└── Sprites
-    └── AwesomeBanner.png
-```
+<FileTree>
+  <FileTree.Folder name="My Work" defaultOpen>
+    <FileTree.Folder name="Textures" defaultOpen>
+      <FileTree.File name="AwesomeBanner.png" />
+    </FileTree.Folder>
+    <FileTree.Folder name="Sprites" defaultOpen>
+      <FileTree.File name="AwesomeBanner.png" />
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
 
 Then you should add `..\Sprites` as the search path. When importing the texture `AwesomeBanner.png`, BLIT will search for the sprite at `MyWork\Sprites\AwesomeBanner.png`.
 

@@ -1,3 +1,5 @@
+import { FileTree } from "nextra/components";
+
 # Export Banners
 
 You can select either to export all assets or only the banner config XML file.
@@ -10,16 +12,20 @@ Click the **Export All** button in the toolbar and select a destination folder t
 
 A complete export will generate the following outputs:
 
-```
-(Target Folder)
-├─banner_icons.xml
-├─AssetSources
-│  └─BannerIcons
-└─GUI
-    └─SpriteParts
-        ├─Config.xml
-        └─ui_<GROUP ID>
-```
+<FileTree>
+  <FileTree.Folder name="Target Folder" defaultOpen>
+    <FileTree.File name="banner_icons.xml" />
+    <FileTree.Folder name="AssetSources" defaultOpen>
+      <FileTree.Folder name="BanneerIcons" />
+    </FileTree.Folder>
+    <FileTree.Folder name="GUI" defaultOpen>
+      <FileTree.Folder name="SpriteParts" defaultOpen>
+        <FileTree.File name="Config.xml" />
+        <FileTree.Folder name="ui_<GROUP ID>" />
+      </FileTree.Folder>
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
 
 | File/Folder                | Description                                                                                                                                                                                                                                        |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
