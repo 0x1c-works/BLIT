@@ -5,5 +5,7 @@
       "breadcrumb": false
     }
   },
-  "about": "关于 BLIT"
+  "about": "关于 BLIT",
+  "installation": "安装 BLIT",
+  "banner-icon-editor": "旗帜图案编辑器"
 }
