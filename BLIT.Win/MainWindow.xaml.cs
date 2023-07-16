@@ -13,6 +13,7 @@ using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Windows.Storage;
@@ -93,6 +94,13 @@ public sealed partial class MainWindow : ThemedWindow
         };
     }
 
+    void navHelp_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+    {
+        Process.Start(new ProcessStartInfo {
+            FileName = I18n.Current.GetString("LinkHelpWebsite"),
+            UseShellExecute = true,
+        });
+    }
 
     public class ViewModel : INotifyPropertyChanged
     {

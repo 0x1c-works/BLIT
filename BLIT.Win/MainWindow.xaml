@@ -46,6 +46,15 @@
                     Icon="Flag"
                     Tag="BannerIcons" />
             </NavigationView.MenuItems>
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem
+                    x:Name="navHelp"
+                    x:Uid="AppNavMenuHelp"
+                    Content="Help"
+                    Icon="Help"
+                    SelectsOnInvoked="False"
+                    Tapped="navHelp_Tapped" />
+            </NavigationView.FooterMenuItems>
             <NavigationView.HeaderTemplate>
                 <DataTemplate x:DataType="local:NavPageHeaderInfo">
                     <StackPanel Orientation="Horizontal" Spacing="5">
