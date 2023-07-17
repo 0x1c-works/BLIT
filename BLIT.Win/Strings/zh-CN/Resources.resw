@@ -261,10 +261,10 @@
     <value>如何解决?</value>
   </data>
   <data name="LinkColorWarning.NavigateUri" xml:space="preserve">
-    <value>http://blit.0x1.best/zh/banner-icon-editor/manage-colors#%EF%B8%8F-danger-%EF%B8%8F</value>
+    <value>http://blit.0x1.best/zh/banner-icon-editor/manage-colors#color-danger</value>
   </data>
   <data name="LinkHelpWebsite" xml:space="preserve">
-    <value>https://blit.0x1.best</value>
+    <value>https://blit.0x1.best/zh</value>
   </data>
   <data name="MenuItemAdd.Text" xml:space="preserve">
     <value>添加</value>

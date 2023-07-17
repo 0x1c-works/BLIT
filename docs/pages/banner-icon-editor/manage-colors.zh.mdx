@@ -2,24 +2,23 @@ import { Callout } from "nextra/components";
 
 # 管理自定义颜色
 
-## ☣️ 危险操作！ ☣️
+## ☣️ 危险操作! ☣️[#color-danger]
 
 如果不能确定满足下面的条件，**千万不要**添加**任何**自定义颜色：
 
-*   你已经通过编写 Harmony 补丁，修复了原生的 `BannerManager.GetColorId` 方法，使其能够支持不连续的颜色 ID。
-*   你正在使用支持自定义颜色的旗帜增强模组（例如 [Banner Editor](https://www.nexusmods.com/mountandblade2bannerlord/mods/4944)）。<br />
-    ⚠️ **注意**，你必须确保你**所有**的 MOD 玩家都安装了这样的模组！
+- 你已经通过编写 Harmony 补丁，修复了原生的 `BannerManager.GetColorId` 方法，使其能够支持不连续的颜色 ID。
+- 你正在使用支持自定义颜色的旗帜增强模组（例如 [Banner Editor](https://www.nexusmods.com/mountandblade2bannerlord/mods/4944)）。<br />
+  ⚠️ **注意**，你必须确保你**所有**的 MOD 玩家都安装了这样的模组！
 
 否则，自定义颜色会导致 **游戏崩溃并损坏存档**！！！
 
 <Callout>
   我已经和 T 社报告了这个 BUG，但目前还未修复。你可以帮忙
   [顶帖](https://forums.taleworlds.com/index.php?threads/game-crash-if-banner-color-ids-are-not-continuous-from-194.459436/)。
-  <br /> 想了解更多的技术细节，或者想在你自己的 MOD
-  中修复这个问题，请参考[如何支持自定义颜色](./how-to-patch-color)。
+  <br /> 想了解更多的技术细节，或者想在你自己的 MOD 中修复这个问题，请参考[如何支持自定义颜色](./how-to-patch-color)。
 </Callout>
 
-***
+---
 
 ## 编辑颜色
 

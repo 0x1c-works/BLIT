@@ -261,7 +261,7 @@ If you prefer not to, the changes will be applied next time when you launch this
     <value>How to resolve?</value>
   </data>
   <data name="LinkColorWarning.NavigateUri" xml:space="preserve">
-    <value>http://blit.0x1.best/banner-icon-editor/manage-colors#%EF%B8%8F-danger-%EF%B8%8F</value>
+    <value>http://blit.0x1.best/banner-icon-editor/manage-colors#color-danger</value>
   </data>
   <data name="LinkHelpWebsite" xml:space="preserve">
     <value>https://blit.0x1.best</value>
