@@ -1,7 +1,12 @@
 export default {
   logo: (
     <>
-      <img src="/logo/icon.png" alt="logo" width={32} style={{ marginRight: "0.5em" }} />
+      <img
+        src="/logo/icon.png"
+        alt="logo"
+        width={32}
+        style={{ marginRight: "0.5em" }}
+      />
       <span>BLIT</span>
     </>
   ),
@@ -30,5 +35,9 @@ export default {
   },
   useNextSeoProps() {
     return { titleTemplate: "%s - BLIT the Bannerlord Image Tool" };
+  },
+  docsRepositoryBase: "https://github.com/0x1c-works/BLIT/tree/main/docs",
+  feedback: {
+    labels: ["documentation"],
   },
 };
