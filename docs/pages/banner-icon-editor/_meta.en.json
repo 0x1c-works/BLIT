@@ -2,5 +2,6 @@
   "first-run": "First Run",
   "import-icons": "Import Icons",
   "manage-colors": "Manager Colors",
-  "export": "Export Banners"
+  "export": "Export Assets",
+  "how-to-patch-color":"Support Custom Colors"
 }

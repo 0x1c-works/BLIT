@@ -1,6 +1,6 @@
 import { FileTree } from "nextra/components";
 
-# Export Banners
+# Export Banner Assets
 
 You can select either to export all assets or only the banner config XML file.
 
@@ -29,21 +29,21 @@ A complete export will generate the following outputs:
 
 | File/Folder                | Description                                                                                                                                                                                                                                        |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| banner_icons.xml           | Put it in the **ModuleData** folder of your mod.                                                                                                                                                                                                   |
+| banner\_icons.xml           | Put it in the **ModuleData** folder of your mod.                                                                                                                                                                                                   |
 | AssetSources               | The merged banner textures (PSD files), which can be imported by Bannerlord Modding Kit directly.                                                                                                                                                  |
 | GUI/SpriteParts/ui\_\*     | The sprite folders for sprite sheet generation.                                                                                                                                                                                                    |
 | GUI/SpriteParts/Config.xml | The config file for setting the banner sprites as `<AlwaysLoad>` so that you don't have to manually load the sprite sheets in code. Use it wisely. <br/><br/> You will probably need to merge its content with your existing `Config.xml`, if any. |
 
----
+***
 
 ## Export XML Only
 
 If you have only changed the banner colors and won't want to wait for all the textures to be packed again (it could take a long time!),
 you can choose to generate only the `banner_icons.xml` file.
 
-To do so, click the **Export XML** button in the toolbar and pick the output _folder_.
+To do so, click the **Export XML** button in the toolbar and pick the output *folder*.
 
----
+***
 
 ## Texture Resolution
 

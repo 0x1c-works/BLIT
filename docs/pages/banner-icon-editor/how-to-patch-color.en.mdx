@@ -1,0 +1,70 @@
+import {Callout} from 'nextra/components'
+
+# How To Support Custom Colors
+
+<Callout>
+This article contains a lot of technical details. If you're not a coder, you can safely ignore this article.
+</Callout>
+
+## Why can't I use custom colors?
+
+In the native game, there is a class called `BannerManager` for managing the
+banner data. A method called `GetColorId` within is used for finding a
+color's ID by its hex value from a *Dictionary* called `ColorPalette`, which
+contains all the registered colors from all `banner_icons.xml` files loaded into
+the game.
+
+The method is implemented something like this:
+
+```csharp
+public int GetColorId(uint color)
+{
+    for(int i = 0; i < BannerManager.ColorPalette.Count - 1; i++){
+        if(BannerManager.ColorPalette[i].Value.Color == color){
+            return i;
+        }
+    }
+    return -1;
+}
+```
+
+As you can see, it treats `ColorPalette` like an array and iterates through by
+index, whereas it is actually a *dictionary* and should be accessed by its key
+, which is not necessarily a series of 0-based continous integers.
+
+When you tries to import the custom banner colors of your mod, the color IDs will
+very likely not fit into the "valid" range of 0 to `Count - 1`. The code above will
+then throw an exception for retrieving a value from the dictionary with a bad
+key.
+
+## How to patch?
+
+<Callout type="warning">
+Patching the code may cause conflicts with other mods, so do it with caution.
+You should also keep an eye on the future releases of Bannerlord, in case
+TaleWorlds fixes the bug.
+</Callout>
+
+You'll need to patch it with **Harmony**. The following code snippet is an
+example of how to do it:
+
+```csharp
+[HarmonyPatch(typeof(BannerManager), nameof(BannerManager.GetColorId))]
+[HarmonyPriority(Priority.First)]
+internal class FixGetColorId
+{
+    private static bool Prefix(ref int __result, uint color)
+    {
+        foreach (KeyValuePair<int, BannerColor> colorEntry in BannerManager.ColorPalette)
+        {
+            if (colorEntry.Value.Color == color)
+            {
+                __result = colorEntry.Key;
+                break;
+            }
+        }
+        __result = -1;
+        return false;
+    }
+}
+```
