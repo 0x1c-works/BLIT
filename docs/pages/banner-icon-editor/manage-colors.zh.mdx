@@ -1,41 +1,43 @@
 import { Callout } from "nextra/components";
 
-# Manage Custom Colors
+# 管理自定义颜色
 
-## ☣️ DANGER! ☣️
+## ☣️ 危险操作！ ☣️
 
-**DO NOT** add **ANY** custom color, if you haven't done one of the followings:
+如果不能确定满足下面的条件，**千万不要**添加**任何**自定义颜色：
 
-- Patched the native `BannerManager.GetColorId` method to support discontinous color IDs.
-- Using a banner enhancement mod that supports custom colors (such as [Banner Editor](https://www.nexusmods.com/mountandblade2bannerlord/mods/4944)).<br />
-  **Note that** you have to make sure _all_ your mod players have also installed such a mod!
+*   你已经通过编写 Harmony 补丁，修复了原生的 `BannerManager.GetColorId` 方法，使其能够支持不连续的颜色 ID。
+*   你正在使用支持自定义颜色的旗帜增强模组（例如 [Banner Editor](https://www.nexusmods.com/mountandblade2bannerlord/mods/4944)）。<br />
+    ⚠️ **注意**，你必须确保你**所有**的 MOD 玩家都安装了这样的模组！
 
-Otherwise, it will **crash your game and corrupt the saved games**!!!
+否则，自定义颜色会导致 **游戏崩溃并损坏存档**！！！
 
 <Callout>
-  I have reported this bug to TaleWorlds but the fix is still in progress. You can help bump this
-  [thread](https://forums.taleworlds.com/index.php?threads/game-crash-if-banner-color-ids-are-not-continuous-from-194.459436/). <br />
-  For more technical details, or if you want to patch it in your own mod, please refer to [How To Support Custom Colors](../how-to-support-custom-colors).
+  我已经和 T 社报告了这个 BUG，但目前还未修复。你可以帮忙
+  [顶帖](https://forums.taleworlds.com/index.php?threads/game-crash-if-banner-color-ids-are-not-continuous-from-194.459436/)。
+  <br /> 想了解更多的技术细节，或者想在你自己的 MOD
+  中修复这个问题，请参考[如何支持自定义颜色](./how-to-support-custom-colors)。
 </Callout>
 
----
+***
 
-## Edit colors
+## 编辑颜色
 
-To manage custom colors, click **BANNER COLORS** under the banner editor's toolbar:
+要编辑自定义颜色，请在旗帜编辑器工具栏的下方，点击 **自定义颜色** 页面：
 
-![Banner colors](./images/banner-5-goto-colors.png)
+![自定义颜色标签](./images/banner-5-goto-colors.png)
 
-Editing colors should be pretty straightforward -- just click **Add** to add a new color and **Delete** to remove the selected color.
+颜色编辑器是很直观的：点击 **添加** 按钮添加新颜色，点击 **删除** 按钮删除选中的颜色。
 
-For each color, you can toggle the **Sigil** and **Background** switches to determine whether this color can be used in the sigil and/or background palettes in the game.
+通关切换 **纹章色** 和 **背景色** 开关，你可以决定是否允许玩家在游戏中对应的调色板上选择这个颜色。
 
-You can also change the color ID manually, as long as it's unique. BLIT will prevent color IDs from being duplicated in a single project.
+通过颜色编辑器，你也可以编辑每个颜色的 ID。ID 必须是唯一的，不过 BLIT
+会避免出现重复ID。
 
-![Color editor](./images/banner-6-color-editor.png)
+![颜色编辑器](./images/banner-6-color-editor.png)
 
-## Multi-selection
+## 多选
 
-You can delete multiple colors by muti-selection (via the <kbd>Shift</kbd> or <kbd>Ctrl</kbd> key). When more than one color are selected, however, you won't be able to edit the ID nor the color.
+你可以通过 <kbd>Shift</kbd> 或 <kbd>Ctrl</kbd> 键进行多选从而进行批量删除等操作。当多个颜色被选中时，你将无法编辑 ID 和颜色值。
 
-![Color Multi Selection](./images/banner-9-multi-colors.png)
+![多选](./images/banner-9-multi-colors.png)
