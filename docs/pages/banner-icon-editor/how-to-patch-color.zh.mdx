@@ -1,0 +1,65 @@
+import {Callout} from 'nextra/components'
+
+# 如何支持自定义颜色
+
+<Callout>
+这片文章包含技术细节，如果你不是程序员，可以直接略过这篇文章。
+</Callout>
+
+## 为什么默认不能使用自定义颜色？
+
+在原版游戏中，有一个叫做 `BannerManager` 的类，它用来管理旗帜的相关数据配置。
+这个类的成员方法 `GetColorId` 会使用颜色的十六进制值，
+从一个名为 `ColorPalette` 的 *字典* 中获取对应的颜色 ID，而颜色 ID 则是从
+各个已启用 MOD 的 `banner_icons.xml` 文件中加载的。
+
+原版游戏中的实现代码大致如下：
+
+```csharp
+public int GetColorId(uint color)
+{
+    for(int i = 0; i < BannerManager.ColorPalette.Count - 1; i++){
+        if(BannerManager.ColorPalette[i] == color){
+            return i;
+        }
+    }
+    return -1;
+}
+```
+
+如你所见，它把 `ColorPalette` 当作了数组，是用下标遍历的，而实际上它是一个 *字典*。
+正确的实现是通过字典的键来访问，而键并不一定是从 0 开始的连续整数。
+
+当你尝试在你的 MOD 中导入旗帜颜色时，如果颜色 ID 不在 0 到 `Count - 1` 的“有效”范围内，
+那么在遍历时就会抛出异常，因为使用了一个不存在的键来从字典取值，且没有用`TryGet`来保护。
+
+## 如何修复
+
+<Callout type="warning">
+通过补丁的方式来修复问题，可能会与其他 MOD 产生冲突，请谨慎操作。
+此外，T 社也可能在未来版本中修复此问题，所以每次更新时，
+最好都检查一下原版代码是否已经修复。
+</Callout>
+
+你需要通过 **Harmony** 来编写一个补丁。下面的代码片段是一个修复示例：
+
+```csharp
+[HarmonyPatch(typeof(BannerManager), nameof(BannerManager.GetColorId))]
+[HarmonyPriority(Priority.First)]
+internal class FixGetColorId
+{
+    private static bool Prefix(ref int __result, uint color)
+    {
+        foreach (KeyValuePair<int, BannerColor> colorEntry in BannerManager.ColorPalette)
+        {
+            if (colorEntry.Value.Color == color)
+            {
+                __result = colorEntry.Key;
+                break;
+            }
+        }
+        __result = -1;
+        return false;
+    }
+}
+```

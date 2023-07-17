@@ -1,3 +1,7 @@
 {
-  "first-run": "首次运行"
+  "first-run": "首次运行",
+  "import-icons": "导入图案",
+  "manage-colors": "管理颜色",
+  "export": "导出资源",
+  "how-to-patch-color":"支持自定义颜色"
 }
