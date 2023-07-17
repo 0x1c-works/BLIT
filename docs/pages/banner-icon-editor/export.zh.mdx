@@ -1,19 +1,19 @@
 import { FileTree } from "nextra/components";
 
-# Export Banners
+# 导出资源
 
-You can select either to export all assets or only the banner config XML file.
+你可以选择导出全部资源，或只导出旗帜的配置文件。
 
-## Complete Export
+## 完整导出
 
-Click the **Export All** button in the toolbar and select a destination folder to export:
+点击工具栏中的 **全部导出** 按钮，并选择一个目标文件夹来导出：
 
 ![Export](./images/banner-7-export-toolbar.png)
 
-A complete export will generate the following outputs:
+全部导出后，会在目标文件夹中生成以下文件：
 
 <FileTree>
-  <FileTree.Folder name="Target Folder" defaultOpen>
+  <FileTree.Folder name="目标文件夹" defaultOpen>
     <FileTree.File name="banner_icons.xml" />
     <FileTree.Folder name="AssetSources" defaultOpen>
       <FileTree.Folder name="BanneerIcons" />
@@ -21,37 +21,35 @@ A complete export will generate the following outputs:
     <FileTree.Folder name="GUI" defaultOpen>
       <FileTree.Folder name="SpriteParts" defaultOpen>
         <FileTree.File name="Config.xml" />
-        <FileTree.Folder name="ui_<GROUP ID>" />
+        <FileTree.Folder name="ui_<图组ID>" />
       </FileTree.Folder>
     </FileTree.Folder>
   </FileTree.Folder>
 </FileTree>
 
-| File/Folder                | Description                                                                                                                                                                                                                                        |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| banner_icons.xml           | Put it in the **ModuleData** folder of your mod.                                                                                                                                                                                                   |
-| AssetSources               | The merged banner textures (PSD files), which can be imported by Bannerlord Modding Kit directly.                                                                                                                                                  |
-| GUI/SpriteParts/ui\_\*     | The sprite folders for sprite sheet generation.                                                                                                                                                                                                    |
-| GUI/SpriteParts/Config.xml | The config file for setting the banner sprites as `<AlwaysLoad>` so that you don't have to manually load the sprite sheets in code. Use it wisely. <br/><br/> You will probably need to merge its content with your existing `Config.xml`, if any. |
+| 文件/文件夹                | 描述                                                                                                                                                                                                                                        |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------|
+| banner\_icons.xml          | 旗帜图案配置文件，放到你的 MOD 的 **ModuleData** 文件夹下|
+| AssetSources               | 合并后的贴图文件 (PSD 文件),可以直接在官方编辑器 Modding Kit 中导入。|
+| GUI/SpriteParts/ui\_\*     | 用于生成图集 (Sprite Sheet) 的图标文件。|
+| GUI/SpriteParts/Config.xml | 为图标资源添加 `<AlwaysLoad>` 配置，以便开启默认加载，视情况使用。 <br/><br/> 如果你的 Mod 已经有了 `Config.xml` 配置，那么需要手动合并内容。|
 
----
+***
 
-## Export XML Only
+## 只导出 XML
 
-If you have only changed the banner colors and won't want to wait for all the textures to be packed again (it could take a long time!),
-you can choose to generate only the `banner_icons.xml` file.
+如果你只修改了自定义颜色，而不希望花很长时间等待重新打包贴图，那么你可以选择只导出 `banner_icons.xml` 文件。
 
-To do so, click the **Export XML** button in the toolbar and pick the output _folder_.
+要这样做，请单击工具栏中的 **Export XML** 按钮并选择输出的 *文件夹*。
 
----
+***
 
-## Texture Resolution
+## 贴图分辨率
 
-By default, each merged texture will be in 2K resolution, i.e. 2048x2048 pixels. Since each texture is tiled 4x4, the packed icon textures will be sized to 512x512 pixels.
+默认情况下，每张合并的贴图都是 2K 分辨率，即 2048x2048 像素。由于每张合并贴图包含 4x4 个图案贴图，因此最终的图标贴图将被调整为 512x512 像素。
 
-This is the recommended configuration, as banners are typically too small for the resolution to be noticable.
-Smaller textures will reduce the size of your mod as well as conserve RAM and vRAM.
+建议使用这个默认配置，因为在游戏中，旗帜通常都比较小，玩家并不会注意到分辨率的差异。使用较小尺寸的贴图，不但可以减少 MOD 的大小，还可以节省内存和显存。
 
-However, if you do wish a larger texture, you can select **4K resolution** before exporting. This will enlarge the merged textures to 4096x4096 pixels (1024x1024 pixels for each icon).
+但如果确实想要尺寸大一点的贴图，可以在导出前选择 **4K resolution**。这将把合并的贴图放大到 4096x4096 像素 (每个图标 1024x1024 像素)。
 
 ![Texture resolution](./images/banner-8-texture-resolution.png)
