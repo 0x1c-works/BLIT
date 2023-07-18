@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using Serilog.Sink.AppCenter;
 using System.IO;
 using Windows.Storage;
 
@@ -13,9 +14,9 @@ public class Logging
         var logPath = Path.Combine(Folder, "log-.txt");
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
-            .WriteTo.Console()
             .WriteTo.Debug()
-            .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
+            .WriteTo.File(logPath, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information)
+            .WriteTo.AppCenterSink(target: AppCenterTarget.ExceptionsAsCrashesAndEvents, appCenterSecret: AppCenterHelper.Secret)
             .CreateLogger();
     }
 }

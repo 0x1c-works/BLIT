@@ -3,6 +3,9 @@
 
 using BLIT.Win.Helpers;
 using BLIT.Win.Services;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.ApplicationModel.Resources;
 using Serilog;
@@ -33,8 +36,14 @@ public partial class App : Application
         ThemeHelper.OnAppStart();
         Logging.Initialize();
         Services = AppServices.Configure();
-
         Log.Information("BLIT started.");
+
+        if (AppCenter.Configured)
+        {
+            AppCenter.Start(typeof(Analytics));
+            AppCenter.Start(typeof(Crashes));
+            Log.Information("App center integrated.");
+        }
     }
 
     /// <summary>

@@ -5,9 +5,11 @@ using BLIT.Win.Controls;
 using BLIT.Win.Helpers;
 using BLIT.Win.Pages.BannerIcons.Models;
 using BLIT.Win.Services;
+using Microsoft.AppCenter.Analytics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -42,6 +44,27 @@ public sealed partial class BannerIconsPage : Page
     {
         InitializeComponent();
         _project.PropertyChanged += OnProjectPropertyChanged;
+        Loaded += OnPageLoaded;
+    }
+
+    void OnPageLoaded(object sender, RoutedEventArgs e)
+    {
+        if (_settings.Banner.SpriteScanFolders.Count == 0)
+        {
+            Toast toast = null;
+            toast = _notification.Notify(new Notification(
+                ToastVariant.Warning,
+                Message: I18n.Current.GetString("WarningNoSpriteScanFolders/Message"),
+                TimeoutSeconds: 30,
+                Action: new(
+                    I18n.Current.GetString("ButtonToSettings/Content"),
+                    (s, e) => {
+                        Analytics.TrackEvent("open settings", new Dictionary<string, string> { { "source", "banner icon's hint" } });
+                        if (toast != null) toast.IsOpen = false;
+                        (App.Current.MainWindow as MainWindow)?.NavigateToSettings();
+                    })
+                ));
+        }
     }
 
     void OnProjectPropertyChanged(object sender, PropertyChangedEventArgs e)

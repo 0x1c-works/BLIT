@@ -7,6 +7,7 @@ using BLIT.Win.Pages.BannerIcons.Models;
 using BLIT.Win.Pages.Settings;
 using BLIT.Win.Services;
 using BLIT.Win.Theming;
+using Microsoft.AppCenter.Analytics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -74,6 +75,11 @@ public sealed partial class MainWindow : ThemedWindow
         }
     }
 
+    public void NavigateToSettings()
+    {
+        AppNav.SelectedItem = AppNav.SettingsItem;
+    }
+
     record NavPage(Type Type, Action<NavigationView, NavigationViewItem> OnLoad);
     static readonly Dictionary<string, NavPage> TAGGED_PAGES = new() {
         {"BannerIcons",new(typeof(BannerIconsPage), OnProjectPageLoad<BannerIconsProject>)},
@@ -96,6 +102,9 @@ public sealed partial class MainWindow : ThemedWindow
 
     void navHelp_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
     {
+        Analytics.TrackEvent("Visit help", new Dictionary<string, string> {
+            {"source", "nav" }
+        });
         Process.Start(new ProcessStartInfo {
             FileName = I18n.Current.GetString("LinkHelpWebsite"),
             UseShellExecute = true,

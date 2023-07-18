@@ -8,16 +8,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Canvas
-        x:Name="rootCanvas"
-        Grid.Row="1"
-        SizeChanged="rootCanvas_SizeChanged">
+    <RelativePanel Grid.Row="1">
         <StackPanel
             x:Name="container"
-            Width="300"
-            Canvas.ZIndex="99"
+            MinWidth="400"
             Orientation="Vertical"
-            SizeChanged="container_SizeChanged">
+            RelativePanel.AlignBottomWithPanel="True"
+            RelativePanel.AlignHorizontalCenterWithPanel="True">
             <StackPanel.Resources>
                 <Style x:Key="ChildStyle" TargetType="InfoBar">
                     <Setter Property="VerticalAlignment" Value="Bottom" />
@@ -27,7 +24,8 @@
         </StackPanel>
         <StackPanel
             x:Name="debugButtons"
-            Canvas.Top="400"
+            RelativePanel.AlignLeftWithPanel="True"
+            RelativePanel.AlignVerticalCenterWithPanel="True"
             Visibility="{x:Bind DebugButtonVisibility}">
             <Button x:Name="btnAutoTestInfo" Content="info+1" />
             <Button x:Name="btnAutoTestWarning" Content="warn+1" />
@@ -43,5 +41,5 @@
                 Click="btnTestNoTimeout_Click"
                 Content="timeout 0s" />
         </StackPanel>
-    </Canvas>
+    </RelativePanel>
 </UserControl>

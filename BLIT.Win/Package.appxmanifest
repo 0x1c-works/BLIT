@@ -9,7 +9,7 @@
   <Identity
     Name="5cf8d578-b9b0-42eb-b761-d77d3686a904"
     Publisher="CN=0x1C.dev"
-    Version="0.1.3.0" />
+    Version="0.1.6.0" />
 
   <Properties>
     <DisplayName>BLIT</DisplayName>
