@@ -149,9 +149,11 @@
                             </TextBlock>
                             <HyperlinkButton
                                 x:Uid="LinkColorWarning"
+                                x:Name="lnkColorWarning"
                                 Background="DarkRed"
                                 Foreground="White"
-                                NavigateUri="https://blit.0x1.best/banner-icons-editor/#2-manage-custom-color:~:text=DO%20NOT%20add%20any%20custom%20color%20if%20you%3A">
+                                NavigateUri="https://blit.0x1.best/banner-icons-editor/#2-manage-custom-color:~:text=DO%20NOT%20add%20any%20custom%20color%20if%20you%3A"
+                                Click="lnkColorWarning_Click">
                                 How to resolve?
                             </HyperlinkButton>
                         </StackPanel>

@@ -157,7 +157,7 @@
     <value>Banner Icons</value>
   </data>
   <data name="AppNavMenuHelp.Content" xml:space="preserve">
-    <value>Help</value>
+    <value>Tutorials</value>
   </data>
   <data name="AppTitle.Text" xml:space="preserve">
     <value>BLIT - Bannerlord Image Tool</value>
@@ -347,6 +347,9 @@ The relative paths are based on the texture import location.</value>
   </data>
   <data name="TextCreator.Text" xml:space="preserve">
     <value>Creator</value>
+  </data>
+  <data name="TextCreatorValue.Text" xml:space="preserve">
+    <value>Wizcas Chen</value>
   </data>
   <data name="TextCustomBannerColorStartID.Text" xml:space="preserve">
     <value>Custom color start ID:</value>

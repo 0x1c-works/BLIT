@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using BLIT.Win.Helpers;
-using Serilog;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -88,7 +87,6 @@ class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T 
 
     public void Dispose()
     {
-        Log.Debug("Project {Project} (scope {Scope}) is disposed", Current, _scope?.Tag ?? "(new)");
         _scope?.Dispose();
     }
 }

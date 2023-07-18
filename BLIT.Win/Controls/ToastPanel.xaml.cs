@@ -25,19 +25,6 @@ public sealed partial class ToastPanel : UserControl
         return AddToast(notification);
     }
 
-    void rootCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        UpdateContainerPosition();
-    }
-    void container_SizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        UpdateContainerPosition();
-    }
-    void UpdateContainerPosition()
-    {
-        Canvas.SetLeft(container, rootCanvas.ActualWidth - container.ActualWidth);
-        Canvas.SetTop(container, rootCanvas.ActualHeight - container.ActualHeight);
-    }
     Toast AddToast(Notification notification)
     {
         Toast toast = notification.CreateToast();

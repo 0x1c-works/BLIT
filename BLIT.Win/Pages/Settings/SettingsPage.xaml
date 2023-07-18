@@ -204,6 +204,7 @@
                         Grid.Column="0"
                         Style="{ThemeResource ItemLabelStyle}" />
                     <TextBlock
+                        x:Uid="TextCreatorValue"
                         Grid.Row="2"
                         Grid.Column="1"
                         TextAlignment="Right">

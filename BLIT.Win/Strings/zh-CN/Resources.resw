@@ -157,7 +157,7 @@
     <value>自定义旗帜</value>
   </data>
   <data name="AppNavMenuHelp.Content" xml:space="preserve">
-    <value>帮助</value>
+    <value>使用教程</value>
   </data>
   <data name="AppTitle.Text" xml:space="preserve">
     <value>BLIT - 战团MOD图片助手</value>
@@ -189,6 +189,12 @@
   </data>
   <data name="ButtonReimport.Content" xml:space="preserve">
     <value>重新导入</value>
+  </data>
+  <data name="ButtonToSettings.Content" xml:space="preserve">
+    <value>前往设置</value>
+  </data>
+  <data name="ButtonViewHelp.Content" xml:space="preserve">
+    <value>查看帮助</value>
   </data>
   <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">
     <value>是，删除它们</value>
@@ -348,6 +354,9 @@
   <data name="TextCreator.Text" xml:space="preserve">
     <value>作者</value>
   </data>
+  <data name="TextCreatorValue.Text" xml:space="preserve">
+    <value>陈小一 ㊙️ Wizcas</value>
+  </data>
   <data name="TextCustomBannerColorStartID.Text" xml:space="preserve">
     <value>自定义颜色起始ID：</value>
   </data>
@@ -403,6 +412,12 @@
   </data>
   <data name="ThemeLight" xml:space="preserve">
     <value>亮色</value>
+  </data>
+  <data name="WarningNoSpriteScanFolders.Message" xml:space="preserve">
+    <value>尚未设置图标扫描目录，添加贴图时将不会自动匹配UI图标。</value>
+  </data>
+  <data name="WarningNoSpriteScanFolders.Url" xml:space="preserve">
+    <value>https://blit.0x1.best/zh/banner-icon-editor/first-run#relative-scan-path</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>是</value>
