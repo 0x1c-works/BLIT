@@ -24,6 +24,7 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <PackageCertificateThumbprint>37C2D1AEF12A1DBA64870CEAAC5E593583835A80</PackageCertificateThumbprint>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
 
   <ItemGroup>
@@ -137,4 +138,10 @@
   <ItemGroup>
     <PRIResource Remove="dist\**" />
   </ItemGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="powershell.exe .\appSecret.ps1 pre" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="powershell.exe .\appSecret.ps1 post" />
+  </Target>
 </Project>
