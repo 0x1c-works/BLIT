@@ -190,6 +190,12 @@
   <data name="ButtonReimport.Content" xml:space="preserve">
     <value>Reimport</value>
   </data>
+  <data name="ButtonToSettings.Content" xml:space="preserve">
+    <value>Go to Settings</value>
+  </data>
+  <data name="ButtonViewHelp.Content" xml:space="preserve">
+    <value>View help</value>
+  </data>
   <data name="ButtonYesDeleteSelection.Content" xml:space="preserve">
     <value>Yes, delete them</value>
   </data>
@@ -406,6 +412,12 @@ It may take a while if there are a lot of assets</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
     <value>Light</value>
+  </data>
+  <data name="WarningNoSpriteScanFolders.Message" xml:space="preserve">
+    <value>You haven't set any sprite scan path. The editor will not find banner icon sprites automatically when adding textures.</value>
+  </data>
+  <data name="WarningNoSpriteScanFolders.Url" xml:space="preserve">
+    <value>https://blit.0x1.best/banner-icon-editor/first-run#relative-scan-path</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
