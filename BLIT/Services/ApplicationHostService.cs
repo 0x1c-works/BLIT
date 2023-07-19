@@ -12,8 +12,8 @@ namespace BLIT.Services;
 /// </summary>
 public class ApplicationHostService : IHostedService
 {
-    private readonly IServiceProvider _serviceProvider;
-    private INavigationWindow _navigationWindow;
+    readonly IServiceProvider _serviceProvider;
+    INavigationWindow? _navigationWindow;
 
     public ApplicationHostService(IServiceProvider serviceProvider)
     {
@@ -41,16 +41,18 @@ public class ApplicationHostService : IHostedService
     /// <summary>
     /// Creates main window during activation.
     /// </summary>
-    private async Task HandleActivationAsync()
+    async Task HandleActivationAsync()
     {
         await Task.CompletedTask;
 
         if (!Application.Current.Windows.OfType<Views.Windows.MainWindow>().Any())
         {
-            _navigationWindow = (_serviceProvider.GetService(typeof(INavigationWindow)) as INavigationWindow)!;
-            _navigationWindow!.ShowWindow();
-
-            _navigationWindow.Navigate(typeof(Views.Pages.DashboardPage));
+            if (_serviceProvider.GetService(typeof(INavigationWindow)) is not INavigationWindow navigationWindow)
+            {
+                throw new InvalidOperationException("INavigationWindows is not found");
+            }
+            navigationWindow.ShowWindow();
+            navigationWindow.Navigate(typeof(Views.Pages.DashboardPage));
         }
 
         await Task.CompletedTask;

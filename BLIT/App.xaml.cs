@@ -1,11 +1,14 @@
-﻿using BLIT.Models;
+﻿using Autofac;
+using Autofac.Configuration;
+using Autofac.Extensions.DependencyInjection;
+using BLIT.Helpers;
 using BLIT.Services;
+using BLIT.ViewModels;
+using BLIT.Views.Windows;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using Wpf.Ui.Mvvm.Contracts;
@@ -24,42 +27,32 @@ public partial class App
     // https://docs.microsoft.com/dotnet/core/extensions/logging
     static readonly IHost _host = Host
         .CreateDefaultBuilder()
+        .UseServiceProviderFactory(new AutofacServiceProviderFactory())
         .ConfigureAppConfiguration(c => {
-            var path = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location);
-            var path2 = AppDomain.CurrentDomain.BaseDirectory;
-            c.SetBasePath(path2);
+            c.SetBasePath(Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory));
         })
-        .ConfigureServices((context, services) => {
-            // App Host
-            services.AddHostedService<ApplicationHostService>();
+        .ConfigureContainer<ContainerBuilder>(ConfigureContainer)
+        .Build();
 
-            // Page resolver service
-            services.AddSingleton<IPageService, PageService>();
+    static void ConfigureContainer(HostBuilderContext ctx, ContainerBuilder builder)
+    {
+        builder.RegisterModule(new ConfigurationModule(ctx.Configuration));
 
-            // Theme manipulation
-            services.AddSingleton<IThemeService, ThemeService>();
+        builder.RegisterType<ApplicationHostService>().As<IHostedService>().SingleInstance();
+        builder.RegisterType<PageService>().As<IPageService>().SingleInstance();
+        builder.RegisterType<ThemeService>().As<IThemeService>().SingleInstance();
+        builder.RegisterType<TaskBarService>().As<ITaskBarService>().SingleInstance();
+        builder.RegisterType<NavigationService>().As<INavigationService>().SingleInstance();
 
-            // TaskBar manipulation
-            services.AddSingleton<ITaskBarService, TaskBarService>();
-
-            // Service containing navigation, same as INavigationWindow... but without window
-            services.AddSingleton<INavigationService, NavigationService>();
-
-            // Main window with navigation
-            services.AddScoped<INavigationWindow, Views.Windows.MainWindow>();
-            services.AddScoped<ViewModels.MainWindowViewModel>();
-
-            // Views and ViewModels
-            services.AddScoped<Views.Pages.DashboardPage>();
-            services.AddScoped<ViewModels.DashboardViewModel>();
-            services.AddScoped<Views.Pages.DataPage>();
-            services.AddScoped<ViewModels.DataViewModel>();
-            services.AddScoped<Views.Pages.SettingsPage>();
-            services.AddScoped<ViewModels.SettingsViewModel>();
-
-            // Configuration
-            services.Configure<AppConfig>(context.Configuration.GetSection(nameof(AppConfig)));
-        }).Build();
+        builder.RegisterType<MainWindow>().As<INavigationWindow>().InstancePerLifetimeScope();
+        builder.RegisterType<MainWindowViewModel>().InstancePerLifetimeScope();
+        builder.RegisterType<Views.Pages.DashboardPage>();
+        builder.RegisterType<DashboardViewModel>();
+        builder.RegisterType<Views.Pages.DataPage>();
+        builder.RegisterType<DataViewModel>();
+        builder.RegisterType<Views.Pages.SettingsPage>();
+        builder.RegisterType<SettingsViewModel>();
+    }
 
     /// <summary>
     /// Gets registered service.
@@ -77,6 +70,8 @@ public partial class App
     /// </summary>
     async void OnStartup(object sender, StartupEventArgs e)
     {
+        Logging.Initialize();
+        AppCenterHelper.Initialize();
         await _host.StartAsync();
     }
 
@@ -95,6 +90,7 @@ public partial class App
     /// </summary>
     void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
+        // TODO: handle exception
         // For more info see https://docs.microsoft.com/en-us/dotnet/api/system.windows.application.dispatcherunhandledexception?view=windowsdesktop-6.0
     }
 }
