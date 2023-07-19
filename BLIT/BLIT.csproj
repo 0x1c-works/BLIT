@@ -35,4 +35,8 @@
     <Resource Include="Assets\applicationIcon-256.png" />
   </ItemGroup>
 
+  <Target Name="ArchiveDistribution" AfterTargets ="Publish">
+    <Exec Command="powershell.exe $(ProjectDir)packing.ps1 $(ProjectDir)$(PublishDir)" />
+  </Target>
+
 </Project>
