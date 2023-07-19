@@ -10,11 +10,11 @@
     Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
     Width="1100"
     Height="650"
+    d:Background="{DynamicResource ApplicationBackgroundBrush}"
     d:DataContext="{d:DesignInstance local:MainWindow,
                                      IsDesignTimeCreatable=True}"
-    d:Background="{DynamicResource ApplicationBackgroundBrush}"
-    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     ExtendsContentIntoTitleBar="True"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     WindowBackdropType="Mica"
     WindowCornerPreference="Round"
     WindowStartupLocation="CenterScreen"
@@ -30,6 +30,7 @@
             Grid.Column="0"
             Footer="{Binding ViewModel.NavigationFooter, Mode=TwoWay}"
             Frame="{Binding ElementName=RootFrame, Mode=OneWay}"
+            IsExpanded="True"
             Items="{Binding ViewModel.NavigationItems, Mode=TwoWay}" />
 
         <ui:TitleBar
@@ -65,10 +66,10 @@
                     <Frame x:Name="RootFrame" Grid.Row="1" />
                     <ui:Breadcrumb
                         Grid.Row="0"
-                        Margin="56,32"
+                        Margin="24,24,24,16"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        FontSize="28"
+                        FontSize="26"
                         Navigation="{Binding ElementName=RootNavigation, Mode=OneWay}" />
                 </Grid>
             </Border>

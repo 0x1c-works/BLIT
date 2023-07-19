@@ -7,6 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="Banner Icons"
+    d:DataContext="{d:DesignInstance local:BannerIconsPage,
+                                     IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -35,6 +37,17 @@
                     </StackPanel>
                 </Button>
                 <Separator />
+                <Label
+                    Margin="16,0"
+                    Content="Tex Res."
+                    Style="{StaticResource ToolBarLabelStyle}" />
+                <ComboBox
+                    Width="80"
+                    SelectedIndex="0"
+                    ToolTipService.ToolTip="Resolution of every merged texture&#x0a;on output">
+                    <ComboBoxItem Content="2K" />
+                    <ComboBoxItem Content="4K" />
+                </ComboBox>
             </ToolBar>
         </ToolBarPanel>
     </DockPanel>

@@ -23,9 +23,27 @@
                     </Style>
                 </Style.Resources>
             </Style>
-            <Style TargetType="Separator">
+            <Style
+                x:Key="{x:Static ToolBar.ComboBoxStyleKey}"
+                BasedOn="{StaticResource DefaultComboBoxStyle}"
+                TargetType="ComboBox">
+                <Setter Property="ToolTipService.InitialShowDelay" Value="50" />
+            </Style>
+            <Style x:Key="{x:Static ToolBar.SeparatorStyleKey}" TargetType="Separator">
                 <Setter Property="Height" Value="32" />
                 <Setter Property="Opacity" Value=".5" />
+            </Style>
+            <Style x:Key="ToolBarLabelStyle" TargetType="Label">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Padding" Value="0,0,0,4" />
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Foreground">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{DynamicResource TextFillColorSecondary}" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="SnapsToDevicePixels" Value="True" />
             </Style>
         </ResourceDictionary>
     </Application.Resources>
