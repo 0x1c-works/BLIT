@@ -1,19 +1,18 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
-using System.Windows.Input;
 using Wpf.Ui.Common.Interfaces;
 
 namespace BLIT.ViewModels;
 public partial class SettingsViewModel : ObservableObject, INavigationAware
 {
-    private bool _isInitialized = false;
+    bool _isInitialized = false;
 
     [ObservableProperty]
-    private string _appVersion = String.Empty;
+    string _appVersion = string.Empty;
 
     [ObservableProperty]
-    private Wpf.Ui.Appearance.ThemeType _currentTheme = Wpf.Ui.Appearance.ThemeType.Unknown;
+    Wpf.Ui.Appearance.ThemeType _currentTheme = Wpf.Ui.Appearance.ThemeType.Unknown;
 
     public void OnNavigatedTo()
     {
@@ -25,7 +24,7 @@ public partial class SettingsViewModel : ObservableObject, INavigationAware
     {
     }
 
-    private void InitializeViewModel()
+    void InitializeViewModel()
     {
         CurrentTheme = Wpf.Ui.Appearance.Theme.GetAppTheme();
         AppVersion = $"BLIT - {GetAssemblyVersion()}";
@@ -33,13 +32,13 @@ public partial class SettingsViewModel : ObservableObject, INavigationAware
         _isInitialized = true;
     }
 
-    private string GetAssemblyVersion()
+    string GetAssemblyVersion()
     {
         return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? String.Empty;
     }
 
     [RelayCommand]
-    private void OnChangeTheme(string parameter)
+    void OnChangeTheme(string parameter)
     {
         switch (parameter)
         {
