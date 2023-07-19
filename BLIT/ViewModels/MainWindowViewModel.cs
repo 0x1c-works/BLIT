@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System;
 using System.Collections.ObjectModel;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
@@ -9,19 +8,19 @@ using Wpf.Ui.Mvvm.Contracts;
 namespace BLIT.ViewModels;
 public partial class MainWindowViewModel : ObservableObject
 {
-    private bool _isInitialized = false;
+    bool _isInitialized = false;
 
     [ObservableProperty]
-    private string _applicationTitle = String.Empty;
+    string _applicationTitle = string.Empty;
 
     [ObservableProperty]
-    private ObservableCollection<INavigationControl> _navigationItems = new();
+    ObservableCollection<INavigationControl> _navigationItems = new();
 
     [ObservableProperty]
-    private ObservableCollection<INavigationControl> _navigationFooter = new();
+    ObservableCollection<INavigationControl> _navigationFooter = new();
 
     [ObservableProperty]
-    private ObservableCollection<MenuItem> _trayMenuItems = new();
+    ObservableCollection<MenuItem> _trayMenuItems = new();
 
     public MainWindowViewModel(INavigationService navigationService)
     {
@@ -29,25 +28,33 @@ public partial class MainWindowViewModel : ObservableObject
             InitializeViewModel();
     }
 
-    private void InitializeViewModel()
+    void InitializeViewModel()
     {
         ApplicationTitle = "WPF UI - BLIT";
 
         NavigationItems = new ObservableCollection<INavigationControl>
         {
-            new NavigationItem()
-            {
-                Content = "Home",
-                PageTag = "dashboard",
-                Icon = SymbolRegular.Home24,
-                PageType = typeof(Views.Pages.DashboardPage)
-            },
+            // FIXME: will add this back someday in the future
+            //new NavigationItem()
+            //{
+            //    Content = "Home",
+            //    PageTag = "dashboard",
+            //    Icon = SymbolRegular.Home24,
+            //    PageType = typeof(Views.Pages.DashboardPage)
+            //},
             new NavigationItem()
             {
                 Content = "Data",
                 PageTag = "data",
                 Icon = SymbolRegular.DataHistogram24,
                 PageType = typeof(Views.Pages.DataPage)
+            },
+            new NavigationItem()
+            {
+                Content = "Banner Icons",
+                PageTag = "banner-icons",
+                Icon = SymbolRegular.Flag24,
+                PageType = typeof(Views.Pages.BannerIconsPage)
             }
         };
 

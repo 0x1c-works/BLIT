@@ -12,6 +12,21 @@
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
+            <Style
+                x:Key="{x:Static ToolBar.ButtonStyleKey}"
+                BasedOn="{StaticResource ToolBarButtonBaseStyle}"
+                TargetType="{x:Type Button}">
+                <Setter Property="ToolTipService.InitialShowDelay" Value="50" />
+                <Style.Resources>
+                    <Style BasedOn="{StaticResource DefaultSymbolIconStyle}" TargetType="ui:SymbolIcon">
+                        <Setter Property="FontSize" Value="28" />
+                    </Style>
+                </Style.Resources>
+            </Style>
+            <Style TargetType="Separator">
+                <Setter Property="Height" Value="32" />
+                <Setter Property="Opacity" Value=".5" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

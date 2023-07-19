@@ -4,6 +4,7 @@ using Autofac.Extensions.DependencyInjection;
 using BLIT.Helpers;
 using BLIT.Services;
 using BLIT.ViewModels;
+using BLIT.Views.Pages;
 using BLIT.Views.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -46,12 +47,16 @@ public partial class App
 
         builder.RegisterType<MainWindow>().As<INavigationWindow>().InstancePerLifetimeScope();
         builder.RegisterType<MainWindowViewModel>().InstancePerLifetimeScope();
-        builder.RegisterType<Views.Pages.DashboardPage>();
+        builder.RegisterType<DashboardPage>();
         builder.RegisterType<DashboardViewModel>();
-        builder.RegisterType<Views.Pages.DataPage>();
+        builder.RegisterType<DataPage>();
         builder.RegisterType<DataViewModel>();
-        builder.RegisterType<Views.Pages.SettingsPage>();
+        builder.RegisterType<SettingsPage>();
         builder.RegisterType<SettingsViewModel>();
+
+        /*** Pages ***/
+        builder.RegisterType<BannerIconsPage>();
+        builder.RegisterType<BannerIconsProjectViewModel>();
     }
 
     /// <summary>
