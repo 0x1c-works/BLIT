@@ -9,7 +9,7 @@
   <Identity
     Name="5cf8d578-b9b0-42eb-b761-d77d3686a904"
     Publisher="CN=0x1C.dev"
-    Version="0.1.6.0" />
+    Version="0.1.11.0" />
 
   <Properties>
     <DisplayName>BLIT</DisplayName>
@@ -32,7 +32,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="BLIT"
+        DisplayName="BLIT.WinUI3"
         Description="Bannerlord Image Tool"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png">

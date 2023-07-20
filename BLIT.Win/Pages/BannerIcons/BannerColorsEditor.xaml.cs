@@ -148,4 +148,9 @@ public sealed partial class BannerColorsEditor : UserControl
             {"source", "color warning" }
         });
     }
+
+    void btnSort_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.SortColors();
+    }
 }

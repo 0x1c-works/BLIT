@@ -66,6 +66,12 @@
                     Click="btnDelete_Click"
                     Icon="Delete"
                     IsEnabled="{x:Bind HasSelectedColor, Mode=OneWay}" />
+                <AppBarButton
+                    x:Name="btnSort"
+                    Click="btnSort_Click"
+                    Icon="Sort">
+                    Sort
+                </AppBarButton>
             </StackPanel>
             <ListView
                 x:Name="listViewColors"
@@ -148,12 +154,12 @@
                                 Custom colors may crash game without patching.
                             </TextBlock>
                             <HyperlinkButton
-                                x:Uid="LinkColorWarning"
                                 x:Name="lnkColorWarning"
+                                x:Uid="LinkColorWarning"
                                 Background="DarkRed"
+                                Click="lnkColorWarning_Click"
                                 Foreground="White"
-                                NavigateUri="https://blit.0x1.best/banner-icons-editor/#2-manage-custom-color:~:text=DO%20NOT%20add%20any%20custom%20color%20if%20you%3A"
-                                Click="lnkColorWarning_Click">
+                                NavigateUri="https://blit.0x1.best/banner-icons-editor/#2-manage-custom-color:~:text=DO%20NOT%20add%20any%20custom%20color%20if%20you%3A">
                                 How to resolve?
                             </HyperlinkButton>
                         </StackPanel>

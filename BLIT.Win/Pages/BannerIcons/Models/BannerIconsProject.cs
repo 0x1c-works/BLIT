@@ -2,6 +2,7 @@
 using BLIT.Banner;
 using BLIT.Win.Helpers;
 using BLIT.Win.Services;
+using ColorCode.Common;
 using MessagePack;
 using Serilog;
 using System;
@@ -102,13 +103,13 @@ public class BannerIconsProject : BindableBase, IProject
         });
     }
 
-    public IOrderedEnumerable<BannerGroupEntry> GetExportingGroups()
+    public IEnumerable<BannerGroupEntry> GetExportingGroups()
     {
         return Groups.Where(g => g?.CanExport ?? false).OrderBy(g => g.GroupID);
     }
-    public IOrderedEnumerable<BannerColorEntry> GetExportingColors()
+    public IEnumerable<BannerColorEntry> GetExportingColors()
     {
-        return Colors.Where(c => c?.CanExport ?? false).OrderBy(c => c.ID);
+        return Colors.Where(c => c?.CanExport ?? false);
     }
 
     public void AddGroup()
@@ -148,6 +149,10 @@ public class BannerIconsProject : BindableBase, IProject
         {
             Colors.Remove(color);
         }
+    }
+    public void SortColors()
+    {
+        Colors.SortStable(BannerColorEntry.Compare);
     }
     public int GetNextGroupID()
     {
