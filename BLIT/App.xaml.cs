@@ -70,6 +70,8 @@ public partial class App
         return _host.Services.GetService(typeof(T)) as T;
     }
 
+    public static ILifetimeScope Container = _host.Services.GetAutofacRoot();
+
     /// <summary>
     /// Occurs when the application is loading.
     /// </summary>

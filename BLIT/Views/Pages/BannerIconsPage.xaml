@@ -18,28 +18,28 @@
             <ToolBar Band="0" ToolBarTray.IsLocked="True">
                 <Button Name="toolBtnNew" ToolTipService.ToolTip="New project">
                     <StackPanel>
-                        <ui:SymbolIcon Symbol="New24" />
+                        <ui:SymbolIcon Symbol="New20" />
                     </StackPanel>
                 </Button>
                 <Button Name="toolBtnOpen" ToolTipService.ToolTip="Open project...">
                     <StackPanel>
-                        <ui:SymbolIcon Symbol="Open24" />
+                        <ui:SymbolIcon Symbol="FolderOpen20" />
                     </StackPanel>
                 </Button>
                 <Button Name="toolBtnSave" ToolTipService.ToolTip="Save project">
                     <StackPanel>
-                        <ui:SymbolIcon Symbol="Save24" />
+                        <ui:SymbolIcon Symbol="Save20" />
                     </StackPanel>
                 </Button>
                 <Button Name="toolBtnSaveAs" ToolTipService.ToolTip="Save project as...">
                     <StackPanel>
-                        <ui:SymbolIcon Symbol="SaveArrowRight24" />
+                        <ui:SymbolIcon Symbol="SaveArrowRight20" />
                     </StackPanel>
                 </Button>
                 <Separator />
                 <Label
                     Margin="16,0"
-                    Content="Tex Res."
+                    Content="Tex Res:"
                     Style="{StaticResource ToolBarLabelStyle}" />
                 <ComboBox
                     Width="80"
@@ -48,7 +48,85 @@
                     <ComboBoxItem Content="2K" />
                     <ComboBoxItem Content="4K" />
                 </ComboBox>
+                <Separator />
+                <Button Name="toolBtnExportAll" ToolTipService.ToolTip="Export all">
+                    <StackPanel>
+                        <ui:SymbolIcon Symbol="Box20" />
+                    </StackPanel>
+                </Button>
+                <Button Name="toolBtnExportXML" ToolTipService.ToolTip="Export only the Banner Icons XML">
+                    <StackPanel>
+                        <ui:SymbolIcon Symbol="NotepadEdit20" />
+                    </StackPanel>
+                </Button>
             </ToolBar>
         </ToolBarPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <!--  Group list  -->
+            <StackPanel>
+                <TextBlock Background="{ui:ThemeResource ControlFillColorDefaultBrush}">
+                    Banner Groups
+                </TextBlock>
+                <ToolBar ToolBarTray.IsLocked="True">
+                    <Button Name="toolBtnAddGroup" ToolTipService.ToolTip="Add a banner group">
+                        <StackPanel>
+                            <ui:SymbolIcon Style="{StaticResource SmallToolIconStyle}" Symbol="Add20" />
+                        </StackPanel>
+                    </Button>
+                    <Button Name="toolBtnDeleteGroup" ToolTipService.ToolTip="Delete a banner group">
+                        <StackPanel>
+                            <ui:SymbolIcon Style="{StaticResource SmallToolIconStyle}" Symbol="Delete20" />
+                        </StackPanel>
+                    </Button>
+                </ToolBar>
+            </StackPanel>
+            <!--  Texture list  -->
+            <DockPanel Grid.Column="1">
+                <ToolBar DockPanel.Dock="Top" ToolBarTray.IsLocked="True">
+                    <Button Name="toolBtnAddTextures" ToolTipService.ToolTip="Add textures">
+                        <StackPanel>
+                            <ui:SymbolIcon Style="{StaticResource SmallToolIconStyle}" Symbol="ImageAdd20" />
+                        </StackPanel>
+                    </Button>
+                    <Button Name="toolBtnDeleteTextures" ToolTipService.ToolTip="Delete selected texture(s)">
+                        <StackPanel>
+                            <ui:SymbolIcon Style="{StaticResource SmallToolIconStyle}" Symbol="DeleteDismiss20" />
+                        </StackPanel>
+                    </Button>
+                </ToolBar>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Rectangle Fill="RoyalBlue" />
+                    <GridSplitter
+                        Grid.Column="1"
+                        Width="5"
+                        HorizontalAlignment="Stretch" />
+                    <Grid Grid.Column="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="Auto"
+                                MinWidth="110"
+                                MaxWidth="200" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" MinHeight="256" />
+                        </Grid.RowDefinitions>
+                    </Grid>
+                </Grid>
+            </DockPanel>
+            <!--  Icon details  -->
+        </Grid>
     </DockPanel>
 </ui:UiPage>
