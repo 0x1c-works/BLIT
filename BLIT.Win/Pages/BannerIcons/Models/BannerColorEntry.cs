@@ -1,5 +1,6 @@
 ﻿using BLIT.Banner;
 using BLIT.Win.Helpers;
+using CommunityToolkit.WinUI.Helpers;
 using MessagePack;
 using Windows.UI;
 
@@ -97,6 +98,34 @@ public class BannerColorEntry : BindableBase
             vm.IsForBackground = IsForBackground;
             return vm;
         }
+    }
+    public static int Compare(BannerColorEntry x, BannerColorEntry y)
+    {
+        CommunityToolkit.WinUI.HsvColor hsv1 = x.Color.ToHsv();
+        CommunityToolkit.WinUI.HsvColor hsv2 = y.Color.ToHsv();
+
+        if (hsv1.H == 360) hsv1.H = 0;
+        if (hsv2.H == 360) hsv2.H = 0;
+
+        var deltaH = hsv1.H - hsv2.H;
+        var deltaS = hsv1.S - hsv2.S;
+        var deltaV = hsv1.V - hsv2.V;
+
+        // for greyscale, sort from white to black
+        if (hsv1.S == 0 && hsv2.S == 0)
+        {
+            return deltaV == 1 ? -1 : deltaV == 0 ? 1 : (deltaV > 0 ? -1 : 1);
+        }
+        // greyscale always is at the start
+        if (hsv1.S == 0) return -1;
+        if (hsv2.S == 0) return 1;
+
+        // For normal colors, sort by H (inc) > S (desc) > V (desc)
+        if (deltaH != 0) return deltaH > 0 ? 1 : -1;
+        if (deltaS != 0) return deltaS > 0 ? -1 : 1;
+        if (deltaV != 0) return deltaV > 0 ? -1 : 1;
+
+        return 0;
     }
 }
 
