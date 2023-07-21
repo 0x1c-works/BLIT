@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows10.0.17763.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
@@ -12,6 +12,7 @@
     <AssemblyVersion>0.2.0.0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version>$(AssemblyVersion)</Version>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <!--Dependent Packages-->
@@ -20,6 +21,11 @@
     <PackageReference Include="Autofac.Configuration" Version="6.0.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="MahApps.Metro" Version="2.4.10" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Unicons" Version="4.11.0" />
+    <PackageReference Include="ReactiveUI" Version="19.4.1" />
+    <PackageReference Include="ReactiveUI.Events.WPF" Version="15.1.1" />
+    <PackageReference Include="ReactiveUI.Fody" Version="19.4.1" />
+    <PackageReference Include="ReactiveUI.WPF" Version="19.4.1" />
     <PackageReference Include="Serilog" Version="2.12.0" />
     <PackageReference Include="Serilog.Sink.AppCenter" Version="1.5.0" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
