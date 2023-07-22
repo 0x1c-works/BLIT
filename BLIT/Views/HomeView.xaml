@@ -16,7 +16,7 @@
             Welcome,<Span><Run x:Name="txtTarget">(Target)</Run></Span>
             !</TextBlock>
         <TextBlock>
-            Please visit the<Hyperlink x:Name="linkWebsite">website</Hyperlink>
-            to learn how to use.</TextBlock>
+            Please visit the&#160;<Hyperlink x:Name="linkWebsite">website</Hyperlink>
+            &#160;to learn how to use.</TextBlock>
     </StackPanel>
 </local:HomeViewBase>

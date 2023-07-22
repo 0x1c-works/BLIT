@@ -16,6 +16,14 @@
                 <!--  Theme setting  -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Amber.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+            <Style TargetType="{x:Type TextElement}">
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

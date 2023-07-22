@@ -13,7 +13,6 @@
     Title="MainWindow"
     Width="800"
     Height="450"
-    DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}"
     mc:Ignorable="d">
     <mah:MetroWindow.Resources>
         <ResourceDictionary>
@@ -69,25 +68,6 @@
                 </TextBlock>
             </DataTemplate>
         </mah:HamburgerMenu.HamburgerMenuHeaderTemplate>
-
-        <!--  Items  -->
-        <mah:HamburgerMenu.ItemsSource>
-            <mah:HamburgerMenuItemCollection>
-                <self:NavMenuItem
-                    Icon="{iconPacks:Unicons Kind=Home}"
-                    Label="Home"
-                    PageType="{x:Type pages:HomeView}" />
-            </mah:HamburgerMenuItemCollection>
-        </mah:HamburgerMenu.ItemsSource>
-
-        <!--  Options  -->
-        <mah:HamburgerMenu.OptionsItemsSource>
-            <mah:HamburgerMenuItemCollection>
-                <mah:HamburgerMenuIconItem Icon="{iconPacks:Unicons Kind=QuestionCircle}" Label="Tutorial" />
-                <mah:HamburgerMenuIconItem Icon="{iconPacks:Unicons Kind=Setting}" Label="Settings" />
-            </mah:HamburgerMenuItemCollection>
-        </mah:HamburgerMenu.OptionsItemsSource>
-
         <!--  Content  -->
         <mah:HamburgerMenu.Content>
             <Grid x:Name="ContentGrid">
@@ -98,16 +78,16 @@
                 <Border Grid.Row="0" Margin="-1,0,-1,0">
                     <TextBlock
                         x:Name="Header"
-                        HorizontalAlignment="Center"
+                        Padding="16,32"
                         VerticalAlignment="Center"
                         FontSize="24"
-                        Foreground="White"
                         Text="Header" />
                 </Border>
                 <!--<Frame x:Name="MainFrame" Grid.Row="1" />-->
                 <rxui:RoutedViewHost
                     x:Name="RoutedViewHost"
                     Grid.Row="1"
+                    Margin="16"
                     HorizontalContentAlignment="Stretch"
                     VerticalContentAlignment="Stretch" />
             </Grid>

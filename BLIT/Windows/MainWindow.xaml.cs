@@ -1,7 +1,9 @@
 ﻿using BLIT.Views;
 using MahApps.Metro.Controls;
 using ReactiveUI;
+using System;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Windows;
 
 namespace BLIT.Windows;
@@ -10,36 +12,35 @@ namespace BLIT.Windows;
 /// </summary>
 public partial class MainWindow : MainWindowBase
 {
-    //IAppNavService? _appNavService = App.Get<IAppNavService>();
-
+    IObservable<Func<NavMenuItem?>> _selectedNavItem;
     public MainWindow()
     {
         InitializeComponent();
-        //if (_appNavService != null)
-        //{
-        //    _appNavService.Frame = MainFrame;
-        //}
-        //MainFrame.Navigate(new Uri("Pages/WelcomePage.xaml", UriKind.Relative));
-
         ViewModel = new MainWindowViewModel();
 
+        // An observable that returns a function as the parameter of command Navigate
+        // which returns the selected item from the NavMain control when called.
+        _selectedNavItem = Observable.Create<Func<NavMenuItem?>>((o) => {
+            o.OnNext(() => NavMain.SelectedItem as NavMenuItem);
+            return () => { };
+        });
+
         this.WhenActivated(disposables => {
-            //this.BindCommand(ViewModel, vm => vm.NavigateToSettings, v => v.SettingsButton);
-            //this.BindCommand(ViewModel, vm => vm.NavigateToHome, v => v.HomeButton);
             this.OneWayBind(ViewModel, x => x.Router, x => x.RoutedViewHost.Router).DisposeWith(disposables);
+            this.OneWayBind(ViewModel, x => x.Menu, x => x.NavMain.ItemsSource).DisposeWith(disposables);
+            this.OneWayBind(ViewModel, x => x.OptionMenu, x => x.NavMain.OptionsItemsSource).DisposeWith(disposables);
+
+            this.BindCommand(
+                ViewModel,
+                x => x.Navigate,
+                x => x.NavMain,
+                _selectedNavItem,
+                // The command will be called by the ItemInvoked event
+                nameof(NavMain.ItemInvoked)).DisposeWith(disposables);
+
+            // This is the initial view
             ViewModel.Router.Navigate.Execute(new WelcomePageViewModel());
         });
-    }
-
-    void HamburgerMenuControl_ItemInvoked(object sender, HamburgerMenuItemInvokedEventArgs args)
-    {
-        NavMain.Content = args.InvokedItem;
-
-        if (!args.IsItemOptions && NavMain.IsPaneOpen)
-        {
-            // You can close the menu if an item was selected
-            // this.HamburgerMenuControl.SetCurrentValue(HamburgerMenuControl.IsPaneOpenProperty, false);
-        }
     }
 }
 
