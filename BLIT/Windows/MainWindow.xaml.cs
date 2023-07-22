@@ -1,15 +1,34 @@
-﻿using MahApps.Metro.Controls;
+﻿using BLIT.Views;
+using MahApps.Metro.Controls;
+using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Windows;
 
 namespace BLIT.Windows;
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow
+public partial class MainWindow : MainWindowBase
 {
-    public MainWindowViewModel ViewModel { get; } = new MainWindowViewModel();
+    //IAppNavService? _appNavService = App.Get<IAppNavService>();
+
     public MainWindow()
     {
         InitializeComponent();
+        //if (_appNavService != null)
+        //{
+        //    _appNavService.Frame = MainFrame;
+        //}
+        //MainFrame.Navigate(new Uri("Pages/WelcomePage.xaml", UriKind.Relative));
+
+        ViewModel = new MainWindowViewModel();
+
+        this.WhenActivated(disposables => {
+            //this.BindCommand(ViewModel, vm => vm.NavigateToSettings, v => v.SettingsButton);
+            //this.BindCommand(ViewModel, vm => vm.NavigateToHome, v => v.HomeButton);
+            this.OneWayBind(ViewModel, x => x.Router, x => x.RoutedViewHost.Router).DisposeWith(disposables);
+            ViewModel.Router.Navigate.Execute(new WelcomePageViewModel());
+        });
     }
 
     void HamburgerMenuControl_ItemInvoked(object sender, HamburgerMenuItemInvokedEventArgs args)
@@ -23,3 +42,36 @@ public partial class MainWindow
         }
     }
 }
+
+public abstract class WindowBase<TViewModel> : MetroWindow, IViewFor<TViewModel> where TViewModel : class
+{
+    /// <summary>
+    /// The view model dependency property.
+    /// </summary>
+    public static readonly DependencyProperty ViewModelProperty =
+        DependencyProperty.Register(
+                                    "ViewModel",
+                                    typeof(TViewModel),
+                                    typeof(ReactiveWindow<TViewModel>),
+                                    new PropertyMetadata(null));
+
+    /// <summary>
+    /// Gets the binding root view model.
+    /// </summary>
+    public TViewModel? BindingRoot => ViewModel;
+
+    /// <inheritdoc/>
+    public TViewModel? ViewModel
+    {
+        get => (TViewModel)GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
+
+    /// <inheritdoc/>
+    object? IViewFor.ViewModel
+    {
+        get => ViewModel;
+        set => ViewModel = (TViewModel?)value;
+    }
+}
+public abstract class MainWindowBase : WindowBase<MainWindowViewModel> { }
