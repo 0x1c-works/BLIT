@@ -81,7 +81,7 @@
                     <RowDefinition Height="48" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <Border Grid.Row="0" Margin="-1,0,-1,0">
+                <Border Grid.Row="0" Margin="0">
                     <TextBlock
                         x:Name="Header"
                         Padding="16,32"
@@ -93,7 +93,7 @@
                 <rxui:RoutedViewHost
                     x:Name="RoutedViewHost"
                     Grid.Row="1"
-                    Margin="16"
+                    Margin="16,0"
                     HorizontalContentAlignment="Stretch"
                     VerticalContentAlignment="Stretch" />
             </Grid>

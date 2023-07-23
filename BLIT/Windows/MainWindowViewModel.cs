@@ -23,14 +23,14 @@ public class MainWindowViewModel : ReactiveObject, IScreen
             TargetViewModel=typeof(SettingsViewModel)
         }
     };
-    public ReactiveCommand<NavMenuItem, IRoutableViewModel> Navigate { get; }
+    public ReactiveCommand<NavMenuItem?, IRoutableViewModel> Navigate { get; }
 
     public RoutingState Router { get; }
 
     public MainWindowViewModel()
     {
         Router = new RoutingState();
-        Navigate = ReactiveCommand.CreateFromObservable<NavMenuItem, IRoutableViewModel>(menuItem => {
+        Navigate = ReactiveCommand.CreateFromObservable<NavMenuItem?, IRoutableViewModel>(menuItem => {
             Type? vmType = menuItem?.TargetViewModel;
             var vm = vmType != null ? App.Get(vmType) : null;
             if (vm is IRoutableViewModel rvm)

@@ -13,19 +13,12 @@ public abstract class MainWindowBase : WindowBase<MainWindowViewModel> { }
 /// </summary>
 public partial class MainWindow : MainWindowBase
 {
-    IObservable<Func<NavMenuItem?>> _selectedNavItem;
     IObservable<NavMenuItem?> _navItemInvoked;
     public MainWindow()
     {
         InitializeComponent();
         ViewModel = new MainWindowViewModel();
 
-        // An observable that returns a function as the parameter of command Navigate
-        // which returns the selected item from the NavMain control when called.
-        _selectedNavItem = Observable.Create<Func<NavMenuItem?>>((o) => {
-            o.OnNext(() => (NavMain.SelectedItem ?? NavMain.SelectedOptionsItem) as NavMenuItem);
-            return () => { };
-        });
         _navItemInvoked = Observable.FromEventPattern<HamburgerMenuItemInvokedRoutedEventHandler, HamburgerMenuItemInvokedEventArgs>(
             h => NavMain.ItemInvoked += h,
             h => NavMain.ItemInvoked -= h)
