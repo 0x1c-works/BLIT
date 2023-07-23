@@ -11,14 +11,14 @@ public class MainWindowViewModel : ReactiveObject, IScreen
 {
     public List<IHamburgerMenuItem> Menu = new List<IHamburgerMenuItem> {
         new NavMenuItem() {
-            Icon = new PackIconUnicons{Kind = PackIconUniconsKind.Home },
+            Icon = new PackIconFeatherIcons{Kind = PackIconFeatherIconsKind.Home},
             Label="Home",
             TargetViewModel = typeof(WelcomePageViewModel)
         }
     };
     public List<IHamburgerMenuItem> OptionMenu = new List<IHamburgerMenuItem> {
         new NavMenuItem() {
-            Icon = new PackIconUnicons{Kind = PackIconUniconsKind.Setting },
+            Icon = new PackIconFeatherIcons{Kind = PackIconFeatherIconsKind.Settings },
             Label="Settings",
             TargetViewModel=typeof(SettingsViewModel)
         }

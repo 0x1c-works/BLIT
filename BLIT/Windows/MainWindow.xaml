@@ -33,7 +33,7 @@
                         Focusable="False"
                         IsTabStop="False">
                         <ContentControl.Resources>
-                            <Style TargetType="iconPacks:PackIconUnicons">
+                            <Style TargetType="iconPacks:PackIconFeatherIcons">
 
                                 <Setter Property="Width" Value="22" />
                                 <Setter Property="Height" Value="22" />
