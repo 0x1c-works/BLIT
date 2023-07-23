@@ -6,13 +6,16 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <SelfContained>true</SelfContained>
-    <PublishReadyToRun>false</PublishReadyToRun>
-    <PublishReadyToRunComposite>false</PublishReadyToRunComposite>
     <AssemblyVersion>0.2.0.0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version>$(AssemblyVersion)</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <PublishReadyToRunComposite>false</PublishReadyToRunComposite>
   </PropertyGroup>
 
   <!--Dependent Packages-->
