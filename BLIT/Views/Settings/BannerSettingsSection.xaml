@@ -1,0 +1,117 @@
+﻿<UserControl
+    x:Class="BLIT.Views.Settings.BannerSettingsSection"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:BLIT.Views.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    d:Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary Source="pack://application:,,,/Styles/GridSectionStyles.xaml" />
+    </UserControl.Resources>
+    <Grid Style="{StaticResource SectionGridStyle}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource SectionTitleStyle}">
+            Banner Settings
+        </TextBlock>
+        <!--  Scan folders  -->
+        <!--<local:BannerSpriteScanFoldersEditor
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        ViewModel="{Binding BannerSettings, Mode=OneWay}" />-->
+
+        <Border
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
+            <StackPanel>
+                <Label Style="{StaticResource ItemLabelStyle}">Sprite scan paths</Label>
+                <TextBlock Style="{StaticResource VerticalCaptionStyle}">
+                    Manage the relative paths to folders where the sprites are likely to be found.
+                    The relative paths are based on the texture import location.
+                </TextBlock>
+            </StackPanel>
+        </Border>
+        <!--  Sprite scan paths editor  -->
+        <Border
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ListBox />
+                <StackPanel Grid.Column="1">
+                    <StackPanel.Resources>
+                        <Style BasedOn="{StaticResource MahApps.Styles.Button.Square}" TargetType="Button">
+                            <Setter Property="Padding" Value="16,0" />
+                            <Setter Property="Margin" Value="4" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <Button>Add</Button>
+                    <Button>Edit</Button>
+                    <Button>Delete</Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!--  Group start ID  -->
+        <Border Grid.Row="3" Grid.Column="0">
+            <StackPanel>
+                <Label Style="{StaticResource ItemLabelStyle}">Custom group start ID</Label>
+                <TextBlock Style="{StaticResource VerticalCaptionStyle}">
+                    Ranged from 7 to 99999.
+                    Larger IDs are recommended to prevent conflicts with other mods.
+                    Note that 1 to 6 are used by the native game.
+                </TextBlock>
+            </StackPanel>
+        </Border>
+        <!--<NumberBox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Width="200"
+                        VerticalAlignment="Top"
+                        AcceptsExpression="True"
+                        Maximum="99999"
+                        Minimum="7"
+                        SpinButtonPlacementMode="Compact"
+                        Value="{Binding BannerSettings.CustomGroupStartID, Mode=TwoWay}" />-->
+        <!--  Color start ID  -->
+        <Border Grid.Row="4" Grid.Column="0">
+            <StackPanel>
+                <Label Style="{StaticResource ItemLabelStyle}">Custom color start ID</Label>
+                <TextBlock Style="{StaticResource VerticalCaptionStyle}">
+                    Ranged from 194 to 999999.
+                    Larger IDs are recommended to prevent conflicts with other mods.
+                    Note that 0 to 193 are used by the native game.
+                </TextBlock>
+            </StackPanel>
+        </Border>
+        <!--<NumberBox
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Width="200"
+                        VerticalAlignment="Top"
+                        AcceptsExpression="True"
+                        Maximum="999999"
+                        Minimum="194"
+                        SpinButtonPlacementMode="Compact"
+                        Value="{Binding BannerSettings.CustomColorStartID, Mode=TwoWay}" />-->
+    </Grid>
+</UserControl>

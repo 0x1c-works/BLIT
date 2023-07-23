@@ -6,51 +6,12 @@
     xmlns:local="clr-namespace:BLIT.Views.Settings"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="450"
+    d:DesignHeight="1024"
     d:DesignWidth="800"
     Style="{StaticResource ViewStyle}"
     mc:Ignorable="d">
     <local:SettingsViewBase.Resources>
-        <Style x:Key="SectionGridStyle" TargetType="Grid">
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="Margin" Value="0,12,0,0" />
-                    <Setter Property="VerticalAlignment" Value="Top" />
-                    <Style.Triggers>
-                        <Trigger Property="Grid.Column" Value="1">
-                            <Setter Property="Margin" Value="16,12,0,0" />
-                            <Setter Property="VerticalAlignment" Value="Center" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Style.Resources>
-        </Style>
-        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="24" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Margin" Value="0,32,0,16" />
-        </Style>
-        <Style x:Key="ItemLabelStyle" TargetType="Label">
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Padding" Value="0,4" />
-        </Style>
-        <Style x:Key="CaptionStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="TextWrapping" Value="Wrap" />
-        </Style>
-        <Style
-            x:Key="VerticalCaptionStyle"
-            BasedOn="{StaticResource CaptionStyle}"
-            TargetType="TextBlock">
-            <Setter Property="Margin" Value="0,4,0,0" />
-        </Style>
-        <Style
-            x:Key="HorizontalCaptionStyle"
-            BasedOn="{StaticResource CaptionStyle}"
-            TargetType="TextBlock">
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="Margin" Value="8,0,0,0" />
-        </Style>
+        <ResourceDictionary Source="pack://application:,,,/Styles/GridSectionStyles.xaml" />
     </local:SettingsViewBase.Resources>
 
     <Grid>
@@ -62,69 +23,7 @@
                     <Button x:Name="btnPickGameFolder" x:Uid="ButtonBrowse" Content="Browse..."/>
                 </StackPanel>-->
 
-                <Grid Style="{StaticResource SectionGridStyle}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.ColumnSpan="2" Style="{StaticResource SectionTitleStyle}">
-                        Banner Settings
-                    </TextBlock>
-                    <!--  Scan folders  -->
-                    <!--<local:BannerSpriteScanFoldersEditor
-                        Grid.Row="1"
-                        Grid.ColumnSpan="2"
-                        ViewModel="{Binding BannerSettings, Mode=OneWay}" />-->
-
-                    <!--  Group start ID  -->
-                    <Border Grid.Row="2" Grid.Column="0">
-                        <StackPanel>
-                            <Label Style="{StaticResource ItemLabelStyle}">Custom group start ID</Label>
-                            <TextBlock Style="{StaticResource VerticalCaptionStyle}">
-                                Ranged from 7 to 99999.
-                                Larger IDs are recommended to prevent conflicts with other mods.
-                                Note that 1 to 6 are used by the native game.
-                            </TextBlock>
-                        </StackPanel>
-                    </Border>
-                    <!--<NumberBox
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Width="200"
-                        VerticalAlignment="Top"
-                        AcceptsExpression="True"
-                        Maximum="99999"
-                        Minimum="7"
-                        SpinButtonPlacementMode="Compact"
-                        Value="{Binding BannerSettings.CustomGroupStartID, Mode=TwoWay}" />-->
-                    <!--  Color start ID  -->
-                    <Border Grid.Row="3" Grid.Column="0">
-                        <StackPanel>
-                            <Label Style="{StaticResource ItemLabelStyle}">Custom color start ID</Label>
-                            <TextBlock Style="{StaticResource VerticalCaptionStyle}">
-                                Ranged from 194 to 999999.
-                                Larger IDs are recommended to prevent conflicts with other mods.
-                                Note that 0 to 193 are used by the native game.
-                            </TextBlock>
-                        </StackPanel>
-                    </Border>
-                    <!--<NumberBox
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        Width="200"
-                        VerticalAlignment="Top"
-                        AcceptsExpression="True"
-                        Maximum="999999"
-                        Minimum="194"
-                        SpinButtonPlacementMode="Compact"
-                        Value="{Binding BannerSettings.CustomColorStartID, Mode=TwoWay}" />-->
-                </Grid>
+                <local:BannerSettingsSection />
 
                 <Grid Style="{StaticResource SectionGridStyle}">
                     <Grid.ColumnDefinitions>
