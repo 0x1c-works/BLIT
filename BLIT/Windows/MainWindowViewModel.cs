@@ -1,4 +1,5 @@
-﻿using BLIT.Views;
+﻿using BLIT.ViewModels;
+using BLIT.Views;
 using MahApps.Metro.Controls;
 using MahApps.Metro.IconPacks;
 using ReactiveUI;
@@ -9,22 +10,31 @@ namespace BLIT.Windows;
 public class MainWindowViewModel : ReactiveObject, IScreen
 {
     public List<IHamburgerMenuItem> Menu = new List<IHamburgerMenuItem> {
-        new NavMenuItem() { Icon = new PackIconUnicons{Kind = PackIconUniconsKind.Home }, Label="Home", TargetViewModel = typeof(WelcomePageViewModel)}
+        new NavMenuItem() {
+            Icon = new PackIconUnicons{Kind = PackIconUniconsKind.Home },
+            Label="Home",
+            TargetViewModel = typeof(WelcomePageViewModel)
+        }
     };
     public List<IHamburgerMenuItem> OptionMenu = new List<IHamburgerMenuItem> {
-        new NavMenuItem() { Icon = new PackIconUnicons{Kind = PackIconUniconsKind.Setting }, Label="Settings" }
+        new NavMenuItem() {
+            Icon = new PackIconUnicons{Kind = PackIconUniconsKind.Setting },
+            Label="Settings",
+            TargetViewModel=typeof(SettingsViewModel)
+        }
     };
-    public ReactiveCommand<Func<NavMenuItem>, IRoutableViewModel> Navigate { get; }
+    public ReactiveCommand<NavMenuItem, IRoutableViewModel> Navigate { get; }
 
     public RoutingState Router { get; }
 
     public MainWindowViewModel()
     {
         Router = new RoutingState();
-        Navigate = ReactiveCommand.CreateFromObservable<Func<NavMenuItem>, IRoutableViewModel>(getter => {
-            Type? vmType = getter()?.TargetViewModel;
-            if (vmType != null && App.Get(vmType) is IRoutableViewModel vm)
-                return Router.Navigate.Execute(vm);
+        Navigate = ReactiveCommand.CreateFromObservable<NavMenuItem, IRoutableViewModel>(menuItem => {
+            Type? vmType = menuItem?.TargetViewModel;
+            var vm = vmType != null ? App.Get(vmType) : null;
+            if (vm is IRoutableViewModel rvm)
+                return Router.Navigate.Execute(rvm);
             throw new NavigationException(vmType);
         });
     }
@@ -39,6 +49,6 @@ public class NavigationException : Exception
 {
     public NavigationException(Type? type) : base(type == null
         ? "Lack of target routable view model"
-        : $"Cannot navigate to {type})")
+        : $"View model {type.Name} is not registered")
     { }
 }

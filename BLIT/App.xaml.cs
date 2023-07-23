@@ -2,8 +2,7 @@
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using BLIT.Helpers;
-using BLIT.Views;
-using BLIT.Windows;
+using BLIT.Win.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using ReactiveUI;
@@ -24,24 +23,14 @@ public partial class App : Application
 {
     public App()
     {
+        Logging.Initialize();
         // Set a lifetime scope (either the root or any of the child ones) to Autofac resolver.
         // This is needed because Autofac became immutable since version 5+.
         // https://github.com/autofac/Autofac/issues/811
         AutofacDependencyResolver autofacResolver = Container.Resolve<AutofacDependencyResolver>();
         autofacResolver.SetLifetimeScope(Container);
-    }
 
-    void SetupDI()
-    {
-        var builder = new ContainerBuilder();
-        builder.RegisterType<HomeView>().As<IViewFor<MainWindowViewModel>>();
-        builder.RegisterType<WelcomePageViewModel>();
-
-        AutofacDependencyResolver resolver = builder.UseAutofacDependencyResolver();
-        builder.RegisterInstance(resolver);
-        resolver.InitializeReactiveUI();
-
-
+        Log.Information("BLIT initialized");
     }
 
     public static IHost _host = Host.CreateDefaultBuilder()
@@ -77,10 +66,6 @@ public partial class App : Application
         //builder.RegisterType<BannerColorEntry>().InstancePerDependency();
         //builder.RegisterType<BannerIconEntry>().InstancePerDependency();
 
-        // Pages & VMs
-        builder.RegisterType<HomeView>();
-        builder.RegisterType<WelcomePageViewModel>();
-
         // Register the Adapter to Splat for ReactiveUI.
         // Creates and sets the Autofac resolver as the Locator.
         AutofacDependencyResolver resolver = builder.UseAutofacDependencyResolver();
@@ -89,17 +74,19 @@ public partial class App : Application
         // Initialize ReactiveUI components.
         resolver.InitializeReactiveUI();
 
-        var ass = Assembly.GetCallingAssembly();
-        var ass2 = Assembly.GetEntryAssembly();
-        var ass3 = Assembly.GetExecutingAssembly();
-        var l0 = Assembly.GetCallingAssembly().DefinedTypes.ToList();
-        var l = Assembly.GetCallingAssembly().DefinedTypes
-            .Where(ti => ti.ImplementedInterfaces.Contains(typeof(IViewFor)))
-            .Select(ti => new { ti.Name, ti.ImplementedInterfaces, ti.IsAbstract })
-            .ToList();
+        /* --------- Automatic Registrations -------- */
+        var assembly = Assembly.GetExecutingAssembly();
+        // Register IViewFor types.
+        Locator.CurrentMutable.RegisterViewsForViewModels(assembly);
 
+        // Register IRoutableViewModel types
+        foreach (Type? routableVm in assembly.DefinedTypes
+            .Where(ti => ti.ImplementedInterfaces.Contains(typeof(IRoutableViewModel)) && !ti.IsAbstract)
+            .Select(ti => ti.AsType()))
+        {
+            if (routableVm != null) builder.RegisterType(routableVm);
+        }
 
-        Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetExecutingAssembly());
     }
 
     public static object? Get(Type type)
