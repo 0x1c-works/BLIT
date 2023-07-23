@@ -11,14 +11,20 @@
     xmlns:rxui="http://reactiveui.net"
     xmlns:self="clr-namespace:BLIT.Windows"
     Title="MainWindow"
-    Width="800"
-    Height="450"
+    Width="1200"
+    Height="800"
+    FlyoutOverlayBrush="Black"
+    OverlayBrush="Black"
     mc:Ignorable="d">
     <mah:MetroWindow.Resources>
         <ResourceDictionary>
             <!--  This is the template for the option menu item  -->
             <DataTemplate DataType="{x:Type mah:HamburgerMenuIconItem}">
-                <DockPanel Height="48" LastChildFill="True">
+                <DockPanel
+                    Height="48"
+                    LastChildFill="True"
+                    ToolTipService.InitialShowDelay="50"
+                    ToolTipService.ToolTip="{Binding Label}">
                     <ContentControl
                         x:Name="IconPart"
                         Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type mah:HamburgerMenu}}, Path=CompactPaneLength}"
