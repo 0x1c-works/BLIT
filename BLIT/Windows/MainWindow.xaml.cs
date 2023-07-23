@@ -1,12 +1,12 @@
 ﻿using BLIT.Views;
-using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using ReactiveUI;
 using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Windows;
 
 namespace BLIT.Windows;
+public abstract class MainWindowBase : WindowBase<MainWindowViewModel> { }
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
@@ -40,39 +40,10 @@ public partial class MainWindow : MainWindowBase
 
             // This is the initial view
             ViewModel.Router.Navigate.Execute(new WelcomePageViewModel());
+
+            ViewModel.Navigate.ThrownExceptions.Subscribe(async ex => {
+                await this.ShowMessageAsync("Navigation Error", ex.Message);
+            }).DisposeWith(disposables);
         });
     }
 }
-
-public abstract class WindowBase<TViewModel> : MetroWindow, IViewFor<TViewModel> where TViewModel : class
-{
-    /// <summary>
-    /// The view model dependency property.
-    /// </summary>
-    public static readonly DependencyProperty ViewModelProperty =
-        DependencyProperty.Register(
-                                    "ViewModel",
-                                    typeof(TViewModel),
-                                    typeof(ReactiveWindow<TViewModel>),
-                                    new PropertyMetadata(null));
-
-    /// <summary>
-    /// Gets the binding root view model.
-    /// </summary>
-    public TViewModel? BindingRoot => ViewModel;
-
-    /// <inheritdoc/>
-    public TViewModel? ViewModel
-    {
-        get => (TViewModel)GetValue(ViewModelProperty);
-        set => SetValue(ViewModelProperty, value);
-    }
-
-    /// <inheritdoc/>
-    object? IViewFor.ViewModel
-    {
-        get => ViewModel;
-        set => ViewModel = (TViewModel?)value;
-    }
-}
-public abstract class MainWindowBase : WindowBase<MainWindowViewModel> { }
