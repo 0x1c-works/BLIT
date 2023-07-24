@@ -13,7 +13,7 @@ public class MainWindowViewModel : ReactiveObject, IScreen
         new NavMenuItem() {
             Icon = new PackIconFeatherIcons{Kind = PackIconFeatherIconsKind.Home},
             Label="Home",
-            TargetViewModel = typeof(WelcomePageViewModel)
+            TargetViewModel = typeof(HomeViewModel)
         }
     };
     public List<IHamburgerMenuItem> OptionMenu = new List<IHamburgerMenuItem> {

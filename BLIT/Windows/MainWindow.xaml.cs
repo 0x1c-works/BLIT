@@ -32,7 +32,7 @@ public partial class MainWindow : MainWindowBase
             _navItemInvoked.InvokeCommand(ViewModel, x => x.Navigate).DisposeWith(disposables);
 
             // This is the initial view
-            ViewModel.Router.Navigate.Execute(new WelcomePageViewModel());
+            ViewModel.Router.Navigate.Execute(new HomeViewModel());
 
             ViewModel.Navigate.ThrownExceptions.Subscribe(async ex => {
                 await this.ShowMessageAsync("Navigation Error", ex.Message);

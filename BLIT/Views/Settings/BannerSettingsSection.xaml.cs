@@ -6,11 +6,10 @@ using System.Windows.Controls.Primitives;
 
 namespace BLIT.Views.Settings;
 
-public abstract class BannerSettingsBase : ReactiveUserControl<BannerSettingsViewModel> { }
 /// <summary>
 /// Interaction logic for BannerSettingsSection.xaml
 /// </summary>
-public partial class BannerSettingsSection : BannerSettingsBase
+public partial class BannerSettingsSection
 {
     public BannerSettingsSection()
     {

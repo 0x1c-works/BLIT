@@ -6,12 +6,11 @@ using System.Reactive.Disposables;
 
 namespace BLIT.Views;
 
-public abstract class HomeViewBase : ReactiveUserControl<WelcomePageViewModel> { }
 
 /// <summary>
 /// Interaction logic for WelcomePage.xaml
 /// </summary>
-public partial class HomeView : HomeViewBase
+public partial class HomeView
 {
     public HomeView()
     {
@@ -23,7 +22,7 @@ public partial class HomeView : HomeViewBase
     }
 }
 
-public class WelcomePageViewModel : ReactiveObject, IRoutableViewModel
+public class HomeViewModel : ReactiveObject, IRoutableViewModel
 {
     public string WebisteUrl = "https://blit.0x1.best";
     public string Target = "World";
@@ -33,7 +32,7 @@ public class WelcomePageViewModel : ReactiveObject, IRoutableViewModel
     public IScreen HostScreen { get; }
     public ReactiveCommand<Unit, Unit> OpenWebsite;
 
-    public WelcomePageViewModel(IScreen? screen = null)
+    public HomeViewModel(IScreen? screen = null)
     {
         HostScreen = screen ?? Locator.Current.GetService<IScreen>()!;
         OpenWebsite = ReactiveCommand.Create(() => {

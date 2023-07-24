@@ -1,5 +1,4 @@
-﻿using BLIT.ViewModels.Banner;
-using ReactiveUI;
+﻿using ReactiveUI;
 using System;
 using System.Reactive.Disposables;
 using System.Windows.Controls.Primitives;
@@ -7,11 +6,10 @@ using System.Windows.Input;
 
 namespace BLIT.Views.Settings;
 
-public abstract class BannerSpriteScanPathItemBase : ReactiveUserControl<BannerSpriteScanPathViewModel> { }
 /// <summary>
 /// Interaction logic for BannerSpriteScanPathItem.xaml
 /// </summary>
-public partial class BannerSpriteScanPathItem : BannerSpriteScanPathItemBase
+public partial class BannerSpriteScanPathItem
 {
     public bool IsEditing
     {

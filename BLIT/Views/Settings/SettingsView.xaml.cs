@@ -1,14 +1,12 @@
-﻿using BLIT.ViewModels;
-using ReactiveUI;
+﻿using ReactiveUI;
 using System.Reactive.Disposables;
 
 namespace BLIT.Views.Settings;
 
-public abstract class SettingsViewBase : ReactiveUserControl<SettingsViewModel> { }
 /// <summary>
 /// Interaction logic for SettingsView.xaml
 /// </summary>
-public partial class SettingsView : SettingsViewBase
+public partial class SettingsView
 {
     public SettingsView()
     {
