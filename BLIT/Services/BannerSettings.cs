@@ -4,7 +4,6 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -16,9 +15,17 @@ public class BannerSettings : ReactiveObject, IDisposable
 {
     IDisposable? _subscription;
 
+    string[] _spriteScanPaths = new string[0];
     [Key(0)]
-    [Reactive]
-    public string[] SpriteScanPaths { get; set; } = new string[0];
+    public string[] SpriteScanPaths
+    {
+        get => _spriteScanPaths;
+        set
+        {
+            var cleanData = value.Where(f => !string.IsNullOrWhiteSpace(f)).ToArray();
+            this.RaiseAndSetIfChanged(ref _spriteScanPaths, cleanData);
+        }
+    }
     [Key(1)]
     [Reactive]
     public OutputResolution TextureOutputResolution { get; set; }
@@ -41,11 +48,6 @@ public class BannerSettings : ReactiveObject, IDisposable
         })
         .Throttle(TimeSpan.FromMilliseconds(1000))
         .Subscribe((_) => Save());
-    }
-
-    public void SyncSpriteScanPaths(IEnumerable<string> scanFolders)
-    {
-        SpriteScanPaths = scanFolders.Where(f => !string.IsNullOrWhiteSpace(f)).ToArray();
     }
 
     public void Save()

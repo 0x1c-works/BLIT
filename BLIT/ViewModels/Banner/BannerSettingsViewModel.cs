@@ -57,6 +57,6 @@ public class BannerSettingsViewModel : ReactiveObject
     }
     void OnPathChanged(BannerSpriteScanPathViewModel path)
     {
-        _settings.SyncSpriteScanPaths(SpriteScanPaths.Select(pathVm => pathVm.Path));
+        _settings.SpriteScanPaths = SpriteScanPaths.Select(pathVm => pathVm.Path).ToArray();
     }
 }
