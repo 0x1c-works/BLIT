@@ -1,0 +1,59 @@
+﻿<local:BannerSpriteScanPathItemBase
+    x:Class="BLIT.Views.Settings.BannerSpriteScanPathItem"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:local="clr-namespace:BLIT.Views.Settings"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="32"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+    <local:BannerSpriteScanPathItemBase.Resources>
+        <Style BasedOn="{StaticResource MahApps.Styles.Button.Flat}" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.AccentBase}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </local:BannerSpriteScanPathItemBase.Resources>
+    <Grid>
+        <!--  Display  -->
+        <Grid x:Name="blockDisplay" FocusManager.FocusedElement="{Binding ElementName=inputPath}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="txtPath" VerticalAlignment="Center" />
+            <Button x:Name="btnEdit" Grid.Column="1">
+                <iconPacks:PackIconFeatherIcons Kind="Edit3" ToolTipService.ToolTip="Edit" />
+            </Button>
+            <Button x:Name="btnDelete" Grid.Column="2">
+                <iconPacks:PackIconFeatherIcons Kind="Delete" ToolTipService.ToolTip="Delete" />
+            </Button>
+        </Grid>
+        <!--  Editor  -->
+        <Grid x:Name="blockEditor" FocusManager.FocusedElement="{Binding ElementName=tbxPath}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox
+                x:Name="inputPath"
+                Grid.Column="0"
+                mah:TextBoxHelper.Watermark="Enter a relative path" />
+            <Button x:Name="btnSave" Grid.Column="1">
+                <iconPacks:PackIconFeatherIcons Kind="Check" />
+            </Button>
+            <Button x:Name="btnCancel" Grid.Column="2">
+                <iconPacks:PackIconFeatherIcons Kind="X" />
+            </Button>
+        </Grid>
+    </Grid>
+</local:BannerSpriteScanPathItemBase>

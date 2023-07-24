@@ -12,6 +12,7 @@
                 <!--  MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive!  -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.FlatButton.xaml" />
                 <!--  Theme setting  -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Amber.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -20,6 +21,10 @@
                 <Setter Property="Page.Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
                 <Setter Property="Page.Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                 <Setter Property="TextElement.FontSize" Value="{DynamicResource MahApps.Font.Size.Default}" />
+            </Style>
+
+            <Style TargetType="Button">
+                <Setter Property="ToolTipService.InitialShowDelay" Value="50" />
             </Style>
 
         </ResourceDictionary>
