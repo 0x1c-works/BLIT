@@ -18,10 +18,10 @@ public class BannerSpriteScanPathViewModel : ReactiveObject
     public IObservable<bool> EditStateChanged;
 
     public ReactiveCommand<Unit, Unit> StartEdit { get; }
-    public ReactiveCommand<Unit, Unit> QuitEdit { get; }
+    public ReactiveCommand<bool, Unit> QuitEdit { get; }
     public ReactiveCommand<Unit, Unit> Delete { get; }
 
-    public BannerSpriteScanPathViewModel(Action<BannerSpriteScanPathViewModel> onDelete)
+    public BannerSpriteScanPathViewModel(Action<BannerSpriteScanPathViewModel> onChanged, Action<BannerSpriteScanPathViewModel> onDelete)
     {
         this.WhenAnyValue(x => x.IsEditing)
             .Select(x => x ? Visibility.Collapsed : Visibility.Visible)
@@ -39,8 +39,10 @@ public class BannerSpriteScanPathViewModel : ReactiveObject
         Delete = ReactiveCommand.Create(() => {
             onDelete(this);
         });
-        QuitEdit = ReactiveCommand.Create(() => {
+        QuitEdit = ReactiveCommand.Create<bool, Unit>((changed) => {
             IsEditing = false;
+            if (changed) { onChanged(this); }
+            return Unit.Default;
         });
     }
 }

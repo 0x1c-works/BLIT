@@ -14,7 +14,7 @@ public partial class BannerSettingsSection
     public BannerSettingsSection()
     {
         InitializeComponent();
-        ViewModel = new BannerSettingsViewModel();
+        ViewModel = App.MustGet<BannerSettingsViewModel>();
 
         this.WhenActivated((disposables) => {
             this.OneWayBind(ViewModel, x => x.SpriteScanPaths, x => x.listScanPaths.ItemsSource).DisposeWith(disposables);

@@ -1,6 +1,7 @@
 ﻿using ReactiveUI;
 using System;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
@@ -32,8 +33,8 @@ public partial class BannerSpriteScanPathItem
 
             // Editor bindings
             this.Bind(ViewModel, x => x.Path, x => x.inputPath.Text, signalViewUpdate: btnSave.Events().Click).DisposeWith(disposables);
-            this.BindCommand(ViewModel, x => x.QuitEdit, x => x.btnSave).DisposeWith(disposables);
-            this.BindCommand(ViewModel, x => x.QuitEdit, x => x.btnCancel).DisposeWith(disposables);
+            this.BindCommand(ViewModel, x => x.QuitEdit, x => x.btnSave, Observable.Return(true)).DisposeWith(disposables);
+            this.BindCommand(ViewModel, x => x.QuitEdit, x => x.btnCancel, Observable.Return(false)).DisposeWith(disposables);
 
             ViewModel?.EditStateChanged.Subscribe((x) => {
                 if (x)

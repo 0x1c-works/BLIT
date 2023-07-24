@@ -43,7 +43,21 @@
     <PackageReference Include="Splat.Autofac" Version="14.6.37" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\BLIT.Banner\BLIT.Banner.csproj" />
+    <ProjectReference Include="..\BLIT.Sprite\BLIT.Sprite.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Preferences.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Preferences.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Preferences.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Preferences.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
   <!--Inject the App Center Secret before build-->

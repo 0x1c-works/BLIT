@@ -1,6 +1,9 @@
-﻿using ReactiveUI;
+﻿using BLIT.Services;
+using DynamicData;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 
@@ -16,15 +19,19 @@ public class BannerSettingsViewModel : ReactiveObject
     public ReactiveCommand<Unit, Unit> EditSpriteScanPath { get; }
     public ReactiveCommand<Unit, Unit> DeleteSpriteScanPath { get; }
 
-    public BannerSettingsViewModel()
+    BannerSettings _settings;
+
+    public BannerSettingsViewModel(BannerSettings settings)
     {
+        _settings = settings;
+        SpriteScanPaths.AddRange(_settings.SpriteScanPaths.Select(path => CreateNewPathVm(path)));
+
         this.WhenAnyValue(x => x.SelectedSpriteScanPath)
             .Select(x => x != null)
             .ToPropertyEx(this, x => x.HasSelectedSpriteScanPath);
 
         AddSpriteScanPath = ReactiveCommand.Create(() => {
-            var pathVm = new BannerSpriteScanPathViewModel(DeletePath);
-            SpriteScanPaths.Add(pathVm);
+            SpriteScanPaths.Add(CreateNewPathVm(string.Empty));
         });
         EditSpriteScanPath = ReactiveCommand.Create(() => {
             if (SelectedSpriteScanPath != null)
@@ -38,10 +45,18 @@ public class BannerSettingsViewModel : ReactiveObject
                 SpriteScanPaths.Remove(SelectedSpriteScanPath);
             }
         });
-    }
 
+    }
+    BannerSpriteScanPathViewModel CreateNewPathVm(string path)
+    {
+        return new BannerSpriteScanPathViewModel(OnPathChanged, DeletePath) { Path = path };
+    }
     void DeletePath(BannerSpriteScanPathViewModel path)
     {
         SpriteScanPaths.Remove(path);
+    }
+    void OnPathChanged(BannerSpriteScanPathViewModel path)
+    {
+        _settings.SyncSpriteScanPaths(SpriteScanPaths.Select(pathVm => pathVm.Path));
     }
 }

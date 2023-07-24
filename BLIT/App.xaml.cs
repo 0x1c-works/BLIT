@@ -2,6 +2,8 @@
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using BLIT.Helpers;
+using BLIT.Services;
+using BLIT.ViewModels.Banner;
 using BLIT.Win.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -54,11 +56,14 @@ public partial class App : Application
 
         // Singleton components
         //builder.RegisterType<GlobalSettings>().SingleInstance();
-        //builder.Register((ctx) => BannerSettings.Load()).SingleInstance();
+        builder.Register((ctx) => BannerSettings.Load()).SingleInstance();
         //RegisterProjectService<BannerIconsProject>(builder);
 
         // Scoped services
         //builder.RegisterType<SettingsService>().AsImplementedInterfaces();
+
+        // Injected view models 
+        builder.RegisterType<BannerSettingsViewModel>();
 
         // Scoped components
         //builder.RegisterType<BannerIconsProject>().InstancePerLifetimeScope();
@@ -97,6 +102,18 @@ public partial class App : Application
     {
         return _host.Services.GetService(typeof(T)) as T;
     }
+    public static object MustGet(Type type)
+    {
+        var result = Get(type);
+        if (result is null) throw new RegistrationException(type);
+        return result;
+    }
+    public static T MustGet<T>() where T : class
+    {
+        T? result = Get<T>();
+        if (result is null) throw new RegistrationException(typeof(T));
+        return result;
+    }
 
     async void OnStartup(object sender, StartupEventArgs e)
     {
@@ -113,7 +130,6 @@ public partial class App : Application
         Log.Error(e.Exception, "Unhandled exception");
     }
 
-
     //static void RegisterProjectService<T>(ContainerBuilder builder) where T : IProject
     //{
     //    builder.RegisterType<ProjectService<T>>()
@@ -121,4 +137,9 @@ public partial class App : Application
     //        .SingleInstance()
     //        .OnActivated(async (e) => await e.Instance.NewProject());
     //}
+}
+
+public class RegistrationException : Exception
+{
+    public RegistrationException(Type type) : base($"{type.Name} is not registered.") { }
 }
