@@ -2,18 +2,25 @@
 using DynamicData;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
 namespace BLIT.ViewModels.Banner;
 
-public class BannerSettingsViewModel : ReactiveObject
+public class BannerSettingsViewModel : ReactiveObject, IDisposable
 {
+    CompositeDisposable _disposables = new CompositeDisposable();
     public ObservableCollection<BannerSpriteScanPathViewModel> SpriteScanPaths { get; } = new();
     [Reactive] public BannerSpriteScanPathViewModel? SelectedSpriteScanPath { get; set; }
     [ObservableAsProperty] public bool HasSelectedSpriteScanPath { get; }
+    //[Reactive] public int CustomGroupStartID { get; set; }
+    //[Reactive] public int CustomColorStartID { get; set; }
+    public int CustomGroupStartID { get => _settings.CustomGroupStartID; set => _settings.CustomGroupStartID = value; }
+    public int CustomColorStartID { get => _settings.CustomColorStartID; set => _settings.CustomColorStartID = value; }
 
     public ReactiveCommand<Unit, Unit> AddSpriteScanPath { get; }
     public ReactiveCommand<Unit, Unit> EditSpriteScanPath { get; }
@@ -25,10 +32,14 @@ public class BannerSettingsViewModel : ReactiveObject
     {
         _settings = settings;
         SpriteScanPaths.AddRange(_settings.SpriteScanPaths.Select(path => CreateNewPathVm(path)));
+        //CustomGroupStartID = settings.CustomGroupStartID;
+        //CustomColorStartID = settings.CustomColorStartID;
 
+        this.WhenAnyValue(x => x.SpriteScanPaths).Subscribe(x => SyncSpriteScanPaths()).DisposeWith(_disposables);
         this.WhenAnyValue(x => x.SelectedSpriteScanPath)
             .Select(x => x != null)
-            .ToPropertyEx(this, x => x.HasSelectedSpriteScanPath);
+            .ToPropertyEx(this, x => x.HasSelectedSpriteScanPath)
+            .DisposeWith(_disposables);
 
         AddSpriteScanPath = ReactiveCommand.Create(() => {
             SpriteScanPaths.Add(CreateNewPathVm(string.Empty));
@@ -57,6 +68,15 @@ public class BannerSettingsViewModel : ReactiveObject
     }
     void OnPathChanged(BannerSpriteScanPathViewModel path)
     {
+        SyncSpriteScanPaths();
+    }
+    void SyncSpriteScanPaths()
+    {
         _settings.SpriteScanPaths = SpriteScanPaths.Select(pathVm => pathVm.Path).ToArray();
+    }
+
+    public void Dispose()
+    {
+        _disposables.Dispose();
     }
 }

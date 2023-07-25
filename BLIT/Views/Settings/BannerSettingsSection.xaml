@@ -6,9 +6,11 @@
     xmlns:local="clr-namespace:BLIT.Views.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:rxui="http://reactiveui.net"
+    xmlns:service="clr-namespace:BLIT.Services"
     xmlns:vm="clr-namespace:BLIT.ViewModels.Banner"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     d:Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
-    d:DesignHeight="450"
+    d:DesignHeight="800"
     d:DesignWidth="800"
     d:Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
     x:TypeArguments="vm:BannerSettingsViewModel"
@@ -79,16 +81,17 @@
                 </TextBlock>
             </StackPanel>
         </Border>
-        <!--<NumberBox
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Width="200"
-                        VerticalAlignment="Top"
-                        AcceptsExpression="True"
-                        Maximum="99999"
-                        Minimum="7"
-                        SpinButtonPlacementMode="Compact"
-                        Value="{Binding BannerSettings.CustomGroupStartID, Mode=TwoWay}" />-->
+        <Border
+            Grid.Row="3"
+            Grid.Column="1"
+            Padding="0,4,0,0"
+            VerticalAlignment="Top">
+            <xctk:IntegerUpDown
+                x:Name="numGroupStartID"
+                Width="150"
+                Maximum="{x:Static service:BannerSettings.MAX_CUSTOM_GROUP_ID}"
+                Minimum="{x:Static service:BannerSettings.MIN_CUSTOM_GROUP_ID}" />
+        </Border>
         <!--  Color start ID  -->
         <Border Grid.Row="4" Grid.Column="0">
             <StackPanel>
@@ -100,15 +103,16 @@
                 </TextBlock>
             </StackPanel>
         </Border>
-        <!--<NumberBox
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        Width="200"
-                        VerticalAlignment="Top"
-                        AcceptsExpression="True"
-                        Maximum="999999"
-                        Minimum="194"
-                        SpinButtonPlacementMode="Compact"
-                        Value="{Binding BannerSettings.CustomColorStartID, Mode=TwoWay}" />-->
+        <Border
+            Grid.Row="4"
+            Grid.Column="1"
+            Padding="0,4,0,0"
+            VerticalAlignment="Top">
+            <xctk:IntegerUpDown
+                x:Name="numColorStartID"
+                Width="150"
+                Maximum="{x:Static service:BannerSettings.MAX_CUSTOM_COLOR_ID}"
+                Minimum="{x:Static service:BannerSettings.MIN_CUSTOM_COLOR_ID}" />
+        </Border>
     </Grid>
 </rxui:ReactiveUserControl>

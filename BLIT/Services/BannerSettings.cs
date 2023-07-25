@@ -6,6 +6,7 @@ using Serilog;
 using System;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
 namespace BLIT.Services;
@@ -13,7 +14,12 @@ namespace BLIT.Services;
 [MessagePackObject]
 public class BannerSettings : ReactiveObject, IDisposable
 {
-    IDisposable? _subscription;
+    public const int MIN_CUSTOM_GROUP_ID = 7;
+    public const int MAX_CUSTOM_GROUP_ID = 99999;
+    public const int MIN_CUSTOM_COLOR_ID = 194;
+    public const int MAX_CUSTOM_COLOR_ID = 999999;
+
+    CompositeDisposable _disposables = new CompositeDisposable();
 
     string[] _spriteScanPaths = new string[0];
     [Key(0)]
@@ -40,14 +46,15 @@ public class BannerSettings : ReactiveObject, IDisposable
     public BannerSettings()
     {
         // trigger saving when any of the properties change in 1s
-        _subscription = Observable.Merge(new[] {
+        Observable.Merge(new[] {
             this.WhenAnyValue(x=>x.SpriteScanPaths).Select((_)=>Unit.Default),
             this.WhenAnyValue(x=>x.TextureOutputResolution).Select((_)=>Unit.Default),
             this.WhenAnyValue(x=>x.CustomGroupStartID).Select((_)=>Unit.Default),
             this.WhenAnyValue(x=>x.CustomColorStartID).Select((_)=>Unit.Default),
         })
         .Throttle(TimeSpan.FromMilliseconds(1000))
-        .Subscribe((_) => Save());
+        .Subscribe((_) => Save())
+        .DisposeWith(_disposables);
     }
 
     public void Save()
@@ -69,7 +76,7 @@ public class BannerSettings : ReactiveObject, IDisposable
 
     public void Dispose()
     {
-        _subscription?.Dispose();
+        _disposables?.Dispose();
         // Final flush
         Save();
     }

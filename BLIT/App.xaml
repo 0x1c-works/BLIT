@@ -2,6 +2,7 @@
     x:Class="BLIT.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     DispatcherUnhandledException="OnDispatcherUnhandledException"
     Exit="OnExit"
     Startup="OnStartup"
@@ -22,9 +23,14 @@
                 <Setter Property="Page.Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                 <Setter Property="TextElement.FontSize" Value="{DynamicResource MahApps.Font.Size.Default}" />
             </Style>
-
             <Style TargetType="Button">
                 <Setter Property="ToolTipService.InitialShowDelay" Value="50" />
+            </Style>
+            <Style TargetType="xctk:ButtonSpinner">
+                <Setter Property="Height" Value="32" />
+            </Style>
+            <Style TargetType="xctk:IntegerUpDown">
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
             </Style>
 
         </ResourceDictionary>
