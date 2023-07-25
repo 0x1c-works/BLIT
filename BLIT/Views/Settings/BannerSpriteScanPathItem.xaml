@@ -37,10 +37,10 @@
                 Padding="4,0,0,0"
                 VerticalAlignment="Center" />
             <Button x:Name="btnEdit" Grid.Column="1">
-                <iconPacks:PackIconFeatherIcons Kind="Edit3" ToolTipService.ToolTip="Edit" />
+                <iconPacks:PackIconBootstrapIcons Kind="Pen" ToolTipService.ToolTip="Edit" />
             </Button>
             <Button x:Name="btnDelete" Grid.Column="2">
-                <iconPacks:PackIconFeatherIcons Kind="Delete" ToolTipService.ToolTip="Delete" />
+                <iconPacks:PackIconBootstrapIcons Kind="Backspace" ToolTipService.ToolTip="Delete" />
             </Button>
         </Grid>
         <!--  Editor  -->
@@ -55,10 +55,10 @@
                 Grid.Column="0"
                 mah:TextBoxHelper.Watermark="Enter a relative path" />
             <Button x:Name="btnSave" Grid.Column="1">
-                <iconPacks:PackIconFeatherIcons Kind="Check" />
+                <iconPacks:PackIconBootstrapIcons Kind="Check2" />
             </Button>
             <Button x:Name="btnCancel" Grid.Column="2">
-                <iconPacks:PackIconFeatherIcons Kind="X" />
+                <iconPacks:PackIconBootstrapIcons Kind="XLg" />
             </Button>
         </Grid>
     </Grid>

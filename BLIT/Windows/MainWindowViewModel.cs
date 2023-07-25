@@ -1,4 +1,5 @@
 ﻿using BLIT.ViewModels;
+using BLIT.ViewModels.Banner;
 using BLIT.Views;
 using MahApps.Metro.Controls;
 using MahApps.Metro.IconPacks;
@@ -11,14 +12,19 @@ public class MainWindowViewModel : ReactiveObject, IScreen
 {
     public List<IHamburgerMenuItem> Menu = new List<IHamburgerMenuItem> {
         new NavMenuItem() {
-            Icon = new PackIconFeatherIcons{Kind = PackIconFeatherIconsKind.Home},
+            Icon = new PackIconBootstrapIcons{Kind = PackIconBootstrapIconsKind.House},
             Label="Home",
             TargetViewModel = typeof(HomeViewModel)
+        },
+        new NavMenuItem() {
+            Icon = new PackIconBootstrapIcons{Kind = PackIconBootstrapIconsKind.Flag},
+            Label="Banner",
+            TargetViewModel = typeof(BannerViewModel)
         }
     };
     public List<IHamburgerMenuItem> OptionMenu = new List<IHamburgerMenuItem> {
         new NavMenuItem() {
-            Icon = new PackIconFeatherIcons{Kind = PackIconFeatherIconsKind.Settings },
+            Icon = new PackIconBootstrapIcons{Kind = PackIconBootstrapIconsKind.Gear },
             Label="Settings",
             TargetViewModel=typeof(SettingsViewModel)
         }
