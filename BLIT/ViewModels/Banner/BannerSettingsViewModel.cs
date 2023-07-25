@@ -17,8 +17,7 @@ public class BannerSettingsViewModel : ReactiveObject, IDisposable
     public ObservableCollection<BannerSpriteScanPathViewModel> SpriteScanPaths { get; } = new();
     [Reactive] public BannerSpriteScanPathViewModel? SelectedSpriteScanPath { get; set; }
     [ObservableAsProperty] public bool HasSelectedSpriteScanPath { get; }
-    //[Reactive] public int CustomGroupStartID { get; set; }
-    //[Reactive] public int CustomColorStartID { get; set; }
+
     public int CustomGroupStartID { get => _settings.CustomGroupStartID; set => _settings.CustomGroupStartID = value; }
     public int CustomColorStartID { get => _settings.CustomColorStartID; set => _settings.CustomColorStartID = value; }
 
@@ -32,10 +31,8 @@ public class BannerSettingsViewModel : ReactiveObject, IDisposable
     {
         _settings = settings;
         SpriteScanPaths.AddRange(_settings.SpriteScanPaths.Select(path => CreateNewPathVm(path)));
-        //CustomGroupStartID = settings.CustomGroupStartID;
-        //CustomColorStartID = settings.CustomColorStartID;
 
-        this.WhenAnyValue(x => x.SpriteScanPaths).Subscribe(x => SyncSpriteScanPaths()).DisposeWith(_disposables);
+        SpriteScanPaths.CollectionChanged += SpriteScanPaths_CollectionChanged;
         this.WhenAnyValue(x => x.SelectedSpriteScanPath)
             .Select(x => x != null)
             .ToPropertyEx(this, x => x.HasSelectedSpriteScanPath)
@@ -58,6 +55,12 @@ public class BannerSettingsViewModel : ReactiveObject, IDisposable
         });
 
     }
+
+    void SpriteScanPaths_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        SyncSpriteScanPaths();
+    }
+
     BannerSpriteScanPathViewModel CreateNewPathVm(string path)
     {
         return new BannerSpriteScanPathViewModel(OnPathChanged, DeletePath) { Path = path };

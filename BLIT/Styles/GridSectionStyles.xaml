@@ -26,6 +26,7 @@
     <Style x:Key="CaptionStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="12" />
         <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Foreground" Value="{StaticResource MahApps.Brushes.SystemControlForegroundBaseLow}" />
     </Style>
     <Style
         x:Key="VerticalCaptionStyle"

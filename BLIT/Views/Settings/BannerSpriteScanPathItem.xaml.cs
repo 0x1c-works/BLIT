@@ -40,6 +40,8 @@ public partial class BannerSpriteScanPathItem
                 if (x)
                 {
                     // FIXME: focus the textbox
+                    Focus();
+                    blockEditor.Focus();
                     var succ = inputPath.Focus();
                     Keyboard.Focus(inputPath);
                     inputPath.SelectAll();
