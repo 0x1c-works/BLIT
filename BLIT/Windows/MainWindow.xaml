@@ -93,7 +93,6 @@
                 <rxui:RoutedViewHost
                     x:Name="RoutedViewHost"
                     Grid.Row="1"
-                    Margin="16,0"
                     HorizontalContentAlignment="Stretch"
                     VerticalContentAlignment="Stretch" />
             </Grid>

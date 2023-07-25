@@ -17,7 +17,7 @@
         <ResourceDictionary Source="pack://application:,,,/Styles/GridSectionStyles.xaml" />
     </UserControl.Resources>
 
-    <Grid>
+    <Grid Margin="16,0">
         <ScrollViewer>
             <StackPanel>
                 <!--<TextBlock x:Uid="LabelGameRootFolder">Game root folder:</TextBlock>
@@ -84,7 +84,7 @@
                         </Label>
                     </Border>
                     <Border Grid.Row="1" Grid.Column="1">
-                        <Button x:Name="btnOpenLogFolder" Style="{StaticResource MahApps.Styles.Button.MetroSquare}">Open log folder</Button>
+                        <Button x:Name="btnOpenLogFolder">Open log folder</Button>
                     </Border>
                 </Grid>
                 <Grid Style="{StaticResource SectionGridStyle}">
