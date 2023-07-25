@@ -16,8 +16,20 @@
     x:TypeArguments="vm:BannerViewModel"
     Style="{StaticResource ViewStyle}"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="PanelTitleStyle" TargetType="Border">
+            <Setter Property="Padding" Value="4,8" />
+            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.SystemControlBackgroundBaseLow}" />
+            <Style.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="{StaticResource MahApps.Font.Size.Window.Title}" />
+                </Style>
+            </Style.Resources>
+        </Style>
+    </UserControl.Resources>
     <DockPanel LastChildFill="True">
-        <ToolBarTray>
+        <!--  Toolbar  -->
+        <ToolBarTray DockPanel.Dock="top">
             <ToolBar ToolBarTray.IsLocked="True">
                 <Button x:Name="toolBtnNewProject" ToolTipService.ToolTip="New project">
                     <iconPacks:BootstrapIcons Kind="FilePlus" />
@@ -57,5 +69,39 @@
                 </Button>
             </ToolBar>
         </ToolBarTray>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <DockPanel Grid.Column="0" LastChildFill="True">
+                <Border
+                    HorizontalAlignment="Stretch"
+                    DockPanel.Dock="Top"
+                    Style="{StaticResource PanelTitleStyle}">
+                    <TextBlock HorizontalAlignment="Center">
+                        Groups
+                    </TextBlock>
+                </Border>
+                <ToolBarTray DockPanel.Dock="Top">
+                    <ToolBar ToolBarTray.IsLocked="True">
+                        <Button x:Name="toolBtnAddGroup" ToolTipService.ToolTip="Add group">
+                            <iconPacks:BootstrapIcons Kind="NodePlus" />
+                        </Button>
+                        <Button x:Name="toolBtnDeleteGroup" ToolTipService.ToolTip="Delete group">
+                            <iconPacks:BootstrapIcons Kind="NodeMinus" />
+                        </Button>
+                    </ToolBar>
+                </ToolBarTray>
+                <ListBox>
+                    <ListBoxItem>some thing</ListBoxItem>
+                </ListBox>
+            </DockPanel>
+            <StackPanel Grid.Column="1" Background="{DynamicResource MahApps.Brushes.SystemControlPageBackgroundChromeLow}" />
+            <GridSplitter Grid.Column="2" Width="5" />
+            <StackPanel Grid.Column="3" />
+        </Grid>
     </DockPanel>
 </rxui:ReactiveUserControl>
