@@ -18,6 +18,13 @@
                 <!--  Theme setting  -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Amber.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <ImageBrush
+                x:Key="TransparentCheckerBrush"
+                ImageSource="pack://application:,,,/Assets/transparent-checker.png"
+                Stretch="None"
+                TileMode="Tile"
+                Viewport="0,0,16,16"
+                ViewportUnits="Absolute" />
 
             <Style x:Key="ViewStyle" TargetType="UserControl">
                 <Setter Property="Page.Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />

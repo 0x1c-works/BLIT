@@ -19,6 +19,20 @@
     <PublishReadyToRunComposite>false</PublishReadyToRunComposite>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Assets\empty-asset.png" />
+    <None Remove="Assets\transparent-checker.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\empty-asset.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\transparent-checker.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
   <!--Dependent Packages-->
   <ItemGroup>
     <PackageReference Include="Autofac" Version="7.0.1" />

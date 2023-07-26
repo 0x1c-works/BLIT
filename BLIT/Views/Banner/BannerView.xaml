@@ -12,8 +12,8 @@
     xmlns:vm="clr-namespace:BLIT.ViewModels.Banner"
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     d:Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignHeight="800"
+    d:DesignWidth="1024"
     d:Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
     x:TypeArguments="vm:BannerViewModel"
     Style="{StaticResource ViewStyle}"
@@ -192,20 +192,21 @@
                                     Style="{StaticResource ItemLabelStyle}">
                                     UI Sprite
                                 </Label>
-                                <StackPanel Grid.Row="1" Grid.Column="0">
+                                <StackPanel
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Margin="0,0,8,0">
                                     <Button
                                         x:Name="btnSelectSprite"
                                         HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Top"
-                                        Click="btnSelectSprite_Click">
+                                        VerticalAlignment="Top">
                                         Select...
                                     </Button>
                                     <Button
                                         x:Name="btnReimportSprite"
                                         Margin="0,4,0,0"
                                         HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Top"
-                                        Click="btnReimportSprite_Click">
+                                        VerticalAlignment="Top">
                                         Reimport
                                     </Button>
                                 </StackPanel>
@@ -222,7 +223,7 @@
                                     <Rectangle
                                         Width="256"
                                         Height="256"
-                                        Fill="{StaticResource TransparentCheckBrush}" />
+                                        Fill="{StaticResource TransparentCheckerBrush}" />
                                     <Image Width="256" Height="256" />
                                 </Grid>
 
@@ -234,20 +235,21 @@
                                     Texture
                                 </Label>
 
-                                <StackPanel Grid.Row="3" Grid.Column="0">
+                                <StackPanel
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                    Margin="0,0,8,0">
                                     <Button
                                         x:Name="btnSelectTexture"
                                         HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Top"
-                                        Click="btnSelectTexture_Click">
+                                        VerticalAlignment="Top">
                                         Select...
                                     </Button>
                                     <Button
                                         x:Name="btnReimportTexture"
                                         Margin="0,4,0,0"
                                         HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Top"
-                                        Click="btnReimportTexture_Click">
+                                        VerticalAlignment="Top">
                                         Reimport
                                     </Button>
                                 </StackPanel>
@@ -263,7 +265,7 @@
                                     Height="Auto"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Top">
-                                    <Rectangle Fill="{StaticResource TransparentCheckBrush}" />
+                                    <Rectangle Fill="{StaticResource TransparentCheckerBrush}" />
                                     <Image
                                         x:Name="imgTexture"
                                         MinWidth="256"
