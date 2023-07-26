@@ -10,7 +10,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
-namespace BLIT.Win.Pages.BannerIcons.Models;
+namespace BLIT.ViewModels.Banner.Data;
 public class BannerIconEntry : ReactiveObject, IDisposable
 {
     public delegate BannerIconEntry Factory(BannerGroupEntry groupVm, string texturePath);
@@ -94,8 +94,7 @@ public class BannerIconEntry : ReactiveObject, IDisposable
                          .ToPropertyEx(this, x => AtlasName)
                          .DisposeWith(_disposables);
 
-        Observable.CombineLatest(atlasIndexChanges,
-                                 this.WhenAnyValue(x => x.TexturePath),
+        atlasIndexChanges.CombineLatest(this.WhenAnyValue(x => x.TexturePath),
                                  (atlasIndex, texturePath) => new { atlasIndex, texturePath })
                   .Select((x) => ImageHelper.IsValidImage(x.texturePath) && x.atlasIndex >= 0)
                   .ToPropertyEx(this, x => x.IsValid)

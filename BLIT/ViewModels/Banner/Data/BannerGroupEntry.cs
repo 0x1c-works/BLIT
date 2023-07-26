@@ -1,6 +1,5 @@
 ﻿using BLIT.Banner;
 using BLIT.Services;
-using BLIT.ViewModels.Banner.Data;
 using DynamicData;
 using DynamicData.Binding;
 using MessagePack;
@@ -15,7 +14,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Windows.Storage;
 
-namespace BLIT.Win.Pages.BannerIcons.Models;
+namespace BLIT.ViewModels.Banner.Data;
 
 public class BannerGroupEntry : ReactiveObject, IDisposable
 {
@@ -47,7 +46,7 @@ public class BannerGroupEntry : ReactiveObject, IDisposable
         _project = project;
         GroupID = groupID;
         _iconFactory = iconFactory;
-        IConnectableObservable<DynamicData.IChangeSet<BannerIconEntry, int>> iconsChanges = _sourceIcons.ToObservableChangeSet(x => x.ID)
+        IConnectableObservable<IChangeSet<BannerIconEntry, int>> iconsChanges = _sourceIcons.ToObservableChangeSet(x => x.ID)
                                                                                                         .ObserveOn(RxApp.MainThreadScheduler)
                                                                                                         .Publish();
         iconsChanges.Bind(out _icons).Subscribe().DisposeWith(_disposables);

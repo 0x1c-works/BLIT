@@ -4,6 +4,7 @@ using Autofac.Extensions.DependencyInjection;
 using BLIT.Helpers;
 using BLIT.Services;
 using BLIT.ViewModels.Banner;
+using BLIT.ViewModels.Banner.Data;
 using BLIT.Win.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -66,10 +67,9 @@ public partial class App : Application
         builder.RegisterType<BannerSettingsViewModel>();
 
         // Scoped components
-        //builder.RegisterType<BannerIconsProject>().InstancePerLifetimeScope();
-        //builder.RegisterType<BannerGroupEntry>().InstancePerDependency();
-        //builder.RegisterType<BannerColorEntry>().InstancePerDependency();
-        //builder.RegisterType<BannerIconEntry>().InstancePerDependency();
+        builder.RegisterType<BannerGroupEntry>().InstancePerDependency();
+        builder.RegisterType<BannerColorEntry>().InstancePerDependency();
+        builder.RegisterType<BannerIconEntry>().InstancePerDependency();
 
         // Register the Adapter to Splat for ReactiveUI.
         // Creates and sets the Autofac resolver as the Locator.
@@ -81,6 +81,11 @@ public partial class App : Application
 
         /* --------- Automatic Registrations -------- */
         var assembly = Assembly.GetExecutingAssembly();
+        RegisterRoutableViewsAndModels(builder, assembly);
+        RegisterProjectServices(builder, assembly);
+    }
+    static void RegisterRoutableViewsAndModels(ContainerBuilder builder, Assembly assembly)
+    {
         // Register IViewFor types.
         Locator.CurrentMutable.RegisterViewsForViewModels(assembly);
 
@@ -91,7 +96,29 @@ public partial class App : Application
         {
             if (routableVm != null) builder.RegisterType(routableVm);
         }
+    }
+    static void RegisterProjectServices(ContainerBuilder builder, Assembly assembly)
+    {
+        var x = assembly.DefinedTypes
+            .Where(ti => ti.ImplementedInterfaces.Contains(typeof(IProject)) && !ti.IsAbstract)
+            .Select(ti => ti.AsType()).ToList();
+        Type genericPSType = typeof(ProjectService<>);
+        Type genericPSIType = typeof(IProjectService<>);
 
+        foreach (TypeInfo? pti in assembly.DefinedTypes
+            .Where(ti => ti.ImplementedInterfaces.Contains(typeof(IProject)) && !ti.IsAbstract)
+            )
+        {
+            if (pti == null) continue;
+            Type psType = genericPSType.MakeGenericType(pti.AsType());
+            Type psiType = genericPSIType.MakeGenericType(pti.AsType());
+            MethodInfo? mi = psType.GetMethod("NewProject", BindingFlags.Instance | BindingFlags.Public);
+            builder.RegisterType(pti.AsType()).InstancePerLifetimeScope(); ;
+            builder.RegisterType(psType).As(psiType).SingleInstance().OnActivated(async (e) => {
+                if (mi == null) return;
+                await mi.InvokeAsync(e.Instance, new object?[] { null });
+            });
+        }
     }
 
     public static object? Get(Type type)
@@ -129,6 +156,7 @@ public partial class App : Application
     {
         Log.Error(e.Exception, "Unhandled exception");
     }
+
 
     //static void RegisterProjectService<T>(ContainerBuilder builder) where T : IProject
     //{

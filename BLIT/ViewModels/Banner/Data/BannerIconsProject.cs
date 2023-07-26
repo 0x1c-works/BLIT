@@ -2,7 +2,6 @@
 using BLIT.Banner;
 using BLIT.Helpers;
 using BLIT.Services;
-using BLIT.Win.Pages.BannerIcons.Models;
 using DynamicData;
 using DynamicData.Binding;
 using MessagePack;
@@ -42,7 +41,7 @@ public class BannerIconsProject : ReactiveObject, IProject, IDisposable
         colorChanges.Bind(out _colors).Subscribe().DisposeWith(_disposables);
 
         Observable.CombineLatest(this.WhenAnyValue(x => x.IsExporting),
-                                 this.WhenAnyValue(x => IsSavingOrLoading),
+                                 this.WhenAnyValue(x => x.IsSavingOrLoading),
                                  groupChanges.AutoRefresh(x => x.CanExport).ToCollection().Select(groups => groups.Any(g => g.CanExport)),
                                  colorChanges.AutoRefresh(x => x.CanExport).ToCollection().Select(colors => colors.Any(c => c.CanExport)),
                                  (isExporting, isSavingOrLoading, hasExportableGruops, hasExportableColors) =>
