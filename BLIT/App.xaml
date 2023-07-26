@@ -53,10 +53,37 @@
                 <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
-            <Style BasedOn="{StaticResource MahApps.Styles.ToolBarTray}" TargetType="ToolBarTray">
+            <Style BasedOn="{StaticResource MahApps.Styles.ToolBarTray}" TargetType="{x:Type ToolBarTray}">
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.SystemControlPageBackgroundListLow}" />
             </Style>
-
+            <Style
+                x:Key="SubtleSeparatorStyle"
+                BasedOn="{StaticResource MahApps.Styles.Separator.StatusBar}"
+                TargetType="Separator">
+                <Setter Property="Margin" Value="8,0" />
+                <Setter Property="Opacity" Value=".3" />
+                <Setter Property="Height" Value="32" />
+            </Style>
+            <Style
+                x:Key="{x:Static ToolBar.ButtonStyleKey}"
+                BasedOn="{StaticResource MahApps.Styles.Button.ToolBar}"
+                TargetType="Button">
+                <Setter Property="ToolTipService.InitialShowDelay" Value="50" />
+                <Style.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="9" />
+                        <Setter Property="TextAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="0,4,0,0" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type StackPanel}}, Path=Orientation}" Value="Horizontal">
+                                <Setter Property="TextAlignment" Value="Left" />
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="Margin" Value="4,0,0,0" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Style.Resources>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

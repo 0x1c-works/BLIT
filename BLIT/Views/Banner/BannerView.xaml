@@ -31,6 +31,8 @@
                         <Setter Property="FontSize" Value="{StaticResource MahApps.Font.Size.Window.Title}" />
                         <Setter Property="FontWeight" Value="Bold" />
                         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Selected.Foreground}" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="HorizontalAlignment" Value="Center" />
                     </Style>
                 </Style.Resources>
             </Style>
@@ -41,18 +43,30 @@
         <ToolBarTray Background="{DynamicResource MahApps.Brushes.SystemControlPageBackgroundListLow}" DockPanel.Dock="top">
             <ToolBar ToolBarTray.IsLocked="True">
                 <Button x:Name="toolBtnNewProject" ToolTipService.ToolTip="New project">
-                    <iconPacks:BootstrapIcons Kind="FilePlus" />
+                    <StackPanel>
+                        <iconPacks:BootstrapIcons Kind="FilePlus" />
+                        <TextBlock>New</TextBlock>
+                    </StackPanel>
                 </Button>
                 <Button x:Name="toolBtnOpenNewProject" ToolTipService.ToolTip="Open project">
-                    <iconPacks:BootstrapIcons Kind="Folder2Open" />
+                    <StackPanel>
+                        <iconPacks:BootstrapIcons Kind="Folder2Open" />
+                        <TextBlock>Open</TextBlock>
+                    </StackPanel>
                 </Button>
                 <Button x:Name="toolBtnSaveProject" ToolTipService.ToolTip="Save project">
-                    <iconPacks:BootstrapIcons Kind="Save" />
+                    <StackPanel>
+                        <iconPacks:BootstrapIcons Kind="Save" />
+                        <TextBlock>Save</TextBlock>
+                    </StackPanel>
                 </Button>
                 <Button x:Name="toolBtnSaveProjectAs" ToolTipService.ToolTip="Save project as...">
-                    <iconPacks:BootstrapIcons Kind="SaveFill" />
+                    <StackPanel>
+                        <iconPacks:BootstrapIcons Kind="SaveFill" />
+                        <TextBlock>Save as</TextBlock>
+                    </StackPanel>
                 </Button>
-                <Separator />
+                <Separator Style="{StaticResource SubtleSeparatorStyle}" />
                 <TextBlock
                     Margin="4,0"
                     VerticalAlignment="Center"
@@ -69,12 +83,18 @@
                     <ComboBoxItem Tag="2K">2K</ComboBoxItem>
                     <ComboBoxItem Tag="4K">2K</ComboBoxItem>
                 </ComboBox>
-                <Separator />
+                <Separator Style="{StaticResource SubtleSeparatorStyle}" />
                 <Button x:Name="toolBtnExportAll" ToolTipService.ToolTip="Export all assets to a folder">
-                    <iconPacks:BootstrapIcons Kind="BoxSeam" />
+                    <StackPanel>
+                        <iconPacks:BootstrapIcons Kind="BoxSeam" />
+                        <TextBlock>Export all</TextBlock>
+                    </StackPanel>
                 </Button>
                 <Button x:Name="toolBtnExportXML" ToolTipService.ToolTip="Export only the banner_icons.xml to a folder">
-                    <iconPacks:BootstrapIcons Kind="FileEarmarkArrowDown" />
+                    <StackPanel>
+                        <iconPacks:BootstrapIcons Kind="FileEarmarkArrowDown" />
+                        <TextBlock>Export XML</TextBlock>
+                    </StackPanel>
                 </Button>
             </ToolBar>
         </ToolBarTray>
@@ -106,17 +126,23 @@
                             HorizontalAlignment="Stretch"
                             DockPanel.Dock="Top"
                             Style="{StaticResource PanelTitleStyle}">
-                            <TextBlock HorizontalAlignment="Center">
+                            <TextBlock>
                                 Groups
                             </TextBlock>
                         </Border>
                         <ToolBarTray DockPanel.Dock="Top">
                             <ToolBar ToolBarTray.IsLocked="True">
                                 <Button x:Name="toolBtnAddGroup" ToolTipService.ToolTip="Add group">
-                                    <iconPacks:BootstrapIcons Kind="NodePlus" />
+                                    <StackPanel>
+                                        <iconPacks:BootstrapIcons Kind="NodePlus" />
+                                        <TextBlock>Add</TextBlock>
+                                    </StackPanel>
                                 </Button>
                                 <Button x:Name="toolBtnDeleteGroup" ToolTipService.ToolTip="Delete group">
-                                    <iconPacks:BootstrapIcons Kind="NodeMinus" />
+                                    <StackPanel>
+                                        <iconPacks:BootstrapIcons Kind="NodeMinus" />
+                                        <TextBlock>Delete</TextBlock>
+                                    </StackPanel>
                                 </Button>
                             </ToolBar>
                         </ToolBarTray>
@@ -143,15 +169,24 @@
                                     Margin="4,0,8,0"
                                     Maximum="{x:Static service:BannerSettings.MAX_CUSTOM_GROUP_ID}"
                                     Minimum="{x:Static service:BannerSettings.MIN_CUSTOM_GROUP_ID}" />
-                                <Separator />
+                                <Separator Style="{StaticResource SubtleSeparatorStyle}" />
                                 <Button x:Name="toolBtnImportTextures" ToolTipService.ToolTip="Add textures...">
-                                    <iconPacks:BootstrapIcons Kind="Image" />
+                                    <StackPanel>
+                                        <iconPacks:BootstrapIcons Kind="Image" />
+                                        <TextBlock>Import</TextBlock>
+                                    </StackPanel>
                                 </Button>
                                 <Button x:Name="toolBtnDeleteTextures" ToolTipService.ToolTip="Delete selected texture(s)">
-                                    <iconPacks:BootstrapIcons Kind="Trash" />
+                                    <StackPanel>
+                                        <iconPacks:BootstrapIcons Kind="Trash" />
+                                        <TextBlock>Delete</TextBlock>
+                                    </StackPanel>
                                 </Button>
                                 <Button x:Name="toolBtnExportGroup" ToolTipService.ToolTip="Export this group's assets">
-                                    <iconPacks:BootstrapIcons Kind="Box" />
+                                    <StackPanel>
+                                        <iconPacks:BootstrapIcons Kind="Box" />
+                                        <TextBlock>Export me</TextBlock>
+                                    </StackPanel>
                                 </Button>
                             </ToolBar>
                         </ToolBarTray>
@@ -165,7 +200,7 @@
                             HorizontalAlignment="Stretch"
                             DockPanel.Dock="Top"
                             Style="{StaticResource PanelTitleStyle}">
-                            <TextBlock HorizontalAlignment="Center">
+                            <TextBlock>
                                 Icon details
                             </TextBlock>
                         </Border>
