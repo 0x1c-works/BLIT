@@ -30,15 +30,16 @@ public class BannerIconsProject : ReactiveObject, IProject, IDisposable
         _groupFactory = bannerGroupFactory;
         _colorFactory = colorFactory;
 
-        IObservable<IChangeSet<BannerGroupEntry, int>> groupChanges = _sourceGroups.ToObservableChangeSet(x => x.GroupID)
-                                                                                   .ObserveOn(RxApp.MainThreadScheduler)
-                                                                                   .Publish();
-        IObservable<IChangeSet<BannerColorEntry, int>> colorChanges = _sourceIcons.ToObservableChangeSet(x => x.ID)
-                                                                                   .Throttle(TimeSpan.FromMilliseconds(50))
-                                                                                   .ObserveOn(RxApp.MainThreadScheduler)
-                                                                                   .Publish();
-        groupChanges.Bind(out _groups).Subscribe().DisposeWith(_disposables);
-        colorChanges.Bind(out _colors).Subscribe().DisposeWith(_disposables);
+        IObservable<IChangeSet<BannerGroupEntry, int>> groupChanges = _sourceGroups
+            .ToObservableChangeSet(x => x.GroupID)
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Bind(out _groups)
+            .Do(_ => Log.Debug("group changes {ChangeSet}", _));
+        IObservable<IChangeSet<BannerColorEntry, int>> colorChanges = _sourceIcons
+            .ToObservableChangeSet(x => x.ID)
+            .Throttle(TimeSpan.FromMilliseconds(50))
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Bind(out _colors);
 
         Observable.CombineLatest(this.WhenAnyValue(x => x.IsExporting),
                                  this.WhenAnyValue(x => x.IsSavingOrLoading),
