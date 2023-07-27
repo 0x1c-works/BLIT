@@ -179,7 +179,10 @@
                         </ListBox>
                     </DockPanel>
                     <!--  Mid Panel: Texture Gallery  -->
-                    <DockPanel Grid.Column="1" Background="{DynamicResource MahApps.Brushes.SystemControlPageBackgroundChromeLow}">
+                    <DockPanel
+                        x:Name="blockTextureGallery"
+                        Grid.Column="1"
+                        Background="{DynamicResource MahApps.Brushes.SystemControlPageBackgroundChromeLow}">
                         <ToolBarTray
                             x:Name="toolbarGroup"
                             Background="{DynamicResource MahApps.Brushes.SystemControlPageBackgroundListLow}"
@@ -220,9 +223,12 @@
                         </ToolBarTray>
                         <StackPanel />
                     </DockPanel>
-                    <GridSplitter Grid.Column="2" Width="5" />
+                    <GridSplitter
+                        x:Name="splitterGroupEditor"
+                        Grid.Column="2"
+                        Width="5" />
                     <!--  Right Panel: Icon Details  -->
-                    <DockPanel Grid.Column="3">
+                    <DockPanel x:Name="blockIconDetails" Grid.Column="3">
                         <Border
                             Height="{Binding ElementName=toolbarGroup, Path=ActualHeight}"
                             HorizontalAlignment="Stretch"
@@ -339,6 +345,31 @@
                             </Grid>
                         </ScrollViewer>
                     </DockPanel>
+                    <Grid
+                        x:Name="blockGroupEditorPlaceholder"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="3"
+                        Background="{StaticResource MahApps.Brushes.SystemControlBackgroundChromeBlackLow}">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="{DynamicResource MahApps.Font.Size.SubHeader}"
+                            Opacity=".6"
+                            TextWrapping="WrapWithOverflow">
+                            Please create and select a group
+                        </TextBlock>
+                    </Grid>
+                    <Grid x:Name="blockIconDetailsPlaceholder" Grid.Column="3">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="{DynamicResource MahApps.Font.Size.Content}"
+                            FontWeight="Bold"
+                            Opacity=".6"
+                            TextWrapping="WrapWithOverflow">
+                            Please select a banner icon to view its details
+                        </TextBlock>
+                    </Grid>
                 </Grid>
             </TabItem>
             <!--  Custom Colors  -->

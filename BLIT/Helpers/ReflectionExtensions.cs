@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 namespace BLIT.Helpers;
-static class InvokeHelper
+static class ReflectionExtensions
 {
     internal static async Task<object?> InvokeAsync(this MethodInfo @this, object obj, params object?[] parameters)
     {

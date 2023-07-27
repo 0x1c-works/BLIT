@@ -83,6 +83,9 @@ public partial class App : Application
         var assembly = Assembly.GetExecutingAssembly();
         RegisterRoutableViewsAndModels(builder, assembly);
         RegisterProjectServices(builder, assembly);
+
+        // Register BindingTypeConverters
+        Locator.CurrentMutable.RegisterConstant(new BooleanToVisibilityConverter(), typeof(IBindingTypeConverter));
     }
     static void RegisterRoutableViewsAndModels(ContainerBuilder builder, Assembly assembly)
     {
@@ -156,15 +159,6 @@ public partial class App : Application
     {
         Log.Error(e.Exception, "Unhandled exception");
     }
-
-
-    //static void RegisterProjectService<T>(ContainerBuilder builder) where T : IProject
-    //{
-    //    builder.RegisterType<ProjectService<T>>()
-    //        .As<IProjectService<T>>()
-    //        .SingleInstance()
-    //        .OnActivated(async (e) => await e.Instance.NewProject());
-    //}
 }
 
 public class RegistrationException : Exception
