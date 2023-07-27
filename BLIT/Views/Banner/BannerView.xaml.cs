@@ -35,10 +35,11 @@ public partial class BannerView
                             x => x.IconDetailsPlaceholderVisibility,
                             x => x.blockIconDetailsPlaceholder.Visibility).DisposeWith(disposables);
 
+            this.Bind(ViewModel, x => x.SelectedGroup, x => x.listBoxGroups.SelectedItem).DisposeWith(disposables);
 
-            this.WhenAnyValue(x => x.listBoxGroups.SelectedItem)
-                .BindTo(ViewModel, x => x.SelectedGroup)
-                .DisposeWith(disposables);
+            //this.WhenAnyValue(x => x.listBoxGroups.SelectedItem)
+            //    .BindTo(ViewModel, x => x.SelectedGroup)
+            //    .DisposeWith(disposables);
             this.BindCommand(ViewModel, x => x.AddGroup, x => x.toolBtnAddGroup).DisposeWith(disposables);
             this.BindCommand(ViewModel, x => x.DeleteGroup, x => x.toolBtnDeleteGroup).DisposeWith(disposables);
         });

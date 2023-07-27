@@ -43,7 +43,7 @@ public class BannerViewModel : ReactiveObject, IRoutableViewModel, IDisposable
     //public ReactiveCommand<Unit, Unit> ExportAll { get; }
     //public ReactiveCommand<Unit, Unit> ExportXML { get; }
     public ReactiveCommand<Unit, Unit> AddGroup { get; }
-    public ReactiveCommand<Unit, Unit> DeleteGroup { get; }
+    public ReactiveCommand<Unit, int> DeleteGroup { get; }
     //public ReactiveCommand<Unit, Unit> ImportTextures { get; }
     //public ReactiveCommand<Unit, Unit> DeleteTextures { get; }
     //public ReactiveCommand<Unit, Unit> ExportGroup { get; }
@@ -99,14 +99,22 @@ public class BannerViewModel : ReactiveObject, IRoutableViewModel, IDisposable
             .ToPropertyEx(this, x => x.IconDetailsPlaceholderVisibility)
             .DisposeWith(_disposables);
 
-        AddGroup = ReactiveCommand.Create(() => { Project.AddGroup(); });
-        DeleteGroup = ReactiveCommand.Create<Unit, Unit>(group => {
-            if (SelectedGroup != null)
-            {
-                Project.DeleteGroup(SelectedGroup);
-            }
-            return Unit.Default;
+        AddGroup = ReactiveCommand.Create(() => Project.AddGroup());
+        DeleteGroup = ReactiveCommand.Create<Unit, int>(_ => {
+            return SelectedGroup != null ? Project.DeleteGroup(SelectedGroup) : -1;
         }, _hasSelectedGroup);
+        IObservable<int> nextSelectedGroupIndex = DeleteGroup.SelectMany(i => this.WhenAnyValue(x => x.Project.Groups).Select(g => {
+            var count = g.Count;
+            if (i < 0 || count == 0)
+            {
+                return -1;
+            }
+            return i >= count ? count - 1 : i;
+        }));
+        nextSelectedGroupIndex.Subscribe(i => {
+            if (i < 0) SelectedGroup = null;
+            else SelectedGroup = Project.Groups[i];
+        }).DisposeWith(_disposables);
     }
 
     public void Dispose()

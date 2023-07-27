@@ -118,20 +118,21 @@ public class BannerIconsProject : ReactiveObject, IProject, IDisposable
         _sourceGroups.Add(newGroup);
     }
 
-    public void DeleteGroup(BannerGroupEntry group)
+    public int DeleteGroup(BannerGroupEntry group)
     {
         if (group is null)
         {
-            return;
+            return -1;
         }
 
         var index = _sourceGroups.IndexOf(group);
         if (index < 0)
         {
-            return;
+            return -1;
         }
 
         _sourceGroups.Remove(group);
+        return index;
     }
 
     public void AddColor()
