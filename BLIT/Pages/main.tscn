@@ -1,0 +1,145 @@
+[gd_scene format=3 uid="uid://3hojvb3p3t7s"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RootFrame" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="RootFrame"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme_type_variation = &"NavPanel"
+
+[node name="RootNav" type="VBoxContainer" parent="RootFrame/PanelContainer"]
+layout_mode = 2
+theme_type_variation = &"NavPanel"
+
+[node name="BannerIcons" type="Button" parent="RootFrame/PanelContainer/RootNav"]
+layout_mode = 2
+text = "Banner Icons"
+
+[node name="Spacer" type="Control" parent="RootFrame/PanelContainer/RootNav"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Settings" type="Button" parent="RootFrame/PanelContainer/RootNav"]
+layout_mode = 2
+text = "Settings
+"
+
+[node name="Workspace" type="PanelContainer" parent="RootFrame"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BannerIconsEditor" type="VBoxContainer" parent="RootFrame/Workspace"]
+layout_mode = 2
+
+[node name="MenuBar" type="HFlowContainer" parent="RootFrame/Workspace/BannerIconsEditor"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="TabContainer" type="TabContainer" parent="RootFrame/Workspace/BannerIconsEditor"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Icons" type="HBoxContainer" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="Title" type="Label" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons/VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+theme_type_variation = &"PanelTitle"
+text = "Groups"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"ToolBar"
+
+[node name="ToolBar" type="HFlowContainer" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons/VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="AddGroup" type="Button" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons/VBoxContainer/PanelContainer/ToolBar"]
+layout_mode = 2
+text = "+"
+flat = true
+
+[node name="DeleteGroup" type="Button" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons/VBoxContainer/PanelContainer/ToolBar"]
+layout_mode = 2
+text = "-"
+flat = true
+
+[node name="GroupList" type="ItemList" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+item_count = 1
+item_0/text = "10000"
+
+[node name="HSplitContainer" type="HSplitContainer" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons/HSplitContainer"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"ToolBar"
+
+[node name="MarginContainer" type="MarginContainer" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons/HSplitContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 4
+
+[node name="ToolBar" type="HFlowContainer" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+
+[node name="Label" type="Label" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+layout_mode = 2
+text = "Group ID: "
+
+[node name="LineEdit" type="LineEdit" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+placeholder_text = "Assign a number"
+
+[node name="VSeparator" type="VSeparator" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+layout_mode = 2
+
+[node name="AddGroup" type="Button" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+layout_mode = 2
+text = "+"
+flat = true
+
+[node name="DeleteGroup" type="Button" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Icons/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+layout_mode = 2
+text = "-"
+flat = true
+
+[node name="Colors" type="HBoxContainer" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="RootFrame/Workspace/BannerIconsEditor/TabContainer/Colors"]
+layout_mode = 2
+text = "Banner Colors?"

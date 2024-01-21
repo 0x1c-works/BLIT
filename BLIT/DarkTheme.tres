@@ -1,0 +1,19 @@
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://fdmock63swm5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_agj3p"]
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mrghr"]
+bg_color = Color(0.0862745, 0.0862745, 0.0862745, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_alelv"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
+
+[resource]
+NavPanel/base_type = &"PanelContainer"
+NavPanel/styles/panel = SubResource("StyleBoxFlat_agj3p")
+PanelTitle/base_type = &"Label"
+PanelTitle/font_sizes/font_size = 14
+PanelTitle/styles/normal = SubResource("StyleBoxFlat_mrghr")
+ToolBar/base_type = &"PanelContainer"
+ToolBar/styles/panel = SubResource("StyleBoxFlat_alelv")
