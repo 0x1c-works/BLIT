@@ -1,0 +1,227 @@
+[gd_scene load_steps=8 format=3 uid="uid://db73agt6rvlth"]
+
+[ext_resource type="Texture2D" uid="uid://utcopa7b80nm" path="res://icons/add-line.svg" id="1_67drw"]
+[ext_resource type="Texture2D" uid="uid://bsusp3b1wh0wt" path="res://icons/subtract-line.svg" id="2_q8ybv"]
+[ext_resource type="Texture2D" uid="uid://cc5uq1gxkdlk2" path="res://icons/image-add-line.svg" id="3_mlxkw"]
+[ext_resource type="Texture2D" uid="uid://cj8jgphrngu5k" path="res://icons/delete-bin-line.svg" id="4_sd6fr"]
+[ext_resource type="Texture2D" uid="uid://b4elf0ultv3hf" path="res://icon.png" id="5_o7pji"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o4bqq"]
+bg_color = Color(0.156863, 0.156863, 0.156863, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ocot"]
+bg_color = Color(0.156863, 0.156863, 0.156863, 1)
+
+[node name="BannerIconsEditor" type="VBoxContainer"]
+
+[node name="MenuBar" type="HFlowContainer" parent="."]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ICONS" type="HBoxContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="GroupList" type="VBoxContainer" parent="TabContainer/ICONS"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+
+[node name="Title" type="Label" parent="TabContainer/ICONS/GroupList"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+theme_type_variation = &"PanelTitle"
+text = "ICON_GROUPS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/ICONS/GroupList"]
+layout_mode = 2
+theme_type_variation = &"ToolBar"
+
+[node name="ToolBar" type="HFlowContainer" parent="TabContainer/ICONS/GroupList/PanelContainer"]
+layout_mode = 2
+
+[node name="AddGroup" type="Button" parent="TabContainer/ICONS/GroupList/PanelContainer/ToolBar"]
+layout_mode = 2
+tooltip_text = "ADD_ICON_GROUP"
+icon = ExtResource("1_67drw")
+flat = true
+
+[node name="DeleteGroup" type="Button" parent="TabContainer/ICONS/GroupList/PanelContainer/ToolBar"]
+layout_mode = 2
+tooltip_text = "DELETE_ICON_GROUP"
+icon = ExtResource("2_q8ybv")
+flat = true
+
+[node name="GroupList" type="ItemList" parent="TabContainer/ICONS/GroupList"]
+layout_mode = 2
+size_flags_vertical = 3
+item_count = 1
+item_0/text = "10000 (10)"
+
+[node name="HSplitContainer" type="HSplitContainer" parent="TabContainer/ICONS"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/ICONS/HSplitContainer"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"ToolBar"
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 4
+
+[node name="ToolBar" type="HFlowContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+
+[node name="Label" type="Label" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+layout_mode = 2
+text = "GROUP_ID"
+
+[node name="SpinBox" type="SpinBox" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+max_value = 65535.0
+rounded = true
+prefix = "#"
+
+[node name="VSeparator" type="VSeparator" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+layout_mode = 2
+
+[node name="AddGroup" type="Button" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+layout_mode = 2
+text = "ADD_TEXTURES"
+icon = ExtResource("3_mlxkw")
+
+[node name="DeleteGroup" type="Button" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+layout_mode = 2
+text = "DELETE_TEXTURES"
+icon = ExtResource("4_sd6fr")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Gallery" type="ScrollContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_o4bqq")
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Gallery"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HFlowContainer" type="HFlowContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Gallery/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Detail" type="ScrollContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.8
+theme_override_styles/panel = SubResource("StyleBoxFlat_6ocot")
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 8
+
+[node name="GridContainer" type="GridContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="Title" type="Label" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "DETAILS"
+
+[node name="Name" type="Label" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_type_variation = &"Subtitle"
+text = "value"
+
+[node name="Label-UI Sprite" type="Label" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "UI_SPRITE"
+
+[node name="Sprite Filename" type="Label" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_type_variation = &"Subtitle"
+text = "value"
+
+[node name="Actions" type="VBoxContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Change" type="Button" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions"]
+layout_mode = 2
+text = "CHANGE_ELLIPSIS"
+
+[node name="Reimport" type="Button" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions"]
+layout_mode = 2
+text = "REIMPORT"
+
+[node name="ImagePreview" type="AspectRatioContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment_horizontal = 0
+alignment_vertical = 0
+
+[node name="TextureRect" type="TextureRect" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/ImagePreview"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("5_o7pji")
+
+[node name="Label-Texture" type="Label" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "TEXTURE"
+
+[node name="Texture Filename" type="Label" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_type_variation = &"Subtitle"
+text = "value"
+
+[node name="Actions2" type="VBoxContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Change" type="Button" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions2"]
+layout_mode = 2
+text = "CHANGE_ELLIPSIS"
+
+[node name="Reimport" type="Button" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions2"]
+layout_mode = 2
+text = "REIMPORT"
+
+[node name="ImagePreview2" type="AspectRatioContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment_horizontal = 0
+alignment_vertical = 0
+
+[node name="TextureRect" type="TextureRect" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/ImagePreview2"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("5_o7pji")
+
+[node name="COLORS" type="HBoxContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/COLORS"]
+layout_mode = 2
+text = "Banner Colors?"
