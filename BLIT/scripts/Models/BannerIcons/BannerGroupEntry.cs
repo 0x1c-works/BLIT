@@ -37,10 +37,10 @@ public class BannerGroupEntry : BindableBase
         _project = project;
         GroupID = groupID;
         _iconFactory = iconFactory;
-        Icons.CollectionChanged += _icons_CollectionChanged;
+        Icons.CollectionChanged += OnIconsCollectionChanged;
     }
 
-    void _icons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    void OnIconsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.Action != NotifyCollectionChangedAction.Reset)
         {

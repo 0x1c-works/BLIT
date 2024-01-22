@@ -77,10 +77,10 @@ public class BannerIconEntry : BindableBase
         _settings = settings;
         _settings = settings;
 
-        _groupViewModel.PropertyChanged += _viewModel_PropertyChanged;
+        _groupViewModel.PropertyChanged += OnViewModelPropertyChanged;
     }
 
-    void _viewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(BannerGroupEntry.GroupName))
         {
@@ -142,9 +142,9 @@ public class BannerIconEntry : BindableBase
     public class SaveData
     {
         [Key(0)]
-        public string TexturePath;
+        public string TexturePath = string.Empty;
         [Key(1)]
-        public string SpritePath;
+        public string SpritePath = string.Empty;
         [Key(2)]
         public int CellIndex;
 

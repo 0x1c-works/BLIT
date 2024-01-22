@@ -187,7 +187,7 @@ public class BannerIconsProject : BindableBase, IProject
         return newID;
     }
 
-    void OnGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
+    void OnGroupPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         OnPropertyChanged(nameof(CanExport));
         if (e.PropertyName == nameof(BannerGroupEntry.GroupID))
@@ -251,7 +251,7 @@ public class BannerIconsProject : BindableBase, IProject
         return ExportXML(outFolderPath);
 
     }
-    public string? ExportXML(string outFolderPath)
+    public string ExportXML(string outFolderPath)
     {
         ToBannerIconData().SaveToXml(outFolderPath);
         SpriteOrganizer.GenerateConfigXML(outFolderPath, ToIconSprites());
