@@ -1,4 +1,9 @@
-[gd_resource type="Theme" load_steps=4 format=3 uid="uid://fdmock63swm5"]
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://fdmock63swm5"]
+
+[sub_resource type="FontVariation" id="FontVariation_mpfgf"]
+variation_opentype = {
+2003265652: 400
+}
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_agj3p"]
 bg_color = Color(0.133333, 0.133333, 0.133333, 1)
@@ -10,10 +15,16 @@ bg_color = Color(0.0862745, 0.0862745, 0.0862745, 1)
 bg_color = Color(0.2, 0.2, 0.2, 1)
 
 [resource]
+default_font = SubResource("FontVariation_mpfgf")
+default_font_size = 16
+Fonts/fonts/large = SubResource("FontVariation_mpfgf")
+Fonts/fonts/normal = SubResource("FontVariation_mpfgf")
 NavPanel/base_type = &"PanelContainer"
 NavPanel/styles/panel = SubResource("StyleBoxFlat_agj3p")
 PanelTitle/base_type = &"Label"
 PanelTitle/font_sizes/font_size = 14
 PanelTitle/styles/normal = SubResource("StyleBoxFlat_mrghr")
+Subtitle/base_type = &"Label"
+Subtitle/colors/font_color = Color(0.666667, 0.666667, 0.666667, 1)
 ToolBar/base_type = &"PanelContainer"
 ToolBar/styles/panel = SubResource("StyleBoxFlat_alelv")

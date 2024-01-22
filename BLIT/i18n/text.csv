@@ -1,0 +1,21 @@
+,en,zh
+BANNER_ICONS,Banner Icons,旗帜图标
+SETTINGS,Settings,设置
+ICON_GROUPS,Groups,图标组
+ADD_ICON_GROUP,Add an icon group,添加图标组
+DELETE_ICON_GROUP,Delete the selected icon group,删除选中的图标组
+GROUP_ID,Group ID,组ID
+ASSIGN_A_NUMBER,Assign a number,填写一个数字
+ADD,Add,添加
+DELETE,Delete,删除
+IMPORT,Import,导入
+EXPORT,Export,导出
+COLORS,Colors,颜色
+ICONS,Icons,图标
+DETAILS,Details,详情
+UI_SPRITE,UI Sprite,UI图标
+TEXTURE,Texture,贴图
+CHANGE_ELLIPSIS,Change...,更改...
+REIMPORT,Reimport,重新导入
+ADD_TEXTURES,Add Textures,添加贴图
+DELETE_TEXTURES,Delete Textures,删除贴图
