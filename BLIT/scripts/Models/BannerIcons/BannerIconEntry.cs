@@ -8,9 +8,9 @@ using System.IO;
 namespace BLIT.scripts.Models.BannerIcons;
 public class BannerIconEntry : BindableBase
 {
-    public delegate BannerIconEntry Factory(BannerGroupEntry groupVm, string texturePath);
+    public delegate BannerIconEntry Factory(BannerGroupEntry group, string texturePath);
 
-    readonly BannerGroupEntry _groupViewModel;
+    readonly BannerGroupEntry _group;
     string _texturePath = string.Empty;
     string _spritePath = string.Empty;
     int _cellIndex;
@@ -65,22 +65,22 @@ public class BannerIconEntry : BindableBase
     }
     public int AtlasIndex => CellIndex / (TextureMerger.ROWS * TextureMerger.COLS);
 
-    public string AtlasName => BannerUtils.GetAtlasName(_groupViewModel.GroupID, AtlasIndex);
-    public int ID => BannerUtils.GetIconID(_groupViewModel.GroupID, CellIndex);
+    public string AtlasName => BannerUtils.GetAtlasName(_group.GroupID, AtlasIndex);
+    public int ID => BannerUtils.GetIconID(_group.GroupID, CellIndex);
 
     public bool IsValid => ImageHelper.IsValidImage(TexturePath) && AtlasIndex >= 0;
 
-    public BannerIconEntry(BannerGroupEntry groupVm, string texturePath, ISettingsService settings)
+    public BannerIconEntry(BannerGroupEntry group, string texturePath, ISettingsService settings)
     {
-        _groupViewModel = groupVm;
+        _group = group;
         _texturePath = texturePath;
         _settings = settings;
         _settings = settings;
 
-        _groupViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        _group.PropertyChanged += OnGroupPropertyChanged;
     }
 
-    void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    void OnGroupPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(BannerGroupEntry.GroupName))
         {
@@ -115,7 +115,7 @@ public class BannerIconEntry : BindableBase
     }
     public IconSprite ToIconSprite()
     {
-        return new(_groupViewModel.GroupID, ID, _spritePath);
+        return new(_group.GroupID, ID, _spritePath);
     }
 
     public void AutoScanSprite()
@@ -148,20 +148,20 @@ public class BannerIconEntry : BindableBase
         [Key(2)]
         public int CellIndex;
 
-        public SaveData(BannerIconEntry vm)
+        public SaveData(BannerIconEntry model)
         {
-            TexturePath = vm.TexturePath;
-            SpritePath = vm.SpritePath;
-            CellIndex = vm.CellIndex;
+            TexturePath = model.TexturePath;
+            SpritePath = model.SpritePath;
+            CellIndex = model.CellIndex;
         }
         public SaveData() { }
 
-        public BannerIconEntry Load(BannerGroupEntry groupVM, Factory factory)
+        public BannerIconEntry Load(BannerGroupEntry group, Factory factory)
         {
-            BannerIconEntry vm = factory(groupVM, TexturePath);
-            vm.SpritePath = SpritePath;
-            vm.CellIndex = CellIndex;
-            return vm;
+            BannerIconEntry model = factory(group, TexturePath);
+            model.SpritePath = SpritePath;
+            model.CellIndex = CellIndex;
+            return model;
         }
     }
 }

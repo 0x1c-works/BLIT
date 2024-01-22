@@ -116,21 +116,21 @@ public class BannerGroupEntry : BindableBase
         [Key(1)]
         public BannerIconEntry.SaveData[] Icons = new BannerIconEntry.SaveData[] { };
 
-        public SaveData(BannerGroupEntry vm)
+        public SaveData(BannerGroupEntry model)
         {
-            GroupID = vm.GroupID;
-            Icons = vm.Icons.Select(icon => new BannerIconEntry.SaveData(icon)).ToArray();
+            GroupID = model.GroupID;
+            Icons = model.Icons.Select(icon => new BannerIconEntry.SaveData(icon)).ToArray();
         }
         public SaveData() { }
 
         public BannerGroupEntry Load(Factory factory)
         {
-            BannerGroupEntry vm = factory(GroupID);
+            BannerGroupEntry model = factory(GroupID);
             foreach (BannerIconEntry.SaveData icon in Icons)
             {
-                vm.Icons.Add(icon.Load(vm, vm._iconFactory.Value));
+                model.Icons.Add(icon.Load(model, model._iconFactory.Value));
             }
-            return vm;
+            return model;
         }
     }
 }

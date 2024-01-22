@@ -267,10 +267,10 @@ public class BannerIconsProject : BindableBase, IProject
         [Key(1)]
         public BannerColorEntry.SaveData[] Colors = new BannerColorEntry.SaveData[] { };
 
-        public SaveData(BannerIconsProject vm)
+        public SaveData(BannerIconsProject model)
         {
-            Groups = vm.Groups.Select(g => new BannerGroupEntry.SaveData(g)).ToArray();
-            Colors = vm.Colors.Select(g => new BannerColorEntry.SaveData(g)).ToArray();
+            Groups = model.Groups.Select(g => new BannerGroupEntry.SaveData(g)).ToArray();
+            Colors = model.Colors.Select(g => new BannerColorEntry.SaveData(g)).ToArray();
         }
         public SaveData() { }
     }

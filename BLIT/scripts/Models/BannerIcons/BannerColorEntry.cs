@@ -82,21 +82,21 @@ public class BannerColorEntry : BindableBase
         [Key(3)]
         public bool IsForBackground;
 
-        public SaveData(BannerColorEntry vm)
+        public SaveData(BannerColorEntry model)
         {
-            ID = vm.ID;
-            Color = vm.Color;
-            IsForSigil = vm.IsForSigil;
-            IsForBackground = vm.IsForBackground;
+            ID = model.ID;
+            Color = model.Color;
+            IsForSigil = model.IsForSigil;
+            IsForBackground = model.IsForBackground;
         }
         public SaveData() { }
         public BannerColorEntry Load(Factory factory)
         {
-            BannerColorEntry vm = factory(ID);
-            vm.Color = Color;
-            vm.IsForSigil = IsForSigil;
-            vm.IsForBackground = IsForBackground;
-            return vm;
+            BannerColorEntry model = factory(ID);
+            model.Color = Color;
+            model.IsForSigil = IsForSigil;
+            model.IsForBackground = IsForBackground;
+            return model;
         }
     }
     public static int Compare(BannerColorEntry x, BannerColorEntry y)
