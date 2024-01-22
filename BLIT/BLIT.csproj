@@ -8,6 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="8.0.0" />
+    <PackageReference Include="ColorCode.Core" Version="2.0.15" />
     <PackageReference Include="MessagePack" Version="2.5.140" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.5.140">
       <PrivateAssets>all</PrivateAssets>
@@ -18,6 +19,7 @@
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="scripts\Models\" />
+    <ProjectReference Include="..\BLIT.Banner\BLIT.Banner.csproj" />
+    <ProjectReference Include="..\BLIT.Sprite\BLIT.Sprite.csproj" />
   </ItemGroup>
 </Project>

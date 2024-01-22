@@ -1,6 +1,8 @@
 ﻿using Autofac;
+using BLIT.scripts.Common;
 using Serilog;
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -9,24 +11,23 @@ namespace BLIT.scripts.Services;
 public interface IProjectService<T> where T : IProject
 {
     T? Current { get; }
+    string Name { get; }
 
     Task<T> NewProject(Func<T, Task>? onLoad = null);
     Task Save(string filePath);
     Task Load(string filePath);
 }
 
-public interface IProject
+public interface IProject : INotifyPropertyChanged
 {
     string FilePath { get; }
-    string Name { get; }
     void AfterLoaded();
     Task Write(Stream s);
     Task Read(Stream s);
 }
 
-class ProjectService<T> : IProjectService<T>, IDisposable where T : IProject
+class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T : IProject
 {
-    public event Action<IProject?>? ProjectChanged;
     ILifetimeScope? _scope;
 
     T? _project;
@@ -35,9 +36,21 @@ class ProjectService<T> : IProjectService<T>, IDisposable where T : IProject
         get => _project;
         set
         {
-            if (Equals(_project, value)) return;
-            _project = value;
-            ProjectChanged?.Invoke(_project);
+            T? old = Current;
+            var changed = SetProperty(ref _project, value);
+            if (changed)
+            {
+                if (old != null) old.PropertyChanged -= OnProjectPropertyChanged;
+                if (Current != null) Current.PropertyChanged += OnProjectPropertyChanged;
+            }
+        }
+    }
+
+    void OnProjectPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(Current.FilePath))
+        {
+            OnPropertyChanged(nameof(Name));
         }
     }
     public string Name
@@ -49,7 +62,10 @@ class ProjectService<T> : IProjectService<T>, IDisposable where T : IProject
         }
     }
 
-    public string CurrentFilePath => throw new NotImplementedException();
+    public ProjectService()
+    {
+        Log.Information($"ProjectService<{typeof(T).Name}> created");
+    }
 
     public async Task<T> NewProject(Func<T, Task>? onLoad = null)
     {
