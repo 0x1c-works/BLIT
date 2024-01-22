@@ -8,6 +8,7 @@ public partial class App : Control
     public override void _Ready()
     {
         Logging.Initialize();
+        AppConfig.Load();
         AppService.Configure();
     }
 

@@ -1,11 +1,10 @@
 ﻿using Serilog;
-using System;
 using System.IO;
 
 namespace BLIT.scripts.Common;
 public class Logging
 {
-    public static string Folder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "BLIT", "logs");
+    public static string Folder => FileSystemHelper.GetLocalDataPath("logs");
     public static void Initialize()
     {
 

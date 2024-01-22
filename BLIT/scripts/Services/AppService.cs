@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using BLIT.scripts.Models;
+using BLIT.scripts.Models.BannerIcons;
 using Serilog;
 using System;
 
@@ -22,18 +24,18 @@ public class AppService
         //builder.RegisterType<LoadingService>().AsImplementedInterfaces().SingleInstance();
 
         // Singleton components
-        //builder.RegisterType<GlobalSettings>().SingleInstance();
-        //builder.Register((ctx) => BannerSettings.Load()).SingleInstance();
-        //RegisterProjectService<BannerIconsProject>(builder);
+        builder.RegisterType<GlobalSettings>().SingleInstance();
+        builder.Register((ctx) => BannerSettings.Load()).SingleInstance();
+        RegisterProjectService<BannerIconsProject>(builder);
 
         // Scoped services
-        //builder.RegisterType<SettingsService>().AsImplementedInterfaces();
+        builder.RegisterType<SettingsService>().AsImplementedInterfaces();
 
         // Scoped components
-        //builder.RegisterType<BannerIconsProject>().InstancePerLifetimeScope();
-        //builder.RegisterType<BannerGroupEntry>().InstancePerDependency();
-        //builder.RegisterType<BannerColorEntry>().InstancePerDependency();
-        //builder.RegisterType<BannerIconEntry>().InstancePerDependency();
+        builder.RegisterType<BannerIconsProject>().InstancePerLifetimeScope();
+        builder.RegisterType<BannerGroupEntry>().InstancePerDependency();
+        builder.RegisterType<BannerColorEntry>().InstancePerDependency();
+        builder.RegisterType<BannerIconEntry>().InstancePerDependency();
 
         _container = builder.Build();
     }

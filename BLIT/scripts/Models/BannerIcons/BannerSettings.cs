@@ -1,8 +1,8 @@
-﻿using MessagePack;
+﻿using BLIT.scripts.Common;
+using MessagePack;
 using Serilog;
 using System;
 using System.Collections.Generic;
-using Windows.Storage;
 
 namespace BLIT.scripts.Models.BannerIcons;
 
@@ -57,11 +57,12 @@ public class BannerSettings
         var data = MessagePackSerializer.Serialize(this);
         Log.Debug("Saving banner settings: {Data}", MessagePackSerializer.ConvertToJson(data));
         var savedSettings = Convert.ToBase64String(data);
-        ApplicationData.Current.LocalSettings.Values["BannerSettings"] = savedSettings;
+        AppConfig.Current.SetValue("BannerIcons", "BannerSettings", savedSettings);
+        AppConfig.Save();
     }
     public static BannerSettings Load()
     {
-        var savedSettings = ApplicationData.Current.LocalSettings.Values["BannerSettings"] as string;
+        var savedSettings = AppConfig.Current.GetValue("BannerIcons", "BannerSettings", "").AsString();
         if (string.IsNullOrEmpty(savedSettings)) return new BannerSettings();
         var data = Convert.FromBase64String(savedSettings);
         Log.Debug("Loaded stored banner settings: {Data}", MessagePackSerializer.ConvertToJson(data));
