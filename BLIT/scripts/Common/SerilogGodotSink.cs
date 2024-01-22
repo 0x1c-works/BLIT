@@ -99,7 +99,7 @@ public class GodotSink : ILogEventSink
         {
             return delegate (LogEvent logEvent, TextWriter output)
             {
-                if (logEvent.Properties.TryGetValue(propertyName, out LogEventPropertyValue propertyValue))
+                if (logEvent.Properties.TryGetValue(propertyName, out LogEventPropertyValue? propertyValue))
                     propertyValue.Render(output, format, formatProvider);
             };
         }
@@ -116,3 +116,4 @@ public static class GodotSinkExtensions
     {
         return configuration.Sink(new GodotSink(outputTemplate, formatProvider));
     }
+}

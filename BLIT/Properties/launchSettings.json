@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "BLIT": {
+      "commandName": "Project"
+    },
+    "Godot": {
+      "commandName": "Executable",
+      "executablePath": "D:\\Godot\\Godot_v4.2.1-stable_mono_win64\\Godot_v4.2.1-stable_mono_win64.exe",
+      "commandLineArgs": "--debug --path $(ProjectDir)"
+    }
+  }
+}

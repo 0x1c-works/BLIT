@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Serilog;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ namespace BLIT.scripts.Services;
 
 public interface IProjectService<T> where T : IProject
 {
-    T Current { get; }
+    T? Current { get; }
 
     Task<T> NewProject(Func<T, Task>? onLoad = null);
     Task Save(string filePath);
@@ -25,7 +26,7 @@ public interface IProject
 
 class ProjectService<T> : IProjectService<T>, IDisposable where T : IProject
 {
-    public event Action<IProject>? ProjectChanged;
+    public event Action<IProject?>? ProjectChanged;
     ILifetimeScope? _scope;
 
     T? _project;
@@ -34,7 +35,7 @@ class ProjectService<T> : IProjectService<T>, IDisposable where T : IProject
         get => _project;
         set
         {
-            if (_project.Equals(value)) return;
+            if (Equals(_project, value)) return;
             _project = value;
             ProjectChanged?.Invoke(_project);
         }
@@ -66,6 +67,11 @@ class ProjectService<T> : IProjectService<T>, IDisposable where T : IProject
     }
     public async Task Save(string filePath)
     {
+        if (Current == null)
+        {
+            Log.Error($"No {typeof(T).Name} to save");
+            return;
+        }
         using Stream s = File.OpenWrite(filePath);
         await Current.Write(s);
     }
