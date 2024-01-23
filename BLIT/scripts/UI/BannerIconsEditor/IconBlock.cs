@@ -2,6 +2,9 @@ using BLIT.scripts.Models.BannerIcons;
 using Godot;
 using System;
 using System.ComponentModel;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 public partial class IconBlock : Control {
     [Export] public TextureRect? Texture { get; set; }
@@ -17,9 +20,14 @@ public partial class IconBlock : Control {
             UpdateUI();
         }
     }
+    private CancellationTokenSource? _cancelLoading;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
+    }
+    public override void _ExitTree() {
+        base._ExitTree();
+        _cancelLoading?.Cancel();
     }
 
     private void UpdateUI() {
@@ -39,10 +47,9 @@ public partial class IconBlock : Control {
         }
     }
 
-    private void UpdateTexture() {
+    private async void UpdateTexture() {
         if (Texture != null) {
-            var img = Image.LoadFromFile(Icon.TexturePath);
-            Texture.Texture = ImageTexture.CreateFromImage(img);
+            Texture.Texture = await LoadImage(Icon.TexturePath);
         }
     }
     private void UpdateID() {
@@ -54,5 +61,15 @@ public partial class IconBlock : Control {
         if (AtlasName != null) {
             AtlasName.Text = Icon.AtlasName;
         }
+    }
+    private Task<ImageTexture?> LoadImage(string path) {
+        _cancelLoading?.Cancel();
+        _cancelLoading = new();
+        return Task.Factory.StartNew(() => {
+            if (!File.Exists(path)) return null;
+
+            var img = Image.LoadFromFile(Icon.TexturePath);
+            return ImageTexture.CreateFromImage(img);
+        }, _cancelLoading.Token);
     }
 }
