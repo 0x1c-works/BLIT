@@ -6,56 +6,47 @@ using System.Collections.Generic;
 
 namespace BLIT.scripts.Models.BannerIcons;
 
-public class BannerColorEntry : BindableBase
-{
+public class BannerColorEntry : BindableBase {
     public delegate BannerColorEntry Factory(int id);
 
-    BannerIconsProject _project;
-    int _id;
-    Color _color = Colors.White;
-    bool _isForSigil = true;
-    bool _isForBackground = true;
+    private BannerIconsProject _project;
+    private int _id;
+    private Color _color = Colors.White;
+    private bool _isForSigil = true;
+    private bool _isForBackground = true;
 
-    public int ID
-    {
+    public int ID {
         get => _id;
-        set
-        {
+        set {
             value = _project.ValidateColorID(_id, value);
             SetProperty(ref _id, value);
             OnPropertyChanged(nameof(CanExport));
         }
     }
-    public Color Color
-    {
+    public Color Color {
         get => _color;
-        set
-        {
+        set {
             SetProperty(ref _color, value);
             OnPropertyChanged(nameof(CanExport));
         }
     }
-    public bool IsForSigil
-    {
+    public bool IsForSigil {
         get => _isForSigil;
         set => SetProperty(ref _isForSigil, value);
     }
-    public bool IsForBackground
-    {
+    public bool IsForBackground {
         get => _isForBackground;
         set => SetProperty(ref _isForBackground, value);
     }
 
     public bool CanExport => ID >= 0 && Color.A > 0;
 
-    public BannerColorEntry(BannerIconsProject project, int id)
-    {
+    public BannerColorEntry(BannerIconsProject project, int id) {
         _project = project;
         ID = id;
     }
 
-    public BannerColor ToBannerColor()
-    {
+    public BannerColor ToBannerColor() {
         return new BannerColor {
             ID = ID,
             Hex = ColorToHex(Color),
@@ -64,14 +55,12 @@ public class BannerColorEntry : BindableBase
         };
     }
 
-    static string ColorToHex(Color color)
-    {
+    private static string ColorToHex(Color color) {
         return $"0xff{color.R:X2}{color.G:X2}{color.B:X2}";
     }
 
     [MessagePackObject]
-    public class SaveData
-    {
+    public class SaveData {
         [Key(0)]
         public int ID;
         [Key(1)]
@@ -82,16 +71,14 @@ public class BannerColorEntry : BindableBase
         [Key(3)]
         public bool IsForBackground;
 
-        public SaveData(BannerColorEntry model)
-        {
+        public SaveData(BannerColorEntry model) {
             ID = model.ID;
             Color = model.Color;
             IsForSigil = model.IsForSigil;
             IsForBackground = model.IsForBackground;
         }
         public SaveData() { }
-        public BannerColorEntry Load(Factory factory)
-        {
+        public BannerColorEntry Load(Factory factory) {
             BannerColorEntry model = factory(ID);
             model.Color = Color;
             model.IsForSigil = IsForSigil;
@@ -99,8 +86,7 @@ public class BannerColorEntry : BindableBase
             return model;
         }
     }
-    public static int Compare(BannerColorEntry x, BannerColorEntry y)
-    {
+    public static int Compare(BannerColorEntry x, BannerColorEntry y) {
         x.Color.ToHsv(out var h1, out var s1, out var v1);
         y.Color.ToHsv(out var h2, out var s2, out var v2);
 
@@ -112,8 +98,7 @@ public class BannerColorEntry : BindableBase
         var deltaV = v1 - v2;
 
         // for greyscale, sort from white to black
-        if (s1 == 0 && s2 == 0)
-        {
+        if (s1 == 0 && s2 == 0) {
             return deltaV == 1 ? -1 : deltaV == 0 ? 1 : (deltaV > 0 ? -1 : 1);
         }
         // greyscale always is at the start
@@ -128,10 +113,8 @@ public class BannerColorEntry : BindableBase
         return 0;
     }
 
-    public class Comparer : IComparer<BannerColorEntry>
-    {
-        public int Compare(BannerColorEntry? x, BannerColorEntry? y)
-        {
+    public class Comparer : IComparer<BannerColorEntry> {
+        public int Compare(BannerColorEntry? x, BannerColorEntry? y) {
             return Compare(x, y);
         }
     }

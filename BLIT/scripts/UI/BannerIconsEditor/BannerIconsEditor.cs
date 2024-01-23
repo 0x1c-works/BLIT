@@ -4,27 +4,22 @@ using BLIT.scripts.Services;
 using Godot;
 using System.ComponentModel;
 
-public partial class BannerIconsEditor : Control
-{
-    IProjectService<BannerIconsProject>? _projectService;
-    IProjectService<BannerIconsProject> ProjectService => _projectService ?? AppService.Container.Resolve<IProjectService<BannerIconsProject>>();
+public partial class BannerIconsEditor : Control {
+    private IProjectService<BannerIconsProject> ProjectService => AppService.Container.Resolve<IProjectService<BannerIconsProject>>();
 
     [Export] public Label? LabelFileName { get; set; }
     [Export] public FileDialog? OpenProjectDialog { get; set; }
     [Export] public FileDialog? SaveProjectDialog { get; set; }
 
-    public override void _Ready()
-    {
-        if (ProjectService == null)
-        {
+    public override void _Ready() {
+        if (ProjectService == null) {
             throw new System.ApplicationException("ProjectService is not injected");
         }
         ProjectService.PropertyChanged += OnProjectServicePropertyChanged;
         UpdateFileName();
     }
 
-    void OnNewProject()
-    {
+    private void OnNewProject() {
         var confirm = new ConfirmationDialog() {
             Title = "CONFIRMATION/TITLE/CREATE_PROJECT",
             DialogText = "CONFIRMATION/TEXT/CREATE_PROJECT",
@@ -42,8 +37,8 @@ public partial class BannerIconsEditor : Control
         AddChild(confirm);
         confirm.PopupCentered();
     }
-    void OnOpenProject()
-    {
+
+    private void OnOpenProject() {
         FileDialog dlg = CreateProjectFileDialog(ProjectService.FilePath);
         dlg.FileSelected += (path) => {
             ProjectService.Open(path);
@@ -53,8 +48,7 @@ public partial class BannerIconsEditor : Control
         dlg.PopupCentered();
     }
 
-    FileDialog CreateProjectFileDialog(string? filePath)
-    {
+    private FileDialog CreateProjectFileDialog(string? filePath) {
         var dlg = new FileDialog() {
             Access = FileDialog.AccessEnum.Filesystem,
             UseNativeDialog = true,
@@ -67,18 +61,14 @@ public partial class BannerIconsEditor : Control
         return dlg;
     }
 
-    void OnProjectServicePropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(ProjectService.Name))
-        {
+    private void OnProjectServicePropertyChanged(object? sender, PropertyChangedEventArgs e) {
+        if (e.PropertyName == nameof(ProjectService.Name)) {
             UpdateFileName();
         }
     }
 
-    void UpdateFileName()
-    {
-        if (LabelFileName != null)
-        {
+    private void UpdateFileName() {
+        if (LabelFileName != null) {
             LabelFileName.Text = ProjectService.Name ?? "NEW_PROJECT";
         }
     }

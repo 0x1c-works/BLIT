@@ -1,6 +1,5 @@
 ﻿namespace BLIT.scripts.Models;
 
-public class GlobalSettings
-{
+public class GlobalSettings {
 }
 

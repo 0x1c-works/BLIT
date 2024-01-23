@@ -5,14 +5,11 @@ using Serilog;
 using System;
 
 namespace BLIT.scripts.Services;
-public class AppService
-{
-    static IContainer? _container;
+public class AppService {
+    private static IContainer? _container;
     public static IContainer Container => _container ?? throw new Exception("AppService not configured");
-    public static void Configure()
-    {
-        if (_container != null)
-        {
+    public static void Configure() {
+        if (_container != null) {
             Log.Warning("AppService already configured. The process is skipped.");
             return;
         }
@@ -40,12 +37,11 @@ public class AppService
         _container = builder.Build();
     }
 
-    static void RegisterProjectService<T>(ContainerBuilder builder) where T : IProject
-    {
+    private static void RegisterProjectService<T>(ContainerBuilder builder) where T : IProject {
         builder.RegisterType<ProjectService<T>>()
-            .As<IProjectService<T>>()
-            .SingleInstance()
-            .OnActivated(async (e) => await e.Instance.NewProject());
+               .As<IProjectService<T>>()
+               .SingleInstance()
+               .OnActivated(async (e) => await e.Instance.NewProject());
     }
 
 }

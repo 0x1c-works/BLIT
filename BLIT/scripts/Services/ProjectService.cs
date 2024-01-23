@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace BLIT.scripts.Services;
 
-public interface IProjectService<T> : INotifyPropertyChanged where T : IProject
-{
+public interface IProjectService<T> : INotifyPropertyChanged where T : IProject {
     T? Current { get; }
     string? Name { get; }
     string? FilePath { get; }
@@ -19,54 +18,44 @@ public interface IProjectService<T> : INotifyPropertyChanged where T : IProject
     Task Open(string filePath);
 }
 
-public interface IProject : INotifyPropertyChanged
-{
+public interface IProject : INotifyPropertyChanged {
     void AfterLoaded();
     Task Write(Stream s);
     Task Read(Stream s);
 }
 
-class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T : IProject
-{
-    ILifetimeScope? _scope;
-
-    T? _project;
-    public T? Current
-    {
+internal class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T : IProject {
+    private ILifetimeScope? _scope;
+    private T? _project;
+    public T? Current {
         get => _project;
-        set
-        {
+        set {
             T? old = Current;
             var changed = SetProperty(ref _project, value);
         }
     }
-    string? _filePath;
-    public string? FilePath
-    {
+
+    private string? _filePath;
+    public string? FilePath {
         get => _filePath;
-        private set
-        {
-            if (SetProperty(ref _filePath, value))
-            {
+        private set {
+            if (SetProperty(ref _filePath, value)) {
                 OnPropertyChanged(nameof(Name));
             }
         }
     }
     public string? Name => string.IsNullOrEmpty(FilePath) ? null : Path.GetFileName(FilePath);
 
-    public ProjectService()
-    {
+    public ProjectService() {
         Log.Information($"ProjectService<{typeof(T).Name}> created");
     }
 
-    public async Task<T> NewProject(Func<T, Task>? onLoad = null)
-    {
+    public async Task<T> NewProject(Func<T, Task>? onLoad = null) {
         // Close the opened project if any
         Dispose();
         _scope = AppService.Container.BeginLifetimeScope(typeof(T).Name);
         T vm = _scope.Resolve<T>();
-        if (onLoad != null)
-        {
+        if (onLoad != null) {
             await onLoad(vm);
         }
         Current = vm;
@@ -74,10 +63,8 @@ class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T 
         FilePath = null;
         return Current;
     }
-    public async Task Save(string filePath)
-    {
-        if (Current == null)
-        {
+    public async Task Save(string filePath) {
+        if (Current == null) {
             Log.Error($"No {typeof(T).Name} to save");
             return;
         }
@@ -85,15 +72,13 @@ class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T 
         await Current.Write(s);
         FilePath = filePath;
     }
-    public async Task Open(string filePath)
-    {
+    public async Task Open(string filePath) {
         using Stream s = File.Open(filePath, FileMode.Open);
         await NewProject(vm => vm.Read(s));
         FilePath = filePath;
     }
 
-    public void Dispose()
-    {
+    public void Dispose() {
         _scope?.Dispose();
     }
 }

@@ -9,20 +9,18 @@ using System.Linq;
 
 namespace BLIT.scripts.Models.BannerIcons;
 
-public class BannerGroupEntry : BindableBase
-{
+public class BannerGroupEntry : BindableBase {
     public delegate BannerGroupEntry Factory(int groupID);
 
-    BannerIconsProject _project;
+    private BannerIconsProject _project;
     public ObservableCollection<BannerIconEntry> Icons { get; } = new();
-    int _groupID = 7;
-    readonly Lazy<BannerIconEntry.Factory> _iconFactory;
 
-    public int GroupID
-    {
+    private int _groupID = 7;
+    private readonly Lazy<BannerIconEntry.Factory> _iconFactory;
+
+    public int GroupID {
         get => _groupID;
-        set
-        {
+        set {
             value = _project.ValidateGroupID(_groupID, value);
             SetProperty(ref _groupID, value);
             OnPropertyChanged(nameof(GroupName));
@@ -32,102 +30,84 @@ public class BannerGroupEntry : BindableBase
 
     public bool CanExport => Icons.Count > 0;
 
-    public BannerGroupEntry(BannerIconsProject project, int groupID, Lazy<BannerIconEntry.Factory> iconFactory)
-    {
+    public BannerGroupEntry(BannerIconsProject project, int groupID, Lazy<BannerIconEntry.Factory> iconFactory) {
         _project = project;
         GroupID = groupID;
         _iconFactory = iconFactory;
         Icons.CollectionChanged += OnIconsCollectionChanged;
     }
 
-    void OnIconsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (e.Action != NotifyCollectionChangedAction.Reset)
-        {
+    private void OnIconsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
+        if (e.Action != NotifyCollectionChangedAction.Reset) {
             RefreshCellIndex();
         }
         OnPropertyChanged(nameof(Icons));
         OnPropertyChanged(nameof(CanExport));
     }
 
-    public void AddIcons(IEnumerable<string> filePaths)
-    {
+    public void AddIcons(IEnumerable<string> filePaths) {
         bool IsIconAdded(BannerIconEntry icon, string filePath) => icon.TexturePath.Equals(filePath, StringComparison.InvariantCultureIgnoreCase);
 
         IEnumerable<BannerIconEntry> newIcons = filePaths
             .Where(filePath => !Icons.Any(icon => IsIconAdded(icon, filePath)))
             .Select(filePath => _iconFactory.Value(this, filePath));
         IEnumerable<BannerIconEntry> existingIcons = Icons.Where(icon => filePaths.Any(file => IsIconAdded(icon, file)));
-        foreach (BannerIconEntry icon in newIcons)
-        {
+        foreach (BannerIconEntry icon in newIcons) {
             Icons.Add(icon);
             icon.AutoScanSprite();
         }
-        foreach (BannerIconEntry icon in existingIcons)
-        {
+        foreach (BannerIconEntry icon in existingIcons) {
             icon.ReloadSprite();
             icon.ReloadTexture();
         }
     }
-    public void DeleteIcons(IEnumerable<BannerIconEntry> icons)
-    {
+    public void DeleteIcons(IEnumerable<BannerIconEntry> icons) {
         var queue = new Queue<BannerIconEntry>(icons);
-        while (queue.Count > 0)
-        {
+        while (queue.Count > 0) {
             BannerIconEntry deleting = queue.Dequeue();
-            if (!Icons.Remove(deleting))
-            {
+            if (!Icons.Remove(deleting)) {
                 // a more expensive way to ensure the icon is deleted
                 var index = Icons.Select(i => i.TexturePath).ToList().IndexOf(deleting.TexturePath);
-                if (index > -1)
-                {
+                if (index > -1) {
                     Icons.RemoveAt(index);
                 }
             }
         }
     }
-    public void RefreshCellIndex()
-    {
-        for (var i = 0; i < Icons.Count; i++)
-        {
+    public void RefreshCellIndex() {
+        for (var i = 0; i < Icons.Count; i++) {
             Icons[i].CellIndex = i;
         }
     }
 
-    public BannerIconGroup ToBannerIconGroup()
-    {
+    public BannerIconGroup ToBannerIconGroup() {
         var group = new BannerIconGroup() {
             ID = GroupID,
             Name = GroupName,
             IsPattern = false,
         };
-        foreach (BannerIconEntry icon in Icons)
-        {
+        foreach (BannerIconEntry icon in Icons) {
             group.Icons.Add(icon.ToBannerIcon());
         }
         return group;
     }
 
     [MessagePackObject]
-    public class SaveData
-    {
+    public class SaveData {
         [Key(0)]
         public int GroupID;
         [Key(1)]
         public BannerIconEntry.SaveData[] Icons = new BannerIconEntry.SaveData[] { };
 
-        public SaveData(BannerGroupEntry model)
-        {
+        public SaveData(BannerGroupEntry model) {
             GroupID = model.GroupID;
             Icons = model.Icons.Select(icon => new BannerIconEntry.SaveData(icon)).ToArray();
         }
         public SaveData() { }
 
-        public BannerGroupEntry Load(Factory factory)
-        {
+        public BannerGroupEntry Load(Factory factory) {
             BannerGroupEntry model = factory(GroupID);
-            foreach (BannerIconEntry.SaveData icon in Icons)
-            {
+            foreach (BannerIconEntry.SaveData icon in Icons) {
                 model.Icons.Add(icon.Load(model, model._iconFactory.Value));
             }
             return model;

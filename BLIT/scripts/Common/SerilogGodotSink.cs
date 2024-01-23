@@ -13,17 +13,14 @@ using System.Linq;
 
 namespace BLIT.scripts.Common;
 
-public class GodotSink : ILogEventSink
-{
-    readonly ITextFormatter formatter;
+public class GodotSink : ILogEventSink {
+    private readonly ITextFormatter formatter;
 
-    public GodotSink(string outputTemplate, IFormatProvider? formatProvider)
-    {
+    public GodotSink(string outputTemplate, IFormatProvider? formatProvider) {
         formatter = new TemplateRenderer(outputTemplate, formatProvider);
     }
 
-    public void Emit(LogEvent logEvent)
-    {
+    public void Emit(LogEvent logEvent) {
         using TextWriter writer = new StringWriter();
         formatter.Format(logEvent, writer);
         writer.Flush();
@@ -48,15 +45,13 @@ public class GodotSink : ILogEventSink
             GD.PushWarning(logEvent.Exception);
     }
 
-    class TemplateRenderer : ITextFormatter
-    {
-        delegate void Renderer(LogEvent logEvent, TextWriter output);
+    private class TemplateRenderer : ITextFormatter {
+        private delegate void Renderer(LogEvent logEvent, TextWriter output);
 
-        readonly Renderer[] renderers;
-        readonly IFormatProvider? formatProvider;
+        private readonly Renderer[] renderers;
+        private readonly IFormatProvider? formatProvider;
 
-        public TemplateRenderer(string outputTemplate, IFormatProvider? formatProvider)
-        {
+        public TemplateRenderer(string outputTemplate, IFormatProvider? formatProvider) {
             this.formatProvider = formatProvider;
 
             MessageTemplate template = new MessageTemplateParser().Parse(outputTemplate);
@@ -80,14 +75,12 @@ public class GodotSink : ILogEventSink
             ).OfType<Renderer>().ToArray();
         }
 
-        public void Format(LogEvent logEvent, TextWriter output)
-        {
+        public void Format(LogEvent logEvent, TextWriter output) {
             foreach (Renderer renderer in renderers)
                 renderer.Invoke(logEvent, output);
         }
 
-        Renderer RenderTimestamp(string? format)
-        {
+        private Renderer RenderTimestamp(string? format) {
             Func<LogEvent, string> f = formatProvider?.GetFormat(typeof(ICustomFormatter)) is ICustomFormatter formatter
                 ? (logEvent) => formatter.Format(format, logEvent.Timestamp, formatProvider)
                 : (logEvent) => logEvent.Timestamp.ToString(format, formatProvider ?? CultureInfo.InvariantCulture);
@@ -95,10 +88,8 @@ public class GodotSink : ILogEventSink
             return (logEvent, output) => output.Write(f(logEvent));
         }
 
-        Renderer RenderProperty(string propertyName, string? format)
-        {
-            return delegate (LogEvent logEvent, TextWriter output)
-            {
+        private Renderer RenderProperty(string propertyName, string? format) {
+            return delegate (LogEvent logEvent, TextWriter output) {
                 if (logEvent.Properties.TryGetValue(propertyName, out LogEventPropertyValue? propertyValue))
                     propertyValue.Render(output, format, formatProvider);
             };
@@ -106,14 +97,12 @@ public class GodotSink : ILogEventSink
     }
 }
 
-public static class GodotSinkExtensions
-{
-    const string DefaultGodotSinkOutputTemplate = "[{Timestamp:HH:mm:ss}] {Message:lj}";
+public static class GodotSinkExtensions {
+    private const string DefaultGodotSinkOutputTemplate = "[{Timestamp:HH:mm:ss}] {Message:lj}";
 
     public static LoggerConfiguration Godot(this LoggerSinkConfiguration configuration,
                                             string outputTemplate = DefaultGodotSinkOutputTemplate,
-                                            IFormatProvider? formatProvider = null)
-    {
+                                            IFormatProvider? formatProvider = null) {
         return configuration.Sink(new GodotSink(outputTemplate, formatProvider));
     }
 }
