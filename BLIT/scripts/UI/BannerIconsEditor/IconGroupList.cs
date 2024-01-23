@@ -1,0 +1,125 @@
+using BLIT.scripts.Models.BannerIcons;
+using BLIT.scripts.Services;
+using Godot;
+using Serilog;
+using System.Collections.Specialized;
+using System.ComponentModel;
+
+public partial class IconGroupList : Control {
+    [Export] public Button? AddButton { get; set; }
+    [Export] public Button? DeleteButton { get; set; }
+    [Export] public Tree? ItemList { get; set; }
+
+    private IProjectService<BannerIconsProject> ProjectService => AppService.Get<IProjectService<BannerIconsProject>>();
+    private BannerIconsProject? Project => ProjectService.Current;
+    private int _prevSelectedID = -1;
+    private int _prevSelectedIndex = -1;
+
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready() {
+        ItemList ??= GetNode<Tree>("ItemList");
+        ItemList.ItemSelected += OnGroupSelected;
+
+        if (AddButton != null) {
+            AddButton.Pressed += CreateGroup;
+        }
+        if (DeleteButton != null) {
+            DeleteButton.Pressed += DeleteSelectedGroup;
+        }
+
+        ProjectService.PropertyChanged += OnProjectServicePropertyChanged;
+        Bind();
+        UpdateList();
+    }
+
+    private void OnProjectServicePropertyChanged(object? sender, PropertyChangedEventArgs e) {
+        if (e.PropertyName == nameof(ProjectService.Current)) {
+            Bind();
+            UpdateList();
+        }
+    }
+
+    private void Bind() {
+        if (Project == null) return;
+        Project.Groups.CollectionChanged += OnGroupsCollectionChanged;
+    }
+
+    private void OnGroupsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
+        // FIXME: can be optimized
+        UpdateList();
+    }
+
+    private void UpdateList() {
+        if (ItemList == null) return;
+        _prevSelectedID = GetSelectedGroup()?.GroupID ?? -1;
+        ItemList.Clear();
+        if (Project == null) {
+            return;
+        }
+        TreeItem root = ItemList.CreateItem();
+        var hasSelected = false;
+        foreach (BannerGroupEntry group in Project.Groups) {
+            TreeItem item = ItemList.CreateItem(root);
+            item.SetText(0, group.GroupID.ToString());
+            item.SetText(1, $"({group.Icons.Count})");
+            item.SetCustomColor(1, Colors.LightGray);
+            item.SetTextAlignment(1, HorizontalAlignment.Right);
+            item.SetMetadata(0, group.GroupID);
+            if (_prevSelectedID == group.GroupID) {
+                hasSelected = true;
+                item.Select(0);
+            }
+        }
+        if (!hasSelected) {
+            TreeItem? fallbackSelected = GetItemAtIndex(_prevSelectedIndex);
+            if (fallbackSelected != null) {
+                fallbackSelected.Select(0);
+            } else {
+                // refresh the UI state on empty selection
+                OnGroupSelected();
+            }
+        }
+    }
+
+    private void OnGroupSelected() {
+        if (ItemList == null) return;
+        BannerGroupEntry? selected = GetSelectedGroup();
+        if (DeleteButton != null) {
+            DeleteButton.Disabled = selected == null;
+        }
+        if (selected != null) {
+            Log.Information("Selected group {Group}", [selected]);
+        }
+    }
+
+    private void CreateGroup() {
+        Project?.AddGroup();
+    }
+
+    private void DeleteSelectedGroup() {
+        if (ItemList == null) return;
+        BannerGroupEntry? selected = GetSelectedGroup();
+        if (selected != null) {
+            Project?.DeleteGroup(selected);
+        }
+    }
+
+    private BannerGroupEntry? GetSelectedGroup() {
+        TreeItem? selected = ItemList?.GetSelected();
+        if (selected != null) {
+            _prevSelectedIndex = selected.GetIndex();
+            var id = selected.GetMetadata(0).AsInt32();
+            BannerGroupEntry? group = Project?.GetGroup(id);
+            return group;
+        }
+        return null;
+    }
+
+    private TreeItem? GetItemAtIndex(int index) {
+        if (index < 0) return null;
+        TreeItem? root = ItemList?.GetRoot();
+        if (root == null) return null;
+        if (index >= root.GetChildCount()) return null;
+        return root.GetChild(index);
+    }
+}

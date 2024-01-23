@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://db73agt6rvlth"]
+[gd_scene load_steps=14 format=3 uid="uid://db73agt6rvlth"]
 
 [ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/BannerIconsEditor.cs" id="1_2nepo"]
 [ext_resource type="Texture2D" uid="uid://utcopa7b80nm" path="res://icons/add-line.svg" id="1_67drw"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://gtmlw0ugwlvj" path="res://icons/save-as-line.svg" id="4_hwptu"]
 [ext_resource type="Texture2D" uid="uid://cj8jgphrngu5k" path="res://icons/delete-bin-line.svg" id="4_sd6fr"]
 [ext_resource type="Texture2D" uid="uid://b4elf0ultv3hf" path="res://icon.png" id="5_o7pji"]
+[ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/IconGroupList.cs" id="6_tjhww"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o4bqq"]
 bg_color = Color(0.156863, 0.156863, 0.156863, 1)
@@ -72,9 +73,13 @@ size_flags_vertical = 3
 [node name="ICONS" type="HBoxContainer" parent="TabContainer"]
 layout_mode = 2
 
-[node name="GroupList" type="VBoxContainer" parent="TabContainer/ICONS"]
+[node name="GroupList" type="VBoxContainer" parent="TabContainer/ICONS" node_paths=PackedStringArray("AddButton", "DeleteButton", "ItemList")]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+script = ExtResource("6_tjhww")
+AddButton = NodePath("PanelContainer/ToolBar/AddGroup")
+DeleteButton = NodePath("PanelContainer/ToolBar/DeleteGroup")
+ItemList = NodePath("ItemList")
 
 [node name="Title" type="Label" parent="TabContainer/ICONS/GroupList"]
 custom_minimum_size = Vector2(0, 38)
@@ -104,10 +109,20 @@ icon = ExtResource("2_q8ybv")
 flat = true
 
 [node name="GroupList" type="ItemList" parent="TabContainer/ICONS/GroupList"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 item_count = 1
 item_0/text = "10000 (10)"
+
+[node name="ItemList" type="Tree" parent="TabContainer/ICONS/GroupList"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+hide_folding = true
+hide_root = true
+select_mode = 1
+scroll_horizontal_enabled = false
 
 [node name="HSplitContainer" type="HSplitContainer" parent="TabContainer/ICONS"]
 layout_mode = 2

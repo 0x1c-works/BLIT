@@ -119,6 +119,9 @@ public class BannerIconsProject : BindableBase, IProject {
         Groups.Remove(group);
         OnPropertyChanged(nameof(CanExport));
     }
+    public BannerGroupEntry? GetGroup(int id) {
+        return Groups.FirstOrDefault(g => g.GroupID == id);
+    }
 
     public void AddColor() {
         Colors.Add(_colorFactory(GetNextColorID()));
@@ -128,6 +131,9 @@ public class BannerIconsProject : BindableBase, IProject {
         foreach (BannerColorEntry color in deleting) {
             Colors.Remove(color);
         }
+    }
+    public BannerColorEntry? GetColor(int id) {
+        return Colors.FirstOrDefault(c => c.ID == id);
     }
     public void SortColors() {
         Colors.SortStable(BannerColorEntry.Compare);
