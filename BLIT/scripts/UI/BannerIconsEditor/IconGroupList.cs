@@ -4,6 +4,7 @@ using Godot;
 using Serilog;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 
 public partial class IconGroupList : Control {
     [Export] public Button? AddButton { get; set; }
@@ -46,9 +47,24 @@ public partial class IconGroupList : Control {
 
     private void OnGroupsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
         // FIXME: can be optimized
-        UpdateList();
+        //UpdateList();
+        if (ItemList == null) return;
+        TreeItem root = ItemList.GetRoot();
+        if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null) {
+            foreach (BannerGroupEntry group in e.NewItems.Cast<BannerGroupEntry>()) {
+                CreateItem(group, root);
+            }
+        } else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems != null) {
+            foreach (BannerGroupEntry group in e.OldItems.Cast<BannerGroupEntry>()) {
+                TreeItem? item = root.GetChildren().FirstOrDefault(child => child.GetMetadata(0).AsInt32() == group.GroupID);
+                if (item != null) {
+                    root.RemoveChild(item);
+                }
+            }
+            var selectedIndex = Mathf.Min(root.GetChildCount() - 1, Mathf.Max(0, _prevSelectedIndex));
+            SelectItemByIndex(selectedIndex);
+        }
     }
-
     private void UpdateList() {
         if (ItemList == null) return;
         _prevSelectedID = GetSelectedGroup()?.GroupID ?? -1;
@@ -59,28 +75,27 @@ public partial class IconGroupList : Control {
         TreeItem root = ItemList.CreateItem();
         var hasSelected = false;
         foreach (BannerGroupEntry group in Project.Groups) {
-            TreeItem item = ItemList.CreateItem(root);
-            item.SetText(0, group.GroupID.ToString());
-            item.SetText(1, $"({group.Icons.Count})");
-            item.SetCustomColor(1, Colors.LightGray);
-            item.SetTextAlignment(1, HorizontalAlignment.Right);
-            item.SetMetadata(0, group.GroupID);
+            TreeItem? item = CreateItem(group, root);
+            if (item == null) continue;
             if (_prevSelectedID == group.GroupID) {
                 hasSelected = true;
                 item.Select(0);
             }
         }
         if (!hasSelected) {
-            TreeItem? fallbackSelected = GetItemAtIndex(_prevSelectedIndex);
-            if (fallbackSelected != null) {
-                fallbackSelected.Select(0);
-            } else {
-                // refresh the UI state on empty selection
-                OnGroupSelected();
-            }
+            SelectItemByIndex(_prevSelectedIndex);
         }
     }
-
+    private TreeItem? CreateItem(BannerGroupEntry group, TreeItem parent) {
+        if (ItemList == null) return null;
+        TreeItem item = ItemList.CreateItem(parent);
+        item.SetText(0, group.GroupID.ToString());
+        item.SetText(1, $"({group.Icons.Count})");
+        item.SetCustomColor(1, Colors.LightGray);
+        item.SetTextAlignment(1, HorizontalAlignment.Right);
+        item.SetMetadata(0, group.GroupID);
+        return item;
+    }
     private void OnGroupSelected() {
         if (ItemList == null) return;
         BannerGroupEntry? selected = GetSelectedGroup();
@@ -91,11 +106,9 @@ public partial class IconGroupList : Control {
             Log.Information("Selected group {Group}", [selected]);
         }
     }
-
     private void CreateGroup() {
         Project?.AddGroup();
     }
-
     private void DeleteSelectedGroup() {
         if (ItemList == null) return;
         BannerGroupEntry? selected = GetSelectedGroup();
@@ -103,7 +116,6 @@ public partial class IconGroupList : Control {
             Project?.DeleteGroup(selected);
         }
     }
-
     private BannerGroupEntry? GetSelectedGroup() {
         TreeItem? selected = ItemList?.GetSelected();
         if (selected != null) {
@@ -114,7 +126,6 @@ public partial class IconGroupList : Control {
         }
         return null;
     }
-
     private TreeItem? GetItemAtIndex(int index) {
         if (index < 0) return null;
         TreeItem? root = ItemList?.GetRoot();
@@ -122,4 +133,14 @@ public partial class IconGroupList : Control {
         if (index >= root.GetChildCount()) return null;
         return root.GetChild(index);
     }
+    private void SelectItemByIndex(int index) {
+        TreeItem? selection = GetItemAtIndex(index);
+        if (selection != null) {
+            selection.Select(0);
+        } else {
+            // refresh the UI state on empty selection
+            OnGroupSelected();
+        }
+    }
+
 }
