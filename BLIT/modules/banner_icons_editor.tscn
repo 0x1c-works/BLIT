@@ -274,3 +274,5 @@ text = "Banner Colors?"
 
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/New" to="." method="OnNewProject"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/Open" to="." method="OnOpenProject"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/Save" to="." method="OnSaveProject"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/SaveAs" to="." method="OnSaveProjectAs"]

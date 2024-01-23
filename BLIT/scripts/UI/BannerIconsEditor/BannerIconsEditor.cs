@@ -39,6 +39,26 @@ public partial class BannerIconsEditor : Control {
         dlg.PopupCentered();
     }
 
+    private async void OnSaveProject() {
+        if (string.IsNullOrEmpty(ProjectService.FilePath)) {
+            OnSaveProjectAs();
+        } else {
+            await ProjectService.Save(ProjectService.FilePath);
+        }
+    }
+    private void OnSaveProjectAs() {
+        FileDialog dlg = CreateProjectFileDialog(ProjectService.FilePath);
+        dlg.FileSelected += async (path) => {
+            if (!path.EndsWith(BannerIconsProject.FILE_EXTENSION)) {
+                path += BannerIconsProject.FILE_EXTENSION;
+            }
+            await ProjectService.Save(path);
+        };
+        dlg.FileMode = FileDialog.FileModeEnum.SaveFile;
+        dlg.Title = "SAVE_BIP";
+        dlg.PopupCentered();
+    }
+
     private FileDialog CreateProjectFileDialog(string? filePath) {
         var dlg = new FileDialog() {
             Access = FileDialog.AccessEnum.Filesystem,
