@@ -1,8 +1,11 @@
 ﻿using Autofac;
+using BLIT.scripts.Common;
 using BLIT.scripts.Models;
 using BLIT.scripts.Models.BannerIcons;
 using Serilog;
 using System;
+using System.Linq;
+using System.Reflection;
 
 namespace BLIT.scripts.Services;
 public class AppService {
@@ -14,16 +17,17 @@ public class AppService {
             return;
         }
         var builder = new ContainerBuilder();
-        // Singleton services
+        // Singletons
+
         //builder.RegisterType<FileDialogService>().AsImplementedInterfaces().SingleInstance();
         //builder.RegisterType<ConfirmDialogService>().AsImplementedInterfaces().SingleInstance();
         //builder.RegisterType<NotificationService>().AsImplementedInterfaces().SingleInstance();
         //builder.RegisterType<LoadingService>().AsImplementedInterfaces().SingleInstance();
 
-        // Singleton components
         builder.RegisterType<GlobalSettings>().SingleInstance();
         builder.Register((ctx) => BannerSettings.Load()).SingleInstance();
-        RegisterProjectService<BannerIconsProject>(builder);
+        var assembly = Assembly.GetExecutingAssembly();
+        RegisterProjectServices(builder, assembly);
 
         // Scoped services
         builder.RegisterType<SettingsService>().AsImplementedInterfaces();
@@ -37,11 +41,26 @@ public class AppService {
         _container = builder.Build();
     }
 
-    private static void RegisterProjectService<T>(ContainerBuilder builder) where T : IProject {
-        builder.RegisterType<ProjectService<T>>()
-               .As<IProjectService<T>>()
-               .SingleInstance()
-               .OnActivated(async (e) => await e.Instance.NewProject());
+    private static void RegisterProjectServices(ContainerBuilder builder, Assembly assembly) {
+        var x = assembly.DefinedTypes
+            .Where(ti => ti.ImplementedInterfaces.Contains(typeof(IProject)) && !ti.IsAbstract)
+            .Select(ti => ti.AsType()).ToList();
+        Type genericClass = typeof(ProjectService<>);
+        Type genericInterface = typeof(IProjectService<>);
+
+        foreach (TypeInfo? pti in assembly.DefinedTypes
+            .Where(ti => ti.ImplementedInterfaces.Contains(typeof(IProject)) && !ti.IsAbstract)
+            ) {
+            if (pti == null) continue;
+            Type serviceClass = genericClass.MakeGenericType(pti.AsType());
+            Type serviceInterface = genericInterface.MakeGenericType(pti.AsType());
+            MethodInfo? mi = serviceClass.GetMethod("NewProject", BindingFlags.Instance | BindingFlags.Public);
+            builder.RegisterType(pti.AsType()).InstancePerLifetimeScope(); ;
+            builder.RegisterType(serviceClass).As(serviceInterface).SingleInstance().OnActivated(async (e) => {
+                if (mi == null) return;
+                await mi.InvokeAsync(e.Instance, [null]);
+            });
+        }
     }
 
 }
