@@ -19,3 +19,19 @@ CHANGE_ELLIPSIS,Change...,更改...
 REIMPORT,Reimport,重新导入
 ADD_TEXTURES,Add Textures,添加贴图
 DELETE_TEXTURES,Delete Textures,删除贴图
+MENU/NEW,New,新建
+MENU/OPEN,Open,打开
+MENU/SAVE,Save,保存
+MENU/SAVE_AS,Save As...,另存为...
+MENU/EXPORT_ALL,Export All,导出全部
+MENU/EXPORT_XML,Export XML Only,仅导出XML
+RESOLUTION,Resolution,分辨率
+CANCEL,Cancel,取消
+OK,OK,确定
+OPEN_BIP,Open a Banner Icon Project,打开旗帜图标项目
+SAVE_BIP,Save the Banner Icon Project,保存旗帜图标项目
+YES,Yes,是
+NO,No,否
+NEW_PROJECT,(New Project),(新项目)
+CONFIRMATION/TITLE/CREATE_PROJECT,"Create New Project","创建新项目"
+CONFIRMATION/TEXT/CREATE_PROJECT,"Are you sure you want to create a new project? All unsaved changes will be lost.","您确定要创建一个新项目吗？所有未保存的更改将丢失。"

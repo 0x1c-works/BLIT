@@ -14,13 +14,13 @@ dest_files=["res://.godot/imported/NotoSansSC.ttf-ff973a0c5d0f84d2db7594b18fe2f0
 
 Rendering=null
 antialiasing=1
-generate_mipmaps=false
-multichannel_signed_distance_field=false
+generate_mipmaps=true
+multichannel_signed_distance_field=true
 msdf_pixel_range=8
 msdf_size=48
 allow_system_fallback=true
 force_autohinter=false
-hinting=1
+hinting=2
 subpixel_positioning=1
 oversampling=0.0
 Fallbacks=null

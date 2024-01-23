@@ -1,8 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://db73agt6rvlth"]
+[gd_scene load_steps=13 format=3 uid="uid://db73agt6rvlth"]
 
+[ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/BannerIconsEditor.cs" id="1_2nepo"]
 [ext_resource type="Texture2D" uid="uid://utcopa7b80nm" path="res://icons/add-line.svg" id="1_67drw"]
+[ext_resource type="Texture2D" uid="uid://nxv2oyycaupc" path="res://icons/file-line.svg" id="1_oafl7"]
 [ext_resource type="Texture2D" uid="uid://bsusp3b1wh0wt" path="res://icons/subtract-line.svg" id="2_q8ybv"]
+[ext_resource type="Texture2D" uid="uid://diym5f7c7ax8y" path="res://icons/folder-open-line.svg" id="2_vaat4"]
+[ext_resource type="Texture2D" uid="uid://cj3sek2p0byf3" path="res://icons/save-line.svg" id="3_3kcax"]
 [ext_resource type="Texture2D" uid="uid://cc5uq1gxkdlk2" path="res://icons/image-add-line.svg" id="3_mlxkw"]
+[ext_resource type="Texture2D" uid="uid://gtmlw0ugwlvj" path="res://icons/save-as-line.svg" id="4_hwptu"]
 [ext_resource type="Texture2D" uid="uid://cj8jgphrngu5k" path="res://icons/delete-bin-line.svg" id="4_sd6fr"]
 [ext_resource type="Texture2D" uid="uid://b4elf0ultv3hf" path="res://icon.png" id="5_o7pji"]
 
@@ -12,18 +17,59 @@ bg_color = Color(0.156863, 0.156863, 0.156863, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ocot"]
 bg_color = Color(0.156863, 0.156863, 0.156863, 1)
 
-[node name="BannerIconsEditor" type="VBoxContainer"]
+[node name="BannerIconsEditor" type="VBoxContainer" node_paths=PackedStringArray("LabelFileName")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2nepo")
+LabelFileName = NodePath("MarginContainer/HBoxContainer/FileName")
 
-[node name="MenuBar" type="HFlowContainer" parent="."]
-custom_minimum_size = Vector2(0, 60)
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="HBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="FileName" type="Label" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"Subtitle"
+text = "file name"
+
+[node name="MenuBar" type="HFlowContainer" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="New" type="Button" parent="MarginContainer/HBoxContainer/MenuBar"]
+layout_mode = 2
+text = "MENU/NEW"
+icon = ExtResource("1_oafl7")
+
+[node name="Open" type="Button" parent="MarginContainer/HBoxContainer/MenuBar"]
+layout_mode = 2
+text = "MENU/OPEN"
+icon = ExtResource("2_vaat4")
+
+[node name="Save" type="Button" parent="MarginContainer/HBoxContainer/MenuBar"]
+layout_mode = 2
+text = "MENU/SAVE"
+icon = ExtResource("3_3kcax")
+
+[node name="SaveAs" type="Button" parent="MarginContainer/HBoxContainer/MenuBar"]
+layout_mode = 2
+text = "MENU/SAVE_AS"
+icon = ExtResource("4_hwptu")
 
 [node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
 
 [node name="ICONS" type="HBoxContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="GroupList" type="VBoxContainer" parent="TabContainer/ICONS"]
@@ -225,3 +271,6 @@ layout_mode = 2
 [node name="Label" type="Label" parent="TabContainer/COLORS"]
 layout_mode = 2
 text = "Banner Colors?"
+
+[connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/New" to="." method="OnNewProject"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/Open" to="." method="OnOpenProject"]

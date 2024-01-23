@@ -12,15 +12,14 @@ config_version=5
 
 config/name="BLIT"
 run/main_scene="res://windows/main.tscn"
-config/features=PackedStringArray("4.2", "Mobile")
+config/features=PackedStringArray("4.2", "C#", "Mobile")
 config/icon="res://icon.png"
 
 [display]
 
 window/size/viewport_width=1440
 window/size/viewport_height=900
-window/stretch/scale=2.0
-window/stretch/scale_mode="integer"
+window/stretch/scale=1.6
 
 [dotnet]
 
@@ -29,7 +28,6 @@ project/assembly_name="BLIT"
 [gui]
 
 theme/custom="res://DarkTheme.tres"
-theme/custom_font="res://fonts/NotoSansSC.ttf"
 
 [internationalization]
 
@@ -37,5 +35,4 @@ locale/translations=PackedStringArray("res://i18n/text.en.translation", "res://i
 
 [rendering]
 
-textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="mobile"

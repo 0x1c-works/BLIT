@@ -1,6 +1,9 @@
-[gd_resource type="Theme" load_steps=5 format=3 uid="uid://fdmock63swm5"]
+[gd_resource type="Theme" load_steps=6 format=3 uid="uid://fdmock63swm5"]
+
+[ext_resource type="FontFile" uid="uid://c5a1v3lspcj3r" path="res://fonts/NotoSansSC.ttf" id="1_l575c"]
 
 [sub_resource type="FontVariation" id="FontVariation_mpfgf"]
+base_font = ExtResource("1_l575c")
 variation_opentype = {
 2003265652: 400
 }

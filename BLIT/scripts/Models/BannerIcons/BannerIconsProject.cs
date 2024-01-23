@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 namespace BLIT.scripts.Models.BannerIcons;
 public class BannerIconsProject : BindableBase, IProject
 {
+    public const string FILE_EXTENSION = ".bip";
     /// <summary>
     /// 0 - 6 is occpuied by the native game
     /// </summary>
@@ -39,8 +40,6 @@ public class BannerIconsProject : BindableBase, IProject
     readonly BannerGroupEntry.Factory _groupFactory;
     readonly BannerColorEntry.Factory _colorFactory;
 
-    string _filePath = "";
-    public string FilePath { get => filePath; private set => SetProperty(ref _filePath, value); }
     public ObservableCollection<BannerGroupEntry> Groups { get; } = new();
     public ObservableCollection<BannerColorEntry> Colors { get; } = new();
 
@@ -70,7 +69,6 @@ public class BannerIconsProject : BindableBase, IProject
     }
 
     bool _isSavingOrLoading = false;
-    string filePath = "";
 
     public bool IsSavingOrLoading
     {
@@ -227,7 +225,10 @@ public class BannerIconsProject : BindableBase, IProject
                 Colors.Add(colorData.Load(_colorFactory));
             }
         }
-        catch (Exception ex) { Log.Error(ex, "error in loading the banner project"); }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "error in loading the banner project");
+        }
         finally
         {
             IsSavingOrLoading = false;

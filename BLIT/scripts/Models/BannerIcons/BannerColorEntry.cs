@@ -75,7 +75,7 @@ public class BannerColorEntry : BindableBase
         [Key(0)]
         public int ID;
         [Key(1)]
-        //[MessagePackFormatter(typeof(WinUIColorFormatter))]
+        [MessagePackFormatter(typeof(GodotColorFormatter))]
         public Color Color;
         [Key(2)]
         public bool IsForSigil;
