@@ -49,6 +49,7 @@ public partial class IconBlock : Control {
 
     private async void UpdateTexture() {
         if (Texture != null) {
+            Texture.Texture?.Dispose();
             Texture.Texture = await LoadImage(Icon.TexturePath);
         }
     }
@@ -68,7 +69,7 @@ public partial class IconBlock : Control {
         return Task.Factory.StartNew(() => {
             if (!File.Exists(path)) return null;
 
-            var img = Image.LoadFromFile(Icon.TexturePath);
+            using var img = Image.LoadFromFile(Icon.TexturePath);
             return ImageTexture.CreateFromImage(img);
         }, _cancelLoading.Token);
     }

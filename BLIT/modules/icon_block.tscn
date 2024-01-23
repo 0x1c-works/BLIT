@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://ct42ucdy1s0av"]
+[gd_scene load_steps=3 format=3 uid="uid://ct42ucdy1s0av"]
 
 [ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/IconBlock.cs" id="1_v7d3p"]
+[ext_resource type="Texture2D" uid="uid://cafkbkhce1p60" path="res://assets/transparent-bg.png" id="2_sc18m"]
 
 [node name="IconBlock" type="VBoxContainer" node_paths=PackedStringArray("Texture", "ID", "AtlasName") groups=["icon_block"]]
 custom_minimum_size = Vector2(200, 0)
@@ -13,6 +14,12 @@ AtlasName = NodePath("AtlasName")
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="Background" type="TextureRect" parent="TextureContainer"]
+layout_mode = 2
+texture = ExtResource("2_sc18m")
+expand_mode = 2
+stretch_mode = 1
 
 [node name="Texture" type="TextureRect" parent="TextureContainer"]
 layout_mode = 2
