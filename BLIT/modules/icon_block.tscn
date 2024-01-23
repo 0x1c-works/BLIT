@@ -1,0 +1,34 @@
+[gd_scene load_steps=2 format=3 uid="uid://ct42ucdy1s0av"]
+
+[ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/IconBlock.cs" id="1_v7d3p"]
+
+[node name="IconBlock" type="VBoxContainer" node_paths=PackedStringArray("Texture", "ID", "AtlasName") groups=["icon_block"]]
+custom_minimum_size = Vector2(200, 0)
+script = ExtResource("1_v7d3p")
+Texture = NodePath("TextureContainer/Texture")
+ID = NodePath("ID")
+AtlasName = NodePath("AtlasName")
+
+[node name="TextureContainer" type="AspectRatioContainer" parent="."]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Texture" type="TextureRect" parent="TextureContainer"]
+layout_mode = 2
+expand_mode = 2
+
+[node name="ID" type="Label" parent="."]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 12
+text = "#123"
+horizontal_alignment = 1
+
+[node name="AtlasName" type="Label" parent="."]
+layout_mode = 2
+size_flags_vertical = 1
+theme_type_variation = &"Subtitle"
+theme_override_font_sizes/font_size = 10
+text = "banner_0123_01"
+horizontal_alignment = 1

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://db73agt6rvlth"]
+[gd_scene load_steps=17 format=3 uid="uid://db73agt6rvlth"]
 
 [ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/BannerIconsEditor.cs" id="1_2nepo"]
 [ext_resource type="Texture2D" uid="uid://utcopa7b80nm" path="res://icons/add-line.svg" id="1_67drw"]
@@ -10,7 +10,10 @@
 [ext_resource type="Texture2D" uid="uid://gtmlw0ugwlvj" path="res://icons/save-as-line.svg" id="4_hwptu"]
 [ext_resource type="Texture2D" uid="uid://cj8jgphrngu5k" path="res://icons/delete-bin-line.svg" id="4_sd6fr"]
 [ext_resource type="Texture2D" uid="uid://b4elf0ultv3hf" path="res://icon.png" id="5_o7pji"]
+[ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/IconsPage.cs" id="6_fayj2"]
 [ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/IconGroupList.cs" id="6_tjhww"]
+[ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/GroupEditor.cs" id="9_qeiso"]
+[ext_resource type="PackedScene" uid="uid://ct42ucdy1s0av" path="res://modules/icon_block.tscn" id="13_o6lwr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o4bqq"]
 bg_color = Color(0.156863, 0.156863, 0.156863, 1)
@@ -70,8 +73,11 @@ icon = ExtResource("4_hwptu")
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ICONS" type="HBoxContainer" parent="TabContainer"]
+[node name="ICONS" type="HBoxContainer" parent="TabContainer" node_paths=PackedStringArray("IconGroupList", "GroupEditor")]
 layout_mode = 2
+script = ExtResource("6_fayj2")
+IconGroupList = NodePath("GroupList")
+GroupEditor = NodePath("GroupEditor")
 
 [node name="GroupList" type="VBoxContainer" parent="TabContainer/ICONS" node_paths=PackedStringArray("AddButton", "DeleteButton", "ItemList")]
 custom_minimum_size = Vector2(120, 0)
@@ -108,13 +114,6 @@ tooltip_text = "DELETE_ICON_GROUP"
 icon = ExtResource("2_q8ybv")
 flat = true
 
-[node name="GroupList" type="ItemList" parent="TabContainer/ICONS/GroupList"]
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-item_count = 1
-item_0/text = "10000 (10)"
-
 [node name="ItemList" type="Tree" parent="TabContainer/ICONS/GroupList"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -124,160 +123,179 @@ hide_root = true
 select_mode = 1
 scroll_horizontal_enabled = false
 
-[node name="HSplitContainer" type="HSplitContainer" parent="TabContainer/ICONS"]
+[node name="GroupEditor" type="HSplitContainer" parent="TabContainer/ICONS" node_paths=PackedStringArray("EmptyPage", "GroupID", "IconContainer")]
 layout_mode = 2
 size_flags_horizontal = 3
+script = ExtResource("9_qeiso")
+EmptyPage = NodePath("../NoSelectedGroup")
+GroupID = NodePath("VBoxContainer/PanelContainer/MarginContainer/ToolBar/SpinBox")
+IconContainer = NodePath("VBoxContainer/HSplitContainer/Gallery/MarginContainer/HFlowContainer")
+IconBlockPrefab = ExtResource("13_o6lwr")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/ICONS/HSplitContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/ICONS/GroupEditor"]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer"]
 layout_mode = 2
 theme_type_variation = &"ToolBar"
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 2
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 4
 
-[node name="ToolBar" type="HFlowContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer"]
+[node name="ToolBar" type="HFlowContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
 theme_override_constants/h_separation = 8
 
-[node name="Label" type="Label" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+[node name="Label" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
 layout_mode = 2
 text = "GROUP_ID"
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 max_value = 65535.0
 rounded = true
 prefix = "#"
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+[node name="VSeparator" type="VSeparator" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
 layout_mode = 2
 
-[node name="AddGroup" type="Button" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+[node name="AddGroup" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
 layout_mode = 2
 text = "ADD_TEXTURES"
 icon = ExtResource("3_mlxkw")
 
-[node name="DeleteGroup" type="Button" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+[node name="DeleteGroup" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
 layout_mode = 2
 text = "DELETE_TEXTURES"
 icon = ExtResource("4_sd6fr")
 
-[node name="HSplitContainer" type="HSplitContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer"]
+[node name="HSplitContainer" type="HSplitContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Gallery" type="ScrollContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer"]
+[node name="Gallery" type="ScrollContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_o4bqq")
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Gallery"]
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Gallery"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HFlowContainer" type="HFlowContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Gallery/MarginContainer"]
+[node name="HFlowContainer" type="HFlowContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Gallery/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Detail" type="ScrollContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer"]
+[node name="IconBlock" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Gallery/MarginContainer/HFlowContainer" instance=ExtResource("13_o6lwr")]
+layout_mode = 2
+
+[node name="Detail" type="ScrollContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.8
 theme_override_styles/panel = SubResource("StyleBoxFlat_6ocot")
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail"]
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 8
 
-[node name="GridContainer" type="GridContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 8
 columns = 2
 
-[node name="Title" type="Label" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Title" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "DETAILS"
 
-[node name="Name" type="Label" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Name" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
 layout_mode = 2
 theme_type_variation = &"Subtitle"
 text = "value"
 
-[node name="Label-UI Sprite" type="Label" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Label-UI Sprite" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "UI_SPRITE"
 
-[node name="Sprite Filename" type="Label" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Sprite Filename" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
 layout_mode = 2
 theme_type_variation = &"Subtitle"
 text = "value"
 
-[node name="Actions" type="VBoxContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Actions" type="VBoxContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="Change" type="Button" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions"]
+[node name="Change" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions"]
 layout_mode = 2
 text = "CHANGE_ELLIPSIS"
 
-[node name="Reimport" type="Button" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions"]
+[node name="Reimport" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions"]
 layout_mode = 2
 text = "REIMPORT"
 
-[node name="ImagePreview" type="AspectRatioContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="ImagePreview" type="AspectRatioContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment_horizontal = 0
 alignment_vertical = 0
 
-[node name="TextureRect" type="TextureRect" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/ImagePreview"]
+[node name="TextureRect" type="TextureRect" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/ImagePreview"]
 layout_mode = 2
 size_flags_horizontal = 3
 texture = ExtResource("5_o7pji")
 
-[node name="Label-Texture" type="Label" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Label-Texture" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "TEXTURE"
 
-[node name="Texture Filename" type="Label" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Texture Filename" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
 layout_mode = 2
 theme_type_variation = &"Subtitle"
 text = "value"
 
-[node name="Actions2" type="VBoxContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Actions2" type="VBoxContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="Change" type="Button" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions2"]
+[node name="Change" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions2"]
 layout_mode = 2
 text = "CHANGE_ELLIPSIS"
 
-[node name="Reimport" type="Button" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions2"]
+[node name="Reimport" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions2"]
 layout_mode = 2
 text = "REIMPORT"
 
-[node name="ImagePreview2" type="AspectRatioContainer" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="ImagePreview2" type="AspectRatioContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment_horizontal = 0
 alignment_vertical = 0
 
-[node name="TextureRect" type="TextureRect" parent="TabContainer/ICONS/HSplitContainer/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/ImagePreview2"]
+[node name="TextureRect" type="TextureRect" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/ImagePreview2"]
 layout_mode = 2
 size_flags_horizontal = 3
 texture = ExtResource("5_o7pji")
+
+[node name="NoSelectedGroup" type="CenterContainer" parent="TabContainer/ICONS"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="TabContainer/ICONS/NoSelectedGroup"]
+layout_mode = 2
+theme_type_variation = &"Subtitle"
+theme_override_font_sizes/font_size = 20
+text = "MESSAGE/NO_SELECTED_ICON_GROUP"
 
 [node name="COLORS" type="HBoxContainer" parent="TabContainer"]
 visible = false
@@ -291,3 +309,4 @@ text = "Banner Colors?"
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/Open" to="." method="OnOpenProject"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/Save" to="." method="OnSaveProject"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/SaveAs" to="." method="OnSaveProjectAs"]
+[connection signal="value_changed" from="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar/SpinBox" to="TabContainer/ICONS/GroupEditor" method="OnGroupIDChanged"]

@@ -2,11 +2,13 @@ using BLIT.scripts.Models.BannerIcons;
 using BLIT.scripts.Services;
 using Godot;
 using Serilog;
+using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 
 public partial class IconGroupList : Control {
+    public event Action<BannerGroupEntry?>? SelectionChanged;
     [Export] public Button? AddButton { get; set; }
     [Export] public Button? DeleteButton { get; set; }
     [Export] public Tree? ItemList { get; set; }
@@ -105,6 +107,7 @@ public partial class IconGroupList : Control {
         if (selected != null) {
             Log.Information("Selected group {Group}", [selected]);
         }
+        SelectionChanged?.Invoke(selected);
     }
     private void CreateGroup() {
         Project?.AddGroup();
