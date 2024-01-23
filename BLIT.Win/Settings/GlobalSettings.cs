@@ -3,16 +3,12 @@ using Windows.Storage;
 
 namespace BLIT.Win.Settings;
 
-public class GlobalSettings : BindableBase
-{
+public class GlobalSettings : BindableBase {
+    private StorageFolder _gameRootFolder;
 
-    StorageFolder _gameRootFolder;
-
-    public StorageFolder GameRootFolder
-    {
+    public StorageFolder GameRootFolder {
         get => _gameRootFolder;
-        set
-        {
+        set {
             SetProperty(ref _gameRootFolder, value);
             OnPropertyChanged(nameof(GameRootFolderPath));
         }

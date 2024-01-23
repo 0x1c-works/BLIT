@@ -7,25 +7,20 @@ namespace BLIT.Win.Helpers;
 /// <summary>
 /// Modified from https://github.com/microsoft/WinUI-Gallery/blob/main/WinUIGallery/Helper/ThemeHelper.cs
 /// </summary>
-public static class ThemeHelper
-{
-    const string THEME_PREFERENCE_KEY = "theme";
+public static class ThemeHelper {
+    private const string THEME_PREFERENCE_KEY = "theme";
 #if !UNPACKAGED
-    static Window CurrentApplicationWindow;
+    private static Window CurrentApplicationWindow;
 #endif
 
     /// <summary>
     /// Gets the current actual theme of the app based on the requested theme of the
     /// root element, or if that value is Default, the requested theme of the Application.
     /// </summary>
-    public static ElementTheme ActualTheme
-    {
-        get
-        {
-            if (CurrentApplicationWindow?.Content is FrameworkElement rootElement)
-            {
-                if (rootElement.RequestedTheme != ElementTheme.Default)
-                {
+    public static ElementTheme ActualTheme {
+        get {
+            if (CurrentApplicationWindow?.Content is FrameworkElement rootElement) {
+                if (rootElement.RequestedTheme != ElementTheme.Default) {
                     return rootElement.RequestedTheme;
                 }
             }
@@ -37,21 +32,16 @@ public static class ThemeHelper
     /// <summary>
     /// Gets or sets (with LocalSettings persistence) the RequestedTheme of the root element.
     /// </summary>
-    public static ElementTheme RootTheme
-    {
-        get
-        {
-            if (CurrentApplicationWindow?.Content is FrameworkElement rootElement)
-            {
+    public static ElementTheme RootTheme {
+        get {
+            if (CurrentApplicationWindow?.Content is FrameworkElement rootElement) {
                 return rootElement.RequestedTheme;
             }
 
             return ElementTheme.Default;
         }
-        set
-        {
-            if (CurrentApplicationWindow?.Content is FrameworkElement rootElement)
-            {
+        set {
+            if (CurrentApplicationWindow?.Content is FrameworkElement rootElement) {
                 rootElement.RequestedTheme = value;
             }
 
@@ -61,13 +51,11 @@ public static class ThemeHelper
         }
     }
 
-    public static void OnAppStart()
-    {
+    public static void OnAppStart() {
         Application.Current.RequestedTheme = ElementThemeToApplicationTheme(GetSavedTheme());
     }
 
-    public static void Initialize()
-    {
+    public static void Initialize() {
 #if !UNPACKAGED
         // Save reference as this might be null when the user is in another app
         CurrentApplicationWindow = App.Current.MainWindow;
@@ -75,25 +63,21 @@ public static class ThemeHelper
 #endif
     }
 
-    public static bool IsDarkTheme
-    {
-        get
-        {
-            if (RootTheme == ElementTheme.Default)
-            {
+    public static bool IsDarkTheme {
+        get {
+            if (RootTheme == ElementTheme.Default) {
                 return Application.Current.RequestedTheme == ApplicationTheme.Dark;
             }
             return RootTheme == ElementTheme.Dark;
         }
     }
 
-    static ElementTheme GetSavedTheme()
-    {
+    private static ElementTheme GetSavedTheme() {
         var savedTheme = ApplicationData.Current.LocalSettings.Values[THEME_PREFERENCE_KEY]?.ToString();
         return savedTheme != null ? Enum.Parse<ElementTheme>(savedTheme) : RootTheme = ElementTheme.Dark;
     }
-    static ApplicationTheme ElementThemeToApplicationTheme(ElementTheme theme)
-    {
+
+    private static ApplicationTheme ElementThemeToApplicationTheme(ElementTheme theme) {
         return theme == ElementTheme.Light ? ApplicationTheme.Light : ApplicationTheme.Dark;
     }
 }

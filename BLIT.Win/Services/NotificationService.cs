@@ -13,13 +13,10 @@ public record struct Notification(ToastVariant Variant,
                                   NotificationAction? Action = null,
                                   bool KeepOpen = false,
                                   double TimeoutSeconds = 10.0,
-                                  bool IsClosable = true)
-{
-    public Toast CreateToast()
-    {
+                                  bool IsClosable = true) {
+    public Toast CreateToast() {
         Button actionButton = null;
-        if (Action.HasValue)
-        {
+        if (Action.HasValue) {
             NotificationAction action = Action.Value;
             actionButton = new Button() {
                 Content = action.Text,
@@ -43,17 +40,14 @@ public record struct Notification(ToastVariant Variant,
 }
 public delegate Toast NotifyHandler(Notification notification);
 
-public interface INotificationService
-{
+public interface INotificationService {
     event NotifyHandler OnNotify;
     Toast Notify(Notification notification);
 }
 
-public class NotificationService : INotificationService
-{
+public class NotificationService : INotificationService {
     public event NotifyHandler OnNotify;
-    public Toast Notify(Notification notification)
-    {
+    public Toast Notify(Notification notification) {
         return OnNotify?.Invoke(notification);
     }
 }

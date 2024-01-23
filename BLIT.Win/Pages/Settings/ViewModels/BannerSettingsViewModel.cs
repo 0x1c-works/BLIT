@@ -6,13 +6,12 @@ using System.Linq;
 
 namespace BLIT.Win.Pages.Settings.ViewModels;
 
-public class BannerSettingsViewModel : BindableBase
-{
-    readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
+public class BannerSettingsViewModel : BindableBase {
+    private readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
     public ObservableCollection<BannerSpriteScanFolderViewModel> SpriteScanFolders { get; } = new();
-    int _selectedScanFolderIndex;
-    public int SelectedSpriteScanFolderIndex
-    {
+
+    private int _selectedScanFolderIndex;
+    public int SelectedSpriteScanFolderIndex {
         get => _selectedScanFolderIndex;
         set => SetProperty(ref _selectedScanFolderIndex, value);
     }
@@ -21,45 +20,34 @@ public class BannerSettingsViewModel : BindableBase
                 ? SpriteScanFolders[SelectedSpriteScanFolderIndex]
                 : null;
 
-    public int CustomGroupStartID
-    {
+    public int CustomGroupStartID {
         get => _settings.Banner.CustomGroupStartID;
-        set
-        {
+        set {
             _settings.Banner.CustomGroupStartID = value;
             OnPropertyChanged();
         }
     }
-    public int CustomColorStartID
-    {
+    public int CustomColorStartID {
         get => _settings.Banner.CustomColorStartID;
-        set
-        {
+        set {
             _settings.Banner.CustomColorStartID = value;
             OnPropertyChanged();
         }
     }
 
-    public BannerSettingsViewModel()
-    {
-        foreach (BannerSpriteScanFolderViewModel folderVM in _settings.Banner.SpriteScanFolders.Select(relPath => new BannerSpriteScanFolderViewModel(relPath)))
-        {
+    public BannerSettingsViewModel() {
+        foreach (BannerSpriteScanFolderViewModel folderVM in _settings.Banner.SpriteScanFolders.Select(relPath => new BannerSpriteScanFolderViewModel(relPath))) {
             SpriteScanFolders.Add(folderVM);
         }
         SpriteScanFolders.CollectionChanged += (s, e) => {
-            if (e.Action != NotifyCollectionChangedAction.Move)
-            {
-                if (e.OldItems is not null)
-                {
-                    foreach (BannerSpriteScanFolderViewModel item in e.OldItems)
-                    {
+            if (e.Action != NotifyCollectionChangedAction.Move) {
+                if (e.OldItems is not null) {
+                    foreach (BannerSpriteScanFolderViewModel item in e.OldItems) {
                         item.PropertyChanged -= OnScanFolderPropertyChanged;
                     }
                 }
-                if (e.NewItems is not null)
-                {
-                    foreach (BannerSpriteScanFolderViewModel item in e.NewItems)
-                    {
+                if (e.NewItems is not null) {
+                    foreach (BannerSpriteScanFolderViewModel item in e.NewItems) {
                         item.PropertyChanged += OnScanFolderPropertyChanged;
                     }
                 }
@@ -68,16 +56,13 @@ public class BannerSettingsViewModel : BindableBase
         };
     }
 
-    void OnScanFolderPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(BannerSpriteScanFolderViewModel.RelativePath))
-        {
+    private void OnScanFolderPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
+        if (e.PropertyName == nameof(BannerSpriteScanFolderViewModel.RelativePath)) {
             SaveSpriteScanFolders();
         }
     }
 
-    public void SaveSpriteScanFolders()
-    {
+    public void SaveSpriteScanFolders() {
         _settings.Banner.SaveSpriteScanFolders(SpriteScanFolders.Select(vm => vm.RelativePath));
     }
 

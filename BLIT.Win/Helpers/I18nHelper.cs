@@ -2,22 +2,18 @@
 
 namespace BLIT.Win.Helpers;
 
-public class I18n
-{
+public class I18n {
     public static I18n Current => App.Current.I18n;
 
+    private readonly ResourceLoader _resLoader;
+    private readonly ResourceManager _resManager;
 
-    readonly ResourceLoader _resLoader;
-    readonly ResourceManager _resManager;
-
-    internal I18n(ResourceLoader resLoader, ResourceManager resManager)
-    {
+    internal I18n(ResourceLoader resLoader, ResourceManager resManager) {
         _resLoader = resLoader;
         _resManager = resManager;
     }
 
-    public string GetString(string id)
-    {
+    public string GetString(string id) {
         return _resLoader.GetString(id);
     }
     /// <summary>
@@ -27,8 +23,7 @@ public class I18n
     /// <param name="fullID"></param>
     /// <param name="context"></param>
     /// <returns></returns>
-    public string GetStringByFullID(string fullID, ResourceContext context = null)
-    {
+    public string GetStringByFullID(string fullID, ResourceContext context = null) {
         ResourceCandidate candidate = context is null ? _resManager.MainResourceMap.GetValue(fullID) : _resManager.MainResourceMap.GetValue(fullID, context);
         return candidate.ValueAsString;
     }

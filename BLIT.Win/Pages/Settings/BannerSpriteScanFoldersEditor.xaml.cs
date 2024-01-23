@@ -11,10 +11,8 @@ using Microsoft.UI.Xaml.Input;
 
 namespace BLIT.Win.Pages.Settings;
 
-public sealed partial class BannerSpriteScanFoldersEditor : UserControl
-{
-    public BannerSettingsViewModel ViewModel
-    {
+public sealed partial class BannerSpriteScanFoldersEditor : UserControl {
+    public BannerSettingsViewModel ViewModel {
         get => GetValue(ViewModelProperty) as BannerSettingsViewModel;
         set => SetValue(ViewModelProperty, value);
     }
@@ -23,50 +21,41 @@ public sealed partial class BannerSpriteScanFoldersEditor : UserControl
         nameof(ViewModel), typeof(BannerSettingsViewModel), typeof(BannerSpriteScanFoldersEditor),
         new PropertyMetadata(null));
 
-    public BannerSpriteScanFoldersEditor()
-    {
+    public BannerSpriteScanFoldersEditor() {
         InitializeComponent();
     }
 
-    void btnAdd_Click(object sender, RoutedEventArgs e)
-    {
+    private void btnAdd_Click(object sender, RoutedEventArgs e) {
         ViewModel.SpriteScanFolders.Add(new BannerSpriteScanFolderViewModel());
         ViewModel.SelectedSpriteScanFolderIndex = ViewModel.SpriteScanFolders.Count - 1;
     }
 
-    void btnEdit_Click(object sender, RoutedEventArgs e)
-    {
+    private void btnEdit_Click(object sender, RoutedEventArgs e) {
         EditSelectedFolder();
     }
 
-    void btnDelete_Click(object sender, RoutedEventArgs e)
-    {
+    private void btnDelete_Click(object sender, RoutedEventArgs e) {
         DeleteSelectedFolder();
     }
 
-    void listViewBannerSrpiteScanFolders_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
+    private void listViewBannerSrpiteScanFolders_SelectionChanged(object sender, SelectionChangedEventArgs e) {
         ViewModel.SelectedSpriteScanFolderIndex = e.AddedItems.Count == 0 ? -1 : listViewBannerSrpiteScanFolders.SelectedIndex;
     }
 
-    void listViewBannerSrpiteScanFolders_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-    {
+    private void listViewBannerSrpiteScanFolders_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e) {
         EditSelectedFolder();
     }
 
-    void EditSelectedFolder()
-    {
-        if (ViewModel.SelectedSpriteScanFolder is null)
-        {
+    private void EditSelectedFolder() {
+        if (ViewModel.SelectedSpriteScanFolder is null) {
             return;
         }
 
         ViewModel.SelectedSpriteScanFolder.IsEditing = true;
     }
-    void DeleteSelectedFolder()
-    {
-        if (ViewModel.SelectedSpriteScanFolder is null)
-        {
+
+    private void DeleteSelectedFolder() {
+        if (ViewModel.SelectedSpriteScanFolder is null) {
             return;
         }
 

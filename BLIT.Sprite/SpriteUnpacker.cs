@@ -5,12 +5,9 @@ using System.Globalization;
 
 namespace BLIT.Sprite;
 
-public class SpriteUnpacker
-{
-    public void UnpackSingle(string spriteSheet, string outputFile, SpriteRegion region)
-    {
-        if (string.IsNullOrEmpty(outputFile))
-        {
+public class SpriteUnpacker {
+    public void UnpackSingle(string spriteSheet, string outputFile, SpriteRegion region) {
+        if (string.IsNullOrEmpty(outputFile)) {
             throw new ArgumentNullException("outputFile");
         }
 
@@ -18,19 +15,16 @@ public class SpriteUnpacker
         using var sprite = new MagickImage(spriteSheet, settings);
         sprite.Write(outputFile);
     }
-    public void UnpackFromCSV(string csvFile, string sourceDir, string outputDir, string srcExt, string outExt)
-    {
+    public void UnpackFromCSV(string csvFile, string sourceDir, string outputDir, string srcExt, string outExt) {
         var config = new CsvConfiguration(CultureInfo.InvariantCulture);
         using StreamReader reader = File.OpenText(csvFile);
         using var csv = new CsvReader(reader, config);
         IEnumerable<SpriteInfo> rows = csv.GetRecords<SpriteInfo>();
-        foreach (SpriteInfo row in rows)
-        {
+        foreach (SpriteInfo row in rows) {
             var sourceFile = Path.Combine(sourceDir, $"{row.Atlas}.{srcExt}");
             var outputFile = Path.Combine(outputDir, row.Atlas, $"{row.ID}.{outExt}");
             var dir = Path.GetDirectoryName(outputFile);
-            if (!string.IsNullOrEmpty(dir))
-            {
+            if (!string.IsNullOrEmpty(dir)) {
                 Directory.CreateDirectory(dir);
             }
 
@@ -38,10 +32,8 @@ public class SpriteUnpacker
         }
     }
 }
-public record SpriteRegion(int X, int Y, int Width, int Height)
-{
-    public static SpriteRegion FromString(string args)
-    {
+public record SpriteRegion(int X, int Y, int Width, int Height) {
+    public static SpriteRegion FromString(string args) {
         var parts = args.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
         return parts.Length != 4
             ? throw new ArgumentException("invalid sprite region. should be in the format of x,y,width,height")
@@ -55,13 +47,11 @@ public record SpriteRegion(int X, int Y, int Width, int Height)
             ? throw new ArgumentException($"invalid sprite h: {parts[3]}")
             : new SpriteRegion(x, y, w, h);
     }
-    public MagickGeometry ToGeometry()
-    {
+    public MagickGeometry ToGeometry() {
         return new MagickGeometry(X, Y, Width, Height);
     }
 }
-public class SpriteInfo
-{
+public class SpriteInfo {
     public string Atlas { get; set; } = "";
     public string ID { get; set; } = "";
     public int Width { get; set; }

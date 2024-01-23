@@ -13,56 +13,46 @@ using System.Threading.Tasks;
 
 namespace BLIT.Win.Controls;
 
-public sealed partial class Toast : UserControl
-{
-    const double TIMER_INTERVAL = 0.01;
-    ToastViewModel ViewModel { get; } = new ToastViewModel();
-    readonly PeriodicTimer _countdownTimer = new(TimeSpan.FromSeconds(TIMER_INTERVAL));
+public sealed partial class Toast : UserControl {
+    private const double TIMER_INTERVAL = 0.01;
+
+    private ToastViewModel ViewModel { get; } = new ToastViewModel();
+
+    private readonly PeriodicTimer _countdownTimer = new(TimeSpan.FromSeconds(TIMER_INTERVAL));
 
     public event Action<Toast> OnClosed;
 
-    public ToastVariant Variant
-    {
+    public ToastVariant Variant {
         get => ViewModel.Variant;
         set => ViewModel.Variant = value;
     }
-    public string Title
-    {
+    public string Title {
         get => ViewModel.Title;
         set => ViewModel.Title = value;
     }
-    public string Message
-    {
+    public string Message {
         get => ViewModel.Message;
         set => ViewModel.Message = value;
     }
-    public bool IsOpen
-    {
+    public bool IsOpen {
         get => ViewModel.IsOpen;
-        set
-        {
-            if (!value)
-            {
+        set {
+            if (!value) {
                 StopTimeout();
-                if (value != ViewModel.IsOpen)
-                {
+                if (value != ViewModel.IsOpen) {
                     OnClosed?.Invoke(this);
                 }
-            }
-            else if (value != ViewModel.IsOpen)
-            {
+            } else if (value != ViewModel.IsOpen) {
                 StartTimeout();
             }
             ViewModel.IsOpen = value;
         }
     }
-    public bool IsClosable
-    {
+    public bool IsClosable {
         get => ViewModel.IsClosable;
         set => ViewModel.IsClosable = value;
     }
-    public Button ActionButton
-    {
+    public Button ActionButton {
         get => ViewModel.ActionButton;
         set => ViewModel.ActionButton = value;
     }
@@ -72,39 +62,31 @@ public sealed partial class Toast : UserControl
         typeof(double),
         typeof(Toast),
         new PropertyMetadata(0.0));
-
-    CancellationTokenSource _cancelTimeout = new();
-    public double TimeoutSeconds
-    {
+    private CancellationTokenSource _cancelTimeout = new();
+    public double TimeoutSeconds {
         get => (double)GetValue(TimeoutSecondsProperty);
-        set
-        {
+        set {
             SetValue(TimeoutSecondsProperty, value);
             StartTimeout();
         }
     }
 
-    public Toast()
-    {
+    public Toast() {
         InitializeComponent();
         infoBar.Closed += (s, e) => IsOpen = false;
     }
 
-    void StartTimeout()
-    {
+    private void StartTimeout() {
         StopTimeout();
-        if (!_cancelTimeout.TryReset())
-        {
+        if (!_cancelTimeout.TryReset()) {
             _cancelTimeout = new CancellationTokenSource();
         }
-        if (TimeoutSeconds > 0)
-        {
+        if (TimeoutSeconds > 0) {
             CancellationToken cancelToken = _cancelTimeout.Token;
             // close the toast after timeout
             Task.Delay(TimeSpan.FromSeconds(TimeoutSeconds), cancelToken)
                 .ContinueWith(t => {
-                    if (!IsOpen)
-                    {
+                    if (!IsOpen) {
                         throw new InvalidOperationException("already closed");
                     }
 
@@ -118,8 +100,7 @@ public sealed partial class Toast : UserControl
             var timeRemaining = TimeoutSeconds;
             var total = TimeoutSeconds;
             Task.Run(async () => {
-                if (timeRemaining < 0)
-                {
+                if (timeRemaining < 0) {
                     return;
                 }
 
@@ -129,17 +110,13 @@ public sealed partial class Toast : UserControl
                 });
                 await UpdateProgress(timeRemaining);
                 DateTime prevTime = DateTime.Now;
-                while (!cancelToken.IsCancellationRequested && await _countdownTimer.WaitForNextTickAsync(cancelToken))
-                {
-                    try
-                    {
+                while (!cancelToken.IsCancellationRequested && await _countdownTimer.WaitForNextTickAsync(cancelToken)) {
+                    try {
                         DateTime newTime = DateTime.Now;
                         timeRemaining -= (newTime - prevTime).TotalSeconds;
                         prevTime = newTime;
                         await UpdateProgress(timeRemaining);
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                         Log.Error(ex, "Toast countdown error", ex);
                         break;
                     }
@@ -147,67 +124,61 @@ public sealed partial class Toast : UserControl
             }, cancelToken);
         }
     }
-    void StopTimeout()
-    {
+
+    private void StopTimeout() {
         _cancelTimeout.Cancel();
     }
 }
-public class ToastViewModel : BindableBase
-{
-    ToastVariant _variant = ToastVariant.Info;
-    public ToastVariant Variant
-    {
+public class ToastViewModel : BindableBase {
+    private ToastVariant _variant = ToastVariant.Info;
+    public ToastVariant Variant {
         get => _variant;
-        set
-        {
+        set {
             SetProperty(ref _variant, value);
             OnPropertyChanged(nameof(ProgressBarVisibility));
         }
     }
-    string _title = "";
-    public string Title
-    {
+
+    private string _title = "";
+    public string Title {
         get => _title;
         set => SetProperty(ref _title, value);
     }
-    string _message = "Toast!";
-    public string Message
-    {
+
+    private string _message = "Toast!";
+    public string Message {
         get => _message;
         set => SetProperty(ref _message, value);
     }
-    bool _isOpen;
-    public bool IsOpen
-    {
+
+    private bool _isOpen;
+    public bool IsOpen {
         get => _isOpen;
         set => SetProperty(ref _isOpen, value);
     }
     public double _progress = -1;
-    public double Progress
-    {
+    public double Progress {
         get => _progress;
-        set
-        {
+        set {
             SetProperty(ref _progress, value);
             OnPropertyChanged(nameof(ProgressBarVisibility));
         }
     }
     public Visibility ProgressBarVisibility => Progress >= 0 || Variant == ToastVariant.Progressing ? Visibility.Visible : Visibility.Collapsed;
-    Button _actionButton;
-    public Button ActionButton
-    {
+
+    private Button _actionButton;
+    public Button ActionButton {
         get => _actionButton;
         set => SetProperty(ref _actionButton, value);
     }
-    bool _isClosable = true;
-    public bool IsClosable
-    {
+
+    private bool _isClosable = true;
+    public bool IsClosable {
         get => _isClosable;
         set => SetProperty(ref _isClosable, value);
     }
 }
-public enum ToastVariant
-{
+public enum ToastVariant {
     Info,
     Warning,
     Error,
@@ -215,22 +186,17 @@ public enum ToastVariant
     Progressing,
 }
 
-public class ToastVariantIsIconVisibleConverter : IValueConverter
-{
-    public object Convert(object value, Type targetType, object parameter, string language)
-    {
+public class ToastVariantIsIconVisibleConverter : IValueConverter {
+    public object Convert(object value, Type targetType, object parameter, string language) {
         return value is not ToastVariant v ? true : (object)(v != ToastVariant.Progressing);
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
-    {
+    public object ConvertBack(object value, Type targetType, object parameter, string language) {
         return null;
     }
 }
-public class ToastVariantSeverityConverter : IValueConverter
-{
-    public object Convert(object value, Type targetType, object parameter, string language)
-    {
+public class ToastVariantSeverityConverter : IValueConverter {
+    public object Convert(object value, Type targetType, object parameter, string language) {
         return value is not ToastVariant v
             ? InfoBarSeverity.Informational
             : v switch {
@@ -241,20 +207,16 @@ public class ToastVariantSeverityConverter : IValueConverter
             };
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
-    {
+    public object ConvertBack(object value, Type targetType, object parameter, string language) {
         throw new NotImplementedException();
     }
 }
-public class ToastProgressBarIndeterminateConverter : IValueConverter
-{
-    public object Convert(object value, Type targetType, object parameter, string language)
-    {
+public class ToastProgressBarIndeterminateConverter : IValueConverter {
+    public object Convert(object value, Type targetType, object parameter, string language) {
         return value is not double v || v < 0;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
-    {
+    public object ConvertBack(object value, Type targetType, object parameter, string language) {
         return null;
     }
 }

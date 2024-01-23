@@ -6,55 +6,41 @@ using System.ComponentModel;
 using System.IO;
 
 namespace BLIT.Win.Pages.BannerIcons.Models;
-public class BannerIconEntry : BindableBase
-{
+public class BannerIconEntry : BindableBase {
     public delegate BannerIconEntry Factory(BannerGroupEntry groupVm, string texturePath);
 
-    readonly BannerGroupEntry _groupViewModel;
-    string _texturePath;
-    string _spritePath;
-    int _cellIndex;
-    readonly ISettingsService _settings;
+    private readonly BannerGroupEntry _groupViewModel;
+    private string _texturePath;
+    private string _spritePath;
+    private int _cellIndex;
+    private readonly ISettingsService _settings;
 
-    public string TexturePath
-    {
+    public string TexturePath {
         get => _texturePath;
-        set
-        {
+        set {
             var newPath = ImageHelper.IsValidImage(value) ? Path.GetFullPath(value) : ImageHelper.BAD_IMAGE_PATH;
-            if (newPath == _texturePath)
-            {
+            if (newPath == _texturePath) {
                 ReloadTexture();
-            }
-            else
-            {
+            } else {
                 SetProperty(ref _texturePath, newPath);
             }
         }
     }
-    public string SpritePath
-    {
+    public string SpritePath {
         get => _spritePath;
-        set
-        {
+        set {
             var newPath = ImageHelper.IsValidImage(value) ? Path.GetFullPath(value) : ImageHelper.BAD_IMAGE_PATH;
-            if (newPath == _spritePath)
-            {
+            if (newPath == _spritePath) {
                 ReloadSprite();
-            }
-            else
-            {
+            } else {
                 SetProperty(ref _spritePath, newPath);
             }
         }
     }
-    public int CellIndex
-    {
+    public int CellIndex {
         get => _cellIndex;
-        set
-        {
-            if (value == _cellIndex)
-            {
+        set {
+            if (value == _cellIndex) {
                 return;
             }
 
@@ -70,8 +56,7 @@ public class BannerIconEntry : BindableBase
 
     public bool IsValid => ImageHelper.IsValidImage(TexturePath) && AtlasIndex >= 0;
 
-    public BannerIconEntry(BannerGroupEntry groupVm, string texturePath, ISettingsService settings)
-    {
+    public BannerIconEntry(BannerGroupEntry groupVm, string texturePath, ISettingsService settings) {
         _groupViewModel = groupVm;
         _texturePath = texturePath;
         _settings = settings;
@@ -80,32 +65,27 @@ public class BannerIconEntry : BindableBase
         _groupViewModel.PropertyChanged += _viewModel_PropertyChanged;
     }
 
-    void _viewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(BannerGroupEntry.GroupName))
-        {
+    private void _viewModel_PropertyChanged(object sender, PropertyChangedEventArgs e) {
+        if (e.PropertyName == nameof(BannerGroupEntry.GroupName)) {
             OnPropertyChanged(nameof(AtlasName));
             OnPropertyChanged(nameof(ID));
         }
     }
 
-    public void ReloadSprite()
-    {
+    public void ReloadSprite() {
         if (string.IsNullOrEmpty(SpritePath)) return;
         var oldPath = SpritePath;
         SpritePath = oldPath + "1";
         SpritePath = oldPath;
     }
-    public void ReloadTexture()
-    {
+    public void ReloadTexture() {
         if (string.IsNullOrEmpty(TexturePath)) return;
         var oldPath = TexturePath;
         TexturePath = oldPath + "1";
         TexturePath = oldPath;
     }
 
-    public BannerIcon ToBannerIcon()
-    {
+    public BannerIcon ToBannerIcon() {
         return new BannerIcon() {
             ID = ID,
             MaterialName = AtlasName,
@@ -113,25 +93,20 @@ public class BannerIconEntry : BindableBase
             Comment = Path.GetFileNameWithoutExtension(TexturePath),
         };
     }
-    public IconSprite ToIconSprite()
-    {
+    public IconSprite ToIconSprite() {
         return new(_groupViewModel.GroupID, ID, _spritePath);
     }
 
-    public void AutoScanSprite()
-    {
-        if (string.IsNullOrEmpty(TexturePath))
-        {
+    public void AutoScanSprite() {
+        if (string.IsNullOrEmpty(TexturePath)) {
             return;
         }
 
         var dir = Path.GetDirectoryName(TexturePath);
         var filename = Path.GetFileName(TexturePath);
-        foreach (var relPath in _settings.Banner.SpriteScanFolders)
-        {
+        foreach (var relPath in _settings.Banner.SpriteScanFolders) {
             var tryPath = Path.Join(dir, relPath, filename);
-            if (File.Exists(tryPath))
-            {
+            if (File.Exists(tryPath)) {
                 SpritePath = tryPath;
                 return;
             }
@@ -139,8 +114,7 @@ public class BannerIconEntry : BindableBase
     }
 
     [MessagePackObject]
-    public class SaveData
-    {
+    public class SaveData {
         [Key(0)]
         public string TexturePath;
         [Key(1)]
@@ -148,16 +122,14 @@ public class BannerIconEntry : BindableBase
         [Key(2)]
         public int CellIndex;
 
-        public SaveData(BannerIconEntry vm)
-        {
+        public SaveData(BannerIconEntry vm) {
             TexturePath = vm.TexturePath;
             SpritePath = vm.SpritePath;
             CellIndex = vm.CellIndex;
         }
         public SaveData() { }
 
-        public BannerIconEntry Load(BannerGroupEntry groupVM, Factory factory)
-        {
+        public BannerIconEntry Load(BannerGroupEntry groupVM, Factory factory) {
             BannerIconEntry vm = factory(groupVM, TexturePath);
             vm.SpritePath = SpritePath;
             vm.CellIndex = CellIndex;

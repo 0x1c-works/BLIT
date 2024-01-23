@@ -12,23 +12,21 @@ namespace BLIT.Win.Theming;
 /// 
 /// This class is modified based on the example from WinUI3 Gallery.
 /// </summary>
-public abstract class ThemedWindow : Window
-{
-    public enum BackdropType
-    {
+public abstract class ThemedWindow : Window {
+    public enum BackdropType {
         Mica,
         MicaAlt,
         DesktopAcrylic,
         DefaultColor,
     }
-    readonly WindowsSystemDispatcherQueueHelper m_wsdqHelper;
-    BackdropType m_currentBackdrop;
-    MicaController m_micaController;
-    DesktopAcrylicController m_acrylicController;
-    SystemBackdropConfiguration m_configurationSource;
 
-    public ThemedWindow()
-    {
+    private readonly WindowsSystemDispatcherQueueHelper m_wsdqHelper;
+    private BackdropType m_currentBackdrop;
+    private MicaController m_micaController;
+    private DesktopAcrylicController m_acrylicController;
+    private SystemBackdropConfiguration m_configurationSource;
+
+    public ThemedWindow() {
         // TODO: read the default theme from LocalSettings to restore user's preferences
         //((FrameworkElement)this.Content).RequestedTheme = AppUIBasics.Helper.ThemeHelper.RootTheme;
 
@@ -37,25 +35,18 @@ public abstract class ThemedWindow : Window
         Activated += ThemedWindow_Initialized;
     }
 
-    void ThemedWindow_Initialized(object sender, WindowActivatedEventArgs args)
-    {
+    private void ThemedWindow_Initialized(object sender, WindowActivatedEventArgs args) {
         SetBackdrop(Backdrop);
         Activated -= ThemedWindow_Initialized;
     }
 
-    public BackdropType Backdrop
-    {
+    public BackdropType Backdrop {
         get => m_currentBackdrop;
-        set
-        {
-            if (m_currentBackdrop != value)
-            {
-                if (Content != null)
-                {
+        set {
+            if (m_currentBackdrop != value) {
+                if (Content != null) {
                     SetBackdrop(value);
-                }
-                else
-                {
+                } else {
                     // wait for ThemeWindow_Initialized to execute
                     // if the components are not initialized yet.
                     m_currentBackdrop = value;
@@ -63,13 +54,11 @@ public abstract class ThemedWindow : Window
             }
         }
     }
-    public ICompositionSupportsSystemBackdrop AsSystemBackdropTarget()
-    {
+    public ICompositionSupportsSystemBackdrop AsSystemBackdropTarget() {
         return this.As<ICompositionSupportsSystemBackdrop>();
     }
 
-    public void SetBackdrop(BackdropType type)
-    {
+    public void SetBackdrop(BackdropType type) {
         // Reset to default color. If the requested type is supported, we'll update to that.
         // Note: This sample completely removes any previous controller to reset to the default
         //       state. This is done so this sample can show what is expected to be the most
@@ -79,13 +68,11 @@ public abstract class ThemedWindow : Window
         //       controller, reusing any existing m_configurationSource and Activated/Closed
         //       event handlers.
         m_currentBackdrop = BackdropType.DefaultColor;
-        if (m_micaController != null)
-        {
+        if (m_micaController != null) {
             m_micaController.Dispose();
             m_micaController = null;
         }
-        if (m_acrylicController != null)
-        {
+        if (m_acrylicController != null) {
             m_acrylicController.Dispose();
             m_acrylicController = null;
         }
@@ -94,46 +81,33 @@ public abstract class ThemedWindow : Window
         ((FrameworkElement)Content).ActualThemeChanged -= Window_ThemeChanged;
         m_configurationSource = null;
 
-        if (type == BackdropType.Mica)
-        {
-            if (TrySetMicaBackdrop(false))
-            {
+        if (type == BackdropType.Mica) {
+            if (TrySetMicaBackdrop(false)) {
                 m_currentBackdrop = type;
-            }
-            else
-            {
+            } else {
                 // Mica isn't supported. Try Acrylic.
                 type = BackdropType.DesktopAcrylic;
             }
         }
-        if (type == BackdropType.MicaAlt)
-        {
-            if (TrySetMicaBackdrop(true))
-            {
+        if (type == BackdropType.MicaAlt) {
+            if (TrySetMicaBackdrop(true)) {
                 m_currentBackdrop = type;
-            }
-            else
-            {
+            } else {
                 // MicaAlt isn't supported. Try Acrylic.
                 type = BackdropType.DesktopAcrylic;
             }
         }
-        if (type == BackdropType.DesktopAcrylic)
-        {
-            if (TrySetAcrylicBackdrop())
-            {
+        if (type == BackdropType.DesktopAcrylic) {
+            if (TrySetAcrylicBackdrop()) {
                 m_currentBackdrop = type;
-            }
-            else
-            {
+            } else {
                 // Acrylic isn't supported, so take the next option, which is DefaultColor, which is already set.
             }
         }
     }
-    bool TrySetMicaBackdrop(bool useMicaAlt)
-    {
-        if (MicaController.IsSupported())
-        {
+
+    private bool TrySetMicaBackdrop(bool useMicaAlt) {
+        if (MicaController.IsSupported()) {
             // Hooking up the policy object
             m_configurationSource = new SystemBackdropConfiguration();
             Activated += Window_Activated;
@@ -158,10 +132,8 @@ public abstract class ThemedWindow : Window
         return false; // Mica is not supported on this system
     }
 
-    bool TrySetAcrylicBackdrop()
-    {
-        if (DesktopAcrylicController.IsSupported())
-        {
+    private bool TrySetAcrylicBackdrop() {
+        if (DesktopAcrylicController.IsSupported()) {
             // Hooking up the policy object
             m_configurationSource = new Microsoft.UI.Composition.SystemBackdrops.SystemBackdropConfiguration();
             Activated += Window_Activated;
@@ -184,22 +156,18 @@ public abstract class ThemedWindow : Window
         return false; // Acrylic is not supported on this system
     }
 
-    void Window_Activated(object sender, WindowActivatedEventArgs args)
-    {
+    private void Window_Activated(object sender, WindowActivatedEventArgs args) {
         m_configurationSource.IsInputActive = args.WindowActivationState != WindowActivationState.Deactivated;
     }
 
-    void Window_Closed(object sender, WindowEventArgs args)
-    {
+    private void Window_Closed(object sender, WindowEventArgs args) {
         // Make sure any Mica/Acrylic controller is disposed so it doesn't try to
         // use this closed window.
-        if (m_micaController != null)
-        {
+        if (m_micaController != null) {
             m_micaController.Dispose();
             m_micaController = null;
         }
-        if (m_acrylicController != null)
-        {
+        if (m_acrylicController != null) {
             m_acrylicController.Dispose();
             m_acrylicController = null;
         }
@@ -207,18 +175,14 @@ public abstract class ThemedWindow : Window
         m_configurationSource = null;
     }
 
-    void Window_ThemeChanged(FrameworkElement sender, object args)
-    {
-        if (m_configurationSource != null)
-        {
+    private void Window_ThemeChanged(FrameworkElement sender, object args) {
+        if (m_configurationSource != null) {
             SetConfigurationSourceTheme();
         }
     }
 
-    void SetConfigurationSourceTheme()
-    {
-        switch (((FrameworkElement)Content).ActualTheme)
-        {
+    private void SetConfigurationSourceTheme() {
+        switch (((FrameworkElement)Content).ActualTheme) {
             case ElementTheme.Dark: m_configurationSource.Theme = SystemBackdropTheme.Dark; break;
             case ElementTheme.Light: m_configurationSource.Theme = SystemBackdropTheme.Light; break;
             case ElementTheme.Default: m_configurationSource.Theme = SystemBackdropTheme.Default; break;

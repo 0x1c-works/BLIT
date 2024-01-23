@@ -31,8 +31,7 @@ namespace BLIT.Win.Helpers;
 /// Implementation of <see cref="INotifyPropertyChanged"/> to simplify models.
 /// </summary>
 [Windows.Foundation.Metadata.WebHostHidden]
-public abstract class BindableBase : INotifyPropertyChanged
-{
+public abstract class BindableBase : INotifyPropertyChanged {
     /// <summary>
     /// Multicast event for property change notifications.
     /// </summary>
@@ -50,10 +49,8 @@ public abstract class BindableBase : INotifyPropertyChanged
     /// support CallerMemberName.</param>
     /// <returns>True if the value was changed, false if the existing value matched the
     /// desired value.</returns>
-    protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
-    {
-        if (object.Equals(storage, value))
-        {
+    protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null) {
+        if (object.Equals(storage, value)) {
             return false;
         }
 
@@ -68,8 +65,7 @@ public abstract class BindableBase : INotifyPropertyChanged
     /// <param name="propertyName">Name of the property used to notify listeners.  This
     /// value is optional and can be provided automatically when invoked from compilers
     /// that support <see cref="CallerMemberNameAttribute"/>.</param>
-    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-    {
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = null) {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

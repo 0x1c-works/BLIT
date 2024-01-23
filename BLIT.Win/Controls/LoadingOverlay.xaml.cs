@@ -7,28 +7,24 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace BLIT.Win.Controls;
 
-public sealed partial class LoadingOverlay : UserControl
-{
+public sealed partial class LoadingOverlay : UserControl {
     public readonly static DependencyProperty MessageProperty = DependencyProperty.Register(
         nameof(Message),
         typeof(string),
         typeof(LoadingOverlay),
         new PropertyMetadata("Loading..."));
 
-    public string Message
-    {
+    public string Message {
         get => (string)GetValue(MessageProperty);
         set => SetValue(MessageProperty, value);
     }
-    public bool IsLoading
-    {
+    public bool IsLoading {
         get => loadingControl.IsLoading;
         set => loadingControl.IsLoading = value;
     }
 
-    public LoadingOverlay()
-    {
-        this.InitializeComponent();
+    public LoadingOverlay() {
+        InitializeComponent();
         AppServices.Get<ILoadingService>().RegisterControl(this);
     }
 }

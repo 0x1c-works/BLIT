@@ -17,14 +17,11 @@ using CP = CommunityToolkit.WinUI.UI.Controls.ColorPicker;
 
 namespace BLIT.Win.Pages.BannerIcons;
 
-public sealed partial class BannerColorsEditor : UserControl
-{
-    const int TITLE_MAX_COUNT = 3;
-    public BannerIconsProject ViewModel
-    {
+public sealed partial class BannerColorsEditor : UserControl {
+    private const int TITLE_MAX_COUNT = 3;
+    public BannerIconsProject ViewModel {
         get => GetValue(ViewModelProperty) as BannerIconsProject;
-        set
-        {
+        set {
             SetValue(ViewModelProperty, value);
             Bindings.Update();
         }
@@ -37,39 +34,31 @@ public sealed partial class BannerColorsEditor : UserControl
     public bool HasSelectedColor { get => SelectedColors.Any(); }
     public bool IsSingleSelected { get => listViewColors.SelectedItems.Count == 1; }
     public bool IsMultipleSelection { get => SelectedColors.Count() > 1; }
-    public bool IsForSigil
-    {
+    public bool IsForSigil {
         get => GetMultiSelectionFlag(c => c.IsForSigil);
         set => SetMultiSelectionFlag((c, v) => c.IsForSigil = v, value);
     }
-    public bool IsForBackground
-    {
+    public bool IsForBackground {
         get => GetMultiSelectionFlag(c => c.IsForBackground);
         set => SetMultiSelectionFlag((c, v) => c.IsForBackground = v, value);
     }
-    public string SelectedColorIDs
-    {
+    public string SelectedColorIDs {
         get => string.Join(", ", SelectedColors.Take(TITLE_MAX_COUNT).Select(c => c.ID));
     }
-    public string MoreColorsText
-    {
-        get
-        {
+    public string MoreColorsText {
+        get {
             var moreCount = SelectedColors.Count() - TITLE_MAX_COUNT;
             return moreCount > 0 ? string.Format(I18n.Current.GetString("AndMore"), moreCount) : string.Empty;
         }
     }
 
-    public BannerColorsEditor()
-    {
+    public BannerColorsEditor() {
         InitializeComponent();
     }
 
-    async void btnChangeColor_Click(object sender, RoutedEventArgs e)
-    {
+    private async void btnChangeColor_Click(object sender, RoutedEventArgs e) {
         var tag = (sender as Button)?.Tag;
-        if (tag is null || tag is not BannerColorEntry vm)
-        {
+        if (tag is null || tag is not BannerColorEntry vm) {
             return;
         }
 
@@ -81,31 +70,26 @@ public sealed partial class BannerColorsEditor : UserControl
         var colorPicker = new CP() { Color = vm.Color };
         dialog.Content = colorPicker;
         ContentDialogResult result = await dialog.ShowAsync().AsTask();
-        if (result == ContentDialogResult.Primary)
-        {
+        if (result == ContentDialogResult.Primary) {
             vm.Color = colorPicker.Color;
         }
     }
-    void btnAdd_Click(object sender, RoutedEventArgs e)
-    {
+
+    private void btnAdd_Click(object sender, RoutedEventArgs e) {
         AddNewColor();
     }
 
-    async void btnDelete_Click(object sender, RoutedEventArgs e)
-    {
+    private async void btnDelete_Click(object sender, RoutedEventArgs e) {
         await DeleteSelectedColors();
     }
 
-    void AddNewColor()
-    {
+    private void AddNewColor() {
         ViewModel.AddColor();
         listViewColors.SelectedIndex = listViewColors.SelectedItems.Count - 1;
     }
 
-    async Task DeleteSelectedColors()
-    {
-        if (!SelectedColors.Any())
-        {
+    private async Task DeleteSelectedColors() {
+        if (!SelectedColors.Any()) {
             return;
         }
 
@@ -113,8 +97,7 @@ public sealed partial class BannerColorsEditor : UserControl
             this,
             I18n.Current.GetString("DialogDeleteColor/Title"),
             string.Format(I18n.Current.GetString("DialogDeleteColor/Content"), SelectedColors.Count()))
-            != ContentDialogResult.Primary)
-        {
+            != ContentDialogResult.Primary) {
             return;
         }
 
@@ -124,33 +107,28 @@ public sealed partial class BannerColorsEditor : UserControl
         listViewColors.SelectedIndex = count > 0 ? Math.Min(index, count - 1) : -1;
     }
 
-    void listViewColors_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
+    private void listViewColors_SelectionChanged(object sender, SelectionChangedEventArgs e) {
         Bindings.Update();
     }
 
-    bool GetMultiSelectionFlag(Func<BannerColorEntry, bool> getter)
-    {
+    private bool GetMultiSelectionFlag(Func<BannerColorEntry, bool> getter) {
         if (!HasSelectedColor) return false;
         return SelectedColors.All(c => getter?.Invoke(c) ?? false);
     }
-    void SetMultiSelectionFlag(Action<BannerColorEntry, bool> setter, bool value)
-    {
-        foreach (BannerColorEntry item in SelectedColors)
-        {
+
+    private void SetMultiSelectionFlag(Action<BannerColorEntry, bool> setter, bool value) {
+        foreach (BannerColorEntry item in SelectedColors) {
             setter?.Invoke(item, value);
         }
     }
 
-    void lnkColorWarning_Click(object sender, RoutedEventArgs e)
-    {
+    private void lnkColorWarning_Click(object sender, RoutedEventArgs e) {
         Analytics.TrackEvent("Visit help", new Dictionary<string, string> {
             {"source", "color warning" }
         });
     }
 
-    void btnSort_Click(object sender, RoutedEventArgs e)
-    {
+    private void btnSort_Click(object sender, RoutedEventArgs e) {
         ViewModel.SortColors();
     }
 }
