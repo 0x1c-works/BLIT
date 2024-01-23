@@ -19,8 +19,7 @@ public class AppService {
         var builder = new ContainerBuilder();
         // Singletons
 
-        //builder.RegisterType<FileDialogService>().AsImplementedInterfaces().SingleInstance();
-        //builder.RegisterType<ConfirmDialogService>().AsImplementedInterfaces().SingleInstance();
+        builder.RegisterType<ConfirmDialogService>().SingleInstance();
         //builder.RegisterType<NotificationService>().AsImplementedInterfaces().SingleInstance();
         //builder.RegisterType<LoadingService>().AsImplementedInterfaces().SingleInstance();
 
@@ -63,4 +62,5 @@ public class AppService {
         }
     }
 
+    public static T Get<T>() where T : notnull => Container.Resolve<T>();
 }

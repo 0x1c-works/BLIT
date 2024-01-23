@@ -1,11 +1,10 @@
-using Autofac;
 using BLIT.scripts.Models.BannerIcons;
 using BLIT.scripts.Services;
 using Godot;
 using System.ComponentModel;
 
 public partial class BannerIconsEditor : Control {
-    private IProjectService<BannerIconsProject> ProjectService => AppService.Container.Resolve<IProjectService<BannerIconsProject>>();
+    private IProjectService<BannerIconsProject> ProjectService => AppService.Get<IProjectService<BannerIconsProject>>();
 
     [Export] public Label? LabelFileName { get; set; }
     [Export] public FileDialog? OpenProjectDialog { get; set; }
@@ -19,23 +18,15 @@ public partial class BannerIconsEditor : Control {
         UpdateFileName();
     }
 
-    private void OnNewProject() {
-        var confirm = new ConfirmationDialog() {
-            Title = "CONFIRMATION/TITLE/CREATE_PROJECT",
-            DialogText = "CONFIRMATION/TEXT/CREATE_PROJECT",
-            OkButtonText = "YES",
-            CancelButtonText = "NO",
-            DialogAutowrap = true,
-            MinSize = new Vector2I(320, 100),
-        };
-        //confirm.Theme = ThemeDB.GetProjectTheme();
-        confirm.GetOkButton().CustomMinimumSize = new Vector2I(60, 0);
-        confirm.GetCancelButton().CustomMinimumSize = new Vector2I(60, 0);
-        confirm.GetOkButton().Pressed += () => {
-            ProjectService.NewProject();
-        };
-        AddChild(confirm);
-        confirm.PopupCentered();
+    private async void OnNewProject() {
+
+        ConfirmDialogService service = AppService.Get<ConfirmDialogService>();
+        var ok = await service.Ask(this,
+                    title: "CONFIRMATION/TITLE/CREATE_PROJECT",
+                    text: "CONFIRMATION/TEXT/CREATE_PROJECT");
+        if (ok) {
+            await ProjectService.NewProject();
+        }
     }
 
     private void OnOpenProject() {
