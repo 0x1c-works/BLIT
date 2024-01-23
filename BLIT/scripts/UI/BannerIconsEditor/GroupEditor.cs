@@ -1,6 +1,7 @@
 using BLIT.scripts.Models.BannerIcons;
 using Godot;
 using Serilog;
+using System.Collections.Specialized;
 using System.Linq;
 
 public partial class GroupEditor : Control {
@@ -49,11 +50,18 @@ public partial class GroupEditor : Control {
                 AddIconBlock(icon);
             }
         }
+        Group.Icons.CollectionChanged += OnIconsCollectionChanged;
+    }
+
+    private void OnIconsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
     }
 
     private void OnGroupIDChanged(float value) {
         if (Group == null) return;
         Group.GroupID = (int)value;
+        if (GroupID != null) {
+            GroupID.Value = Group.GroupID;
+        }
     }
 
     private void AddIconBlock(BannerIconEntry icon) {

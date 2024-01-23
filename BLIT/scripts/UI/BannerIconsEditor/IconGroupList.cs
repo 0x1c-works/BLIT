@@ -58,7 +58,7 @@ public partial class IconGroupList : Control {
             }
         } else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems != null) {
             foreach (BannerGroupEntry group in e.OldItems.Cast<BannerGroupEntry>()) {
-                TreeItem? item = root.GetChildren().FirstOrDefault(child => child.GetMetadata(0).AsInt32() == group.GroupID);
+                TreeItem? item = GetItemByID(group.GroupID);
                 if (item != null) {
                     root.RemoveChild(item);
                 }
@@ -96,6 +96,15 @@ public partial class IconGroupList : Control {
         item.SetCustomColor(1, Colors.LightGray);
         item.SetTextAlignment(1, HorizontalAlignment.Right);
         item.SetMetadata(0, group.GroupID);
+        group.PropertyChanged += (sender, e) => {
+            if (e.PropertyName == nameof(group.GroupID)) {
+                item.SetText(0, group.GroupID.ToString());
+                item.SetMetadata(0, group.GroupID);
+            }
+        };
+        group.Icons.CollectionChanged += (sender, e) => {
+            item.SetText(1, group.Icons.Count.ToString());
+        };
         return item;
     }
     private void OnGroupSelected() {
@@ -136,6 +145,9 @@ public partial class IconGroupList : Control {
         if (index >= root.GetChildCount()) return null;
         return root.GetChild(index);
     }
+    private TreeItem? GetItemByID(int id) {
+        return ItemList?.GetRoot().GetChildren().FirstOrDefault(child => child.GetMetadata(0).AsInt32() == id);
+    }
     private void SelectItemByIndex(int index) {
         TreeItem? selection = GetItemAtIndex(index);
         if (selection != null) {
@@ -145,5 +157,4 @@ public partial class IconGroupList : Control {
             OnGroupSelected();
         }
     }
-
 }
