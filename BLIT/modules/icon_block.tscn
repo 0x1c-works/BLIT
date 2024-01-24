@@ -7,8 +7,8 @@
 
 [node name="IconBlock" type="PanelContainer" node_paths=PackedStringArray("Texture", "ID", "AtlasName")]
 offset_top = 245.0
-offset_right = 200.0
-offset_bottom = 245.0
+offset_right = 170.0
+offset_bottom = 456.0
 focus_mode = 2
 theme_override_styles/panel = ExtResource("1_u6pfk")
 script = ExtResource("1_v7d3p")
@@ -19,11 +19,10 @@ SelectedStyle = ExtResource("3_ru0ln")
 UnselectedStyle = ExtResource("1_u6pfk")
 
 [node name="IconBlock" type="VBoxContainer" parent="."]
-custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
 [node name="TextureContainer" type="AspectRatioContainer" parent="IconBlock"]
-custom_minimum_size = Vector2(0, 200)
+custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 size_flags_vertical = 3
 
