@@ -1,41 +1,56 @@
-[gd_scene load_steps=3 format=3 uid="uid://ct42ucdy1s0av"]
+[gd_scene load_steps=5 format=3 uid="uid://ct42ucdy1s0av"]
 
+[ext_resource type="StyleBox" uid="uid://brywikuod4ig7" path="res://modules/icon_block_unselected_style.tres" id="1_u6pfk"]
 [ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/IconBlock.cs" id="1_v7d3p"]
 [ext_resource type="Texture2D" uid="uid://cafkbkhce1p60" path="res://assets/transparent-bg.png" id="2_sc18m"]
+[ext_resource type="StyleBox" uid="uid://cqqnnpav4agyx" path="res://modules/icon_block_selected_style.tres" id="3_ru0ln"]
 
-[node name="IconBlock" type="VBoxContainer" node_paths=PackedStringArray("Texture", "ID", "AtlasName") groups=["icon_block"]]
-custom_minimum_size = Vector2(200, 0)
+[node name="IconBlock" type="PanelContainer" node_paths=PackedStringArray("Texture", "ID", "AtlasName")]
+offset_top = 245.0
+offset_right = 200.0
+offset_bottom = 245.0
+focus_mode = 2
+theme_override_styles/panel = ExtResource("1_u6pfk")
 script = ExtResource("1_v7d3p")
-Texture = NodePath("TextureContainer/Texture")
-ID = NodePath("ID")
-AtlasName = NodePath("AtlasName")
+Texture = NodePath("IconBlock/TextureContainer/Texture")
+ID = NodePath("IconBlock/ID")
+AtlasName = NodePath("IconBlock/AtlasName")
+SelectedStyle = ExtResource("3_ru0ln")
+UnselectedStyle = ExtResource("1_u6pfk")
 
-[node name="TextureContainer" type="AspectRatioContainer" parent="."]
+[node name="IconBlock" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="TextureContainer" type="AspectRatioContainer" parent="IconBlock"]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Background" type="TextureRect" parent="TextureContainer"]
+[node name="Background" type="TextureRect" parent="IconBlock/TextureContainer"]
 layout_mode = 2
 texture = ExtResource("2_sc18m")
 expand_mode = 2
 stretch_mode = 1
 
-[node name="Texture" type="TextureRect" parent="TextureContainer"]
+[node name="Texture" type="TextureRect" parent="IconBlock/TextureContainer"]
 layout_mode = 2
 expand_mode = 2
 
-[node name="ID" type="Label" parent="."]
+[node name="ID" type="Label" parent="IconBlock"]
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_font_sizes/font_size = 12
 text = "#123"
 horizontal_alignment = 1
 
-[node name="AtlasName" type="Label" parent="."]
+[node name="AtlasName" type="Label" parent="IconBlock"]
 layout_mode = 2
 size_flags_vertical = 1
 theme_type_variation = &"Subtitle"
 theme_override_font_sizes/font_size = 10
 text = "banner_0123_01"
 horizontal_alignment = 1
+
+[connection signal="focus_entered" from="." to="." method="OnFocusEnter"]
+[connection signal="focus_exited" from="." to="." method="OnFocusExit"]

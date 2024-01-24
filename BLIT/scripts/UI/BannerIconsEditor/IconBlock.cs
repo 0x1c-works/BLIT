@@ -6,10 +6,13 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-public partial class IconBlock : Control {
+public partial class IconBlock : PanelContainer {
+    public event Action<IconBlock> Selected = delegate { };
     [Export] public TextureRect? Texture { get; set; }
     [Export] public Label? ID { get; set; }
     [Export] public Label? AtlasName { get; set; }
+    [Export] public StyleBox? SelectedStyle { get; set; }
+    [Export] public StyleBox? UnselectedStyle { get; set; }
 
     private BannerIconEntry? _icon;
     public BannerIconEntry Icon {
@@ -72,5 +75,17 @@ public partial class IconBlock : Control {
             using var img = Image.LoadFromFile(Icon.TexturePath);
             return ImageTexture.CreateFromImage(img);
         }, _cancelLoading.Token);
+    }
+
+    private void OnFocusEnter() {
+        UpdateFocusStyle();
+        Selected(this);
+    }
+
+    private void OnFocusExit() {
+        UpdateFocusStyle();
+    }
+    private void UpdateFocusStyle() {
+        AddThemeStyleboxOverride("panel", HasFocus() ? SelectedStyle : UnselectedStyle);
     }
 }
