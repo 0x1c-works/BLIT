@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://db73agt6rvlth"]
+[gd_scene load_steps=18 format=3 uid="uid://db73agt6rvlth"]
 
 [ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/BannerIconsEditor.cs" id="1_2nepo"]
 [ext_resource type="Texture2D" uid="uid://utcopa7b80nm" path="res://icons/add-line.svg" id="1_67drw"]
@@ -14,6 +14,7 @@
 [ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/IconGroupList.cs" id="6_tjhww"]
 [ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/GroupEditor.cs" id="9_qeiso"]
 [ext_resource type="PackedScene" uid="uid://ct42ucdy1s0av" path="res://modules/icon_block.tscn" id="13_o6lwr"]
+[ext_resource type="Script" path="res://scripts/UI/Control/FlowItemList.cs" id="14_5tk0m"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o4bqq"]
 bg_color = Color(0.156863, 0.156863, 0.156863, 1)
@@ -123,13 +124,13 @@ hide_root = true
 select_mode = 1
 scroll_horizontal_enabled = false
 
-[node name="GroupEditor" type="HSplitContainer" parent="TabContainer/ICONS" node_paths=PackedStringArray("EmptyPage", "GroupID", "IconContainer")]
+[node name="GroupEditor" type="HSplitContainer" parent="TabContainer/ICONS" node_paths=PackedStringArray("EmptyPage", "GroupID", "IconGallery")]
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("9_qeiso")
 EmptyPage = NodePath("../NoSelectedGroup")
 GroupID = NodePath("VBoxContainer/PanelContainer/MarginContainer/ToolBar/SpinBox")
-IconContainer = NodePath("VBoxContainer/HSplitContainer/Gallery/MarginContainer/HFlowContainer")
+IconGallery = NodePath("VBoxContainer/HSplitContainer/Gallery/MarginContainer/GalleryContainer")
 IconBlockPrefab = ExtResource("13_o6lwr")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/ICONS/GroupEditor"]
@@ -187,11 +188,12 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_o4bqq")
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HFlowContainer" type="HFlowContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Gallery/MarginContainer"]
+[node name="GalleryContainer" type="HFlowContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Gallery/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+script = ExtResource("14_5tk0m")
 
-[node name="IconBlock" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Gallery/MarginContainer/HFlowContainer" instance=ExtResource("13_o6lwr")]
+[node name="IconBlock" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Gallery/MarginContainer/GalleryContainer" instance=ExtResource("13_o6lwr")]
 layout_mode = 2
 
 [node name="Detail" type="ScrollContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer"]
@@ -310,3 +312,4 @@ text = "Banner Colors?"
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/Save" to="." method="OnSaveProject"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/SaveAs" to="." method="OnSaveProjectAs"]
 [connection signal="value_changed" from="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar/SpinBox" to="TabContainer/ICONS/GroupEditor" method="OnGroupIDChanged"]
+[connection signal="SelectionChange" from="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Gallery/MarginContainer/GalleryContainer" to="TabContainer/ICONS/GroupEditor" method="OnIconSelected"]

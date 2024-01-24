@@ -7,7 +7,7 @@ using System.Linq;
 public partial class GroupEditor : Control {
     [Export] public Control? EmptyPage { get; set; }
     [Export] public SpinBox? GroupID { get; set; }
-    [Export] public Container? IconContainer { get; set; }
+    [Export] public FlowItemList? IconGallery { get; set; }
 
     [Export] public PackedScene? IconBlockPrefab { get; set; }
 
@@ -41,8 +41,8 @@ public partial class GroupEditor : Control {
         if (GroupID != null) {
             GroupID.Value = Group.GroupID;
         }
-        if (IconContainer != null) {
-            Node[] children = IconContainer.GetChildren().ToArray();
+        if (IconGallery != null) {
+            Node[] children = IconGallery.GetChildren().ToArray();
             foreach (Node? item in children) {
                 item.QueueFree();
             }
@@ -69,12 +69,19 @@ public partial class GroupEditor : Control {
             Log.Error("IconBlockPrefab is not set");
             return;
         }
-        if (IconContainer == null) {
-            Log.Error("IconContainer is not set");
+        if (IconGallery == null) {
+            Log.Error("IconGallery is not set");
             return;
         }
         IconBlock block = IconBlockPrefab.Instantiate<IconBlock>();
         block.Icon = icon;
-        IconContainer.AddChild(block);
+        IconGallery.AddChild(block);
+    }
+    private void OnIconSelected() {
+        var selected = IconGallery?.SelectedItem as IconBlock;
+        Log.Debug("selected: {ID} @ {Atlas}", selected?.Icon?.ID, selected?.Icon?.AtlasName);
+        if (selected != null) {
+
+        }
     }
 }

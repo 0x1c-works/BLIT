@@ -1,5 +1,6 @@
 using BLIT.scripts.Models.BannerIcons;
 using Godot;
+using Serilog;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -30,6 +31,7 @@ public partial class IconBlock : PanelContainer {
     }
     public override void _ExitTree() {
         base._ExitTree();
+        Texture?.Texture?.Dispose();
         _cancelLoading?.Cancel();
     }
 
@@ -53,16 +55,30 @@ public partial class IconBlock : PanelContainer {
     private async void UpdateTexture() {
         if (Texture != null) {
             Texture.Texture?.Dispose();
-            Texture.Texture = await LoadImage(Icon.TexturePath);
+            ImageTexture? tex = null;
+            try {
+                tex = await LoadImage(Icon.TexturePath);
+                if (IsInstanceValid(Texture)) {
+                    Texture.Texture = tex;
+                } else {
+                    tex?.Dispose();
+                }
+            } catch (TaskCanceledException) {
+                tex?.Dispose();
+                // ignore
+            } catch (Exception ex) {
+                Log.Error(ex, "Failed to load image");
+                tex?.Dispose();
+            }
         }
     }
     private void UpdateID() {
-        if (ID != null) {
+        if (ID != null && IsInstanceValid(ID)) {
             ID.Text = $"#{Icon.ID}";
         }
     }
     private void UpdateAtlasName() {
-        if (AtlasName != null) {
+        if (AtlasName != null && IsInstanceValid(AtlasName)) {
             AtlasName.Text = Icon.AtlasName;
         }
     }
