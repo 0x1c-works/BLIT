@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://db73agt6rvlth"]
+[gd_scene load_steps=19 format=3 uid="uid://db73agt6rvlth"]
 
 [ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/BannerIconsEditor.cs" id="1_2nepo"]
 [ext_resource type="Texture2D" uid="uid://utcopa7b80nm" path="res://icons/add-line.svg" id="1_67drw"]
@@ -15,6 +15,7 @@
 [ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/GroupEditor.cs" id="9_qeiso"]
 [ext_resource type="PackedScene" uid="uid://ct42ucdy1s0av" path="res://modules/icon_block.tscn" id="13_o6lwr"]
 [ext_resource type="Script" path="res://scripts/UI/Control/FlowItemList.cs" id="14_5tk0m"]
+[ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/IconDetailEditor.cs" id="15_exwfc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o4bqq"]
 bg_color = Color(0.156863, 0.156863, 0.156863, 1)
@@ -124,7 +125,7 @@ hide_root = true
 select_mode = 1
 scroll_horizontal_enabled = false
 
-[node name="GroupEditor" type="HSplitContainer" parent="TabContainer/ICONS" node_paths=PackedStringArray("EmptyPage", "GroupID", "IconGallery")]
+[node name="GroupEditor" type="HSplitContainer" parent="TabContainer/ICONS" node_paths=PackedStringArray("EmptyPage", "GroupID", "IconGallery", "IconDetailEditor")]
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("9_qeiso")
@@ -132,6 +133,7 @@ EmptyPage = NodePath("../NoSelectedGroup")
 GroupID = NodePath("VBoxContainer/PanelContainer/MarginContainer/ToolBar/SpinBox")
 IconGallery = NodePath("VBoxContainer/HSplitContainer/Gallery/MarginContainer/GalleryContainer")
 IconBlockPrefab = ExtResource("13_o6lwr")
+IconDetailEditor = NodePath("VBoxContainer/HSplitContainer/Detail")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/ICONS/GroupEditor"]
 layout_mode = 2
@@ -202,97 +204,119 @@ Texture = NodePath("../IconBlock/IconBlock/TextureContainer/Texture")
 ID = NodePath("../IconBlock/IconBlock/ID")
 AtlasName = NodePath("../IconBlock/IconBlock/AtlasName")
 
-[node name="Detail" type="ScrollContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer"]
+[node name="Detail" type="VBoxContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer" node_paths=PackedStringArray("ReimportSprite", "ReimportTexture", "Title", "SpritePath", "TexturePath", "Sprite", "Texture")]
+layout_mode = 2
+script = ExtResource("15_exwfc")
+ReimportSprite = NodePath("Content/MarginContainer/GridContainer/Sprite Actions/Reimport")
+ReimportTexture = NodePath("Content/MarginContainer/GridContainer/Texture Actions/Reimport")
+Title = NodePath("Title")
+SpritePath = NodePath("Content/MarginContainer/GridContainer/Sprite Filename")
+TexturePath = NodePath("Content/MarginContainer/GridContainer/Texture Filename")
+Sprite = NodePath("Content/MarginContainer/GridContainer/Sprite Preview/TextureRect")
+Texture = NodePath("Content/MarginContainer/GridContainer/Texture Preview/TextureRect")
+
+[node name="Title" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+theme_type_variation = &"PanelTitle"
+text = "value"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Content" type="ScrollContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.8
+size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_6ocot")
+follow_focus = true
+horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail"]
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 8
 
-[node name="GridContainer" type="GridContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 8
 columns = 2
 
-[node name="Title" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
-layout_mode = 2
-text = "DETAILS"
-
-[node name="Name" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
-layout_mode = 2
-theme_type_variation = &"Subtitle"
-text = "value"
-
-[node name="Label-UI Sprite" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Label-UI Sprite" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "UI_SPRITE"
 
-[node name="Sprite Filename" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Sprite Filename" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_type_variation = &"Subtitle"
 text = "value"
+autowrap_mode = 3
 
-[node name="Actions" type="VBoxContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Sprite Actions" type="VBoxContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="Change" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions"]
+[node name="Change" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer/Sprite Actions"]
 layout_mode = 2
 text = "CHANGE_ELLIPSIS"
 
-[node name="Reimport" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions"]
+[node name="Reimport" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer/Sprite Actions"]
 layout_mode = 2
 text = "REIMPORT"
 
-[node name="ImagePreview" type="AspectRatioContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Sprite Preview" type="AspectRatioContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 alignment_horizontal = 0
 alignment_vertical = 0
 
-[node name="TextureRect" type="TextureRect" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/ImagePreview"]
+[node name="TextureRect" type="TextureRect" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer/Sprite Preview"]
 layout_mode = 2
 size_flags_horizontal = 3
 texture = ExtResource("5_o7pji")
+expand_mode = 2
 
-[node name="Label-Texture" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Label-Texture" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "TEXTURE"
 
-[node name="Texture Filename" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Texture Filename" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_type_variation = &"Subtitle"
 text = "value"
+autowrap_mode = 3
 
-[node name="Actions2" type="VBoxContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Texture Actions" type="VBoxContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="Change" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions2"]
+[node name="Change" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer/Texture Actions"]
 layout_mode = 2
 text = "CHANGE_ELLIPSIS"
 
-[node name="Reimport" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/Actions2"]
+[node name="Reimport" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer/Texture Actions"]
 layout_mode = 2
 text = "REIMPORT"
 
-[node name="ImagePreview2" type="AspectRatioContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer"]
+[node name="Texture Preview" type="AspectRatioContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 alignment_horizontal = 0
 alignment_vertical = 0
 
-[node name="TextureRect" type="TextureRect" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/MarginContainer/GridContainer/ImagePreview2"]
+[node name="TextureRect" type="TextureRect" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer/Texture Preview"]
 layout_mode = 2
 size_flags_horizontal = 3
 texture = ExtResource("5_o7pji")
+expand_mode = 2
 
 [node name="NoSelectedGroup" type="CenterContainer" parent="TabContainer/ICONS"]
 visible = false
@@ -318,4 +342,3 @@ text = "Banner Colors?"
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/Save" to="." method="OnSaveProject"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/SaveAs" to="." method="OnSaveProjectAs"]
 [connection signal="value_changed" from="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar/SpinBox" to="TabContainer/ICONS/GroupEditor" method="OnGroupIDChanged"]
-[connection signal="SelectionChange" from="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Gallery/MarginContainer/GalleryContainer" to="TabContainer/ICONS/GroupEditor" method="OnIconSelected"]

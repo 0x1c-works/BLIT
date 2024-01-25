@@ -8,8 +8,8 @@ public partial class GroupEditor : Control {
     [Export] public Control? EmptyPage { get; set; }
     [Export] public SpinBox? GroupID { get; set; }
     [Export] public FlowItemList? IconGallery { get; set; }
-
     [Export] public PackedScene? IconBlockPrefab { get; set; }
+    [Export] public IconDetailEditor? IconDetailEditor { get; set; }
 
     private BannerGroupEntry? _group;
     public BannerGroupEntry? Group {
@@ -23,6 +23,7 @@ public partial class GroupEditor : Control {
 
     public override void _Ready() {
         if (IconGallery != null) {
+            IconGallery.SelectionChanged += OnIconSelected;
             IconGallery.ChildMoved += OnChildMoved;
         }
         UpdateUI();
@@ -88,8 +89,8 @@ public partial class GroupEditor : Control {
     private void OnIconSelected() {
         var selected = IconGallery?.SelectedItem as IconBlock;
         Log.Debug("selected: {ID} @ {Atlas}", selected?.Icon?.ID, selected?.Icon?.AtlasName);
-        if (selected != null) {
-
+        if (IconDetailEditor != null) {
+            IconDetailEditor.IconBlock = selected;
         }
     }
 }

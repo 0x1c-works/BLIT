@@ -20,7 +20,7 @@ public partial class FlowItemList : HFlowContainer {
     private const int DROP_INDICATOR_WIDTH = 2;
     private const int BLOCK_GAP = DROP_INDICATOR_WIDTH * 3;
 
-    [Signal] public delegate void SelectionChangeEventHandler();
+    [Signal] public delegate void SelectionChangedEventHandler();
     [Signal] public delegate void ChildMovedEventHandler(int oldIndex, int newIndex);
     [Export] public Color DropIndicatorColor = Colors.Orange;
 
@@ -60,7 +60,7 @@ public partial class FlowItemList : HFlowContainer {
     public override void _Process(double delta) {
         base._Process(delta);
         if (_shouldNotifyChange) {
-            EmitSignal(SignalName.SelectionChange);
+            EmitSignal(SignalName.SelectionChanged);
             _shouldNotifyChange = false;
         }
     }

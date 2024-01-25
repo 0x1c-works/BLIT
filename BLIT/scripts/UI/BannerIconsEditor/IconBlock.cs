@@ -112,7 +112,7 @@ public partial class IconBlock : PanelContainer {
         return Task.Factory.StartNew(() => {
             if (!File.Exists(path)) return null;
 
-            using var img = Image.LoadFromFile(Icon.TexturePath);
+            using var img = Image.LoadFromFile(path);
             return ImageTexture.CreateFromImage(img);
         }, _cancelLoading.Token);
     }
