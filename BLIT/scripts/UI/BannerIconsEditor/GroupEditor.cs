@@ -22,7 +22,15 @@ public partial class GroupEditor : Control {
     }
 
     public override void _Ready() {
+        if (IconGallery != null) {
+            IconGallery.ChildMoved += OnChildMoved;
+        }
         UpdateUI();
+    }
+
+    private void OnChildMoved(int oldIndex, int newIndex) {
+        Group?.Icons.Move(oldIndex, newIndex);
+        Group?.RefreshCellIndex();
     }
 
     public void OnGroupSelected(BannerGroupEntry? group) {

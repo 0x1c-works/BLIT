@@ -21,6 +21,7 @@ public partial class FlowItemList : HFlowContainer {
     private const int BLOCK_GAP = DROP_INDICATOR_WIDTH * 3;
 
     [Signal] public delegate void SelectionChangeEventHandler();
+    [Signal] public delegate void ChildMovedEventHandler(int oldIndex, int newIndex);
     [Export] public Color DropIndicatorColor = Colors.Orange;
 
     private Control? _selected;
@@ -77,7 +78,6 @@ public partial class FlowItemList : HFlowContainer {
         Log.Debug("Can drop: {Can}; Pos: {atPosition}", isDroppable, atPosition);
         if (isDroppable) {
             DropInfo dropInfo = GetDropInfo(atPosition);
-            Log.Debug("Drop check: {DropInfo}", dropInfo);
             if (!dropInfo.IsValid) {
                 isDroppable = false;
             } else {
@@ -97,9 +97,21 @@ public partial class FlowItemList : HFlowContainer {
     }
     public override void _DropData(Vector2 atPosition, Variant data) {
         base._DropData(atPosition, data);
+        DropRect = null;
         var icon = data.Obj as IconBlock;
         Log.Debug("{D} dropped", icon?.Icon.ID);
-        DropRect = null;
+        if (data.Obj is IconBlock iconBlock) {
+            DropInfo dropInfo = GetDropInfo(atPosition);
+            if (!dropInfo.IsValid) return;
+            var oldIndex = GetChildren().IndexOf(iconBlock);
+            // If the moving icon is before the ref child, the new index should be adjusted
+            // because MoveChild() is based on the indices without the moving child, which makes
+            // the following siblings' indices shifted by -1.
+            var bias = oldIndex < dropInfo.RefIndex ? -1 : 0;
+            var newIndex = dropInfo.RefIndex + (dropInfo.IsBeforeRef ? 0 : 1) + bias;
+            MoveChild(iconBlock, newIndex);
+            EmitSignal(SignalName.ChildMoved, oldIndex, newIndex);
+        }
     }
 
     private DropInfo GetDropInfo(Vector2 pos) {

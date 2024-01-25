@@ -23,6 +23,9 @@ public partial class IconBlock : PanelContainer {
         set {
             if (_icon == value) return;
             _icon = value;
+            if (_icon != null) {
+                _icon.PropertyChanged += OnIconPropertyChanged;
+            }
             UpdateUI();
         }
     }
@@ -58,7 +61,6 @@ public partial class IconBlock : PanelContainer {
     }
 
     private void UpdateUI() {
-        Icon.PropertyChanged += OnIconPropertyChanged;
         UpdateTexture();
         UpdateID();
         UpdateAtlasName();
