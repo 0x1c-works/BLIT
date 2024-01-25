@@ -204,9 +204,11 @@ Texture = NodePath("../IconBlock/IconBlock/TextureContainer/Texture")
 ID = NodePath("../IconBlock/IconBlock/ID")
 AtlasName = NodePath("../IconBlock/IconBlock/AtlasName")
 
-[node name="Detail" type="VBoxContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer" node_paths=PackedStringArray("ReimportSprite", "ReimportTexture", "Title", "SpritePath", "TexturePath", "Sprite", "Texture")]
+[node name="Detail" type="VBoxContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer" node_paths=PackedStringArray("Content", "EmptyPage", "ReimportSprite", "ReimportTexture", "Title", "SpritePath", "TexturePath", "Sprite", "Texture")]
 layout_mode = 2
 script = ExtResource("15_exwfc")
+Content = NodePath("Content")
+EmptyPage = NodePath("NoSelectedIcon")
 ReimportSprite = NodePath("Content/MarginContainer/GridContainer/Sprite Actions/Reimport")
 ReimportTexture = NodePath("Content/MarginContainer/GridContainer/Texture Actions/Reimport")
 Title = NodePath("Title")
@@ -317,6 +319,21 @@ layout_mode = 2
 size_flags_horizontal = 3
 texture = ExtResource("5_o7pji")
 expand_mode = 2
+
+[node name="NoSelectedIcon" type="CenterContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/NoSelectedIcon"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_type_variation = &"Subtitle"
+theme_override_font_sizes/font_size = 20
+text = "MESSAGE/NO_SELECTED_ICON"
+horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="NoSelectedGroup" type="CenterContainer" parent="TabContainer/ICONS"]
 visible = false

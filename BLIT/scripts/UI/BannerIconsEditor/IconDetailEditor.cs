@@ -1,8 +1,10 @@
+using BLIT.Banner;
 using BLIT.scripts.Common;
 using Godot;
 using System.Threading;
 
 public partial class IconDetailEditor : Control {
+    [Export] public Control? Content { get; set; }
     [Export] public Control? EmptyPage { get; set; }
     [Export] public Button? ReimportSprite { get; set; }
     [Export] public Button? ReimportTexture { get; set; }
@@ -14,24 +16,20 @@ public partial class IconDetailEditor : Control {
 
     private CancellationTokenSource? _cancelSpriteLoading = new();
 
-    private IconBlock? _icon;
+    private IconBlock? _iconBlock;
     public IconBlock? IconBlock {
-        get => _icon;
+        get => _iconBlock;
         set {
-            if (_icon == value) return;
-            Visible = value != null;
-            if (EmptyPage != null) {
-                EmptyPage.Visible = !Visible;
-            }
-            _icon = value;
-            if (IconBlock != null) {
-                UpdateUI();
-            }
+            if (_iconBlock == value) return;
+            _iconBlock = value;
+            UpdateUI();
         }
     }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
+        // Set the initial UI state
+        UpdateUI();
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -39,20 +37,32 @@ public partial class IconDetailEditor : Control {
     }
 
     private void UpdateUI() {
+
+        if (Content != null) {
+            Content.Visible = IconBlock != null;
+        }
+        if (EmptyPage != null) {
+            EmptyPage.Visible = IconBlock == null;
+        }
         UpdateTitle();
         UpdateSprite();
         UpdateTexture();
     }
 
     private void UpdateTitle() {
-        UpdateLabel(Title, IconBlock?.Icon?.AtlasName);
+        BLIT.scripts.Models.BannerIcons.BannerIconEntry? icon = IconBlock?.Icon;
+        var title = string.Empty;
+        if (icon != null) {
+            title = $"{BannerUtils.GetGroupName(icon.Group.GroupID)} / #{icon.ID}";
+        }
+        UpdateLabel(Title, title);
     }
     private async void UpdateSprite() {
         var spritePath = IconBlock?.Icon?.SpritePath;
         UpdateLabel(SpritePath, GetImageDisplayPath(spritePath));
         if (Sprite != null && IsInstanceValid(Sprite)) {
             ImageTexture? tex = ImageHelper.IsValidImage(spritePath) ? await ImageHelper.LoadImage(spritePath!, _cancelSpriteLoading) : null;
-            Sprite.Texture.Dispose();
+            Sprite.Texture?.Dispose();
             Sprite.Texture = tex;
         }
     }

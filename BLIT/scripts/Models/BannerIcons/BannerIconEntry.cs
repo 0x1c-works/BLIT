@@ -15,6 +15,8 @@ public class BannerIconEntry : BindableBase {
     private int _cellIndex;
     private readonly ISettingsService _settings;
 
+    public BannerGroupEntry Group => _group;
+
     public string TexturePath {
         get => _texturePath;
         set {
