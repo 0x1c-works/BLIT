@@ -196,6 +196,12 @@ script = ExtResource("14_5tk0m")
 [node name="IconBlock" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Gallery/MarginContainer/GalleryContainer" instance=ExtResource("13_o6lwr")]
 layout_mode = 2
 
+[node name="IconBlock2" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Gallery/MarginContainer/GalleryContainer" node_paths=PackedStringArray("Texture", "ID", "AtlasName") instance=ExtResource("13_o6lwr")]
+layout_mode = 2
+Texture = NodePath("../IconBlock/IconBlock/TextureContainer/Texture")
+ID = NodePath("../IconBlock/IconBlock/ID")
+AtlasName = NodePath("../IconBlock/IconBlock/AtlasName")
+
 [node name="Detail" type="ScrollContainer" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3

@@ -15,6 +15,8 @@ public partial class IconBlock : PanelContainer {
     [Export] public StyleBox? SelectedStyle { get; set; }
     [Export] public StyleBox? UnselectedStyle { get; set; }
 
+    [Export] public PackedScene? DragPreview { get; set; }
+
     private BannerIconEntry? _icon;
     public BannerIconEntry Icon {
         get => _icon ?? throw new NullReferenceException("IconBlock has an empty icon");
@@ -28,11 +30,31 @@ public partial class IconBlock : PanelContainer {
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
+        FocusEntered += OnFocusEnter;
+        FocusExited += OnFocusExit;
     }
     public override void _ExitTree() {
         base._ExitTree();
-        Texture?.Texture?.Dispose();
+        if (Texture != null && IsInstanceValid(Texture) && Texture.Texture != null && IsInstanceValid(Texture.Texture)) {
+            Texture?.Texture?.Dispose();
+        }
         _cancelLoading?.Cancel();
+    }
+    public override Variant _GetDragData(Vector2 atPosition) {
+        Control preview;
+        if (DragPreview != null) {
+            IconDragPreview iconPreview = DragPreview.Instantiate<IconDragPreview>();
+            iconPreview.SetData(Icon);
+            preview = iconPreview;
+        } else {
+            preview = new ColorPickerButton() {
+                Color = Colors.Orange,
+                Size = new Vector2(50, 50),
+            };
+        }
+        preview.RotationDegrees = 10;
+        SetDragPreview(preview);
+        return this;
     }
 
     private void UpdateUI() {
