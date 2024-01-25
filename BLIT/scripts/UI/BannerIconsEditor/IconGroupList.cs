@@ -92,7 +92,7 @@ public partial class IconGroupList : Control {
         if (ItemList == null) return null;
         TreeItem item = ItemList.CreateItem(parent);
         item.SetText(0, group.GroupID.ToString());
-        item.SetText(1, $"({group.Icons.Count})");
+        item.SetText(1, FormatGroupCount(group));
         item.SetCustomColor(1, Colors.LightGray);
         item.SetTextAlignment(1, HorizontalAlignment.Right);
         item.SetMetadata(0, group.GroupID);
@@ -103,9 +103,12 @@ public partial class IconGroupList : Control {
             }
         };
         group.Icons.CollectionChanged += (sender, e) => {
-            item.SetText(1, group.Icons.Count.ToString());
+            item.SetText(1, FormatGroupCount(group));
         };
         return item;
+    }
+    private string FormatGroupCount(BannerGroupEntry group) {
+        return $"({group.Icons.Count})";
     }
     private void OnGroupSelected() {
         if (ItemList == null) return;

@@ -104,6 +104,8 @@ public partial class FlowItemList : HFlowContainer {
             DropInfo dropInfo = GetDropInfo(atPosition);
             if (!dropInfo.IsValid) return;
             var oldIndex = GetChildren().IndexOf(iconBlock);
+            // No need to move around self
+            if (dropInfo.RefIndex == oldIndex) return;
             // If the moving icon is before the ref child, the new index should be adjusted
             // because MoveChild() is based on the indices without the moving child, which makes
             // the following siblings' indices shifted by -1.
