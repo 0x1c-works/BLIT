@@ -1,7 +1,6 @@
 using Godot;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 public interface ISelectableItem {
@@ -20,7 +19,6 @@ public partial class FlowItemList : HFlowContainer {
         }
     }
 
-    private record SelectEvents(Action OnFocus, Action OnUnfocus);
     private const int DROP_INDICATOR_WIDTH = 2;
     private const int BLOCK_GAP = DROP_INDICATOR_WIDTH * 3;
 
@@ -41,7 +39,6 @@ public partial class FlowItemList : HFlowContainer {
             }
         }
     }
-    private Dictionary<ulong, SelectEvents> _itemEvents = new();
     private bool _shouldNotifyChange = false;
 
     private Rect2? _dropRect;
