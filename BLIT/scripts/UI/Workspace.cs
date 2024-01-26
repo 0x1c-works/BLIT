@@ -3,6 +3,7 @@ using Godot.Collections;
 using System.Linq;
 
 public partial class Workspace : Control {
+    [Export] public Control? StartPage { get; set; }
     [Export] public ButtonGroup? RootNavButtonGroup { get; set; }
     [Export] public Dictionary<NodePath, NodePath> ButtonToPages { get; set; } = new();
 
@@ -25,7 +26,14 @@ public partial class Workspace : Control {
     public override void _Ready() {
         RegisterNavButtons();
         foreach (Control page in GetChildren().Where(child => child is Control).Cast<Control>()) {
-            page.Visible = false;
+            page.Visible = page == StartPage;
+            if (page.Visible) {
+                NodePath relPath = GetPathTo(page);
+                NodePath activeNavPath = ButtonToPages.FirstOrDefault(kv => kv.Value == relPath).Key;
+                if (GetNode(activeNavPath) is BaseButton activeNav) {
+                    activeNav.ButtonPressed = true;
+                }
+            }
         }
     }
 

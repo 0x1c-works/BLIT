@@ -1,9 +1,18 @@
-[gd_scene format=3 uid="uid://b15pvtu8kkjfd"]
+[gd_scene load_steps=2 format=3 uid="uid://b15pvtu8kkjfd"]
 
-[node name="Settings" type="ScrollContainer"]
+[ext_resource type="Script" path="res://scripts/UI/Settings/SettingsPage.cs" id="1_gslnq"]
+
+[node name="Settings" type="ScrollContainer" node_paths=PackedStringArray("Language")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gslnq")
+Language = NodePath("MarginContainer/VBoxContainer/General/GridContainer/LanguageSelect")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-custom_minimum_size = Vector2(600, 0)
+custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
@@ -12,16 +21,38 @@ theme_override_constants/margin_bottom = 8
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="General" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer/General"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "SETTINGS/GENERAL"
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/General"]
+layout_mode = 2
+columns = 2
+
+[node name="LanguageTitle" type="Label" parent="MarginContainer/VBoxContainer/General/GridContainer"]
+layout_mode = 2
+text = "SETTINGS/GENERAL/LANGUAGE"
+
+[node name="LanguageSelect" type="OptionButton" parent="MarginContainer/VBoxContainer/General/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
 
 [node name="Banner Settings" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="Title" type="Label" parent="MarginContainer/VBoxContainer/Banner Settings"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 theme_type_variation = &"HeaderMedium"
-text = "BANNER_SETTINGS"
+text = "SETTINGS/BANNER_ICONS"
 
 [node name="ScanFoldersTitle" type="Label" parent="MarginContainer/VBoxContainer/Banner Settings"]
 custom_minimum_size = Vector2(200, 0)
@@ -38,6 +69,7 @@ text = "SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS_DESC"
 autowrap_mode = 3
 
 [node name="ScanFoldersEditor" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Banner Settings"]
+visible = false
 layout_mode = 2
 
 [node name="ItemList" type="ItemList" parent="MarginContainer/VBoxContainer/Banner Settings/ScanFoldersEditor"]
@@ -61,3 +93,11 @@ text = "EDIT"
 [node name="Delete" type="Button" parent="MarginContainer/VBoxContainer/Banner Settings/ScanFoldersEditor/Buttons"]
 layout_mode = 2
 text = "DELETE"
+
+[node name="ScanFoldersEdit" type="TextEdit" parent="MarginContainer/VBoxContainer/Banner Settings"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+placeholder_text = "One relative path to a scan folder per line, for example:
+Sprite
+../Sprite
+"

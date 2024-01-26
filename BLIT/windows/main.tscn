@@ -49,10 +49,11 @@ toggle_mode = true
 button_group = ExtResource("2_8heu0")
 text = "SETTINGS"
 
-[node name="Workspace" type="PanelContainer" parent="RootFrame"]
+[node name="Workspace" type="PanelContainer" parent="RootFrame" node_paths=PackedStringArray("StartPage")]
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("2_vh5if")
+StartPage = NodePath("BannerIconsEditor")
 RootNavButtonGroup = ExtResource("2_8heu0")
 ButtonToPages = {
 NodePath("../NavBar/RootNav/BannerIcons"): NodePath("BannerIconsEditor"),
@@ -60,8 +61,8 @@ NodePath("../NavBar/RootNav/Settings"): NodePath("Settings")
 }
 
 [node name="BannerIconsEditor" parent="RootFrame/Workspace" instance=ExtResource("1_8ape0")]
-visible = false
 layout_mode = 2
 
 [node name="Settings" parent="RootFrame/Workspace" instance=ExtResource("4_qkby6")]
+visible = false
 layout_mode = 2

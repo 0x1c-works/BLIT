@@ -1,9 +1,9 @@
 ,en,zh
-BANNER_ICONS,Banner Icons,旗帜图标
+BANNER_ICONS,Banner Icons,旗帜图案
 SETTINGS,Settings,设置
-ICON_GROUPS,Groups,图标组
-ADD_ICON_GROUP,Add an icon group,添加图标组
-DELETE_ICON_GROUP,Delete the selected icon group,删除选中的图标组
+ICON_GROUPS,Groups,图案组
+ADD_ICON_GROUP,Add an icon group,添加图案组
+DELETE_ICON_GROUP,Delete the selected icon group,删除选中的图案组
 GROUP_ID,Group ID,组ID
 ASSIGN_A_NUMBER,Assign a number,填写一个数字
 ADD,Add,添加
@@ -29,16 +29,18 @@ MENU/EXPORT_XML,Export XML Only,仅导出XML
 RESOLUTION,Resolution,分辨率
 CANCEL,Cancel,取消
 OK,OK,确定
-OPEN_BIP,Open a Banner Icon Project,打开旗帜图标项目
-SAVE_BIP,Save the Banner Icon Project,保存旗帜图标项目
+OPEN_BIP,Open a Banner Icon Project,打开旗帜图案项目
+SAVE_BIP,Save the Banner Icon Project,保存旗帜图案项目
 YES,Yes,是
 NO,No,否
 NEW_PROJECT,(New Project),(新项目)
 CONFIRMATION/TITLE/CREATE_PROJECT,"Create New Project","创建新项目"
 CONFIRMATION/TEXT/CREATE_PROJECT,"Are you sure you want to create a new project? All unsaved changes will be lost.","您确定要创建一个新项目吗？所有未保存的更改将丢失。"
-MESSAGE/NO_SELECTED_ICON_GROUP,Please select an icon group in the list to edit,请在左侧列表中选择一个图标组进行编辑
-MESSAGE/NO_SELECTED_ICON,Please select an icon to edit its detail,请选择一个图标以编辑详情
+MESSAGE/NO_SELECTED_ICON_GROUP,Please select an icon group in the list to edit,请在左侧列表中选择一个图案组进行编辑
+MESSAGE/NO_SELECTED_ICON,Please select an icon to edit its detail,请选择一个图案以编辑详情
 UNASSIGNED,Unassigned,未选择
+SETTINGS/GENERAL,General,常规
+SETTINGS/GENERAL/LANGUAGE,Language,语言
 SETTINGS/BANNER_ICONS,Banner Icons,旗帜图案
 SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS,Banner sprite scan folders,UI图标扫描文件夹
-SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS_DESC,The following paths points to the folders that will be scanned for matching UI sprites when importing textures.\nThey are relative paths to the imported textures.,以下目录用于在导入贴图时，根据文件名扫描匹配的UI图标文件。\n它们是基于贴图位置的相对路径。
+SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS_DESC,"Please manage the paths to UI sprite scan folders in the text edit below. The scan folders are for automatically matching the UI sprite files, based on textures' filen names, when importing banner icon textures.\nEach line is a relative folder path to the texture location.",请在下方填写UI图标扫描目录的路径，用于在导入旗帜贴图时，通过文件名自动匹配UI图标文件。\n每行对应一个扫描目录，目录路径是基于贴图文件的相对路径。
