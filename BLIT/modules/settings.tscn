@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://b15pvtu8kkjfd"]
+
+[node name="Settings" type="ScrollContainer"]
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Banner Settings" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer/Banner Settings"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "BANNER_SETTINGS"
+
+[node name="ScanFoldersTitle" type="Label" parent="MarginContainer/VBoxContainer/Banner Settings"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_type_variation = &"HeaderSmall"
+text = "SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS"
+autowrap_mode = 3
+
+[node name="ScanFoldersDesc" type="Label" parent="MarginContainer/VBoxContainer/Banner Settings"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_type_variation = &"Subtitle"
+text = "SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS_DESC"
+autowrap_mode = 3
+
+[node name="ScanFoldersEditor" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Banner Settings"]
+layout_mode = 2
+
+[node name="ItemList" type="ItemList" parent="MarginContainer/VBoxContainer/Banner Settings/ScanFoldersEditor"]
+custom_minimum_size = Vector2(300, 200)
+layout_mode = 2
+item_count = 1
+item_0/text = "../Sprites"
+
+[node name="Buttons" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Banner Settings/ScanFoldersEditor"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="Add" type="Button" parent="MarginContainer/VBoxContainer/Banner Settings/ScanFoldersEditor/Buttons"]
+layout_mode = 2
+text = "ADD"
+
+[node name="Edit" type="Button" parent="MarginContainer/VBoxContainer/Banner Settings/ScanFoldersEditor/Buttons"]
+layout_mode = 2
+text = "EDIT"
+
+[node name="Delete" type="Button" parent="MarginContainer/VBoxContainer/Banner Settings/ScanFoldersEditor/Buttons"]
+layout_mode = 2
+text = "DELETE"

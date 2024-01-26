@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://3hojvb3p3t7s"]
+[gd_scene load_steps=6 format=3 uid="uid://3hojvb3p3t7s"]
 
 [ext_resource type="PackedScene" uid="uid://db73agt6rvlth" path="res://modules/banner_icons_editor.tscn" id="1_8ape0"]
 [ext_resource type="Script" path="res://scripts/App.cs" id="1_ckv5x"]
+[ext_resource type="ButtonGroup" uid="uid://cicdbskcwrkjc" path="res://modules/main_nav_button_group.tres" id="2_8heu0"]
+[ext_resource type="Script" path="res://scripts/UI/Workspace.cs" id="2_vh5if"]
+[ext_resource type="PackedScene" uid="uid://b15pvtu8kkjfd" path="res://modules/settings.tscn" id="4_qkby6"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -21,30 +24,44 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="RootFrame"]
+[node name="NavBar" type="PanelContainer" parent="RootFrame"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 theme_type_variation = &"NavPanel"
 
-[node name="RootNav" type="VBoxContainer" parent="RootFrame/PanelContainer"]
+[node name="RootNav" type="VBoxContainer" parent="RootFrame/NavBar"]
 layout_mode = 2
 theme_type_variation = &"NavPanel"
 
-[node name="BannerIcons" type="Button" parent="RootFrame/PanelContainer/RootNav"]
+[node name="BannerIcons" type="Button" parent="RootFrame/NavBar/RootNav"]
 layout_mode = 2
+toggle_mode = true
+button_group = ExtResource("2_8heu0")
 text = "BANNER_ICONS"
 
-[node name="Spacer" type="Control" parent="RootFrame/PanelContainer/RootNav"]
+[node name="Spacer" type="Control" parent="RootFrame/NavBar/RootNav"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Settings" type="Button" parent="RootFrame/PanelContainer/RootNav"]
+[node name="Settings" type="Button" parent="RootFrame/NavBar/RootNav"]
 layout_mode = 2
+toggle_mode = true
+button_group = ExtResource("2_8heu0")
 text = "SETTINGS"
 
 [node name="Workspace" type="PanelContainer" parent="RootFrame"]
 layout_mode = 2
 size_flags_horizontal = 3
+script = ExtResource("2_vh5if")
+RootNavButtonGroup = ExtResource("2_8heu0")
+ButtonToPages = {
+NodePath("../NavBar/RootNav/BannerIcons"): NodePath("BannerIconsEditor"),
+NodePath("../NavBar/RootNav/Settings"): NodePath("Settings")
+}
 
 [node name="BannerIconsEditor" parent="RootFrame/Workspace" instance=ExtResource("1_8ape0")]
+visible = false
+layout_mode = 2
+
+[node name="Settings" parent="RootFrame/Workspace" instance=ExtResource("4_qkby6")]
 layout_mode = 2

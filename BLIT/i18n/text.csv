@@ -7,6 +7,7 @@ DELETE_ICON_GROUP,Delete the selected icon group,删除选中的图标组
 GROUP_ID,Group ID,组ID
 ASSIGN_A_NUMBER,Assign a number,填写一个数字
 ADD,Add,添加
+EDIT,Edit,编辑
 DELETE,Delete,删除
 IMPORT,Import,导入
 EXPORT,Export,导出
@@ -38,3 +39,6 @@ CONFIRMATION/TEXT/CREATE_PROJECT,"Are you sure you want to create a new project?
 MESSAGE/NO_SELECTED_ICON_GROUP,Please select an icon group in the list to edit,请在左侧列表中选择一个图标组进行编辑
 MESSAGE/NO_SELECTED_ICON,Please select an icon to edit its detail,请选择一个图标以编辑详情
 UNASSIGNED,Unassigned,未选择
+SETTINGS/BANNER_ICONS,Banner Icons,旗帜图案
+SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS,Banner sprite scan folders,UI图标扫描文件夹
+SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS_DESC,The following paths points to the folders that will be scanned for matching UI sprites when importing textures.\nThey are relative paths to the imported textures.,以下目录用于在导入贴图时，根据文件名扫描匹配的UI图标文件。\n它们是基于贴图位置的相对路径。
