@@ -43,4 +43,8 @@ SETTINGS/GENERAL,General,常规
 SETTINGS/GENERAL/LANGUAGE,Language,语言
 SETTINGS/BANNER_ICONS,Banner Icons,旗帜图案
 SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS,Banner sprite scan folders,UI图标扫描文件夹
-SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS_DESC,"Please manage the paths to UI sprite scan folders in the text edit below. The scan folders are for automatically matching the UI sprite files, based on textures' filen names, when importing banner icon textures.\nEach line is a relative folder path to the texture location.",请在下方填写UI图标扫描目录的路径，用于在导入旗帜贴图时，通过文件名自动匹配UI图标文件。\n每行对应一个扫描目录，目录路径是基于贴图文件的相对路径。
+SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS_DESC,"When importing banner icon textures, scan folders will be looked for UI sprite files that match the textures' base file name (i.e without extensions) of the imported textures. \nPlease enter the relative folder paths in the edit below, one for each line.",请在下方填写UI图标扫描目录的路径，用于在导入旗帜贴图时，通过文件名自动匹配UI图标文件。\n每行对应一个扫描目录，目录路径是基于贴图文件的相对路径。
+SETTINGS/BANNER_ICONS/GROUP_START_ID,Custom group start ID,自定义图案组起始ID
+SETTINGS/BANNER_ICONS/GROUP_START_ID_DESC,"Custom icon groups will have incremental IDs starting from this value.\nNote that 1 to 6 are used by the vanilla game. Overriding them might cause the game to crash.",图案组的ID会以此为起始值递增，并且不会小于该值。\n请注意，原版游戏使用了 1 到 6 的 ID，如果您的自定义 ID 与原版 ID 重复，可能会导致游戏崩溃。
+SETTINGS/BANNER_ICONS/COLOR_START_ID,Custom color start ID,自定义颜色起始ID
+SETTINGS/BANNER_ICONS/COLOR_START_ID_DESC,"Custom colors will have incremental IDs starting from this value.\nNote that 0 to 193 are used by the vanilla game. Overriding them might cause the game to crash.",自定义颜色的ID会以此为起始值递增，并且不会小于该值。\n请注意，原版游戏使用了 0 到 193 的 ID，如果您的自定义 ID 与原版 ID 重复，可能会导致游戏崩溃。

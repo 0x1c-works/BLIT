@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://b15pvtu8kkjfd"]
+[gd_scene load_steps=3 format=3 uid="uid://b15pvtu8kkjfd"]
 
 [ext_resource type="Script" path="res://scripts/UI/Settings/SettingsPage.cs" id="1_gslnq"]
+[ext_resource type="Script" path="res://scripts/UI/Settings/BannerIconsSettingsPage.cs" id="2_oa8go"]
 
 [node name="Settings" type="ScrollContainer" node_paths=PackedStringArray("Language")]
 anchors_preset = 15
@@ -44,60 +45,86 @@ text = "SETTINGS/GENERAL/LANGUAGE"
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="Banner Settings" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="Banner Icons" type="VBoxContainer" parent="MarginContainer/VBoxContainer" node_paths=PackedStringArray("ScanFoldersEdit", "GroupStartIDEdit", "ColorStartIDEdit")]
 layout_mode = 2
 theme_override_constants/separation = 8
+script = ExtResource("2_oa8go")
+ScanFoldersEdit = NodePath("ScanFoldersEdit")
+GroupStartIDEdit = NodePath("GridContainer/GroupStartIDEdit")
+ColorStartIDEdit = NodePath("GridContainer/ColorStartIDEdit")
 
-[node name="Title" type="Label" parent="MarginContainer/VBoxContainer/Banner Settings"]
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer/Banner Icons"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 theme_type_variation = &"HeaderMedium"
 text = "SETTINGS/BANNER_ICONS"
 
-[node name="ScanFoldersTitle" type="Label" parent="MarginContainer/VBoxContainer/Banner Settings"]
+[node name="ScanFoldersTitle" type="Label" parent="MarginContainer/VBoxContainer/Banner Icons"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_type_variation = &"HeaderSmall"
 text = "SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS"
 autowrap_mode = 3
 
-[node name="ScanFoldersDesc" type="Label" parent="MarginContainer/VBoxContainer/Banner Settings"]
+[node name="ScanFoldersDesc" type="Label" parent="MarginContainer/VBoxContainer/Banner Icons"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_type_variation = &"Subtitle"
 text = "SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS_DESC"
 autowrap_mode = 3
 
-[node name="ScanFoldersEditor" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Banner Settings"]
-visible = false
-layout_mode = 2
-
-[node name="ItemList" type="ItemList" parent="MarginContainer/VBoxContainer/Banner Settings/ScanFoldersEditor"]
-custom_minimum_size = Vector2(300, 200)
-layout_mode = 2
-item_count = 1
-item_0/text = "../Sprites"
-
-[node name="Buttons" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Banner Settings/ScanFoldersEditor"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-
-[node name="Add" type="Button" parent="MarginContainer/VBoxContainer/Banner Settings/ScanFoldersEditor/Buttons"]
-layout_mode = 2
-text = "ADD"
-
-[node name="Edit" type="Button" parent="MarginContainer/VBoxContainer/Banner Settings/ScanFoldersEditor/Buttons"]
-layout_mode = 2
-text = "EDIT"
-
-[node name="Delete" type="Button" parent="MarginContainer/VBoxContainer/Banner Settings/ScanFoldersEditor/Buttons"]
-layout_mode = 2
-text = "DELETE"
-
-[node name="ScanFoldersEdit" type="TextEdit" parent="MarginContainer/VBoxContainer/Banner Settings"]
-custom_minimum_size = Vector2(0, 200)
+[node name="ScanFoldersEdit" type="TextEdit" parent="MarginContainer/VBoxContainer/Banner Icons"]
+custom_minimum_size = Vector2(0, 160)
 layout_mode = 2
 placeholder_text = "One relative path to a scan folder per line, for example:
 Sprite
 ../Sprite
 "
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/Banner Icons"]
+layout_mode = 2
+columns = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer"]
+layout_mode = 2
+
+[node name="GroupStartIDTitle" type="Label" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer/VBoxContainer"]
+layout_mode = 2
+text = "SETTINGS/BANNER_ICONS/GROUP_START_ID"
+
+[node name="GroupStartIDTips" type="Label" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"Subtitle"
+theme_override_font_sizes/font_size = 12
+text = "SETTINGS/BANNER_ICONS/GROUP_START_ID_DESC"
+
+[node name="GroupStartIDEdit" type="SpinBox" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 0
+min_value = 1.0
+max_value = 999999.0
+value = 1.0
+rounded = true
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer"]
+layout_mode = 2
+
+[node name="ColorStartIDTitle" type="Label" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer/VBoxContainer2"]
+layout_mode = 2
+text = "SETTINGS/BANNER_ICONS/COLOR_START_ID"
+
+[node name="ColorStartIDTips" type="Label" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer/VBoxContainer2"]
+layout_mode = 2
+theme_type_variation = &"Subtitle"
+theme_override_font_sizes/font_size = 12
+text = "SETTINGS/BANNER_ICONS/COLOR_START_ID_DESC"
+
+[node name="ColorStartIDEdit" type="SpinBox" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 0
+max_value = 999999.0
+rounded = true

@@ -9,7 +9,7 @@ namespace BLIT.scripts.Models.BannerIcons;
 [MessagePackObject]
 public class BannerSettings {
     [Key(0)]
-    public List<string> SpriteScanFolders { get; set; } = new();
+    public List<string> SpriteScanFolders { get; set; } = ["./Sprites", "../Sprites"];
     [Key(1)]
     public Banner.OutputResolution TextureOutputResolution { get; set; }
 
