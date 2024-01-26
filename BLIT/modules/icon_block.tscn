@@ -7,10 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://b8mmnqe58rlq7" path="res://modules/icon_drag_preview.tscn" id="4_wdi4w"]
 
 [node name="IconBlock" type="PanelContainer" node_paths=PackedStringArray("Texture", "ID", "AtlasName")]
-offset_top = 245.0
 offset_right = 170.0
-offset_bottom = 456.0
-focus_mode = 2
+offset_bottom = 211.0
 mouse_filter = 1
 theme_override_styles/panel = ExtResource("1_u6pfk")
 script = ExtResource("1_v7d3p")
@@ -53,3 +51,10 @@ theme_type_variation = &"Subtitle"
 theme_override_font_sizes/font_size = 10
 text = "banner_0123_01"
 horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+mouse_filter = 1
+flat = true
+
+[connection signal="pressed" from="Button" to="." method="OnClick"]

@@ -4,6 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+public interface ISelectableItem {
+    event Action<ISelectableItem> Selected;
+    void UpdateSelectedStyle();
+}
 [GlobalClass]
 public partial class FlowItemList : HFlowContainer {
     private record struct DropInfo(int RefIndex, Rect2 RefRect, bool IsBeforeRef) {
@@ -16,7 +20,7 @@ public partial class FlowItemList : HFlowContainer {
         }
     }
 
-    private record FocusEvents(Action OnFocus, Action OnUnfocus);
+    private record SelectEvents(Action OnFocus, Action OnUnfocus);
     private const int DROP_INDICATOR_WIDTH = 2;
     private const int BLOCK_GAP = DROP_INDICATOR_WIDTH * 3;
 
@@ -24,17 +28,20 @@ public partial class FlowItemList : HFlowContainer {
     [Signal] public delegate void ChildMovedEventHandler(int oldIndex, int newIndex);
     [Export] public Color DropIndicatorColor = Colors.Orange;
 
-    private Control? _selected;
-    public Control? SelectedItem {
+    private ISelectableItem? _selected;
+    public ISelectableItem? SelectedItem {
         get => _selected;
-        private set {
+        set {
             if (_selected != value) {
+                ISelectableItem? oldSelection = _selected;
                 _selected = value;
                 _shouldNotifyChange = true;
+                oldSelection?.UpdateSelectedStyle();
+                _selected?.UpdateSelectedStyle();
             }
         }
     }
-    private Dictionary<ulong, FocusEvents> _itemEvents = new();
+    private Dictionary<ulong, SelectEvents> _itemEvents = new();
     private bool _shouldNotifyChange = false;
 
     private Rect2? _dropRect;
@@ -134,29 +141,18 @@ public partial class FlowItemList : HFlowContainer {
     }
 
     private void OnChildEnteredTree(Node node) {
-        if (node is Control control) {
-            var events = new FocusEvents(() => OnItemFocused(control), () => OnItemUnfocused(control));
-            _itemEvents[control.GetInstanceId()] = events;
-            control.FocusEntered += events.OnFocus;
-            control.FocusExited += events.OnUnfocus;
+        if (IsInstanceValid(node) && node is ISelectableItem item) {
+            item.Selected += OnItemSelected;
         }
     }
 
     private void OnChildExitingTree(Node node) {
-        if (node is Control control) {
-            if (_itemEvents.TryGetValue(control.GetInstanceId(), out FocusEvents? events)) {
-                control.FocusEntered -= events.OnFocus;
-                control.FocusExited -= events.OnUnfocus;
-                _itemEvents.Remove(control.GetInstanceId());
-            }
+        if (IsInstanceValid(node) && node is ISelectableItem item) {
+            item.Selected -= OnItemSelected;
         }
     }
 
-    private void OnItemFocused(Control item) {
+    private void OnItemSelected(ISelectableItem item) {
         SelectedItem = item;
-    }
-
-    private void OnItemUnfocused(Control item) {
-        if (item == SelectedItem) SelectedItem = null;
     }
 }

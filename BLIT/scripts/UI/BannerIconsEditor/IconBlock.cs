@@ -7,8 +7,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-public partial class IconBlock : PanelContainer {
-    public event Action<IconBlock> Selected = delegate { };
+public partial class IconBlock : PanelContainer, ISelectableItem {
+    public event Action<ISelectableItem> Selected = delegate { };
     [Export] public TextureRect? Texture { get; set; }
     [Export] public Label? ID { get; set; }
     [Export] public Label? AtlasName { get; set; }
@@ -16,6 +16,21 @@ public partial class IconBlock : PanelContainer {
     [Export] public StyleBox? UnselectedStyle { get; set; }
 
     [Export] public PackedScene? DragPreview { get; set; }
+
+    public bool IsSelected {
+        get {
+            if (GetParent() is FlowItemList list) {
+                return list.SelectedItem == this;
+            }
+            return false;
+        }
+        set {
+            if (value && GetParent() is FlowItemList list) {
+                list.SelectedItem = this;
+            }
+            UpdateSelectedStyle();
+        }
+    }
 
     private BannerIconEntry? _icon;
     public BannerIconEntry Icon {
@@ -33,8 +48,6 @@ public partial class IconBlock : PanelContainer {
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
-        FocusEntered += OnFocusEnter;
-        FocusExited += OnFocusExit;
     }
     public override void _ExitTree() {
         base._ExitTree();
@@ -117,15 +130,11 @@ public partial class IconBlock : PanelContainer {
         }, _cancelLoading.Token);
     }
 
-    private void OnFocusEnter() {
-        UpdateFocusStyle();
+    public void UpdateSelectedStyle() {
+        AddThemeStyleboxOverride("panel", IsSelected ? SelectedStyle : UnselectedStyle);
+    }
+    private void OnClick() {
         Selected(this);
-    }
-
-    private void OnFocusExit() {
-        UpdateFocusStyle();
-    }
-    private void UpdateFocusStyle() {
-        AddThemeStyleboxOverride("panel", HasFocus() ? SelectedStyle : UnselectedStyle);
+        UpdateSelectedStyle();
     }
 }
