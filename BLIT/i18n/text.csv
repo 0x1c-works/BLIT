@@ -11,6 +11,7 @@ EDIT,Edit,编辑
 DELETE,Delete,删除
 IMPORT,Import,导入
 EXPORT,Export,导出
+OPEN,Open,打开
 COLORS,Colors,颜色
 ICONS,Icons,图标
 DETAILS,Details,详情
@@ -41,10 +42,14 @@ MESSAGE/NO_SELECTED_ICON,Please select an icon to edit its detail,请选择一�
 UNASSIGNED,Unassigned,未选择
 SETTINGS/GENERAL,General,常规
 SETTINGS/GENERAL/LANGUAGE,Language,语言
+SETTINGS/GENERAL/VIEW_HELP,Read user manual,查看用户手册
 SETTINGS/BANNER_ICONS,Banner Icons,旗帜图案
 SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS,Banner sprite scan folders,UI图标扫描文件夹
-SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS_DESC,"When importing banner icon textures, scan folders will be looked for UI sprite files that match the textures' base file name (i.e without extensions) of the imported textures. \nPlease enter the relative folder paths in the edit below, one for each line.",请在下方填写UI图标扫描目录的路径，用于在导入旗帜贴图时，通过文件名自动匹配UI图标文件。\n每行对应一个扫描目录，目录路径是基于贴图文件的相对路径。
+SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS_DESC,"When importing banner icon textures, these folders will be scanned for UI sprite files matching on the base file names of textures (i.e without extensions). \nPlease enter the relative folder paths in the edit box below, one for each line. For example, './Sprites' means to scan in the Sprites subfolder of where the texture lies.",请在下方文本框内填写 UI 图标的扫描路径。在导入旗帜贴图时，会扫描这些文件夹，并自动尝试按文件名查找匹配的 UI 图标文件。\n每行填写一个基于贴图文件位置的相对路径，如 “./Sprites” 表示在贴图文件夹的 Sprite 子目录内扫描。
 SETTINGS/BANNER_ICONS/GROUP_START_ID,Custom group start ID,自定义图案组起始ID
 SETTINGS/BANNER_ICONS/GROUP_START_ID_DESC,"Custom icon groups will have incremental IDs starting from this value.\nNote that 1 to 6 are used by the vanilla game. Overriding them might cause the game to crash.",图案组的ID会以此为起始值递增，并且不会小于该值。\n请注意，原版游戏使用了 1 到 6 的 ID，如果您的自定义 ID 与原版 ID 重复，可能会导致游戏崩溃。
 SETTINGS/BANNER_ICONS/COLOR_START_ID,Custom color start ID,自定义颜色起始ID
 SETTINGS/BANNER_ICONS/COLOR_START_ID_DESC,"Custom colors will have incremental IDs starting from this value.\nNote that 0 to 193 are used by the vanilla game. Overriding them might cause the game to crash.",自定义颜色的ID会以此为起始值递增，并且不会小于该值。\n请注意，原版游戏使用了 0 到 193 的 ID，如果您的自定义 ID 与原版 ID 重复，可能会导致游戏崩溃。
+SETTINGS/ABOUT,About,关于
+SETTINGS/ABOUT/VERSION,Version,版本
+SETTINGS/ABOUT/LOG,Application Log,应用日志

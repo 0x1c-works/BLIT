@@ -3,49 +3,61 @@
 [ext_resource type="Script" path="res://scripts/UI/Settings/SettingsPage.cs" id="1_gslnq"]
 [ext_resource type="Script" path="res://scripts/UI/Settings/BannerIconsSettingsPage.cs" id="2_oa8go"]
 
-[node name="Settings" type="ScrollContainer" node_paths=PackedStringArray("Language")]
+[node name="Settings" type="ScrollContainer" node_paths=PackedStringArray("LanguageSelect", "VersionLabel")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_gslnq")
-Language = NodePath("MarginContainer/VBoxContainer/General/GridContainer/LanguageSelect")
+LanguageSelect = NodePath("HBoxContainer/MarginContainer/Page/General/GridContainer/LanguageSelect")
+VersionLabel = NodePath("HBoxContainer/MarginContainer/Page/About/GridContainer/VersionValue")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
-theme_override_constants/margin_left = 8
+size_flags_stretch_ratio = 0.8
+theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
+theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="Page" type="VBoxContainer" parent="HBoxContainer/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="General" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="General" type="VBoxContainer" parent="HBoxContainer/MarginContainer/Page"]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="MarginContainer/VBoxContainer/General"]
+[node name="Title" type="Label" parent="HBoxContainer/MarginContainer/Page/General"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 theme_type_variation = &"HeaderMedium"
 text = "SETTINGS/GENERAL"
 
-[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/General"]
+[node name="GridContainer" type="GridContainer" parent="HBoxContainer/MarginContainer/Page/General"]
 layout_mode = 2
+theme_override_constants/v_separation = 8
 columns = 2
 
-[node name="LanguageTitle" type="Label" parent="MarginContainer/VBoxContainer/General/GridContainer"]
+[node name="LanguageTitle" type="Label" parent="HBoxContainer/MarginContainer/Page/General/GridContainer"]
 layout_mode = 2
 text = "SETTINGS/GENERAL/LANGUAGE"
 
-[node name="LanguageSelect" type="OptionButton" parent="MarginContainer/VBoxContainer/General/GridContainer"]
+[node name="LanguageSelect" type="OptionButton" parent="HBoxContainer/MarginContainer/Page/General/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="Banner Icons" type="VBoxContainer" parent="MarginContainer/VBoxContainer" node_paths=PackedStringArray("ScanFoldersEdit", "GroupStartIDEdit", "ColorStartIDEdit")]
+[node name="LinkButton" type="LinkButton" parent="HBoxContainer/MarginContainer/Page/General/GridContainer"]
+layout_mode = 2
+text = "SETTINGS/GENERAL/VIEW_HELP"
+uri = "https://blit.0x1.best"
+
+[node name="Banner Icons" type="VBoxContainer" parent="HBoxContainer/MarginContainer/Page" node_paths=PackedStringArray("ScanFoldersEdit", "GroupStartIDEdit", "ColorStartIDEdit")]
 layout_mode = 2
 theme_override_constants/separation = 8
 script = ExtResource("2_oa8go")
@@ -53,27 +65,27 @@ ScanFoldersEdit = NodePath("ScanFoldersEdit")
 GroupStartIDEdit = NodePath("GridContainer/GroupStartIDEdit")
 ColorStartIDEdit = NodePath("GridContainer/ColorStartIDEdit")
 
-[node name="Title" type="Label" parent="MarginContainer/VBoxContainer/Banner Icons"]
+[node name="Title" type="Label" parent="HBoxContainer/MarginContainer/Page/Banner Icons"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 theme_type_variation = &"HeaderMedium"
 text = "SETTINGS/BANNER_ICONS"
 
-[node name="ScanFoldersTitle" type="Label" parent="MarginContainer/VBoxContainer/Banner Icons"]
+[node name="ScanFoldersTitle" type="Label" parent="HBoxContainer/MarginContainer/Page/Banner Icons"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-theme_type_variation = &"HeaderSmall"
 text = "SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS"
 autowrap_mode = 3
 
-[node name="ScanFoldersDesc" type="Label" parent="MarginContainer/VBoxContainer/Banner Icons"]
+[node name="ScanFoldersDesc" type="Label" parent="HBoxContainer/MarginContainer/Page/Banner Icons"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_type_variation = &"Subtitle"
+theme_override_font_sizes/font_size = 12
 text = "SETTINGS/BANNER_ICONS/SPRITE_SCAN_FOLDERS_DESC"
 autowrap_mode = 3
 
-[node name="ScanFoldersEdit" type="TextEdit" parent="MarginContainer/VBoxContainer/Banner Icons"]
+[node name="ScanFoldersEdit" type="TextEdit" parent="HBoxContainer/MarginContainer/Page/Banner Icons"]
 custom_minimum_size = Vector2(0, 160)
 layout_mode = 2
 placeholder_text = "One relative path to a scan folder per line, for example:
@@ -81,50 +93,97 @@ Sprite
 ../Sprite
 "
 
-[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/Banner Icons"]
+[node name="GridContainer" type="GridContainer" parent="HBoxContainer/MarginContainer/Page/Banner Icons"]
 layout_mode = 2
+theme_override_constants/v_separation = 8
 columns = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/MarginContainer/Page/Banner Icons/GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="GroupStartIDTitle" type="Label" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer/VBoxContainer"]
+[node name="GroupStartIDTitle" type="Label" parent="HBoxContainer/MarginContainer/Page/Banner Icons/GridContainer/VBoxContainer"]
 layout_mode = 2
 text = "SETTINGS/BANNER_ICONS/GROUP_START_ID"
 
-[node name="GroupStartIDTips" type="Label" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer/VBoxContainer"]
+[node name="GroupStartIDTips" type="Label" parent="HBoxContainer/MarginContainer/Page/Banner Icons/GridContainer/VBoxContainer"]
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 theme_type_variation = &"Subtitle"
 theme_override_font_sizes/font_size = 12
 text = "SETTINGS/BANNER_ICONS/GROUP_START_ID_DESC"
+autowrap_mode = 3
 
-[node name="GroupStartIDEdit" type="SpinBox" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer"]
+[node name="GroupStartIDEdit" type="SpinBox" parent="HBoxContainer/MarginContainer/Page/Banner Icons/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 size_flags_vertical = 0
 min_value = 1.0
 max_value = 999999.0
 value = 1.0
 rounded = true
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer/MarginContainer/Page/Banner Icons/GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="ColorStartIDTitle" type="Label" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer/VBoxContainer2"]
+[node name="ColorStartIDTitle" type="Label" parent="HBoxContainer/MarginContainer/Page/Banner Icons/GridContainer/VBoxContainer2"]
 layout_mode = 2
 text = "SETTINGS/BANNER_ICONS/COLOR_START_ID"
 
-[node name="ColorStartIDTips" type="Label" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer/VBoxContainer2"]
+[node name="ColorStartIDTips" type="Label" parent="HBoxContainer/MarginContainer/Page/Banner Icons/GridContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 theme_type_variation = &"Subtitle"
 theme_override_font_sizes/font_size = 12
 text = "SETTINGS/BANNER_ICONS/COLOR_START_ID_DESC"
+autowrap_mode = 3
 
-[node name="ColorStartIDEdit" type="SpinBox" parent="MarginContainer/VBoxContainer/Banner Icons/GridContainer"]
+[node name="ColorStartIDEdit" type="SpinBox" parent="HBoxContainer/MarginContainer/Page/Banner Icons/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 size_flags_vertical = 0
 max_value = 999999.0
 rounded = true
+
+[node name="About" type="VBoxContainer" parent="HBoxContainer/MarginContainer/Page"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="HBoxContainer/MarginContainer/Page/About"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "SETTINGS/ABOUT"
+
+[node name="GridContainer" type="GridContainer" parent="HBoxContainer/MarginContainer/Page/About"]
+layout_mode = 2
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="VersionTitle" type="Label" parent="HBoxContainer/MarginContainer/Page/About/GridContainer"]
+layout_mode = 2
+text = "SETTINGS/ABOUT/VERSION"
+
+[node name="VersionValue" type="Label" parent="HBoxContainer/MarginContainer/Page/About/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "1.1.0"
+
+[node name="LogTitle" type="Label" parent="HBoxContainer/MarginContainer/Page/About/GridContainer"]
+layout_mode = 2
+text = "SETTINGS/ABOUT/LOG"
+
+[node name="LogButton" type="Button" parent="HBoxContainer/MarginContainer/Page/About/GridContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "OPEN"
+
+[node name="Control" type="Control" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.2
+
+[connection signal="pressed" from="HBoxContainer/MarginContainer/Page/About/GridContainer/LogButton" to="." method="OnOpenLog"]
