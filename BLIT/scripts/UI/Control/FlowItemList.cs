@@ -146,6 +146,9 @@ public partial class FlowItemList : HFlowContainer {
     private void OnChildExitingTree(Node node) {
         if (IsInstanceValid(node) && node is ISelectableItem item) {
             item.Selected -= OnItemSelected;
+            if (item == SelectedItem) {
+                SelectedItem = null;
+            }
         }
     }
 

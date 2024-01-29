@@ -125,7 +125,7 @@ hide_root = true
 select_mode = 1
 scroll_horizontal_enabled = false
 
-[node name="GroupEditor" type="HSplitContainer" parent="TabContainer/ICONS" node_paths=PackedStringArray("EmptyPage", "GroupID", "IconGallery", "IconDetailEditor")]
+[node name="GroupEditor" type="HSplitContainer" parent="TabContainer/ICONS" node_paths=PackedStringArray("EmptyPage", "GroupID", "IconGallery", "IconDetailEditor", "DeleteIconsButton")]
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("9_qeiso")
@@ -134,6 +134,7 @@ GroupID = NodePath("VBoxContainer/PanelContainer/MarginContainer/ToolBar/SpinBox
 IconGallery = NodePath("VBoxContainer/HSplitContainer/Gallery/MarginContainer/GalleryContainer")
 IconBlockPrefab = ExtResource("13_o6lwr")
 IconDetailEditor = NodePath("VBoxContainer/HSplitContainer/Detail")
+DeleteIconsButton = NodePath("VBoxContainer/PanelContainer/MarginContainer/ToolBar/Delete Textures")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/ICONS/GroupEditor"]
 layout_mode = 2
@@ -167,12 +168,12 @@ prefix = "#"
 [node name="VSeparator" type="VSeparator" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
 layout_mode = 2
 
-[node name="AddGroup" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+[node name="Add Textures" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
 layout_mode = 2
 text = "ADD_TEXTURES"
 icon = ExtResource("3_mlxkw")
 
-[node name="DeleteGroup" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
+[node name="Delete Textures" type="Button" parent="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar"]
 layout_mode = 2
 text = "DELETE_TEXTURES"
 icon = ExtResource("4_sd6fr")
@@ -359,3 +360,5 @@ text = "Banner Colors?"
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/Save" to="." method="OnSaveProject"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/SaveAs" to="." method="OnSaveProjectAs"]
 [connection signal="value_changed" from="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar/SpinBox" to="TabContainer/ICONS/GroupEditor" method="OnGroupIDChanged"]
+[connection signal="pressed" from="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar/Add Textures" to="TabContainer/ICONS/GroupEditor" method="OnAddTextures"]
+[connection signal="pressed" from="TabContainer/ICONS/GroupEditor/VBoxContainer/PanelContainer/MarginContainer/ToolBar/Delete Textures" to="TabContainer/ICONS/GroupEditor" method="OnDeleteTextures"]

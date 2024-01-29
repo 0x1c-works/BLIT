@@ -7,8 +7,6 @@ public partial class BannerIconsEditor : Control {
     private IProjectService<BannerIconsProject> ProjectService => AppService.Get<IProjectService<BannerIconsProject>>();
 
     [Export] public Label? LabelFileName { get; set; }
-    [Export] public FileDialog? OpenProjectDialog { get; set; }
-    [Export] public FileDialog? SaveProjectDialog { get; set; }
 
     public override void _Ready() {
         if (ProjectService == null) {

@@ -1,3 +1,4 @@
+using BLIT.scripts.Common;
 using BLIT.scripts.Models.BannerIcons;
 using Godot;
 using Serilog;
@@ -10,6 +11,7 @@ public partial class GroupEditor : Control {
     [Export] public FlowItemList? IconGallery { get; set; }
     [Export] public PackedScene? IconBlockPrefab { get; set; }
     [Export] public IconDetailEditor? IconDetailEditor { get; set; }
+    [Export] public Button? DeleteIconsButton { get; set; }
 
     private BannerGroupEntry? _group;
     public BannerGroupEntry? Group {
@@ -63,6 +65,20 @@ public partial class GroupEditor : Control {
     }
 
     private void OnIconsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
+        if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null) {
+            foreach (BannerIconEntry icon in e.NewItems.Cast<BannerIconEntry>()) {
+                AddIconBlock(icon);
+            }
+        } else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems != null) {
+            foreach (BannerIconEntry icon in e.OldItems.Cast<BannerIconEntry>()) {
+                IconGallery?.GetChildren().FirstOrDefault(child => {
+                    if (child is IconBlock block) {
+                        return block.Icon == icon;
+                    }
+                    return false;
+                })?.QueueFree();
+            }
+        }
     }
 
     private void OnGroupIDChanged(float value) {
@@ -89,8 +105,27 @@ public partial class GroupEditor : Control {
     private void OnIconSelected() {
         var selected = IconGallery?.SelectedItem as IconBlock;
         Log.Debug("selected: {ID} @ {Atlas}", selected?.Icon?.ID, selected?.Icon?.AtlasName);
-        if (IconDetailEditor != null) {
-            IconDetailEditor.IconBlock = selected;
+        if (IsInstanceValid(IconDetailEditor)) {
+            IconDetailEditor!.IconBlock = selected;
         }
+        if (IsInstanceValid(DeleteIconsButton)) {
+            DeleteIconsButton!.Disabled = selected == null;
+        }
+    }
+    private void OnAddTextures() {
+        FileDialog dlg = FileDialogHelper.CreateNative([FileDialogHelper.SUPPORTED_IMAGES]);
+        dlg.FileMode = FileDialog.FileModeEnum.OpenFiles;
+        dlg.FilesSelected += (path) => {
+            if (path != null && path.Length > 0) {
+                Group?.AddIcons(path);
+            }
+        };
+        AddChild(dlg);
+        dlg.PopupCentered();
+    }
+    private void OnDeleteTextures() {
+        if (IconGallery?.SelectedItem is not IconBlock selected) return;
+        // TODO: confirm
+        Group?.DeleteIcons(new[] { selected.Icon });
     }
 }
