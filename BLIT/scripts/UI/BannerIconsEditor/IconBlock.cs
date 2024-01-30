@@ -31,12 +31,6 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
             }
             return false;
         }
-        set {
-            if (value && GetParent() is FlowItemList list) {
-                list.SelectedItem = this;
-            }
-            UpdateSelectedStyle();
-        }
     }
 
     private BannerIconEntry? _icon;
@@ -175,7 +169,7 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
                 using var img = Image.LoadFromFile(path);
                 return ImageTexture.CreateFromImage(img);
             }, cancelSource.Token);
-            if (Check.IsGodotSafe(tex) && !IsInsideTree() || !Check.IsGodotSafe(this)) {
+            if (Check.IsGodotSafe(tex) && (!IsInsideTree() || !Check.IsGodotSafe(this))) {
                 tex.Dispose();
                 tex = null;
             }
@@ -189,11 +183,18 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
         return tex;
     }
 
-    public void UpdateSelectedStyle() {
-        AddThemeStyleboxOverride("panel", IsSelected ? SelectedStyle : UnselectedStyle);
+    public void UpdateSelectedState() {
+        var isSelected = IsSelected;
+        AddThemeStyleboxOverride("panel", isSelected ? SelectedStyle : UnselectedStyle);
+        if (!isSelected) {
+            // When this block is not selected, its sprite's preview is not visible
+            // so we can dispose it's sprite texture to save memory 
+            _spriteAsset?.Dispose();
+            _spriteAsset = null;
+        }
     }
     private void OnClick() {
         Selected(this);
-        UpdateSelectedStyle();
+        UpdateSelectedState();
     }
 }

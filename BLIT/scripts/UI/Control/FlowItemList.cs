@@ -6,7 +6,7 @@ using System.Linq;
 
 public interface ISelectableItem {
     event Action<ISelectableItem> Selected;
-    void UpdateSelectedStyle();
+    void UpdateSelectedState();
 }
 [GlobalClass]
 public partial class FlowItemList : HFlowContainer {
@@ -35,8 +35,8 @@ public partial class FlowItemList : HFlowContainer {
                 ISelectableItem? oldSelection = _selected;
                 _selected = value;
                 _shouldNotifyChange = true;
-                oldSelection?.UpdateSelectedStyle();
-                _selected?.UpdateSelectedStyle();
+                oldSelection?.UpdateSelectedState();
+                _selected?.UpdateSelectedState();
             }
         }
     }
