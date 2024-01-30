@@ -50,8 +50,8 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
             UpdateUI();
         }
     }
-    private CancellationTokenSource? _cancelLoadingTexture;
-    private CancellationTokenSource? _cancelLoadingSprite;
+    private CancellationTokenSource? _cancelLoadingTexture = new();
+    private CancellationTokenSource? _cancelLoadingSprite = new();
     public Texture2D? TextureAsset { get; private set; }
     public Texture2D? SpriteAsset { get; private set; }
 
