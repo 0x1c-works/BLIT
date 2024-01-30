@@ -7,8 +7,13 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+public delegate void Texture2DUpdate(string path, Texture2D? texture);
+
 public partial class IconBlock : PanelContainer, ISelectableItem {
     public event Action<ISelectableItem> Selected = delegate { };
+    public event Texture2DUpdate TextureUpdated = delegate { };
+    public event Texture2DUpdate SpriteUpdated = delegate { };
+
     [Export] public TextureRect? Texture { get; set; }
     [Export] public Label? ID { get; set; }
     [Export] public Label? AtlasName { get; set; }
@@ -86,29 +91,25 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
             UpdateAtlasName();
         } else if (e.PropertyName == nameof(BannerIconEntry.TexturePath)) {
             UpdateTexture();
+        } else if (e.PropertyName == nameof(BannerIconEntry.SpritePath)) {
+            UpdateSprite();
         }
     }
 
-    private async void UpdateTexture() {
-        if (Texture != null) {
-            Texture.Texture?.Dispose();
-            ImageTexture? tex = null;
-            try {
-                tex = await LoadImage(Icon.TexturePath);
-                if (IsInstanceValid(Texture)) {
-                    Texture.Texture = tex;
-                } else {
-                    tex?.Dispose();
-                }
-            } catch (TaskCanceledException) {
-                tex?.Dispose();
-                // ignore
-            } catch (Exception ex) {
-                Log.Error(ex, "Failed to load image");
-                tex?.Dispose();
-            }
+    public async void UpdateTexture() {
+        Texture?.Texture?.Dispose();
+        Texture2D? tex = await LoadImage(Icon.TexturePath);
+        if (IsInstanceValid(Texture)) {
+            Texture!.Texture = tex;
+        } else {
+            tex?.Dispose();
         }
+        TextureUpdated(Icon.TexturePath, tex);
     }
+    public async void UpdateSprite() {
+        SpriteUpdated(Icon.SpritePath, await LoadImage(Icon.SpritePath));
+    }
+
     private void UpdateID() {
         if (ID != null && IsInstanceValid(ID)) {
             ID.Text = $"#{Icon.ID}";
@@ -119,15 +120,24 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
             AtlasName.Text = Icon.AtlasName;
         }
     }
-    private Task<ImageTexture?> LoadImage(string path) {
-        _cancelLoading?.Cancel();
-        _cancelLoading = new();
-        return Task.Factory.StartNew(() => {
-            if (!File.Exists(path)) return null;
+    private async Task<Texture2D?> LoadImage(string path) {
+        Texture2D? tex = null;
+        try {
+            _cancelLoading?.Cancel();
+            _cancelLoading = new();
+            tex = await Task.Factory.StartNew(() => {
+                if (!File.Exists(path)) return null;
 
-            using var img = Image.LoadFromFile(path);
-            return ImageTexture.CreateFromImage(img);
-        }, _cancelLoading.Token);
+                using var img = Image.LoadFromFile(path);
+                return ImageTexture.CreateFromImage(img);
+            }, _cancelLoading.Token);
+        } catch (TaskCanceledException) {
+            tex?.Dispose();
+        } catch (Exception ex) {
+            Log.Error(ex, "Failed to load image");
+            tex?.Dispose();
+        }
+        return tex;
     }
 
     public void UpdateSelectedStyle() {

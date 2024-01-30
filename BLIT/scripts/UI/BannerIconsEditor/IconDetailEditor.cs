@@ -2,6 +2,7 @@ using BLIT.Banner;
 using BLIT.scripts.Common;
 using Godot;
 using System.Threading;
+using static Godot.FileDialog;
 
 public partial class IconDetailEditor : Control {
     [Export] public Control? Content { get; set; }
@@ -21,7 +22,13 @@ public partial class IconDetailEditor : Control {
         get => _iconBlock;
         set {
             if (_iconBlock == value) return;
+            if (_iconBlock != null && IsInstanceValid(_iconBlock)) {
+                UnbindIconBlock(_iconBlock);
+            }
             _iconBlock = value;
+            if (_iconBlock != null && IsInstanceValid(_iconBlock)) {
+                BindIconBlock(_iconBlock);
+            }
             UpdateUI();
         }
     }
@@ -32,8 +39,27 @@ public partial class IconDetailEditor : Control {
         UpdateUI();
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta) {
+    private void BindIconBlock(IconBlock block) {
+        block.SpriteUpdated += OnSpriteUpdated;
+        block.TextureUpdated += OnTextureUpdated;
+    }
+    private void UnbindIconBlock(IconBlock block) {
+        block.SpriteUpdated -= OnSpriteUpdated;
+        block.TextureUpdated -= OnTextureUpdated;
+    }
+    private void OnSpriteUpdated(string path, Texture2D? tex) {
+        UpdateLabel(SpritePath, GetImageDisplayPath(path));
+        if (Sprite != null && IsInstanceValid(Sprite)) {
+            Sprite.Texture?.Dispose();
+            Sprite.Texture = tex;
+        }
+    }
+    private void OnTextureUpdated(string path, Texture2D? tex) {
+        UpdateLabel(TexturePath, GetImageDisplayPath(path));
+        if (Texture != null && IsInstanceValid(Texture)) {
+            Texture.Texture?.Dispose();
+            Texture.Texture = tex;
+        }
     }
 
     private void UpdateUI() {
@@ -79,5 +105,34 @@ public partial class IconDetailEditor : Control {
         if (label != null && IsInstanceValid(label)) {
             label.Text = value ?? string.Empty;
         }
+    }
+
+    private void OnReimportSprite() {
+        IconBlock?.UpdateSprite();
+    }
+    private void OnReimportTexture() {
+        IconBlock?.UpdateTexture();
+    }
+    private void ChangeSprite() {
+        if (IconBlock == null || !IsInstanceValid(IconBlock)) return;
+        ChangeImage(IconBlock.Icon.SpritePath, (path) => {
+            IconBlock.Icon.SpritePath = path;
+            IconBlock.UpdateSprite();
+        });
+    }
+    private void ChangeTexture() {
+        if (IconBlock == null || !IsInstanceValid(IconBlock)) return;
+        ChangeImage(IconBlock.Icon.TexturePath, (path) => {
+            IconBlock.Icon.TexturePath = path;
+            IconBlock.UpdateTexture();
+        });
+    }
+
+    private void ChangeImage(string? currentPath, FileSelectedEventHandler onFileSelected) {
+        FileDialog dlg = FileDialogHelper.CreateNative([FileDialogHelper.SUPPORTED_IMAGES], currentPath);
+        dlg.FileMode = FileModeEnum.OpenFile;
+        dlg.FileSelected += onFileSelected;
+        AddChild(dlg);
+        dlg.PopupCentered();
     }
 }
