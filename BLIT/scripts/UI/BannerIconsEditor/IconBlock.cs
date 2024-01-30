@@ -4,6 +4,7 @@ using Godot;
 using Serilog;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,17 +44,37 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
         get => _icon ?? throw new NullReferenceException("IconBlock has an empty icon");
         set {
             if (_icon == value) return;
+            if (_icon != null) {
+                UnbindIcon();
+            }
             _icon = value;
             if (_icon != null) {
-                _icon.PropertyChanged += OnIconPropertyChanged;
+                BindIcon();
             }
             UpdateUI();
         }
     }
     private CancellationTokenSource? _cancelLoadingTexture = new();
     private CancellationTokenSource? _cancelLoadingSprite = new();
-    public Texture2D? TextureAsset { get; private set; }
-    public Texture2D? SpriteAsset { get; private set; }
+
+    private Texture2D? _textureAsset;
+    private Texture2D? _spriteAsset;
+    public Texture2D? TextureAsset {
+        get {
+            if (_textureAsset == null) {
+                UpdateTexture();
+            }
+            return _textureAsset;
+        }
+    }
+    public Texture2D? SpriteAsset {
+        get {
+            if (_spriteAsset == null) {
+                UpdateSprite();
+            }
+            return _spriteAsset;
+        }
+    }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
@@ -65,13 +86,24 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
     }
     public override void _ExitTree() {
         base._ExitTree();
+        UnbindIcon();
         if (Check.IsGodotSafe(Texture)) {
             Texture?.Texture?.Dispose();
         }
         _cancelLoadingTexture?.Cancel();
         _cancelLoadingSprite?.Cancel();
-        TextureAsset?.Dispose();
-        SpriteAsset?.Dispose();
+        _textureAsset?.Dispose();
+        _spriteAsset?.Dispose();
+    }
+    private void BindIcon() {
+        if (_icon != null) {
+            _icon.PropertyChanged += OnIconPropertyChanged;
+        }
+    }
+    private void UnbindIcon() {
+        if (_icon != null) {
+            _icon.PropertyChanged -= OnIconPropertyChanged;
+        }
     }
     public override Variant _GetDragData(Vector2 atPosition) {
         Control preview;
@@ -92,7 +124,7 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
 
     private void UpdateUI() {
         UpdateTexture();
-        UpdateSprite();
+        //UpdateSprite();
         UpdateID();
         UpdateAtlasName();
     }
@@ -110,14 +142,16 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
     }
 
     public async void UpdateTexture() {
-        TextureAsset?.Dispose();
-        TextureAsset = await LoadImage(Icon.TexturePath, _cancelLoadingTexture);
-        TextureUpdated(Icon.TexturePath, TextureAsset);
+        _textureAsset?.Dispose();
+        _textureAsset = await LoadImage(Icon.TexturePath, _cancelLoadingTexture);
+        TextureUpdated(Icon.TexturePath, _textureAsset);
     }
     public async void UpdateSprite() {
-        SpriteAsset?.Dispose();
-        SpriteAsset = await LoadImage(Icon.SpritePath, _cancelLoadingSprite);
-        SpriteUpdated(Icon.SpritePath, SpriteAsset);
+        _spriteAsset?.Dispose();
+        var stack = new StackTrace();
+        Log.Debug("update sprite: {path} @ {id}", Icon.SpritePath, GetInstanceId());
+        _spriteAsset = await LoadImage(Icon.SpritePath, _cancelLoadingSprite);
+        SpriteUpdated(Icon.SpritePath, _spriteAsset);
     }
 
     private void UpdateID() {
@@ -141,8 +175,13 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
                 using var img = Image.LoadFromFile(path);
                 return ImageTexture.CreateFromImage(img);
             }, cancelSource.Token);
+            if (Check.IsGodotSafe(tex) && !IsInsideTree() || !Check.IsGodotSafe(this)) {
+                tex.Dispose();
+                tex = null;
+            }
         } catch (TaskCanceledException) {
             tex?.Dispose();
+            Log.Debug("cancel loading image: {path}", path);
         } catch (Exception ex) {
             Log.Error(ex, "Failed to load image");
             tex?.Dispose();
