@@ -75,16 +75,10 @@ public class BannerIconEntry : BindableBase {
     }
 
     public void ReloadSprite() {
-        if (string.IsNullOrEmpty(SpritePath)) return;
-        var oldPath = SpritePath;
-        SpritePath = oldPath + "1";
-        SpritePath = oldPath;
+        OnPropertyChanged(nameof(SpritePath));
     }
     public void ReloadTexture() {
-        if (string.IsNullOrEmpty(TexturePath)) return;
-        var oldPath = TexturePath;
-        TexturePath = oldPath + "1";
-        TexturePath = oldPath;
+        OnPropertyChanged(nameof(SpritePath));
     }
 
     public BannerIcon ToBannerIcon() {

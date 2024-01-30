@@ -22,11 +22,11 @@ public partial class IconDetailEditor : Control {
         get => _iconBlock;
         set {
             if (_iconBlock == value) return;
-            if (_iconBlock != null && IsInstanceValid(_iconBlock)) {
+            if (Check.IsGodotSafe(_iconBlock)) {
                 UnbindIconBlock(_iconBlock);
             }
             _iconBlock = value;
-            if (_iconBlock != null && IsInstanceValid(_iconBlock)) {
+            if (Check.IsGodotSafe(_iconBlock)) {
                 BindIconBlock(_iconBlock);
             }
             UpdateUI();
@@ -47,19 +47,11 @@ public partial class IconDetailEditor : Control {
         block.SpriteUpdated -= OnSpriteUpdated;
         block.TextureUpdated -= OnTextureUpdated;
     }
-    private void OnSpriteUpdated(string path, Texture2D? tex) {
-        UpdateLabel(SpritePath, GetImageDisplayPath(path));
-        if (Sprite != null && IsInstanceValid(Sprite)) {
-            Sprite.Texture?.Dispose();
-            Sprite.Texture = tex;
-        }
+    private void OnSpriteUpdated(string path, Texture2D? asset) {
+        UpdateImageAsset(path, asset, SpritePath, Sprite);
     }
-    private void OnTextureUpdated(string path, Texture2D? tex) {
-        UpdateLabel(TexturePath, GetImageDisplayPath(path));
-        if (Texture != null && IsInstanceValid(Texture)) {
-            Texture.Texture?.Dispose();
-            Texture.Texture = tex;
-        }
+    private void OnTextureUpdated(string path, Texture2D? asset) {
+        UpdateImageAsset(path, asset, TexturePath, Texture);
     }
 
     private void UpdateUI() {
@@ -71,8 +63,8 @@ public partial class IconDetailEditor : Control {
             EmptyPage.Visible = IconBlock == null;
         }
         UpdateTitle();
-        UpdateSprite();
-        UpdateTexture();
+        UpdateImageAsset(IconBlock?.Icon.TexturePath, IconBlock?.TextureAsset, TexturePath, Texture);
+        UpdateImageAsset(IconBlock?.Icon.SpritePath, IconBlock?.SpriteAsset, SpritePath, Sprite);
     }
 
     private void UpdateTitle() {
@@ -83,26 +75,17 @@ public partial class IconDetailEditor : Control {
         }
         UpdateLabel(Title, title);
     }
-    private async void UpdateSprite() {
-        var spritePath = IconBlock?.Icon?.SpritePath;
-        UpdateLabel(SpritePath, GetImageDisplayPath(spritePath));
-        if (Sprite != null && IsInstanceValid(Sprite)) {
-            ImageTexture? tex = ImageHelper.IsValidImage(spritePath) ? await ImageHelper.LoadImage(spritePath!, _cancelSpriteLoading) : null;
-            Sprite.Texture?.Dispose();
-            Sprite.Texture = tex;
-        }
-    }
-    private void UpdateTexture() {
-        UpdateLabel(TexturePath, GetImageDisplayPath(IconBlock?.Icon?.TexturePath));
-        if (Texture != null && IsInstanceValid(Texture) && IconBlock?.Texture != null) {
-            Texture.Texture = IconBlock.Texture.Texture;
+    private void UpdateImageAsset(string? path, Texture2D? asset, Label? pathLabel, TextureRect? preview) {
+        UpdateLabel(pathLabel, GetImageDisplayPath(path));
+        if (Check.IsGodotSafe(preview)) {
+            preview.Texture = asset;
         }
     }
     private string GetImageDisplayPath(string? path) {
         return ImageHelper.IsValidImage(path) ? path! : "UNASSIGNED";
     }
     private void UpdateLabel(Label? label, string? value) {
-        if (label != null && IsInstanceValid(label)) {
+        if (Check.IsGodotSafe(label)) {
             label.Text = value ?? string.Empty;
         }
     }
@@ -114,17 +97,17 @@ public partial class IconDetailEditor : Control {
         IconBlock?.UpdateTexture();
     }
     private void ChangeSprite() {
-        if (IconBlock == null || !IsInstanceValid(IconBlock)) return;
+        if (!Check.IsGodotSafe(IconBlock)) return;
         ChangeImage(IconBlock.Icon.SpritePath, (path) => {
             IconBlock.Icon.SpritePath = path;
-            IconBlock.UpdateSprite();
+            //IconBlock.UpdateSprite();
         });
     }
     private void ChangeTexture() {
-        if (IconBlock == null || !IsInstanceValid(IconBlock)) return;
+        if (!Check.IsGodotSafe(IconBlock)) return;
         ChangeImage(IconBlock.Icon.TexturePath, (path) => {
             IconBlock.Icon.TexturePath = path;
-            IconBlock.UpdateTexture();
+            //IconBlock.UpdateTexture();
         });
     }
 

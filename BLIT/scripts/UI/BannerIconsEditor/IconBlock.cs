@@ -1,3 +1,4 @@
+using BLIT.scripts.Common;
 using BLIT.scripts.Models.BannerIcons;
 using Godot;
 using Serilog;
@@ -49,17 +50,28 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
             UpdateUI();
         }
     }
-    private CancellationTokenSource? _cancelLoading;
+    private CancellationTokenSource? _cancelLoadingTexture;
+    private CancellationTokenSource? _cancelLoadingSprite;
+    public Texture2D? TextureAsset { get; private set; }
+    public Texture2D? SpriteAsset { get; private set; }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
+        TextureUpdated += (path, asset) => {
+            if (Check.IsGodotSafe(Texture)) {
+                Texture.Texture = asset;
+            }
+        };
     }
     public override void _ExitTree() {
         base._ExitTree();
-        if (Texture != null && IsInstanceValid(Texture) && Texture.Texture != null && IsInstanceValid(Texture.Texture)) {
+        if (Check.IsGodotSafe(Texture)) {
             Texture?.Texture?.Dispose();
         }
-        _cancelLoading?.Cancel();
+        _cancelLoadingTexture?.Cancel();
+        _cancelLoadingSprite?.Cancel();
+        TextureAsset?.Dispose();
+        SpriteAsset?.Dispose();
     }
     public override Variant _GetDragData(Vector2 atPosition) {
         Control preview;
@@ -80,6 +92,7 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
 
     private void UpdateUI() {
         UpdateTexture();
+        UpdateSprite();
         UpdateID();
         UpdateAtlasName();
     }
@@ -97,40 +110,37 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
     }
 
     public async void UpdateTexture() {
-        Texture?.Texture?.Dispose();
-        Texture2D? tex = await LoadImage(Icon.TexturePath);
-        if (IsInstanceValid(Texture)) {
-            Texture!.Texture = tex;
-        } else {
-            tex?.Dispose();
-        }
-        TextureUpdated(Icon.TexturePath, tex);
+        TextureAsset?.Dispose();
+        TextureAsset = await LoadImage(Icon.TexturePath, _cancelLoadingTexture);
+        TextureUpdated(Icon.TexturePath, TextureAsset);
     }
     public async void UpdateSprite() {
-        SpriteUpdated(Icon.SpritePath, await LoadImage(Icon.SpritePath));
+        SpriteAsset?.Dispose();
+        SpriteAsset = await LoadImage(Icon.SpritePath, _cancelLoadingSprite);
+        SpriteUpdated(Icon.SpritePath, SpriteAsset);
     }
 
     private void UpdateID() {
-        if (ID != null && IsInstanceValid(ID)) {
+        if (Check.IsGodotSafe(ID)) {
             ID.Text = $"#{Icon.ID}";
         }
     }
     private void UpdateAtlasName() {
-        if (AtlasName != null && IsInstanceValid(AtlasName)) {
+        if (Check.IsGodotSafe(AtlasName)) {
             AtlasName.Text = Icon.AtlasName;
         }
     }
-    private async Task<Texture2D?> LoadImage(string path) {
+    private async Task<Texture2D?> LoadImage(string path, CancellationTokenSource? cancelSource) {
         Texture2D? tex = null;
         try {
-            _cancelLoading?.Cancel();
-            _cancelLoading = new();
+            cancelSource?.Cancel();
+            cancelSource = new();
             tex = await Task.Factory.StartNew(() => {
                 if (!File.Exists(path)) return null;
 
                 using var img = Image.LoadFromFile(path);
                 return ImageTexture.CreateFromImage(img);
-            }, _cancelLoading.Token);
+            }, cancelSource.Token);
         } catch (TaskCanceledException) {
             tex?.Dispose();
         } catch (Exception ex) {
