@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://db73agt6rvlth"]
+[gd_scene load_steps=20 format=3 uid="uid://db73agt6rvlth"]
 
 [ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/BannerIconsEditor.cs" id="1_2nepo"]
 [ext_resource type="Texture2D" uid="uid://utcopa7b80nm" path="res://icons/add-line.svg" id="1_67drw"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://ct42ucdy1s0av" path="res://modules/icon_block.tscn" id="13_o6lwr"]
 [ext_resource type="Script" path="res://scripts/UI/Control/FlowItemList.cs" id="14_5tk0m"]
 [ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/IconDetailEditor.cs" id="15_exwfc"]
+[ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/ColorsPage.cs" id="17_x5jm1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o4bqq"]
 bg_color = Color(0.156863, 0.156863, 0.156863, 1)
@@ -74,8 +75,10 @@ icon = ExtResource("4_hwptu")
 [node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
+current_tab = 1
 
 [node name="ICONS" type="HBoxContainer" parent="TabContainer" node_paths=PackedStringArray("IconGroupList", "GroupEditor")]
+visible = false
 layout_mode = 2
 script = ExtResource("6_fayj2")
 IconGroupList = NodePath("GroupList")
@@ -347,13 +350,48 @@ theme_type_variation = &"Subtitle"
 theme_override_font_sizes/font_size = 20
 text = "MESSAGE/NO_SELECTED_ICON_GROUP"
 
-[node name="COLORS" type="HBoxContainer" parent="TabContainer"]
-visible = false
+[node name="COLORS" type="HBoxContainer" parent="TabContainer" node_paths=PackedStringArray("ColorList")]
+layout_mode = 2
+script = ExtResource("17_x5jm1")
+ColorList = NodePath("VBoxContainer/Color List")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/COLORS"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/COLORS"]
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/COLORS/VBoxContainer"]
 layout_mode = 2
-text = "Banner Colors?"
+theme_type_variation = &"ToolBar"
+
+[node name="ToolBar" type="HFlowContainer" parent="TabContainer/COLORS/VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="Add Color" type="Button" parent="TabContainer/COLORS/VBoxContainer/PanelContainer/ToolBar"]
+layout_mode = 2
+tooltip_text = "ADD_ICON_GROUP"
+icon = ExtResource("1_67drw")
+flat = true
+
+[node name="Delete Color" type="Button" parent="TabContainer/COLORS/VBoxContainer/PanelContainer/ToolBar"]
+layout_mode = 2
+tooltip_text = "DELETE_ICON_GROUP"
+icon = ExtResource("2_q8ybv")
+flat = true
+
+[node name="Color List" type="Tree" parent="TabContainer/COLORS/VBoxContainer"]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+size_flags_vertical = 3
+columns = 4
+hide_folding = true
+hide_root = true
+select_mode = 2
+scroll_horizontal_enabled = false
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/COLORS"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/COLORS/MarginContainer"]
+layout_mode = 2
 
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/New" to="." method="OnNewProject"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/Open" to="." method="OnOpenProject"]

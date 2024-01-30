@@ -54,3 +54,8 @@ SETTINGS/ABOUT,About,关于
 SETTINGS/ABOUT/VERSION,Version,版本
 SETTINGS/ABOUT/LOG,Application Log,应用日志
 SUPPORTED_IMAGES,Supported Images,支持的图片格式
+COLOR,Color,颜色
+ID,ID,编号
+SIGIL_COLOR,Sigil Color,前景色
+BACKGROUND_COLOR,Background Color,背景色
+

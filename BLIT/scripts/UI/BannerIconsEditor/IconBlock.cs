@@ -4,7 +4,6 @@ using Godot;
 using Serilog;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -118,7 +117,6 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
 
     private void UpdateUI() {
         UpdateTexture();
-        //UpdateSprite();
         UpdateID();
         UpdateAtlasName();
     }
@@ -142,8 +140,6 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
     }
     public async void UpdateSprite() {
         _spriteAsset?.Dispose();
-        var stack = new StackTrace();
-        Log.Debug("update sprite: {path} @ {id}", Icon.SpritePath, GetInstanceId());
         _spriteAsset = await LoadImage(Icon.SpritePath, _cancelLoadingSprite);
         SpriteUpdated(Icon.SpritePath, _spriteAsset);
     }
@@ -165,7 +161,7 @@ public partial class IconBlock : PanelContainer, ISelectableItem {
             cancelSource = new();
             tex = await Task.Factory.StartNew(() => {
                 if (!File.Exists(path)) return null;
-
+                Log.Debug("loading image: {path} @ {id}", Icon.SpritePath, GetInstanceId());
                 using var img = Image.LoadFromFile(path);
                 return ImageTexture.CreateFromImage(img);
             }, cancelSource.Token);
