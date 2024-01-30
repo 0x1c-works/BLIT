@@ -105,11 +105,11 @@ public partial class GroupEditor : Control {
     private void OnIconSelected() {
         var selected = IconGallery?.SelectedItem as IconBlock;
         Log.Debug("selected: {ID} @ {Atlas}", selected?.Icon?.ID, selected?.Icon?.AtlasName);
-        if (IsInstanceValid(IconDetailEditor)) {
-            IconDetailEditor!.IconBlock = selected;
+        if (Check.IsGodotSafe(IconDetailEditor)) {
+            IconDetailEditor.IconBlock = selected;
         }
-        if (IsInstanceValid(DeleteIconsButton)) {
-            DeleteIconsButton!.Disabled = selected == null;
+        if (Check.IsGodotSafe(DeleteIconsButton)) {
+            DeleteIconsButton.Disabled = selected == null;
         }
     }
     private void OnAddTextures() {

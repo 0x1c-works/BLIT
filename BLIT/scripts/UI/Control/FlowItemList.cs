@@ -1,3 +1,4 @@
+using BLIT.scripts.Common;
 using Godot;
 using Serilog;
 using System;
@@ -138,13 +139,13 @@ public partial class FlowItemList : HFlowContainer {
     }
 
     private void OnChildEnteredTree(Node node) {
-        if (IsInstanceValid(node) && node is ISelectableItem item) {
+        if (Check.IsGodotSafe(node) && node is ISelectableItem item) {
             item.Selected += OnItemSelected;
         }
     }
 
     private void OnChildExitingTree(Node node) {
-        if (IsInstanceValid(node) && node is ISelectableItem item) {
+        if (Check.IsGodotSafe(node) && node is ISelectableItem item) {
             item.Selected -= OnItemSelected;
             if (item == SelectedItem) {
                 SelectedItem = null;

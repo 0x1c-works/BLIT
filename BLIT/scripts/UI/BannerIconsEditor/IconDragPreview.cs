@@ -1,3 +1,4 @@
+using BLIT.scripts.Common;
 using BLIT.scripts.Models.BannerIcons;
 using Godot;
 
@@ -6,10 +7,10 @@ public partial class IconDragPreview : Control {
     [Export] public Label? AtlasName { get; set; }
 
     public void SetData(BannerIconEntry icon) {
-        if (ID != null && IsInstanceValid(ID)) {
+        if (Check.IsGodotSafe(ID)) {
             ID.Text = (icon.ID.ToString());
         }
-        if (AtlasName != null && IsInstanceValid(AtlasName)) {
+        if (Check.IsGodotSafe(AtlasName)) {
             AtlasName.Text = (icon.AtlasName);
         }
     }
