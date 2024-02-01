@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://db73agt6rvlth"]
+[gd_scene load_steps=24 format=3 uid="uid://db73agt6rvlth"]
 
 [ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/BannerIconsEditor.cs" id="1_2nepo"]
 [ext_resource type="Texture2D" uid="uid://utcopa7b80nm" path="res://icons/add-line.svg" id="1_67drw"]
@@ -26,6 +26,9 @@ bg_color = Color(0.156863, 0.156863, 0.156863, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ocot"]
 bg_color = Color(0.156863, 0.156863, 0.156863, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_r3e0k"]
+font_size = 18
 
 [node name="BannerIconsEditor" type="VBoxContainer" node_paths=PackedStringArray("LabelFileName")]
 anchors_preset = 15
@@ -353,104 +356,151 @@ theme_type_variation = &"Subtitle"
 theme_override_font_sizes/font_size = 20
 text = "MESSAGE/NO_SELECTED_ICON_GROUP"
 
-[node name="COLORS" type="HBoxContainer" parent="TabContainer" node_paths=PackedStringArray("ColorList")]
+[node name="COLORS" type="HBoxContainer" parent="TabContainer" node_paths=PackedStringArray("ColorList", "IDEdit", "SigilColorToggle", "BackgroundColorToggle", "ColorPicker", "MultipleIDSection", "MultipleIDList", "MultipleIDMore", "ColorEditor", "EmptyPage")]
 layout_mode = 2
 script = ExtResource("17_x5jm1")
-ColorList = NodePath("VBoxContainer/Color List")
+ColorList = NodePath("Color List Wrapper/Color List")
+IDEdit = NodePath("Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/ID Row/ID Edit")
+SigilColorToggle = NodePath("Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Switch Row/Sigil Color")
+BackgroundColorToggle = NodePath("Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Switch Row/Background Color")
+ColorPicker = NodePath("Color Editor/MarginContainer/VBoxContainer/ColorPicker")
+MultipleIDSection = NodePath("Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/ID Row/Multiple IDs")
+MultipleIDList = NodePath("Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/ID Row/Multiple IDs/ID List")
+MultipleIDMore = NodePath("Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/ID Row/Multiple IDs/more")
+ColorEditor = NodePath("Color Editor")
+EmptyPage = NodePath("No Selected Color")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/COLORS"]
+[node name="Color List Wrapper" type="VBoxContainer" parent="TabContainer/COLORS"]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="TabContainer/COLORS/VBoxContainer"]
+[node name="Toolbar Wrapper" type="PanelContainer" parent="TabContainer/COLORS/Color List Wrapper"]
 layout_mode = 2
 theme_type_variation = &"ToolBar"
 
-[node name="ToolBar" type="HFlowContainer" parent="TabContainer/COLORS/VBoxContainer/PanelContainer"]
+[node name="ToolBar" type="HFlowContainer" parent="TabContainer/COLORS/Color List Wrapper/Toolbar Wrapper"]
 layout_mode = 2
 
-[node name="Add Color" type="Button" parent="TabContainer/COLORS/VBoxContainer/PanelContainer/ToolBar"]
+[node name="Add Color" type="Button" parent="TabContainer/COLORS/Color List Wrapper/Toolbar Wrapper/ToolBar"]
 layout_mode = 2
 tooltip_text = "ADD_ICON_GROUP"
 icon = ExtResource("1_67drw")
 flat = true
 
-[node name="Delete Color" type="Button" parent="TabContainer/COLORS/VBoxContainer/PanelContainer/ToolBar"]
+[node name="Delete Color" type="Button" parent="TabContainer/COLORS/Color List Wrapper/Toolbar Wrapper/ToolBar"]
 layout_mode = 2
 tooltip_text = "DELETE_ICON_GROUP"
 icon = ExtResource("2_q8ybv")
 flat = true
 
-[node name="Color List" type="Tree" parent="TabContainer/COLORS/VBoxContainer"]
+[node name="Color List" type="Tree" parent="TabContainer/COLORS/Color List Wrapper"]
 custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_colors/guide_color = Color(0, 0, 0, 0)
 columns = 4
 hide_folding = true
+enable_recursive_folding = false
 hide_root = true
 select_mode = 2
 scroll_horizontal_enabled = false
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/COLORS"]
+[node name="Color Editor" type="ScrollContainer" parent="TabContainer/COLORS"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/COLORS/Color Editor"]
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/COLORS/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/COLORS/Color Editor/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/COLORS/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/COLORS/Color Editor/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/COLORS/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/COLORS/Color Editor/MarginContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/COLORS/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/COLORS/Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="ID Row" type="HBoxContainer" parent="TabContainer/COLORS/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer"]
+[node name="ID Row" type="HBoxContainer" parent="TabContainer/COLORS/Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="TabContainer/COLORS/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/ID Row"]
+[node name="TextureRect" type="TextureRect" parent="TabContainer/COLORS/Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/ID Row"]
 layout_mode = 2
 texture = ExtResource("18_8gjtc")
 expand_mode = 2
 stretch_mode = 3
 
-[node name="Label" type="Label" parent="TabContainer/COLORS/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/ID Row"]
+[node name="Label" type="Label" parent="TabContainer/COLORS/Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/ID Row"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "ID"
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/COLORS/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/ID Row"]
+[node name="ID Edit" type="SpinBox" parent="TabContainer/COLORS/Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/ID Row"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 max_value = 99999.0
 rounded = true
 
-[node name="Switch Row" type="HBoxContainer" parent="TabContainer/COLORS/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="Multiple IDs" type="HBoxContainer" parent="TabContainer/COLORS/Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/ID Row"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ID List" type="Label" parent="TabContainer/COLORS/Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/ID Row/Multiple IDs"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_vertical = 1
+text = "110, 111, 112"
+label_settings = SubResource("LabelSettings_r3e0k")
+vertical_alignment = 2
+
+[node name="more" type="Label" parent="TabContainer/COLORS/Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/ID Row/Multiple IDs"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_vertical = 1
+theme_type_variation = &"Subtitle"
+text = "and 3 more"
+vertical_alignment = 2
+
+[node name="Switch Row" type="HBoxContainer" parent="TabContainer/COLORS/Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Sigil Color" type="CheckButton" parent="TabContainer/COLORS/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Switch Row"]
+[node name="Sigil Color" type="CheckButton" parent="TabContainer/COLORS/Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Switch Row"]
 layout_mode = 2
 text = "SIGIL_COLOR"
 icon = ExtResource("18_37faq")
 
-[node name="Background Color" type="CheckButton" parent="TabContainer/COLORS/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Switch Row"]
+[node name="Background Color" type="CheckButton" parent="TabContainer/COLORS/Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Switch Row"]
 layout_mode = 2
 text = "BACKGROUND_COLOR"
 icon = ExtResource("19_51l7a")
 
-[node name="ColorPicker" type="ColorPicker" parent="TabContainer/COLORS/MarginContainer/VBoxContainer"]
+[node name="ColorPicker" type="ColorPicker" parent="TabContainer/COLORS/Color Editor/MarginContainer/VBoxContainer"]
 layout_mode = 2
 edit_alpha = false
 color_mode = 1
 picker_shape = 1
+
+[node name="No Selected Color" type="CenterContainer" parent="TabContainer/COLORS"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="TabContainer/COLORS/No Selected Color"]
+layout_mode = 2
+theme_type_variation = &"Subtitle"
+theme_override_font_sizes/font_size = 20
+text = "MESSAGE/NO_SELECTED_COLOR"
 
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/New" to="." method="OnNewProject"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MenuBar/Open" to="." method="OnOpenProject"]
@@ -463,3 +513,4 @@ picker_shape = 1
 [connection signal="pressed" from="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer/Sprite Actions/Reimport" to="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail" method="OnReimportSprite"]
 [connection signal="pressed" from="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer/Texture Actions/Change" to="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail" method="ChangeTexture"]
 [connection signal="pressed" from="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer/Texture Actions/Reimport" to="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail" method="OnReimportTexture"]
+[connection signal="multi_selected" from="TabContainer/COLORS/Color List Wrapper/Color List" to="TabContainer/COLORS" method="OnCellsSelected"]
