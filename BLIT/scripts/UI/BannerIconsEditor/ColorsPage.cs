@@ -35,6 +35,19 @@ public partial class ColorsPage : Control {
 
         BuildList();
         UpdateEditor();
+
+        if (Check.IsGodotSafe(IDEdit)) {
+            IDEdit.ValueChanged += OnIDEditValueChanged;
+        }
+        if (Check.IsGodotSafe(SigilColorToggle)) {
+            SigilColorToggle.Toggled += OnSigilColorToggleToggled;
+        }
+        if (Check.IsGodotSafe(BackgroundColorToggle)) {
+            BackgroundColorToggle.Toggled += OnBackgroundColorToggleToggled;
+        }
+        if (Check.IsGodotSafe(ColorPicker)) {
+            ColorPicker.ColorChanged += OnColorPickerColorChanged;
+        }
     }
 
     private void OnProjectServicePropertyChanged(object? sender, PropertyChangedEventArgs e) {
@@ -61,19 +74,30 @@ public partial class ColorsPage : Control {
         }
         TreeItem item = ColorList.CreateItem(parent);
         item.SetMetadata(0, color.ID);
-        item.SetCustomBgColor(0, color.Color);
-        item.SetText(1, $"#{color.ID}");
         item.SetCustomFontSize(2, 10);
         item.SetCustomFontSize(3, 10);
+        RenderItem(item, color);
+        color.PropertyChanged += (o, e) => OnColorPropertyChanged(item, color, e);
+        return item;
+    }
+
+    private void RenderItem(TreeItem item, BannerColorEntry color) {
+        item.SetCustomBgColor(0, color.Color);
+        item.SetText(1, $"#{color.ID}");
         if (color.IsForSigil) {
             item.SetIcon(2, _sigilIcon);
             item.SetTooltipText(2, "SIGIL_COLOR");
+        } else {
+            item.SetIcon(2, null);
+            item.SetTooltipText(2, null);
         }
         if (color.IsForBackground) {
             item.SetIcon(3, _backgroundIcon);
             item.SetTooltipText(3, "BACKGROUND_COLOR");
+        } else {
+            item.SetIcon(3, null);
+            item.SetTooltipText(3, null);
         }
-        return item;
     }
 
     private void OnCellsSelected(TreeItem item, int column, bool selected) {
@@ -149,6 +173,38 @@ public partial class ColorsPage : Control {
             if (Check.IsGodotSafe(BackgroundColorToggle)) {
                 BackgroundColorToggle.ButtonPressed = _selectedColors.All(c => c.IsForBackground);
             }
+        }
+    }
+
+    private void OnIDEditValueChanged(double value) {
+        if (_selectedColors.Count != 1) return;
+        BannerColorEntry color = _selectedColors[0];
+        color.ID = (int)value;
+        IDEdit!.Value = color.ID;
+    }
+    private void OnSigilColorToggleToggled(bool pressed) {
+        foreach (BannerColorEntry color in _selectedColors) {
+            color.IsForSigil = pressed;
+        }
+    }
+    private void OnBackgroundColorToggleToggled(bool pressed) {
+        foreach (BannerColorEntry color in _selectedColors) {
+            color.IsForBackground = pressed;
+        }
+    }
+    private void OnColorPickerColorChanged(Color color) {
+        if (_selectedColors.Count != 1) return;
+        _selectedColors[0].Color = color;
+    }
+
+    private void OnColorPropertyChanged(TreeItem item, BannerColorEntry color, PropertyChangedEventArgs e) {
+        switch (e.PropertyName) {
+            case nameof(BannerColorEntry.ID):
+            case nameof(BannerColorEntry.Color):
+            case nameof(BannerColorEntry.IsForSigil):
+            case nameof(BannerColorEntry.IsForBackground):
+                RenderItem(item, color);
+                break;
         }
     }
 }
