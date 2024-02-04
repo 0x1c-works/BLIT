@@ -1,13 +1,16 @@
 using BLIT.scripts.Common;
 using BLIT.scripts.Models.BannerIcons;
 using BLIT.scripts.Services;
+using BLIT.scripts.UI.Control;
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 
 public partial class ColorsPage : Control {
+    [Export] public Button? DeleteButton { get; set; }
     [Export] public Tree? ColorList { get; set; }
     [Export] public SpinBox? IDEdit { get; set; }
     [Export] public CheckButton? SigilColorToggle { get; set; }
@@ -33,7 +36,7 @@ public partial class ColorsPage : Control {
 
         ProjectService.PropertyChanged += OnProjectServicePropertyChanged;
 
-        BuildList();
+        ReloadList();
         UpdateEditor();
 
         if (Check.IsGodotSafe(IDEdit)) {
@@ -52,11 +55,11 @@ public partial class ColorsPage : Control {
 
     private void OnProjectServicePropertyChanged(object? sender, PropertyChangedEventArgs e) {
         if (e.PropertyName == nameof(ProjectService.Current)) {
-            BuildList();
+            ReloadList();
         }
     }
 
-    private void BuildList() {
+    private void ReloadList() {
         if (Project == null) return;
         if (!Check.IsGodotSafe(ColorList)) return;
         ColorList.Clear();
@@ -65,6 +68,26 @@ public partial class ColorsPage : Control {
         TreeItem root = ColorList.CreateItem();
         foreach (BannerColorEntry color in Project.Colors) {
             CreateItem(color, root);
+        }
+        Project.Colors.CollectionChanged += OnColorsCollectionChanged;
+    }
+
+    private void OnColorsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
+        if (!Check.IsGodotSafe(ColorList)) return;
+        TreeItem root = ColorList.GetRoot();
+        if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null) {
+            foreach (BannerColorEntry color in e.NewItems.Cast<BannerColorEntry>()) {
+                CreateItem(color, root);
+            }
+        } else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems != null) {
+            foreach (BannerColorEntry color in e.OldItems.Cast<BannerColorEntry>()) {
+                TreeItem? item = ColorList.GetItemByID(color.ID);
+                if (item != null) {
+                    root.RemoveChild(item);
+                }
+            }
+            //var selectedIndex = Mathf.Min(root.GetChildCount() - 1, Mathf.Max(0, _prevSelectedIndex));
+            ColorList.SelectItemByIndex(-1);
         }
     }
 
@@ -109,6 +132,9 @@ public partial class ColorsPage : Control {
             _selectedColors.Add(color);
         } else {
             _selectedColors.Remove(color);
+        }
+        if (DeleteButton != null) {
+            DeleteButton.Disabled = _selectedColors.Count == 0;
         }
         UpdateEditor();
     }
@@ -196,7 +222,6 @@ public partial class ColorsPage : Control {
         if (_selectedColors.Count != 1) return;
         _selectedColors[0].Color = color;
     }
-
     private void OnColorPropertyChanged(TreeItem item, BannerColorEntry color, PropertyChangedEventArgs e) {
         switch (e.PropertyName) {
             case nameof(BannerColorEntry.ID):
@@ -206,5 +231,19 @@ public partial class ColorsPage : Control {
                 RenderItem(item, color);
                 break;
         }
+    }
+    private void AddColor() {
+        if (Project == null) return;
+        Project.AddColor();
+    }
+    private void DeleteSelectedColors() {
+        if (Project == null) return;
+        Project.DeleteColors(_selectedColors);
+    }
+    private void SortColor() {
+        if (Project == null) return;
+        Project.Colors.CollectionChanged -= OnColorsCollectionChanged;
+        Project.SortColors();
+        ReloadList();
     }
 }

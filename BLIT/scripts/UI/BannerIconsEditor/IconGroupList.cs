@@ -1,3 +1,4 @@
+using BLIT.scripts.Common;
 using BLIT.scripts.Models.BannerIcons;
 using BLIT.scripts.Services;
 using Godot;
@@ -48,9 +49,7 @@ public partial class IconGroupList : Control {
     }
 
     private void OnGroupsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
-        // FIXME: can be optimized
-        //UpdateList();
-        if (ItemList == null) return;
+        if (!Check.IsGodotSafe(ItemList)) return;
         TreeItem root = ItemList.GetRoot();
         if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null) {
             foreach (BannerGroupEntry group in e.NewItems.Cast<BannerGroupEntry>()) {

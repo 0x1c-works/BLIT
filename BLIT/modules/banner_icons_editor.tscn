@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://db73agt6rvlth"]
+[gd_scene load_steps=25 format=3 uid="uid://db73agt6rvlth"]
 
 [ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/BannerIconsEditor.cs" id="1_2nepo"]
 [ext_resource type="Texture2D" uid="uid://utcopa7b80nm" path="res://icons/add-line.svg" id="1_67drw"]
@@ -19,6 +19,7 @@
 [ext_resource type="Script" path="res://scripts/UI/BannerIconsEditor/ColorsPage.cs" id="17_x5jm1"]
 [ext_resource type="Texture2D" uid="uid://cs8w8g8e18s4x" path="res://icons/hashtag.svg" id="18_8gjtc"]
 [ext_resource type="Texture2D" uid="uid://bun326xd0ges1" path="res://icons/quill-pen-fill.svg" id="18_37faq"]
+[ext_resource type="Texture2D" uid="uid://d0rrqry7mk780" path="res://icons/sort-asc.svg" id="18_smecl"]
 [ext_resource type="Texture2D" uid="uid://bvej62h5gx3ft" path="res://icons/paint-fill.svg" id="19_51l7a"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o4bqq"]
@@ -356,9 +357,10 @@ theme_type_variation = &"Subtitle"
 theme_override_font_sizes/font_size = 20
 text = "MESSAGE/NO_SELECTED_ICON_GROUP"
 
-[node name="COLORS" type="HBoxContainer" parent="TabContainer" node_paths=PackedStringArray("ColorList", "IDEdit", "SigilColorToggle", "BackgroundColorToggle", "ColorPicker", "MultipleIDSection", "MultipleIDList", "MultipleIDMore", "ColorEditor", "EmptyPage")]
+[node name="COLORS" type="HBoxContainer" parent="TabContainer" node_paths=PackedStringArray("DeleteButton", "ColorList", "IDEdit", "SigilColorToggle", "BackgroundColorToggle", "ColorPicker", "MultipleIDSection", "MultipleIDList", "MultipleIDMore", "ColorEditor", "EmptyPage")]
 layout_mode = 2
 script = ExtResource("17_x5jm1")
+DeleteButton = NodePath("Color List Wrapper/Toolbar Wrapper/ToolBar/Delete Color")
 ColorList = NodePath("Color List Wrapper/Color List")
 IDEdit = NodePath("Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/ID Row/ID Edit")
 SigilColorToggle = NodePath("Color Editor/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Switch Row/Sigil Color")
@@ -382,14 +384,20 @@ layout_mode = 2
 
 [node name="Add Color" type="Button" parent="TabContainer/COLORS/Color List Wrapper/Toolbar Wrapper/ToolBar"]
 layout_mode = 2
-tooltip_text = "ADD_ICON_GROUP"
+tooltip_text = "ADD_COLOR"
 icon = ExtResource("1_67drw")
 flat = true
 
 [node name="Delete Color" type="Button" parent="TabContainer/COLORS/Color List Wrapper/Toolbar Wrapper/ToolBar"]
 layout_mode = 2
-tooltip_text = "DELETE_ICON_GROUP"
+tooltip_text = "DELETE_COLOR"
 icon = ExtResource("2_q8ybv")
+flat = true
+
+[node name="Sort Color" type="Button" parent="TabContainer/COLORS/Color List Wrapper/Toolbar Wrapper/ToolBar"]
+layout_mode = 2
+tooltip_text = "SORT"
+icon = ExtResource("18_smecl")
 flat = true
 
 [node name="Color List" type="Tree" parent="TabContainer/COLORS/Color List Wrapper"]
@@ -513,4 +521,7 @@ text = "MESSAGE/NO_SELECTED_COLOR"
 [connection signal="pressed" from="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer/Sprite Actions/Reimport" to="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail" method="OnReimportSprite"]
 [connection signal="pressed" from="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer/Texture Actions/Change" to="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail" method="ChangeTexture"]
 [connection signal="pressed" from="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail/Content/MarginContainer/GridContainer/Texture Actions/Reimport" to="TabContainer/ICONS/GroupEditor/VBoxContainer/HSplitContainer/Detail" method="OnReimportTexture"]
+[connection signal="pressed" from="TabContainer/COLORS/Color List Wrapper/Toolbar Wrapper/ToolBar/Add Color" to="TabContainer/COLORS" method="AddColor"]
+[connection signal="pressed" from="TabContainer/COLORS/Color List Wrapper/Toolbar Wrapper/ToolBar/Delete Color" to="TabContainer/COLORS" method="DeleteSelectedColors"]
+[connection signal="pressed" from="TabContainer/COLORS/Color List Wrapper/Toolbar Wrapper/ToolBar/Sort Color" to="TabContainer/COLORS" method="SortColor"]
 [connection signal="multi_selected" from="TabContainer/COLORS/Color List Wrapper/Color List" to="TabContainer/COLORS" method="OnCellsSelected"]

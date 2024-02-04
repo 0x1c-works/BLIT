@@ -60,3 +60,6 @@ ID,ID,编号
 SIGIL_COLOR,Sigil Color,前景色
 BACKGROUND_COLOR,Background Color,背景色
 AND_NUMBER_MORE, and {0} more, 和其他{0}个
+ADD_COLOR,Add a color,添加颜色
+DELETE_COLOR,Delete the selected color,删除选中的颜色
+SORT,Sort,排序
