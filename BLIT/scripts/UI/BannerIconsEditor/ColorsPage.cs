@@ -3,8 +3,10 @@ using BLIT.scripts.Models.BannerIcons;
 using BLIT.scripts.Services;
 using BLIT.scripts.UI.Control;
 using Godot;
+using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -27,7 +29,10 @@ public partial class ColorsPage : Control {
 
     private Texture2D? _sigilIcon;
     private Texture2D? _backgroundIcon;
-    private List<BannerColorEntry> _selectedColors = [];
+    private Dictionary<BannerColorEntry, PropertyChangedEventHandler> _propChangedHandlers = new();
+    private List<(BannerColorEntry, HashSet<int>)> _colorsSelectedStates = [];
+    public IList<BannerColorEntry> SelectedColors => _colorsSelectedStates.Where(v => v.Item2.Count > 0).Select(v => v.Item1).ToImmutableList();
+
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
@@ -62,7 +67,16 @@ public partial class ColorsPage : Control {
     private void ReloadList() {
         if (Project == null) return;
         if (!Check.IsGodotSafe(ColorList)) return;
+        _colorsSelectedStates.Clear();
         ColorList.Clear();
+        // Remove all color property changed handlers because the old items are no longer valid
+        // otherwise, Godot will throw exceptions when color properties are changed, because it will
+        // try to update the UI of the disposed TreeItem.
+        foreach (KeyValuePair<BannerColorEntry, PropertyChangedEventHandler> kv in _propChangedHandlers) {
+            kv.Key.PropertyChanged -= kv.Value;
+        }
+        _propChangedHandlers.Clear();
+
         ColorList.SetColumnExpand(1, true);
         ColorList.SetColumnCustomMinimumWidth(0, 20);
         TreeItem root = ColorList.CreateItem();
@@ -70,25 +84,7 @@ public partial class ColorsPage : Control {
             CreateItem(color, root);
         }
         Project.Colors.CollectionChanged += OnColorsCollectionChanged;
-    }
-
-    private void OnColorsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
-        if (!Check.IsGodotSafe(ColorList)) return;
-        TreeItem root = ColorList.GetRoot();
-        if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null) {
-            foreach (BannerColorEntry color in e.NewItems.Cast<BannerColorEntry>()) {
-                CreateItem(color, root);
-            }
-        } else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems != null) {
-            foreach (BannerColorEntry color in e.OldItems.Cast<BannerColorEntry>()) {
-                TreeItem? item = ColorList.GetItemByID(color.ID);
-                if (item != null) {
-                    root.RemoveChild(item);
-                }
-            }
-            //var selectedIndex = Mathf.Min(root.GetChildCount() - 1, Mathf.Max(0, _prevSelectedIndex));
-            ColorList.SelectItemByIndex(-1);
-        }
+        UpdateEditor();
     }
 
     private TreeItem CreateItem(BannerColorEntry color, TreeItem parent) {
@@ -99,14 +95,33 @@ public partial class ColorsPage : Control {
         item.SetMetadata(0, color.ID);
         item.SetCustomFontSize(2, 10);
         item.SetCustomFontSize(3, 10);
-        RenderItem(item, color);
-        color.PropertyChanged += (o, e) => OnColorPropertyChanged(item, color, e);
+        RenderColorItem(item, color);
+        // Construct a new color property handler bound to the newly created TreeItem
+        void handler(object? sender, PropertyChangedEventArgs e) {
+            OnColorPropertyChanged(item, color, e);
+        }
+        if (_propChangedHandlers.TryGetValue(color, out PropertyChangedEventHandler? oldHandler)) {
+            Log.Warning("color property handler for {ID} is overridden unexpectedly", color.ID);
+            color.PropertyChanged -= oldHandler;
+        }
+        color.PropertyChanged += handler;
+        // Register the handler for unregistering it when the TreeItem is removed
+        _propChangedHandlers[color] = handler;
         return item;
     }
-
-    private void RenderItem(TreeItem item, BannerColorEntry color) {
+    private void OnColorPropertyChanged(TreeItem item, BannerColorEntry color, PropertyChangedEventArgs e) {
+        switch (e.PropertyName) {
+            case nameof(BannerColorEntry.ID):
+            case nameof(BannerColorEntry.Color):
+            case nameof(BannerColorEntry.IsForSigil):
+            case nameof(BannerColorEntry.IsForBackground):
+                RenderColorItem(item, color);
+                break;
+        }
+    }
+    private void RenderColorItem(TreeItem item, BannerColorEntry color) {
         item.SetCustomBgColor(0, color.Color);
-        item.SetText(1, $"#{color.ID}");
+        item.SetText(1, color.ID.ToString());
         if (color.IsForSigil) {
             item.SetIcon(2, _sigilIcon);
             item.SetTooltipText(2, "SIGIL_COLOR");
@@ -123,24 +138,100 @@ public partial class ColorsPage : Control {
         }
     }
 
+    private void OnColorsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
+        if (!Check.IsGodotSafe(ColorList)) return;
+        TreeItem root = ColorList.GetRoot();
+        if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null) {
+            foreach (BannerColorEntry color in e.NewItems.Cast<BannerColorEntry>()) {
+                CreateItem(color, root);
+            }
+        } else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems != null) {
+            var prevIndex = e.OldStartingIndex;
+            foreach (BannerColorEntry color in e.OldItems.Cast<BannerColorEntry>()) {
+                TreeItem? item = ColorList.GetItemByID(color.ID);
+                if (item != null) {
+                    root.RemoveChild(item);
+                }
+                if (_propChangedHandlers.TryGetValue(color, out PropertyChangedEventHandler? handler)) {
+                    // Remove the property handler of the deleted TreeItem to prevent from updating
+                    // the disposed UI controls whenever the color properties are changed.
+                    color.PropertyChanged -= handler;
+                    _propChangedHandlers.Remove(color);
+                }
+                _colorsSelectedStates.RemoveAll(entry => entry.Item1 == color);
+            }
+            var newSelectedIndex = Mathf.Min(root.GetChildCount() - 1, Mathf.Max(0, prevIndex));
+            ColorList.SelectItemByIndex(newSelectedIndex, selectRow: true);
+        }
+    }
+
     private void OnCellsSelected(TreeItem item, int column, bool selected) {
         var colorID = item.GetMetadata(0).AsInt32();
         BannerColorEntry? color = Project?.GetColor(colorID);
         if (color == null) return;
+        (BannerColorEntry, HashSet<int>) selectedState = _colorsSelectedStates.FirstOrDefault(entry => entry.Item1 == color);
         if (selected) {
-            if (_selectedColors.Contains(color)) return;
-            _selectedColors.Add(color);
-        } else {
-            _selectedColors.Remove(color);
+            if (selectedState.Item1 == null) {
+                selectedState = (color, [column]);
+                _colorsSelectedStates.Add(selectedState);
+            } else {
+                selectedState.Item2.Add(column);
+            }
+        } else
+            if (selectedState.Item1 != null) {
+            selectedState.Item2.Remove(column);
+            if (selectedState.Item2.Count <= 0) {
+                _colorsSelectedStates.Remove(selectedState);
+            }
         }
+
         if (DeleteButton != null) {
-            DeleteButton.Disabled = _selectedColors.Count == 0;
+            DeleteButton.Disabled = SelectedColors.Count == 0;
         }
         UpdateEditor();
     }
+    private void SelectRow(TreeItem item, bool isSelected) {
+        for (var i = 0; i < 4; i++) {
+            if (isSelected) {
+                item.Select(i);
+            } else {
+                item.Deselect(i);
+            }
+        }
+    }
+    private void OnColorListGUIInput(InputEvent e) {
+        if (!Check.IsGodotSafe(ColorList)) return;
+        if (e is InputEventKey keyEvent) {
+            if (keyEvent.Keycode is Key.Space or Key.Enter && keyEvent.Pressed) {
+                TreeItem focusedItem = ColorList.GetSelected();
+                if (Check.IsGodotSafe(focusedItem)) {
+                    var isItemSelected = IsColorItemSelected(focusedItem);
+                    //SelectRow(focusedItem, !isItemSelected);
+                    ColorList.ToggleItem(focusedItem, !isItemSelected, entireRow: true);
+                }
+            }
+        }
+    }
+    private bool IsColorItemSelected(TreeItem item) {
+        return Enumerable.Range(0, 4).Any(item.IsSelected);
+    }
 
+    private void AddColor() {
+        if (Project == null) return;
+        Project.AddColor();
+    }
+    private void DeleteSelectedColors() {
+        if (Project == null) return;
+        Project.DeleteColors(SelectedColors);
+    }
+    private void SortColor() {
+        if (Project == null) return;
+        Project.Colors.CollectionChanged -= OnColorsCollectionChanged;
+        Project.SortColors();
+        ReloadList();
+    }
     private void UpdateEditor() {
-        if (_selectedColors == null || _selectedColors.Count == 0) {
+        if (SelectedColors.Count == 0) {
             if (Check.IsGodotSafe(ColorEditor)) {
                 ColorEditor.Visible = false;
             }
@@ -156,9 +247,8 @@ public partial class ColorsPage : Control {
         if (Check.IsGodotSafe(EmptyPage)) {
             EmptyPage.Visible = false;
         }
-
-        if (_selectedColors.Count == 1) {
-            BannerColorEntry color = _selectedColors[0];
+        if (SelectedColors.Count == 1) {
+            BannerColorEntry color = SelectedColors[0];
             if (Check.IsGodotSafe(IDEdit)) {
                 IDEdit.Visible = true;
                 IDEdit.Value = color.ID;
@@ -183,67 +273,48 @@ public partial class ColorsPage : Control {
             if (Check.IsGodotSafe(MultipleIDSection)) {
                 MultipleIDSection.Visible = true;
             }
-            var colorIDs = _selectedColors.Select(c => c.ID).Order().ToArray();
+            var colorIDs = SelectedColors.Select(c => c.ID).Order().ToArray();
             if (Check.IsGodotSafe(MultipleIDList)) {
                 MultipleIDList.Text = string.Join(", ", colorIDs.Take(3));
             }
-            if (colorIDs.Length > 3 && Check.IsGodotSafe(MultipleIDMore)) {
-                MultipleIDMore.Text = string.Format(Tr("AND_NUMBER_MORE"), colorIDs.Length - 3);
+            if (Check.IsGodotSafe(MultipleIDMore)) {
+                if (colorIDs.Length > 3) {
+                    MultipleIDMore.Visible = true;
+                    MultipleIDMore.Text = string.Format(Tr("AND_NUMBER_MORE"), colorIDs.Length - 3);
+                } else {
+                    MultipleIDMore.Visible = false;
+                }
             }
             if (Check.IsGodotSafe(ColorPicker)) {
                 ColorPicker.Visible = false;
             }
             if (Check.IsGodotSafe(SigilColorToggle)) {
-                SigilColorToggle.ButtonPressed = _selectedColors.All(c => c.IsForSigil);
+                SigilColorToggle.ButtonPressed = SelectedColors.All(c => c.IsForSigil);
             }
             if (Check.IsGodotSafe(BackgroundColorToggle)) {
-                BackgroundColorToggle.ButtonPressed = _selectedColors.All(c => c.IsForBackground);
+                BackgroundColorToggle.ButtonPressed = SelectedColors.All(c => c.IsForBackground);
             }
         }
     }
 
     private void OnIDEditValueChanged(double value) {
-        if (_selectedColors.Count != 1) return;
-        BannerColorEntry color = _selectedColors[0];
+        if (SelectedColors.Count != 1) return;
+        BannerColorEntry color = SelectedColors[0];
         color.ID = (int)value;
         IDEdit!.Value = color.ID;
     }
     private void OnSigilColorToggleToggled(bool pressed) {
-        foreach (BannerColorEntry color in _selectedColors) {
+        foreach (BannerColorEntry color in SelectedColors) {
             color.IsForSigil = pressed;
         }
     }
     private void OnBackgroundColorToggleToggled(bool pressed) {
-        foreach (BannerColorEntry color in _selectedColors) {
+        foreach (BannerColorEntry color in SelectedColors) {
             color.IsForBackground = pressed;
         }
     }
     private void OnColorPickerColorChanged(Color color) {
-        if (_selectedColors.Count != 1) return;
-        _selectedColors[0].Color = color;
-    }
-    private void OnColorPropertyChanged(TreeItem item, BannerColorEntry color, PropertyChangedEventArgs e) {
-        switch (e.PropertyName) {
-            case nameof(BannerColorEntry.ID):
-            case nameof(BannerColorEntry.Color):
-            case nameof(BannerColorEntry.IsForSigil):
-            case nameof(BannerColorEntry.IsForBackground):
-                RenderItem(item, color);
-                break;
-        }
-    }
-    private void AddColor() {
-        if (Project == null) return;
-        Project.AddColor();
-    }
-    private void DeleteSelectedColors() {
-        if (Project == null) return;
-        Project.DeleteColors(_selectedColors);
-    }
-    private void SortColor() {
-        if (Project == null) return;
-        Project.Colors.CollectionChanged -= OnColorsCollectionChanged;
-        Project.SortColors();
-        ReloadList();
+        if (SelectedColors.Count != 1) return;
+        SelectedColors[0].Color = color;
     }
 }

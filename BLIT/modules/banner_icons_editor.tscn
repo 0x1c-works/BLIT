@@ -524,4 +524,5 @@ text = "MESSAGE/NO_SELECTED_COLOR"
 [connection signal="pressed" from="TabContainer/COLORS/Color List Wrapper/Toolbar Wrapper/ToolBar/Add Color" to="TabContainer/COLORS" method="AddColor"]
 [connection signal="pressed" from="TabContainer/COLORS/Color List Wrapper/Toolbar Wrapper/ToolBar/Delete Color" to="TabContainer/COLORS" method="DeleteSelectedColors"]
 [connection signal="pressed" from="TabContainer/COLORS/Color List Wrapper/Toolbar Wrapper/ToolBar/Sort Color" to="TabContainer/COLORS" method="SortColor"]
+[connection signal="gui_input" from="TabContainer/COLORS/Color List Wrapper/Color List" to="TabContainer/COLORS" method="OnColorListGUIInput"]
 [connection signal="multi_selected" from="TabContainer/COLORS/Color List Wrapper/Color List" to="TabContainer/COLORS" method="OnCellsSelected"]
