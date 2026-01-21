@@ -4,16 +4,17 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="uap rescap">
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  IgnorableNamespaces="uap rescap mp">
 
   <Identity
-    Name="5cf8d578-b9b0-42eb-b761-d77d3686a904"
-    Publisher="CN=0x1C.dev"
-    Version="0.1.11.0" />
+    Name="ZoroWizcas.350BF036A26"
+    Publisher="CN=AD42E090-F4E2-47FD-BAF5-866425B8F937"
+    Version="0.1.16.0" />
 
   <Properties>
-    <DisplayName>BLIT</DisplayName>
-    <PublisherDisplayName>Wizcas Chen</PublisherDisplayName>
+    <DisplayName>Bannerlord.BLIT</DisplayName>
+    <PublisherDisplayName>Zoro Wizcas</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -32,7 +33,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="BLIT.WinUI3"
+        DisplayName="Bannerlord.BLIT"
         Description="Bannerlord Image Tool"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png">
@@ -51,4 +52,6 @@
     <Capability Name="internetClient"/>
     <uap:Capability Name="picturesLibrary"/>
   </Capabilities>
+
+  <mp:PhoneIdentity PhoneProductId="8b8240a2-232c-43ad-95ab-bc5d50331eb9"/>
 </Package>

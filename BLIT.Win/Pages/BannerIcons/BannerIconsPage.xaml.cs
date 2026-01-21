@@ -5,11 +5,10 @@ using BLIT.Win.Controls;
 using BLIT.Win.Helpers;
 using BLIT.Win.Pages.BannerIcons.Models;
 using BLIT.Win.Services;
-using Microsoft.AppCenter.Analytics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Sentry;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -54,7 +53,7 @@ public sealed partial class BannerIconsPage : Page {
                 Action: new(
                     I18n.Current.GetString("ButtonToSettings/Content"),
                     (s, e) => {
-                        Analytics.TrackEvent("open settings", new Dictionary<string, string> { { "source", "banner icon's hint" } });
+                        SentrySdk.AddBreadcrumb("open settings", category: "ui.help");
                         if (toast != null) toast.IsOpen = false;
                         (App.Current.MainWindow as MainWindow)?.NavigateToSettings();
                     })

@@ -4,7 +4,6 @@
 using BLIT.Win.Helpers;
 using BLIT.Win.Pages.BannerIcons.Models;
 using BLIT.Win.Services;
-using Microsoft.AppCenter.Analytics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -120,12 +119,6 @@ public sealed partial class BannerColorsEditor : UserControl {
         foreach (BannerColorEntry item in SelectedColors) {
             setter?.Invoke(item, value);
         }
-    }
-
-    private void lnkColorWarning_Click(object sender, RoutedEventArgs e) {
-        Analytics.TrackEvent("Visit help", new Dictionary<string, string> {
-            {"source", "color warning" }
-        });
     }
 
     private void btnSort_Click(object sender, RoutedEventArgs e) {

@@ -7,10 +7,10 @@ using BLIT.Win.Pages.BannerIcons.Models;
 using BLIT.Win.Pages.Settings;
 using BLIT.Win.Services;
 using BLIT.Win.Theming;
-using Microsoft.AppCenter.Analytics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -42,7 +42,7 @@ public sealed partial class MainWindow : ThemedWindow {
     private void MainWindow_Activated(object sender, WindowActivatedEventArgs args) {
         AppTitleText.Foreground = args.WindowActivationState == WindowActivationState.Deactivated
             ? (SolidColorBrush)App.Current.Resources["WindowCaptionForegroundDisabled"]
-            : (Brush)(SolidColorBrush)App.Current.Resources["WindowCaptionForeground"];
+            : (SolidColorBrush)App.Current.Resources["WindowCaptionForeground"];
     }
 
     private void AppNav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args) {
@@ -89,9 +89,7 @@ public sealed partial class MainWindow : ThemedWindow {
     }
 
     private void navHelp_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e) {
-        Analytics.TrackEvent("Visit help", new Dictionary<string, string> {
-            {"source", "nav" }
-        });
+        SentrySdk.AddBreadcrumb("Visit help", category: "ui.nav");
         Process.Start(new ProcessStartInfo {
             FileName = I18n.Current.GetString("LinkHelpWebsite"),
             UseShellExecute = true,
