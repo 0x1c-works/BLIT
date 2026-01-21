@@ -10,7 +10,7 @@
   <Identity
     Name="ZoroWizcas.350BF036A26"
     Publisher="CN=AD42E090-F4E2-47FD-BAF5-866425B8F937"
-    Version="0.1.16.0" />
+    Version="0.1.21.0" />
 
   <Properties>
     <DisplayName>Bannerlord.BLIT</DisplayName>
@@ -53,5 +53,5 @@
     <uap:Capability Name="picturesLibrary"/>
   </Capabilities>
 
-  <mp:PhoneIdentity PhoneProductId="8b8240a2-232c-43ad-95ab-bc5d50331eb9"/>
+	<mp:PhoneIdentity PhoneProductId="8b8240a2-232c-43ad-95ab-bc5d50331eb9" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 </Package>
