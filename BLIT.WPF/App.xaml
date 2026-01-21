@@ -1,9 +1,18 @@
 <Application x:Class="BLIT.WPF.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <!-- WPF-UI Theme Resources -->
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Dark theme -->
+                <ui:ThemesDictionary Theme="Dark" />
+                <!-- WPF-UI controls dictionary -->
+                <ui:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+            
             <!-- Built-in converters -->
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             

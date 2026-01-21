@@ -3,16 +3,14 @@ using BLIT.WPF.Pages.BannerIcons;
 using BLIT.WPF.Pages.BannerIcons.Models;
 using BLIT.WPF.Pages.Settings;
 using BLIT.WPF.Services;
-using Sentry;
-using System;
-using System.Collections.Generic;
+using Serilog;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Wpf.Ui.Controls;
 
 namespace BLIT.WPF;
 
@@ -27,62 +25,57 @@ public partial class MainWindow : Window {
     }
     
     private void MainWindow_Loaded(object sender, RoutedEventArgs e) {
-        // Select first menu item after window is loaded
-        if (AppNav.Items.Count > 0) {
-            AppNav.SelectedIndex = 0;
-        }
+        Log.Information($"MainWindow loaded. NavigationView items count: {MainNavigationView.MenuItems.Count}");
     }
 
-    private void AppNav_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-        try {
-            if (AppNav.SelectedItem is not ListBoxItem item) {
-                return;
-            }
+    private void NavigationView_SelectionChanged(object sender, RoutedEventArgs e) {
+        Log.Information("NavigationView_SelectionChanged event fired");
+        
+        if (sender is not NavigationView navView) {
+            Log.Information("Sender is not NavigationView");
+            return;
+        }
 
-            var tag = item.Tag as string;
-            if (tag != null && TAGGED_PAGES.TryGetValue(tag, out NavPage? page)) {
-                // Create page instance and navigate
-                var pageInstance = Activator.CreateInstance(page.Type) as Page;
-                if (pageInstance != null) {
-                    AppContent.Navigate(pageInstance);
-                    page.OnLoad?.Invoke(sender, item);
-                } else {
-                    System.Diagnostics.Debug.WriteLine($"Failed to create page instance for {page.Type.Name}");
-                }
+        var selectedItem = navView.SelectedItem as NavigationViewItem;
+        if (selectedItem == null) {
+            Log.Information("SelectedItem is null");
+            return;
+        }
+
+        Log.Information($"Selected item: {selectedItem.Content}");
+        
+        // Get the TargetPageType from the selected item
+        var targetPageType = (Type?)selectedItem.GetValue(Wpf.Ui.Controls.NavigationViewItem.TargetPageTypeProperty);
+        
+        if (targetPageType == null) {
+            Log.Information("TargetPageType is null");
+            return;
+        }
+
+        Log.Information($"Navigating to page type: {targetPageType.Name}");
+        
+        try {
+            // Create an instance of the target page
+            if (Activator.CreateInstance(targetPageType) is Page pageInstance) {
+                Log.Information($"Created page instance: {pageInstance.GetType().Name}");
+                AppContent.Navigate(pageInstance);
+                Log.Information("Navigation completed successfully");
+            } else {
+                Log.Error($"Failed to create page instance for {targetPageType.Name}");
             }
         } catch (Exception ex) {
-            System.Diagnostics.Debug.WriteLine($"Navigation error: {ex.Message}");
-            MessageBox.Show($"导航失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            Log.Error($"Exception during navigation: {ex.Message}");
+            Log.Error($"Stack trace: {ex.StackTrace}");
         }
     }
 
     public void NavigateToSettings() {
-        // Navigate to settings page if needed
+        Log.Information("Navigating to Settings page");
         AppContent.Navigate(new SettingsPage());
     }
 
-    private record NavPage(Type Type, Action<object, ListBoxItem>? OnLoad);
-
-    private static readonly Dictionary<string, NavPage> TAGGED_PAGES = new() {
-        {"BannerIcons", new(typeof(BannerIconsPage), OnProjectPageLoad<BannerIconsProject>)},
-    };
-
-    private static void OnProjectPageLoad<T>(object sender, ListBoxItem item) where T : IProject {
-        var project = AppServices.Get<IProjectService<T>>();
-        if (project != null) {
-            void UpdateHeader() {
-                // Update UI header if needed
-            }
-            UpdateHeader();
-            project.PropertyChanged += (s, e) => {
-                if (e.PropertyName == nameof(project.Name)) {
-                    UpdateHeader();
-                }
-            };
-        }
-    }
-
-    private void NavHelp_MouseDown(object sender, MouseButtonEventArgs e) {
+    private void NavItem_Help_MouseDown(object sender, MouseButtonEventArgs e) {
+        Log.Information("Help button clicked");
         SentrySdk.AddBreadcrumb("Visit help", category: "ui.nav");
         Process.Start(new ProcessStartInfo {
             FileName = I18n.Current.GetString("LinkHelpWebsite"),
@@ -118,3 +111,7 @@ public record NavPageHeaderInfo(string Title, string? SubTitle = null, bool IsMo
         ? I18n.Current.GetString("Placeholder.NewProject") 
         : SubTitle;
 }
+
+
+
+
