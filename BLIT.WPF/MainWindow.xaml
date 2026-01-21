@@ -41,14 +41,14 @@
                     TargetPageType="pages:BannerIconsPage" />
             </ui:NavigationView.MenuItems>
             
-            <!-- Footer Menu Items -->
-            <ui:NavigationView.FooterMenuItems>
-                <ui:NavigationViewItem
-                    x:Name="NavItem_Help"
-                    Content="{helpers:I18n AppNavMenuHelp.Content}"
-                    Icon="{ui:SymbolIcon QuestionCircle24}"
-                    MouseDown="NavItem_Help_MouseDown" />
-            </ui:NavigationView.FooterMenuItems>
+             <!-- Footer Menu Items -->
+             <ui:NavigationView.FooterMenuItems>
+                 <ui:NavigationViewItem
+                     x:Name="NavItem_Help"
+                     Content="{helpers:I18n AppNavMenuHelp.Content}"
+                     Icon="{ui:SymbolIcon QuestionCircle24}"
+                     Tag="Help" />
+             </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>
         
         <!-- Content area in right panel -->

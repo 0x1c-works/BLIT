@@ -44,6 +44,14 @@ public partial class MainWindow : Window {
 
         Log.Information($"Selected item: {selectedItem.Content}");
         
+        // Check if this is the Help item
+        var tag = selectedItem.Tag as string;
+        if (tag == "Help") {
+            Log.Information("Help item selected");
+            HandleHelpNavigation();
+            return;
+        }
+        
         // Get the TargetPageType from the selected item
         var targetPageType = (Type?)selectedItem.GetValue(Wpf.Ui.Controls.NavigationViewItem.TargetPageTypeProperty);
         
@@ -69,18 +77,26 @@ public partial class MainWindow : Window {
         }
     }
 
+    private void HandleHelpNavigation() {
+        try {
+            Log.Information("Handling help navigation");
+            SentrySdk.AddBreadcrumb("Visit help", category: "ui.nav");
+            
+            string helpUrl = I18n.Current.GetString("LinkHelpWebsite");
+            Log.Information($"Opening help URL: {helpUrl}");
+            
+            Process.Start(new ProcessStartInfo {
+                FileName = helpUrl,
+                UseShellExecute = true,
+            });
+        } catch (Exception ex) {
+            Log.Error($"Failed to open help URL: {ex.Message}");
+        }
+    }
+
     public void NavigateToSettings() {
         Log.Information("Navigating to Settings page");
         AppContent.Navigate(new SettingsPage());
-    }
-
-    private void NavItem_Help_MouseDown(object sender, MouseButtonEventArgs e) {
-        Log.Information("Help button clicked");
-        SentrySdk.AddBreadcrumb("Visit help", category: "ui.nav");
-        Process.Start(new ProcessStartInfo {
-            FileName = I18n.Current.GetString("LinkHelpWebsite"),
-            UseShellExecute = true,
-        });
     }
 
     public class ViewModel : INotifyPropertyChanged {
