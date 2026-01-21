@@ -28,8 +28,7 @@
             IsBackButtonVisible="Auto"
             IsPaneToggleVisible="True"
             PaneDisplayMode="Left"
-            PaneTitle="{helpers:I18n AppTitle.Text}"
-            SelectionChanged="NavigationView_SelectionChanged">
+            PaneTitle="{helpers:I18n AppTitle.Text}">
             
             <!-- Menu Items -->
             <ui:NavigationView.MenuItems>

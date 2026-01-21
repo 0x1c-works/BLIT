@@ -26,34 +26,42 @@ public partial class MainWindow : Window {
     
     private void MainWindow_Loaded(object sender, RoutedEventArgs e) {
         Log.Information($"MainWindow loaded. NavigationView items count: {MainNavigationView.MenuItems.Count}");
+        
+        // Manually wire up event handlers for NavigationViewItems
+        // since they might not work from XAML
+        if (MainNavigationView.MenuItems.Count > 0) {
+            var bannerIconsItem = MainNavigationView.MenuItems[0] as NavigationViewItem;
+            if (bannerIconsItem != null) {
+                Log.Information($"Setting up event handlers for BannerIcons item");
+                // Try different events to see which one works
+                bannerIconsItem.PreviewMouseDown += (s, e) => {
+                    Log.Information("BannerIcons - PreviewMouseDown triggered");
+                    NavigateToPage(bannerIconsItem);
+                };
+            }
+        }
+        
+        // Setup Help button
+        if (MainNavigationView.FooterMenuItems.Count > 0) {
+            var helpItem = MainNavigationView.FooterMenuItems[0] as NavigationViewItem;
+            if (helpItem != null) {
+                Log.Information($"Setting up event handlers for Help item");
+                helpItem.PreviewMouseDown += (s, e) => {
+                    Log.Information("Help - PreviewMouseDown triggered");
+                    e.Handled = true;
+                    HandleHelpNavigation();
+                };
+            }
+        }
+        
+        Log.Information("MainWindow initialization complete");
     }
 
-    private void NavigationView_SelectionChanged(object sender, RoutedEventArgs e) {
-        Log.Information("NavigationView_SelectionChanged event fired");
+    private void NavigateToPage(NavigationViewItem item) {
+        Log.Information($"NavigateToPage called for: {item.Content}");
         
-        if (sender is not NavigationView navView) {
-            Log.Information("Sender is not NavigationView");
-            return;
-        }
-
-        var selectedItem = navView.SelectedItem as NavigationViewItem;
-        if (selectedItem == null) {
-            Log.Information("SelectedItem is null");
-            return;
-        }
-
-        Log.Information($"Selected item: {selectedItem.Content}");
-        
-        // Check if this is the Help item
-        var tag = selectedItem.Tag as string;
-        if (tag == "Help") {
-            Log.Information("Help item selected");
-            HandleHelpNavigation();
-            return;
-        }
-        
-        // Get the TargetPageType from the selected item
-        var targetPageType = (Type?)selectedItem.GetValue(Wpf.Ui.Controls.NavigationViewItem.TargetPageTypeProperty);
+        // Get the TargetPageType from the item
+        var targetPageType = (Type?)item.GetValue(Wpf.Ui.Controls.NavigationViewItem.TargetPageTypeProperty);
         
         if (targetPageType == null) {
             Log.Information("TargetPageType is null");
@@ -74,23 +82,6 @@ public partial class MainWindow : Window {
         } catch (Exception ex) {
             Log.Error($"Exception during navigation: {ex.Message}");
             Log.Error($"Stack trace: {ex.StackTrace}");
-        }
-    }
-
-    private void HandleHelpNavigation() {
-        try {
-            Log.Information("Handling help navigation");
-            SentrySdk.AddBreadcrumb("Visit help", category: "ui.nav");
-            
-            string helpUrl = I18n.Current.GetString("LinkHelpWebsite");
-            Log.Information($"Opening help URL: {helpUrl}");
-            
-            Process.Start(new ProcessStartInfo {
-                FileName = helpUrl,
-                UseShellExecute = true,
-            });
-        } catch (Exception ex) {
-            Log.Error($"Failed to open help URL: {ex.Message}");
         }
     }
 
