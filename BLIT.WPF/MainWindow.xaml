@@ -1,0 +1,58 @@
+<Window x:Class="BLIT.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BLIT.WPF"
+        xmlns:controls="clr-namespace:BLIT.WPF.Controls"
+        xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
+        mc:Ignorable="d"
+        Title="{helpers:I18n AppTitle.Text}"
+        Height="720" 
+        Width="1280"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <!-- Simple navigation structure with ListBox -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Navigation Sidebar -->
+        <Border Grid.Column="0" Background="#1E1E1E" BorderBrush="#2D2D30" BorderThickness="0,0,1,0">
+            <DockPanel>
+                <ListBox x:Name="AppNav" 
+                         DockPanel.Dock="Bottom"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Padding="0"
+                         SelectionChanged="AppNav_SelectionChanged">
+                    <ListBoxItem Tag="BannerIcons">
+                        <TextBlock Text="{helpers:I18n AppNavMenuBanner.Content}" Padding="16,12"/>
+                    </ListBoxItem>
+                </ListBox>
+                
+                <ListBox x:Name="NavFooter" 
+                         DockPanel.Dock="Bottom"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Padding="0"
+                         BorderBrush="#2D2D30">
+                    <Border BorderThickness="0,1,0,0" BorderBrush="#2D2D30">
+                        <ListBoxItem x:Name="NavHelp" MouseDown="NavHelp_MouseDown">
+                            <TextBlock Text="{helpers:I18n AppNavMenuHelp.Content}" Padding="16,12"/>
+                        </ListBoxItem>
+                    </Border>
+                </ListBox>
+                
+                <Border />
+            </DockPanel>
+        </Border>
+        
+        <!-- Content Area -->
+        <Frame x:Name="AppContent" Grid.Column="1" NavigationUIVisibility="Hidden" />
+        
+        <!-- Loading Overlay -->
+        <controls:LoadingOverlay Grid.ColumnSpan="2" />
+    </Grid>
+</Window>

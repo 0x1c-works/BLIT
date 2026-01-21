@@ -1,0 +1,185 @@
+<Page x:Class="BLIT.WPF.Pages.BannerIcons.BannerIconsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
+      xmlns:vm="clr-namespace:BLIT.WPF.Pages.BannerIcons.Models"
+      xmlns:local="clr-namespace:BLIT.WPF.Pages.BannerIcons"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="1000"
+      Title="BannerIconsPage">
+    <Page.Resources>
+        <helpers:InvertBoolConverter x:Key="InvertBoolConverter" />
+        
+        <!-- 分组列表项模板 -->
+        <DataTemplate x:Key="GroupItemTemplate" DataType="{x:Type vm:BannerGroupEntry}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding GroupID}" VerticalAlignment="Center"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0">
+                    <TextBlock Text="(" Foreground="Gray"/>
+                    <TextBlock Text="{Binding Icons.Count}" Foreground="Gray"/>
+                    <TextBlock Text=")" Foreground="Gray"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+    
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <!-- 工具栏 -->
+        <ToolBarTray Grid.Row="0" Background="#F3F3F3">
+            <ToolBar>
+                <Button x:Name="btnNewProject" 
+                        Click="btnNewProject_Click"
+                        ToolTip="{helpers:I18n AppButtonNewProject.Content}"
+                        IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="📁" FontSize="16" Margin="0,0,4,0"/>
+                        <TextBlock Text="{helpers:I18n AppButtonNewProject.Content}"/>
+                    </StackPanel>
+                </Button>
+                
+                <Button x:Name="btnSaveProject" 
+                        Click="btnSaveProject_Click"
+                        ToolTip="{helpers:I18n AppButtonSaveProject.Content}"
+                        IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="💾" FontSize="16" Margin="0,0,4,0"/>
+                        <TextBlock Text="{helpers:I18n AppButtonSaveProject.Content}"/>
+                    </StackPanel>
+                </Button>
+                
+                <Button x:Name="btnSaveProjectAs" 
+                        Click="btnSaveProjectAs_Click"
+                        ToolTip="{helpers:I18n AppButtonSaveProjectAs.Content}"
+                        IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="💾" FontSize="16" Margin="0,0,4,0"/>
+                        <TextBlock Text="{helpers:I18n AppButtonSaveProjectAs.Content}"/>
+                    </StackPanel>
+                </Button>
+                
+                <Button x:Name="btnOpenProject" 
+                        Click="btnOpenProject_Click"
+                        ToolTip="{helpers:I18n AppButtonOpenProject.Content}"
+                        IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="📂" FontSize="16" Margin="0,0,4,0"/>
+                        <TextBlock Text="{helpers:I18n AppButtonOpenProject.Content}"/>
+                    </StackPanel>
+                </Button>
+                
+                <Separator/>
+                
+                <TextBlock Text="{helpers:I18n LabelTextureResolution.Text}" 
+                           VerticalAlignment="Center" 
+                           Margin="8,0"/>
+                <ComboBox x:Name="comboOutputResolution" 
+                          SelectedValuePath="Tag"
+                          SelectionChanged="comboOutputResolution_SelectionChanged"
+                          MinWidth="80">
+                    <ComboBoxItem Content="2K" Tag="Res2K"/>
+                    <ComboBoxItem Content="4K" Tag="Res4K"/>
+                </ComboBox>
+                
+                <Separator/>
+                
+                <Button x:Name="btnExportAll" 
+                        Click="btnExportAll_Click"
+                        ToolTip="{helpers:I18n AppButtonExportAll.Content}"
+                        IsEnabled="{Binding ViewModel.CanExport, RelativeSource={RelativeSource AncestorType=Page}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="📤" FontSize="16" Margin="0,0,4,0"/>
+                        <TextBlock Text="{helpers:I18n AppButtonExportAll.Content}"/>
+                    </StackPanel>
+                </Button>
+                
+                <Button x:Name="btnExportXML" 
+                        Click="btnExportXML_Click"
+                        ToolTip="{helpers:I18n AppButtonExportXML.Content}"
+                        IsEnabled="{Binding ViewModel.CanExport, RelativeSource={RelativeSource AncestorType=Page}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="📄" FontSize="16" Margin="0,0,4,0"/>
+                        <TextBlock Text="{helpers:I18n AppButtonExportXML.Content}"/>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+        
+        <!-- 主内容区域 -->
+        <TabControl Grid.Row="1">
+            <!-- 分组编辑器标签页 -->
+            <TabItem Header="{helpers:I18n PivotBannerGroupsEditor.Header}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- 左侧分组列表 -->
+                    <Grid Grid.Column="0" Background="#F9F9F9">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <Border Grid.Row="0" Padding="16" Background="#E0E0E0">
+                            <TextBlock Text="{helpers:I18n TextBannerGroupListTitle.Text}" 
+                                       FontWeight="Bold"
+                                       TextAlignment="Center"/>
+                        </Border>
+                        
+                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                            <Button x:Name="btnAddGroup"
+                                    Click="btnAddGroup_Click"
+                                    ToolTip="Add Group"
+                                    Padding="8">
+                                <TextBlock Text="➕ 添加分组"/>
+                            </Button>
+                            <Button x:Name="btnDeleteGroup"
+                                    Click="btnDeleteGroup_Click"
+                                    ToolTip="Delete Group"
+                                    Padding="8"
+                                    IsEnabled="{Binding HasSelectedGroup, RelativeSource={RelativeSource AncestorType=Page}}">
+                                <TextBlock Text="🗑️ 删除分组"/>
+                            </Button>
+                        </StackPanel>
+                        
+                        <ListBox x:Name="listViewGroups"
+                                 Grid.Row="2"
+                                 ItemsSource="{Binding ViewModel.Groups, RelativeSource={RelativeSource AncestorType=Page}}"
+                                 ItemTemplate="{StaticResource GroupItemTemplate}"
+                                 SelectionChanged="listViewGroups_SelectionChanged"/>
+                    </Grid>
+                    
+                    <!-- 右侧编辑区域 -->
+                    <Border Grid.Column="1" BorderBrush="#E0E0E0" BorderThickness="1,0,0,0">
+                        <Grid>
+                            <TextBlock Text="{helpers:I18n TextNoSelectedBannerGroup.Text}" 
+                                       Padding="16"
+                                       Visibility="{Binding HasSelectedGroup, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}"/>
+                            
+                            <local:BannerIconGroupEditor ViewModel="{Binding SelectedGroup, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                         Visibility="{Binding HasSelectedGroup, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+            
+            <!-- 颜色编辑器标签页 -->
+            <TabItem Header="{helpers:I18n PivotBannerColorsEditor.Header}">
+                <local:BannerColorsEditor ViewModel="{Binding ViewModel, RelativeSource={RelativeSource AncestorType=Page}}"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Page>
