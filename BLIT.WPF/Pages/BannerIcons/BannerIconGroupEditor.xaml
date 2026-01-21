@@ -6,34 +6,41 @@
              xmlns:local="clr-namespace:BLIT.WPF.Pages.BannerIcons"
              xmlns:vm="clr-namespace:BLIT.WPF.Pages.BannerIcons.Models"
              xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
+             xmlns:vwp="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1000">
     <UserControl.Resources>
+        <!-- Converters -->
+        <helpers:PathToOptimizedBitmapImageConverter x:Key="PathToOptimizedBitmapImageConverter"/>
+        
+        <!-- Shared Checkerboard Background -->
+        <DrawingBrush x:Key="CheckerboardBrush" 
+                      Viewport="0,0,10,10" 
+                      ViewportUnits="Absolute" 
+                      TileMode="Tile">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="White">
+                        <GeometryDrawing.Geometry>
+                            <GeometryGroup>
+                                <RectangleGeometry Rect="0,0,5,5"/>
+                                <RectangleGeometry Rect="5,5,5,5"/>
+                            </GeometryGroup>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+        
         <!-- Icon Texture Template -->
         <DataTemplate x:Key="IconTextureTemplate" DataType="{x:Type vm:BannerIconEntry}">
             <Grid Width="128" Height="128" Margin="4">
                 <!-- Checkboard Background -->
-                <Rectangle Fill="#E0E0E0">
-                    <Rectangle.OpacityMask>
-                        <DrawingBrush Viewport="0,0,10,10" ViewportUnits="Absolute" TileMode="Tile">
-                            <DrawingBrush.Drawing>
-                                <DrawingGroup>
-                                    <GeometryDrawing Brush="White">
-                                        <GeometryDrawing.Geometry>
-                                            <GeometryGroup>
-                                                <RectangleGeometry Rect="0,0,5,5"/>
-                                                <RectangleGeometry Rect="5,5,5,5"/>
-                                            </GeometryGroup>
-                                        </GeometryDrawing.Geometry>
-                                    </GeometryDrawing>
-                                </DrawingGroup>
-                            </DrawingBrush.Drawing>
-                        </DrawingBrush>
-                    </Rectangle.OpacityMask>
-                </Rectangle>
+                <Rectangle Fill="#E0E0E0" OpacityMask="{StaticResource CheckerboardBrush}"/>
                 
                 <!-- Icon Image -->
-                <Image Stretch="Uniform" Source="{Binding TexturePath}" />
+                <Image Stretch="Uniform" 
+                       Source="{Binding TexturePath, Converter={StaticResource PathToOptimizedBitmapImageConverter}, ConverterParameter=128}"/>
                 
                 <!-- Atlas Name Overlay (Top) -->
                 <Grid VerticalAlignment="Top" Background="#80000000">
@@ -127,7 +134,10 @@
                  Padding="8">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel/>
+                    <vwp:VirtualizingWrapPanel 
+                        ItemSize="136,136"
+                        SpacingMode="Uniform"
+                        StretchItems="False"/>
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
         </ListBox>
@@ -209,25 +219,9 @@
                             VerticalAlignment="Top"
                             Margin="8,0,0,0">
                         <Grid>
-                            <Rectangle Fill="#E0E0E0">
-                                <Rectangle.OpacityMask>
-                                    <DrawingBrush Viewport="0,0,10,10" ViewportUnits="Absolute" TileMode="Tile">
-                                        <DrawingBrush.Drawing>
-                                            <DrawingGroup>
-                                                <GeometryDrawing Brush="White">
-                                                    <GeometryDrawing.Geometry>
-                                                        <GeometryGroup>
-                                                            <RectangleGeometry Rect="0,0,5,5"/>
-                                                            <RectangleGeometry Rect="5,5,5,5"/>
-                                                        </GeometryGroup>
-                                                    </GeometryDrawing.Geometry>
-                                                </GeometryDrawing>
-                                            </DrawingGroup>
-                                        </DrawingBrush.Drawing>
-                                    </DrawingBrush>
-                                </Rectangle.OpacityMask>
-                            </Rectangle>
-                            <Image Source="{Binding SpritePath}" Stretch="Uniform"/>
+                            <Rectangle Fill="#E0E0E0" OpacityMask="{StaticResource CheckerboardBrush}"/>
+                            <Image Stretch="Uniform" 
+                                   Source="{Binding SpritePath, Converter={StaticResource PathToOptimizedBitmapImageConverter}, ConverterParameter=256}"/>
                         </Grid>
                     </Border>
                     
@@ -265,25 +259,9 @@
                             VerticalAlignment="Top"
                             Margin="8,0,0,0">
                         <Grid>
-                            <Rectangle Fill="#E0E0E0">
-                                <Rectangle.OpacityMask>
-                                    <DrawingBrush Viewport="0,0,10,10" ViewportUnits="Absolute" TileMode="Tile">
-                                        <DrawingBrush.Drawing>
-                                            <DrawingGroup>
-                                                <GeometryDrawing Brush="White">
-                                                    <GeometryDrawing.Geometry>
-                                                        <GeometryGroup>
-                                                            <RectangleGeometry Rect="0,0,5,5"/>
-                                                            <RectangleGeometry Rect="5,5,5,5"/>
-                                                        </GeometryGroup>
-                                                    </GeometryDrawing.Geometry>
-                                                </GeometryDrawing>
-                                            </DrawingGroup>
-                                        </DrawingBrush.Drawing>
-                                    </DrawingBrush>
-                                </Rectangle.OpacityMask>
-                            </Rectangle>
-                            <Image Source="{Binding TexturePath}" Stretch="Uniform"/>
+                            <Rectangle Fill="#E0E0E0" OpacityMask="{StaticResource CheckerboardBrush}"/>
+                            <Image Stretch="Uniform" 
+                                   Source="{Binding TexturePath, Converter={StaticResource PathToOptimizedBitmapImageConverter}, ConverterParameter=512}"/>
                         </Grid>
                     </Border>
                 </Grid>
