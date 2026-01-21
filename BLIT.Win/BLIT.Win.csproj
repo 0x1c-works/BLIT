@@ -24,7 +24,6 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
-    <PackageCertificateKeyFile>BLIT.Win_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
 
   <!-- Ensure test artifacts are never generated for Store submission -->
@@ -33,17 +32,10 @@
   </PropertyGroup>
 
   <!-- Store Publishing Configuration -->
-  <!-- By default use the temporary key for development/local testing -->
-  <!-- For Store submission, replace PackageCertificateKeyFile with Partner Center certificate -->
-  <PropertyGroup Condition="'$(Configuration)' == 'Release' AND !Exists('$(MSBuildProjectDirectory)\StoreCertificate.pfx')">
-    <!-- Using temporary key - will fail Store validation -->
-    <PackageCertificateKeyFile>BLIT.Win_TemporaryKey.pfx</PackageCertificateKeyFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Release' AND Exists('$(MSBuildProjectDirectory)\StoreCertificate.pfx')">
-    <!-- Using Partner Center certificate - ready for Store submission -->
-    <PackageCertificateKeyFile>StoreCertificate.pfx</PackageCertificateKeyFile>
-  </PropertyGroup>
+  <!-- For Store submission, VS "Create App Package" wizard will handle certificate automatically -->
+  <!-- The wizard uses the certificate associated with your Microsoft Partner Center account -->
+  <!-- Do NOT specify PackageCertificateKeyFile here - let VS wizard handle it -->
+  <!-- Just ensure AppxPackageSigningEnabled=True (already set above) -->
 
   <ItemGroup>
     <Compile Remove="dist\**" />
