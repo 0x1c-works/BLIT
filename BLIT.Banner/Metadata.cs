@@ -1,4 +1,6 @@
-﻿using System.Xml.Serialization;
+﻿using OpenCCNET;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace BLIT.Banner;
 
@@ -16,8 +18,48 @@ public class BannerIconData {
             outDir = Directory.CreateDirectory(outDir).FullName;
         }
 
-        using var writer = new FileStream(Path.Join(outDir, XML_FILE_NAME), FileMode.Create);
-        serializer.Serialize(writer, new XmlDoc { BannerIconData = this });
+        // 调试：打印当前工作目录
+        var currentDir = Directory.GetCurrentDirectory();
+        var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+        var assemblyDir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+
+        System.Diagnostics.Debug.WriteLine($"Current Working Directory: {currentDir}");
+        System.Diagnostics.Debug.WriteLine($"AppDomain BaseDirectory: {baseDir}");
+        System.Diagnostics.Debug.WriteLine($"Assembly Directory: {assemblyDir}");
+
+        ZhConverter.Initialize(
+            dictionaryDirectory: Path.Combine(baseDir, "Dictionary"),
+            jiebaResourceDirectory: Path.Combine(baseDir, "JiebaResource")
+            );
+
+        // 序列化到内存流
+        using (var memoryStream = new MemoryStream()) {
+            serializer.Serialize(memoryStream, new XmlDoc { BannerIconData = this });
+            memoryStream.Position = 0;
+
+            // 加载为 XDocument
+            var doc = XDocument.Load(memoryStream);
+
+            // 遍历所有 Icon 元素，添加 comment 并移除 comment attribute
+            var iconElements = doc.Descendants("Icon").ToList();
+            foreach (XElement? iconElement in iconElements) {
+                XAttribute? commentAttr = iconElement.Attribute("comment");
+                if (commentAttr != null && !string.IsNullOrEmpty(commentAttr.Value)) {
+                    var oldValue = commentAttr.Value;
+                    var finalValue = ZhConverter.HantToHans(oldValue);
+                    if (finalValue != oldValue) {
+                        finalValue = $"{finalValue}/{oldValue}";
+                    }
+                    // 在 Icon 元素前插入 comment
+                    iconElement.AddBeforeSelf(new XComment(finalValue));
+                    // 移除 comment attribute
+                    commentAttr.Remove();
+                }
+            }
+
+            // 保存到文件
+            doc.Save(Path.Join(outDir, XML_FILE_NAME));
+        }
     }
     [XmlRoot("base")]
     public class XmlDoc {
@@ -41,7 +83,7 @@ public struct BannerIcon {
     [XmlAttribute("id")] public int ID;
     [XmlAttribute("material_name")] public string MaterialName;
     [XmlAttribute("texture_index")] public int TextureIndex;
-    public string Comment;
+    [XmlAttribute("comment")] public string Comment;
 }
 
 public record BannerColor {
