@@ -61,20 +61,21 @@ public partial class BannerIconsPage : Page, INotifyPropertyChanged {
     private void OnPageLoaded(object sender, RoutedEventArgs e) {
         System.Diagnostics.Debug.WriteLine("BannerIconsPage: Page loaded");
         
-        // 检查精灵扫描文件夹配置
-        if (_settings?.Banner.SpriteScanFolders.Count == 0) {
-            _notification?.Notify(new Notification(
-                ToastVariant.Warning,
-                Message: I18n.Current.GetString("WarningNoSpriteScanFolders/Message"),
-                TimeoutSeconds: 30,
-                Action: new(
-                    I18n.Current.GetString("ButtonToSettings/Content"),
-                    (s, e) => {
-                        SentrySdk.AddBreadcrumb("open settings", category: "ui.help");
-                        (Application.Current.MainWindow as MainWindow)?.NavigateToSettings();
-                    })
-                ));
-        }
+        // TODO: 显示警告信息并支持跳转
+        // // 检查精灵扫描文件夹配置
+        // if (_settings?.Banner.SpriteScanFolders.Count == 0) {
+        //     _notification?.Notify(new Notification(
+        //         ToastVariant.Warning,
+        //         Message: I18n.Current.GetString("WarningNoSpriteScanFolders/Message"),
+        //         TimeoutSeconds: 30,
+        //         Action: new(
+        //             I18n.Current.GetString("ButtonToSettings/Content"),
+        //             (s, e) => {
+        //                 SentrySdk.AddBreadcrumb("open settings", category: "ui.help");
+        //                 (Application.Current.MainWindow as MainWindow)?.NavigateToSettings();
+        //             })
+        //         ));
+        // }
     }
 
     private void OnProjectPropertyChanged(object? sender, PropertyChangedEventArgs e) {
