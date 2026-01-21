@@ -12,6 +12,17 @@
     <UserControl.Resources>
         <!-- Converters -->
         <helpers:PathToOptimizedBitmapImageConverter x:Key="PathToOptimizedBitmapImageConverter"/>
+        <helpers:AsyncPathToBitmapImageConverter x:Key="AsyncPathToBitmapImageConverter"/>
+        <helpers:StringIsNullOrEmptyConverter x:Key="StringIsNullOrEmptyConverter"/>
+        
+        <!-- Loading Indicator Style -->
+        <Style x:Key="LoadingSpinnerStyle" TargetType="TextBlock">
+            <Setter Property="Text" Value="⟳"/>
+            <Setter Property="FontSize" Value="32"/>
+            <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
         
         <!-- Shared Checkerboard Background -->
         <DrawingBrush x:Key="CheckerboardBrush" 
@@ -38,9 +49,14 @@
                 <!-- Checkboard Background -->
                 <Rectangle Fill="#E0E0E0" OpacityMask="{StaticResource CheckerboardBrush}"/>
                 
-                <!-- Icon Image -->
+                <!-- Loading Indicator (shown when path is empty or loading) -->
+                <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
+                           Visibility="{Binding TexturePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}"/>
+                
+                <!-- Icon Image - Async Load -->
                 <Image Stretch="Uniform" 
-                       Source="{Binding TexturePath, Converter={StaticResource PathToOptimizedBitmapImageConverter}, ConverterParameter=128}"/>
+                       helpers:AsyncImageLoader.AsyncSource="{Binding TexturePath}"
+                       helpers:AsyncImageLoader.DecodePixelWidth="128"/>
                 
                 <!-- Atlas Name Overlay (Top) -->
                 <Grid VerticalAlignment="Top" Background="#80000000">
@@ -220,8 +236,15 @@
                             Margin="8,0,0,0">
                         <Grid>
                             <Rectangle Fill="#E0E0E0" OpacityMask="{StaticResource CheckerboardBrush}"/>
+                            
+                            <!-- Loading Indicator -->
+                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
+                                       Visibility="{Binding SpritePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}"/>
+                            
+                            <!-- Sprite Preview Image - Async Load -->
                             <Image Stretch="Uniform" 
-                                   Source="{Binding SpritePath, Converter={StaticResource PathToOptimizedBitmapImageConverter}, ConverterParameter=256}"/>
+                                   helpers:AsyncImageLoader.AsyncSource="{Binding SpritePath}"
+                                   helpers:AsyncImageLoader.DecodePixelWidth="256"/>
                         </Grid>
                     </Border>
                     
@@ -260,8 +283,15 @@
                             Margin="8,0,0,0">
                         <Grid>
                             <Rectangle Fill="#E0E0E0" OpacityMask="{StaticResource CheckerboardBrush}"/>
+                            
+                            <!-- Loading Indicator -->
+                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
+                                       Visibility="{Binding TexturePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}"/>
+                            
+                            <!-- Texture Preview Image - Async Load -->
                             <Image Stretch="Uniform" 
-                                   Source="{Binding TexturePath, Converter={StaticResource PathToOptimizedBitmapImageConverter}, ConverterParameter=512}"/>
+                                   helpers:AsyncImageLoader.AsyncSource="{Binding TexturePath}"
+                                   helpers:AsyncImageLoader.DecodePixelWidth="512"/>
                         </Grid>
                     </Border>
                 </Grid>
