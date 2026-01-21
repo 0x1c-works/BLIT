@@ -26,52 +26,37 @@ public partial class MainWindow : Window {
     
     private void MainWindow_Loaded(object sender, RoutedEventArgs e) {
         Log.Information($"MainWindow loaded. NavigationView items count: {MainNavigationView.MenuItems.Count}");
-        
-        // Manually wire up event handlers for NavigationViewItems
-        // since they might not work from XAML
-        if (MainNavigationView.MenuItems.Count > 0) {
-            var bannerIconsItem = MainNavigationView.MenuItems[0] as NavigationViewItem;
-            if (bannerIconsItem != null) {
-                Log.Information($"Setting up event handlers for BannerIcons item");
-                // Try different events to see which one works
-                bannerIconsItem.PreviewMouseDown += (s, e) => {
-                    Log.Information("BannerIcons - PreviewMouseDown triggered");
-                    NavigateToPage(bannerIconsItem);
-                };
-            }
-        }
-        
-        // Setup Help button
-        if (MainNavigationView.FooterMenuItems.Count > 0) {
-            var helpItem = MainNavigationView.FooterMenuItems[0] as NavigationViewItem;
-            if (helpItem != null) {
-                Log.Information($"Setting up event handlers for Help item");
-                helpItem.PreviewMouseDown += (s, e) => {
-                    Log.Information("Help - PreviewMouseDown triggered");
-                    e.Handled = true;
-                    HandleHelpNavigation();
-                };
-            }
-        }
-        
-        Log.Information("MainWindow initialization complete");
     }
 
-    private void NavigateToPage(NavigationViewItem item) {
-        Log.Information($"NavigateToPage called for: {item.Content}");
+    private void NavigationView_ItemInvoked(object sender, Wpf.Ui.Controls.NavigationViewItemInvokedEventArgs e) {
+        Log.Information("NavigationView_ItemInvoked event fired");
         
-        // Get the TargetPageType from the item
-        var targetPageType = (Type?)item.GetValue(Wpf.Ui.Controls.NavigationViewItem.TargetPageTypeProperty);
+        if (e.InvokedItem is not NavigationViewItem navItem) {
+            Log.Information("InvokedItem is not NavigationViewItem");
+            return;
+        }
+
+        var tag = navItem.Tag as string;
+        Log.Information($"Invoked item tag: {tag}, content: {navItem.Content}");
+        
+        // Special handling for Help item - open in browser
+        if (tag == "Help") {
+            Log.Information("Help item invoked - opening browser");
+            HandleHelpNavigation();
+            return;
+        }
+        
+        // For regular pages, get TargetPageType and navigate
+        var targetPageType = (Type?)navItem.GetValue(Wpf.Ui.Controls.NavigationViewItem.TargetPageTypeProperty);
         
         if (targetPageType == null) {
-            Log.Information("TargetPageType is null");
+            Log.Information($"TargetPageType is null for item: {tag}");
             return;
         }
 
         Log.Information($"Navigating to page type: {targetPageType.Name}");
         
         try {
-            // Create an instance of the target page
             if (Activator.CreateInstance(targetPageType) is Page pageInstance) {
                 Log.Information($"Created page instance: {pageInstance.GetType().Name}");
                 AppContent.Navigate(pageInstance);
@@ -82,6 +67,25 @@ public partial class MainWindow : Window {
         } catch (Exception ex) {
             Log.Error($"Exception during navigation: {ex.Message}");
             Log.Error($"Stack trace: {ex.StackTrace}");
+        }
+    }
+
+    private void HandleHelpNavigation() {
+        try {
+            Log.Information("Opening help in browser");
+            SentrySdk.AddBreadcrumb("Visit help", category: "ui.nav");
+            
+            string helpUrl = I18n.Current.GetString("LinkHelpWebsite");
+            Log.Information($"Help URL: {helpUrl}");
+            
+            Process.Start(new ProcessStartInfo {
+                FileName = helpUrl,
+                UseShellExecute = true,
+            });
+            
+            Log.Information("Help URL opened successfully");
+        } catch (Exception ex) {
+            Log.Error($"Failed to open help URL: {ex.Message}");
         }
     }
 
@@ -118,6 +122,7 @@ public record NavPageHeaderInfo(string Title, string? SubTitle = null, bool IsMo
         ? I18n.Current.GetString("Placeholder.NewProject") 
         : SubTitle;
 }
+
 
 
 
