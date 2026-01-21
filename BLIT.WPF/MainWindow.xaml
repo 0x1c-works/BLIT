@@ -17,7 +17,6 @@
         Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         
@@ -29,7 +28,7 @@
             IsPaneToggleVisible="True"
             PaneDisplayMode="Left"
             PaneTitle="{helpers:I18n AppTitle.Text}"
-            ItemInvoked="NavigationView_ItemInvoked">
+            >
             
             <!-- Menu Items -->
             <ui:NavigationView.MenuItems>
@@ -51,11 +50,8 @@
              </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>
         
-        <!-- Content area in right panel -->
-        <Frame x:Name="AppContent" Grid.Column="1" NavigationUIVisibility="Hidden" />
-        
         <!-- Loading Overlay -->
-        <controls:LoadingOverlay Grid.ColumnSpan="2" />
+        <controls:LoadingOverlay />
     </Grid>
 </Window>
 

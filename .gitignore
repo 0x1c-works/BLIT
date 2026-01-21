@@ -477,3 +477,6 @@ $RECYCLE.BIN/
 *.lnk
 
 dist/
+
+# JetBrains Rider
+.idea
