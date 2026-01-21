@@ -41,7 +41,7 @@ public struct BannerIcon {
     [XmlAttribute("id")] public int ID;
     [XmlAttribute("material_name")] public string MaterialName;
     [XmlAttribute("texture_index")] public int TextureIndex;
-    [XmlAttribute("comment")] public string Comment;
+    public string Comment;
 }
 
 public record BannerColor {
