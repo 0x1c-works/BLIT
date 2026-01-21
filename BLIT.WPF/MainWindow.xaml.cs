@@ -28,11 +28,12 @@ public partial class MainWindow : Window {
         Log.Information($"MainWindow loaded. NavigationView items count: {MainNavigationView.MenuItems.Count}");
     }
 
-    private void NavigationView_ItemInvoked(object sender, Wpf.Ui.Controls.NavigationViewItemInvokedEventArgs e) {
+    private void NavigationView_ItemInvoked(NavigationView sender, RoutedEventArgs e) {
         Log.Information("NavigationView_ItemInvoked event fired");
         
-        if (e.InvokedItem is not NavigationViewItem navItem) {
-            Log.Information("InvokedItem is not NavigationViewItem");
+        var navItem = sender.SelectedItem as NavigationViewItem;
+        if (navItem == null) {
+            Log.Information("SelectedItem is not NavigationViewItem");
             return;
         }
 
