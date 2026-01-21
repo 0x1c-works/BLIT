@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
@@ -25,6 +25,24 @@
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
     <PackageCertificateKeyFile>BLIT.Win_TemporaryKey.pfx</PackageCertificateKeyFile>
+  </PropertyGroup>
+
+  <!-- Ensure test artifacts are never generated for Store submission -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <GenerateTestArtifacts>False</GenerateTestArtifacts>
+  </PropertyGroup>
+
+  <!-- Store Publishing Configuration -->
+  <!-- By default use the temporary key for development/local testing -->
+  <!-- For Store submission, replace PackageCertificateKeyFile with Partner Center certificate -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release' AND !Exists('$(MSBuildProjectDirectory)\StoreCertificate.pfx')">
+    <!-- Using temporary key - will fail Store validation -->
+    <PackageCertificateKeyFile>BLIT.Win_TemporaryKey.pfx</PackageCertificateKeyFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release' AND Exists('$(MSBuildProjectDirectory)\StoreCertificate.pfx')">
+    <!-- Using Partner Center certificate - ready for Store submission -->
+    <PackageCertificateKeyFile>StoreCertificate.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -137,4 +155,11 @@
   <ItemGroup>
     <PRIResource Remove="dist\**" />
   </ItemGroup>
+
+  <!-- Override test artifacts generation for Store submission -->
+  <Target Name="DisableTestArtifactsBeforePack" BeforeTargets="MakeBundle;CreateAppPackage">
+    <PropertyGroup>
+      <GenerateTestArtifacts>False</GenerateTestArtifacts>
+    </PropertyGroup>
+  </Target>
 </Project>
