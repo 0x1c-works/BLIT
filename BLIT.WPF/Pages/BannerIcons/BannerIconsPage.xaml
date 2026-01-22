@@ -55,41 +55,41 @@
             <ToolBar>
                 <Button x:Name="btnNewProject" 
                         Click="btnNewProject_Click"
-                        ToolTip="{helpers:I18n AppButtonNewProject.Content}"
+                        ToolTip="{helpers:I18n AppButtonNewProject.Label}"
                         IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="📁" FontSize="16" Margin="0,0,4,0"/>
-                        <TextBlock Text="{helpers:I18n AppButtonNewProject.Content}"/>
+                        <TextBlock Text="{helpers:I18n AppButtonNewProject.Label}"/>
                     </StackPanel>
                 </Button>
                 
                 <Button x:Name="btnSaveProject" 
                         Click="btnSaveProject_Click"
-                        ToolTip="{helpers:I18n AppButtonSaveProject.Content}"
+                        ToolTip="{helpers:I18n AppButtonSaveProject.Label}"
                         IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="💾" FontSize="16" Margin="0,0,4,0"/>
-                        <TextBlock Text="{helpers:I18n AppButtonSaveProject.Content}"/>
+                        <TextBlock Text="{helpers:I18n AppButtonSaveProject.Label}"/>
                     </StackPanel>
                 </Button>
                 
                 <Button x:Name="btnSaveProjectAs" 
                         Click="btnSaveProjectAs_Click"
-                        ToolTip="{helpers:I18n AppButtonSaveProjectAs.Content}"
+                        ToolTip="{helpers:I18n AppButtonSaveProjectAs.Label}"
                         IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="💾" FontSize="16" Margin="0,0,4,0"/>
-                        <TextBlock Text="{helpers:I18n AppButtonSaveProjectAs.Content}"/>
+                        <TextBlock Text="{helpers:I18n AppButtonSaveProjectAs.Label}"/>
                     </StackPanel>
                 </Button>
                 
                 <Button x:Name="btnOpenProject" 
                         Click="btnOpenProject_Click"
-                        ToolTip="{helpers:I18n AppButtonOpenProject.Content}"
+                        ToolTip="{helpers:I18n AppButtonOpenProject.Label}"
                         IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="📂" FontSize="16" Margin="0,0,4,0"/>
-                        <TextBlock Text="{helpers:I18n AppButtonOpenProject.Content}"/>
+                        <TextBlock Text="{helpers:I18n AppButtonOpenProject.Label}"/>
                     </StackPanel>
                 </Button>
                 
@@ -110,21 +110,21 @@
                 
                 <Button x:Name="btnExportAll" 
                         Click="btnExportAll_Click"
-                        ToolTip="{helpers:I18n AppButtonExportAll.Content}"
+                        ToolTip="{helpers:I18n AppButtonExportAll.Label}"
                         IsEnabled="{Binding ViewModel.CanExport, RelativeSource={RelativeSource AncestorType=Page}}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="📤" FontSize="16" Margin="0,0,4,0"/>
-                        <TextBlock Text="{helpers:I18n AppButtonExportAll.Content}"/>
+                        <TextBlock Text="{helpers:I18n AppButtonExportAll.Label}"/>
                     </StackPanel>
                 </Button>
                 
                 <Button x:Name="btnExportXML" 
                         Click="btnExportXML_Click"
-                        ToolTip="{helpers:I18n AppButtonExportXML.Content}"
+                        ToolTip="{helpers:I18n AppButtonExportXML.Label}"
                         IsEnabled="{Binding ViewModel.CanExport, RelativeSource={RelativeSource AncestorType=Page}}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="📄" FontSize="16" Margin="0,0,4,0"/>
-                        <TextBlock Text="{helpers:I18n AppButtonExportXML.Content}"/>
+                        <TextBlock Text="{helpers:I18n AppButtonExportXML.Label}"/>
                     </StackPanel>
                 </Button>
             </ToolBar>
