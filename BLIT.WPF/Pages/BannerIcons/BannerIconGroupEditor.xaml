@@ -138,16 +138,16 @@
             </Button>
         </StackPanel>
         
-        <!-- Icon Grid (Left) -->
-        <ListBox x:Name="listIcons" 
-                 Grid.Row="1" 
-                 Grid.Column="0"
-                 ItemsSource="{Binding ViewModel.Icons, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                 ItemTemplate="{StaticResource IconTextureTemplate}"
-                 SelectionMode="Extended"
-                 SelectionChanged="listIcons_SelectionChanged"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 Padding="8">
+         <!-- Icon Grid (Left) -->
+         <ListBox x:Name="listIcons" 
+                  Grid.Row="1" 
+                  Grid.Column="0"
+                  ItemsSource="{Binding ViewModel.Icons, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                  ItemTemplate="{StaticResource IconTextureTemplate}"
+                  SelectionMode="Extended"
+                  SelectionChanged="listIcons_SelectionChanged"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  Padding="8">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <vwp:VirtualizingWrapPanel 

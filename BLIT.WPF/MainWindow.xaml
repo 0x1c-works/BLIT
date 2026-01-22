@@ -10,26 +10,47 @@
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
         Title="{helpers:I18n AppTitle.Text}"
-        Height="720" 
+        Height="720"
         Width="1280"
         WindowStartupLocation="CenterScreen"
         Background="{ui:ThemeResource ApplicationBackgroundBrush}"
         Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        
+
         <!-- NavigationView in left panel -->
-        <ui:NavigationView 
+        <ui:NavigationView
             x:Name="MainNavigationView"
             Grid.Column="0"
             IsBackButtonVisible="Auto"
             IsPaneToggleVisible="True"
             PaneDisplayMode="Left"
-            PaneTitle="{helpers:I18n AppTitle.Text}"
-            >
-            
+            PaneTitle="{helpers:I18n AppTitle.Text}">
+
+            <ui:NavigationView.Resources>
+                <!-- 【终极修复】重写 Template，物理移除 ScrollViewer -->
+                <Style TargetType="{x:Type ui:NavigationViewContentPresenter}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ui:NavigationViewContentPresenter}">
+                                <!-- 源码里这里包了一层 ScrollViewer，我们直接去掉它，只留核心 -->
+                                <ContentPresenter
+                                    Content="{TemplateBinding Content}"
+                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                    ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <!-- 顺便把垂直对齐拉伸，确保占满高度 -->
+                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                    <Setter Property="VerticalAlignment" Value="Stretch" />
+                </Style>
+            </ui:NavigationView.Resources>
+
             <!-- Menu Items -->
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem
@@ -39,20 +60,18 @@
                     Tag="BannerIcons"
                     TargetPageType="pages:BannerIconsPage" />
             </ui:NavigationView.MenuItems>
-            
-             <!-- Footer Menu Items -->
-             <ui:NavigationView.FooterMenuItems>
-                 <ui:NavigationViewItem
-                     x:Name="NavItem_Help"
-                     Content="{helpers:I18n AppNavMenuHelp.Content}"
-                     Icon="{ui:SymbolIcon QuestionCircle24}"
-                     Tag="Help" />
-             </ui:NavigationView.FooterMenuItems>
+
+            <!-- Footer Menu Items -->
+            <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem
+                    x:Name="NavItem_Help"
+                    Content="{helpers:I18n AppNavMenuHelp.Content}"
+                    Icon="{ui:SymbolIcon QuestionCircle24}"
+                    Tag="Help" />
+            </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>
-        
+
         <!-- Loading Overlay -->
         <controls:LoadingOverlay />
     </Grid>
 </Window>
-
-

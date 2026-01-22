@@ -8,7 +8,9 @@
       xmlns:local="clr-namespace:BLIT.WPF.Pages.BannerIcons"
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="1000"
-      Title="BannerIconsPage">
+      Title="BannerIconsPage"
+      VerticalAlignment="Stretch"
+      HorizontalAlignment="Stretch">
     <Page.Resources>
         <helpers:InvertBoolConverter x:Key="InvertBoolConverter" />
         
@@ -29,14 +31,27 @@
         </DataTemplate>
     </Page.Resources>
     
-    <Grid Margin="0">
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         
+        <!-- Header - 固定高度 -->
+        <Border Grid.Row="0"
+                Background="{DynamicResource ApplicationBackgroundBrush}"
+                BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="24,16">
+            <TextBlock Text="{helpers:I18n AppTitle.Text}"
+                       FontSize="28"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+        </Border>
+        
         <!-- 工具栏 -->
-        <ToolBarTray Grid.Row="0" Background="#F3F3F3">
+        <ToolBarTray Grid.Row="1" Background="#F3F3F3">
             <ToolBar>
                 <Button x:Name="btnNewProject" 
                         Click="btnNewProject_Click"
@@ -116,7 +131,7 @@
         </ToolBarTray>
         
         <!-- 主内容区域 -->
-        <TabControl Grid.Row="1">
+        <TabControl Grid.Row="2">
             <!-- 分组编辑器标签页 -->
             <TabItem Header="{helpers:I18n PivotBannerGroupsEditor.Header}">
                 <Grid>
