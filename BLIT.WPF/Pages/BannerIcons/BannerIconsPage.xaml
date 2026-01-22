@@ -1,199 +1,231 @@
-<Page x:Class="BLIT.WPF.Pages.BannerIcons.BannerIconsPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
-      xmlns:vm="clr-namespace:BLIT.WPF.Pages.BannerIcons.Models"
-      xmlns:local="clr-namespace:BLIT.WPF.Pages.BannerIcons"
-      mc:Ignorable="d" 
-      d:DesignHeight="600" d:DesignWidth="1000"
-      Title="BannerIconsPage"
-      VerticalAlignment="Stretch"
-      HorizontalAlignment="Stretch">
+<Page
+    x:Class="BLIT.WPF.Pages.BannerIcons.BannerIconsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
+    xmlns:local="clr-namespace:BLIT.WPF.Pages.BannerIcons"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:BLIT.WPF.Pages.BannerIcons.Models"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="BannerIconsPage"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Stretch"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
+    mc:Ignorable="d">
     <Page.Resources>
         <helpers:InvertBoolConverter x:Key="InvertBoolConverter" />
-        
-        <!-- 分组列表项模板 -->
+
+        <!--  分组列表项模板  -->
         <DataTemplate x:Key="GroupItemTemplate" DataType="{x:Type vm:BannerGroupEntry}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding GroupID}" VerticalAlignment="Center"/>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0">
-                    <TextBlock Text="(" Foreground="Gray"/>
-                    <TextBlock Text="{Binding Icons.Count}" Foreground="Gray"/>
-                    <TextBlock Text=")" Foreground="Gray"/>
+                <TextBlock VerticalAlignment="Center" Text="{Binding GroupID}" />
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="8,0,0,0"
+                    Orientation="Horizontal">
+                    <TextBlock Foreground="Gray" Text="(" />
+                    <TextBlock Foreground="Gray" Text="{Binding Icons.Count}" />
+                    <TextBlock Foreground="Gray" Text=")" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
     </Page.Resources>
-    
-    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
-        <!-- Header - 固定高度 -->
-        <Border Grid.Row="0"
-                Background="{DynamicResource ApplicationBackgroundBrush}"
-                BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
-                BorderThickness="0,0,0,1"
-                Padding="24,16">
-            <TextBlock Text="{helpers:I18n AppTitle.Text}"
-                       FontSize="28"
-                       FontWeight="SemiBold"
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+
+        <!--  Header - 固定高度  -->
+        <Border
+            Grid.Row="0"
+            Padding="24,16"
+            Background="{DynamicResource ApplicationBackgroundBrush}"
+            BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+            BorderThickness="0,0,0,1">
+            <TextBlock
+                FontSize="28"
+                FontWeight="SemiBold"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                Text="{helpers:I18n AppTitle.Text}" />
         </Border>
-        
-        <!-- 工具栏 -->
-        <ToolBarTray Grid.Row="1" Background="#F3F3F3">
-            <ToolBar>
-                <Button x:Name="btnNewProject" 
-                        Click="btnNewProject_Click"
-                        ToolTip="{helpers:I18n AppButtonNewProject.Label}"
-                        IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="📁" FontSize="16" Margin="0,0,4,0"/>
-                        <TextBlock Text="{helpers:I18n AppButtonNewProject.Label}"/>
-                    </StackPanel>
-                </Button>
-                
-                <Button x:Name="btnSaveProject" 
-                        Click="btnSaveProject_Click"
-                        ToolTip="{helpers:I18n AppButtonSaveProject.Label}"
-                        IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="💾" FontSize="16" Margin="0,0,4,0"/>
-                        <TextBlock Text="{helpers:I18n AppButtonSaveProject.Label}"/>
-                    </StackPanel>
-                </Button>
-                
-                <Button x:Name="btnSaveProjectAs" 
-                        Click="btnSaveProjectAs_Click"
-                        ToolTip="{helpers:I18n AppButtonSaveProjectAs.Label}"
-                        IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="💾" FontSize="16" Margin="0,0,4,0"/>
-                        <TextBlock Text="{helpers:I18n AppButtonSaveProjectAs.Label}"/>
-                    </StackPanel>
-                </Button>
-                
-                <Button x:Name="btnOpenProject" 
-                        Click="btnOpenProject_Click"
-                        ToolTip="{helpers:I18n AppButtonOpenProject.Label}"
-                        IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="📂" FontSize="16" Margin="0,0,4,0"/>
-                        <TextBlock Text="{helpers:I18n AppButtonOpenProject.Label}"/>
-                    </StackPanel>
-                </Button>
-                
-                <Separator/>
-                
-                <TextBlock Text="{helpers:I18n LabelTextureResolution.Text}" 
-                           VerticalAlignment="Center" 
-                           Margin="8,0"/>
-                <ComboBox x:Name="comboOutputResolution" 
-                          SelectedValuePath="Tag"
-                          SelectionChanged="comboOutputResolution_SelectionChanged"
-                          MinWidth="80">
-                    <ComboBoxItem Content="2K" Tag="Res2K"/>
-                    <ComboBoxItem Content="4K" Tag="Res4K"/>
-                </ComboBox>
-                
-                <Separator/>
-                
-                <Button x:Name="btnExportAll" 
+
+        <!--  菜单工具栏  -->
+        <Border
+            Grid.Row="1"
+            Padding="12,0"
+            Background="#F3F3F3"
+            BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+            BorderThickness="0,0,0,1">
+            <Menu VerticalAlignment="Center">
+                <!--  文件菜单  -->
+                <MenuItem
+                    Click="btnNewProject_Click"
+                    Header="{helpers:I18n AppButtonNewProject.Label}"
+                    Icon="{ui:SymbolIcon Symbol=Document20}"
+                    IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                    ToolTip="{helpers:I18n AppButtonNewProject.Label}">
+                </MenuItem>
+
+                <!--  保存项目  -->
+                <MenuItem
+                    Click="btnSaveProject_Click"
+                    Header="{helpers:I18n AppButtonSaveProject.Label}"
+                    Icon="{ui:SymbolIcon Symbol=Save20}"
+                    IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                    ToolTip="{helpers:I18n AppButtonSaveProject.Label}">
+                </MenuItem>
+
+                <!--  另存为  -->
+                <MenuItem
+                    Click="btnSaveProjectAs_Click"
+                    Header="{helpers:I18n AppButtonSaveProjectAs.Label}"
+                    Icon="{ui:SymbolIcon Symbol=SaveArrowRight20}"
+                    IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                    ToolTip="{helpers:I18n AppButtonSaveProjectAs.Label}">
+                </MenuItem>
+
+                <!--  打开项目  -->
+                <MenuItem
+                    Click="btnOpenProject_Click"
+                    Header="{helpers:I18n AppButtonOpenProject.Label}"
+                    Icon="{ui:SymbolIcon Symbol=Folder20}"
+                    IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                    ToolTip="{helpers:I18n AppButtonOpenProject.Label}">
+                </MenuItem>
+
+                <!--  分隔符  -->
+                <Separator />
+
+                <!--  导出菜单  -->
+                <MenuItem Header="{helpers:I18n AppButtonExportAll.Label}"
+                          Icon="{ui:SymbolIcon Symbol=ArrowExportUp20}"
+                          IsEnabled="{Binding ViewModel.CanExport, RelativeSource={RelativeSource AncestorType=Page}}">
+                    <MenuItem
                         Click="btnExportAll_Click"
-                        ToolTip="{helpers:I18n AppButtonExportAll.Label}"
-                        IsEnabled="{Binding ViewModel.CanExport, RelativeSource={RelativeSource AncestorType=Page}}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="📤" FontSize="16" Margin="0,0,4,0"/>
-                        <TextBlock Text="{helpers:I18n AppButtonExportAll.Label}"/>
-                    </StackPanel>
-                </Button>
-                
-                <Button x:Name="btnExportXML" 
+                        Header="{helpers:I18n AppButtonExportAll.Label}"
+                        ToolTip="{helpers:I18n AppButtonExportAll.Label}">
+                    </MenuItem>
+                    <MenuItem
                         Click="btnExportXML_Click"
-                        ToolTip="{helpers:I18n AppButtonExportXML.Label}"
-                        IsEnabled="{Binding ViewModel.CanExport, RelativeSource={RelativeSource AncestorType=Page}}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="📄" FontSize="16" Margin="0,0,4,0"/>
-                        <TextBlock Text="{helpers:I18n AppButtonExportXML.Label}"/>
-                    </StackPanel>
-                </Button>
-            </ToolBar>
-        </ToolBarTray>
-        
-        <!-- 主内容区域 -->
+                        Header="{helpers:I18n AppButtonExportXML.Label}"
+                        ToolTip="{helpers:I18n AppButtonExportXML.Label}">
+                    </MenuItem>
+                </MenuItem>
+
+                <!--  分隔符  -->
+                <Separator />
+
+                <!--  纹理分辨率  -->
+                <MenuItem Width="200" IsSubmenuOpen="False" VerticalAlignment="Stretch">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock
+                                Margin="0,0,6,0"
+                                FontSize="14"
+                                Text="⚙️" />
+                            <TextBlock Text="{helpers:I18n LabelTextureResolution.Text}" />
+                            <ComboBox
+                                x:Name="comboOutputResolution"
+                                MinWidth="100"
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                SelectedValuePath="Tag"
+                                SelectionChanged="comboOutputResolution_SelectionChanged">
+                                <ComboBoxItem Content="2K" Tag="Res2K" />
+                                <ComboBoxItem Content="4K" Tag="Res4K" />
+                            </ComboBox>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+            </Menu>
+        </Border>
+
+        <!--  主内容区域  -->
         <TabControl Grid.Row="2">
-            <!-- 分组编辑器标签页 -->
+            <!--  分组编辑器标签页  -->
             <TabItem Header="{helpers:I18n PivotBannerGroupsEditor.Header}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="300"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="300" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    
-                    <!-- 左侧分组列表 -->
+
+                    <!--  左侧分组列表  -->
                     <Grid Grid.Column="0" Background="#F9F9F9">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        
-                        <Border Grid.Row="0" Padding="16" Background="#E0E0E0">
-                            <TextBlock Text="{helpers:I18n TextBannerGroupListTitle.Text}" 
-                                       FontWeight="Bold"
-                                       TextAlignment="Center"/>
+
+                        <Border
+                            Grid.Row="0"
+                            Padding="16"
+                            Background="#E0E0E0">
+                            <TextBlock
+                                FontWeight="Bold"
+                                Text="{helpers:I18n TextBannerGroupListTitle.Text}"
+                                TextAlignment="Center" />
                         </Border>
-                        
+
                         <StackPanel Grid.Row="1" Orientation="Horizontal">
-                            <Button x:Name="btnAddGroup"
-                                    Click="btnAddGroup_Click"
-                                    ToolTip="Add Group"
-                                    Padding="8">
-                                <TextBlock Text="➕ 添加分组"/>
+                            <Button
+                                x:Name="btnAddGroup"
+                                Padding="8"
+                                Click="btnAddGroup_Click"
+                                ToolTip="Add Group">
+                                <TextBlock Text="➕ 添加分组" />
                             </Button>
-                            <Button x:Name="btnDeleteGroup"
-                                    Click="btnDeleteGroup_Click"
-                                    ToolTip="Delete Group"
-                                    Padding="8"
-                                    IsEnabled="{Binding HasSelectedGroup, RelativeSource={RelativeSource AncestorType=Page}}">
-                                <TextBlock Text="🗑️ 删除分组"/>
+                            <Button
+                                x:Name="btnDeleteGroup"
+                                Padding="8"
+                                Click="btnDeleteGroup_Click"
+                                IsEnabled="{Binding HasSelectedGroup, RelativeSource={RelativeSource AncestorType=Page}}"
+                                ToolTip="Delete Group">
+                                <TextBlock Text="🗑️ 删除分组" />
                             </Button>
                         </StackPanel>
-                        
-                        <ListBox x:Name="listViewGroups"
-                                 Grid.Row="2"
-                                 ItemsSource="{Binding ViewModel.Groups, RelativeSource={RelativeSource AncestorType=Page}}"
-                                 ItemTemplate="{StaticResource GroupItemTemplate}"
-                                 SelectionChanged="listViewGroups_SelectionChanged"/>
+
+                        <ListBox
+                            x:Name="listViewGroups"
+                            Grid.Row="2"
+                            ItemTemplate="{StaticResource GroupItemTemplate}"
+                            ItemsSource="{Binding ViewModel.Groups, RelativeSource={RelativeSource AncestorType=Page}}"
+                            SelectionChanged="listViewGroups_SelectionChanged" />
                     </Grid>
-                    
-                    <!-- 右侧编辑区域 -->
-                    <Border Grid.Column="1" BorderBrush="#E0E0E0" BorderThickness="1,0,0,0">
+
+                    <!--  右侧编辑区域  -->
+                    <Border
+                        Grid.Column="1"
+                        BorderBrush="#E0E0E0"
+                        BorderThickness="1,0,0,0">
                         <Grid>
-                            <TextBlock Text="{helpers:I18n TextNoSelectedBannerGroup.Text}" 
-                                       Padding="16"
-                                       Visibility="{Binding HasSelectedGroup, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}"/>
-                            
-                            <local:BannerIconGroupEditor ViewModel="{Binding SelectedGroup, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                         Visibility="{Binding HasSelectedGroup, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"/>
+                            <TextBlock
+                                Padding="16"
+                                Text="{helpers:I18n TextNoSelectedBannerGroup.Text}"
+                                Visibility="{Binding HasSelectedGroup, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}" />
+
+                            <local:BannerIconGroupEditor
+                                ViewModel="{Binding SelectedGroup, RelativeSource={RelativeSource AncestorType=Page}}"
+                                Visibility="{Binding HasSelectedGroup, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}" />
                         </Grid>
                     </Border>
                 </Grid>
             </TabItem>
-            
-            <!-- 颜色编辑器标签页 -->
+
+            <!--  颜色编辑器标签页  -->
             <TabItem Header="{helpers:I18n PivotBannerColorsEditor.Header}">
-                <local:BannerColorsEditor ViewModel="{Binding ViewModel, RelativeSource={RelativeSource AncestorType=Page}}"/>
+                <local:BannerColorsEditor
+                    ViewModel="{Binding ViewModel, RelativeSource={RelativeSource AncestorType=Page}}" />
             </TabItem>
         </TabControl>
     </Grid>
