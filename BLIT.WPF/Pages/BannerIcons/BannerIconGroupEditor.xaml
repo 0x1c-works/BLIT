@@ -1,24 +1,26 @@
-<UserControl x:Class="BLIT.WPF.Pages.BannerIcons.BannerIconGroupEditor"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:vm="clr-namespace:BLIT.WPF.Pages.BannerIcons.Models"
-             xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
-             xmlns:vwp="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-             mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="1000"
-             ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
-             ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-             Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+<UserControl
+    x:Class="BLIT.WPF.Pages.BannerIcons.BannerIconGroupEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:vm="clr-namespace:BLIT.WPF.Pages.BannerIcons.Models"
+    xmlns:vwp="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    mc:Ignorable="d">
     <UserControl.Resources>
-        <!-- Converters -->
+        <!--  Converters  -->
         <helpers:PathToOptimizedBitmapImageConverter x:Key="PathToOptimizedBitmapImageConverter" />
         <helpers:AsyncPathToBitmapImageConverter x:Key="AsyncPathToBitmapImageConverter" />
         <helpers:StringIsNullOrEmptyConverter x:Key="StringIsNullOrEmptyConverter" />
 
-        <!-- Loading Indicator Style -->
+        <!--  Loading Indicator Style  -->
         <Style x:Key="LoadingSpinnerStyle" TargetType="TextBlock">
             <Setter Property="Text" Value="⟳" />
             <Setter Property="FontSize" Value="32" />
@@ -27,50 +29,61 @@
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
 
-        <!-- Shared Checkerboard Background Brush using image tiles -->
-        <ImageBrush x:Key="CheckerboardBrush"
-                    ImageSource="/Assets/transparent-bg.png"
-                    Stretch="Uniform"
-                    TileMode="Tile"
-                    Viewport="0,0,32,32"
-                    ViewportUnits="Absolute" />
+        <!--  Shared Checkerboard Background Brush using image tiles  -->
+        <ImageBrush
+            x:Key="CheckerboardBrush"
+            ImageSource="/Assets/transparent-bg.png"
+            Stretch="Uniform"
+            TileMode="Tile"
+            Viewport="0,0,32,32"
+            ViewportUnits="Absolute" />
 
-        <!-- Icon Texture Template -->
+        <!--  Icon Texture Template  -->
         <DataTemplate x:Key="IconTextureTemplate" DataType="{x:Type vm:BannerIconEntry}">
-            <Grid Width="128" Height="128" Margin="4">
-                <!-- Checkboard Background -->
+            <Grid>
+                <!--  Checkboard Background  -->
                 <Rectangle Fill="{StaticResource CheckerboardBrush}" />
 
-                <!-- Loading Indicator (shown when path is empty or loading) -->
-                <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
-                           Visibility="{Binding TexturePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
+                <!--  Loading Indicator (shown when path is empty or loading)  -->
+                <TextBlock Style="{StaticResource LoadingSpinnerStyle}" Visibility="{Binding TexturePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
 
-                <!-- Icon Image - Async Load -->
-                <Image Stretch="Uniform"
-                       helpers:AsyncImageLoader.AsyncSource="{Binding TexturePath}"
-                       helpers:AsyncImageLoader.DecodePixelWidth="128" />
+                <!--  Icon Image - Async Load  -->
+                <Image
+                    helpers:AsyncImageLoader.AsyncSource="{Binding TexturePath}"
+                    helpers:AsyncImageLoader.DecodePixelWidth="128"
+                    Stretch="Uniform" />
 
-                <!-- Atlas Name Overlay (Top) -->
+                <!--  Atlas Name Overlay (Top)  -->
                 <Grid VerticalAlignment="Top" Background="#80000000">
-                    <TextBlock Text="{Binding AtlasName}"
-                               FontSize="10"
-                               Foreground="White"
-                               TextAlignment="Center"
-                               Margin="2" />
+                    <TextBlock
+                        Margin="2"
+                        FontSize="10"
+                        Foreground="White"
+                        Text="{Binding AtlasName}"
+                        TextAlignment="Center" />
                 </Grid>
 
-                <!-- ID Badge (Bottom Right) -->
-                <Border HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
-                        Background="#99CCCCCC"
-                        BorderBrush="DarkGray"
-                        BorderThickness="1"
-                        CornerRadius="4"
-                        Padding="4,1"
-                        Margin="2">
-                    <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                        <TextBlock Text="{Binding ID}" FontWeight="Bold" Foreground="Black" FontSize="10" />
-                        <TextBlock Text="#" Foreground="Black" FontSize="10" Margin="0,0,2,0" />
+                <!--  ID Badge (Bottom Right)  -->
+                <Border
+                    Margin="2"
+                    Padding="4,1"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Background="#99CCCCCC"
+                    BorderBrush="DarkGray"
+                    BorderThickness="1"
+                    CornerRadius="4">
+                    <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal">
+                        <TextBlock
+                            FontSize="10"
+                            FontWeight="Bold"
+                            Foreground="Black"
+                            Text="{Binding ID}" />
+                        <TextBlock
+                            Margin="0,0,2,0"
+                            FontSize="10"
+                            Foreground="Black"
+                            Text="#" />
                     </StackPanel>
                 </Border>
             </Grid>
@@ -95,49 +108,57 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!-- Toolbar -->
-        <StackPanel Grid.Row="0" Grid.ColumnSpan="3"
-                    Orientation="Horizontal">
+        <!--  Toolbar  -->
+        <StackPanel
+            Grid.Row="0"
+            Grid.ColumnSpan="3"
+            Orientation="Horizontal">
             <StackPanel.Margin>
                 <Thickness>16,8</Thickness>
             </StackPanel.Margin>
-            <TextBlock Text="{helpers:I18n LabelBannerGroupID.Text}" VerticalAlignment="Center" Margin="0,0,8,0" />
-            <TextBox x:Name="txtGroupID"
-                     Width="100"
-                     VerticalAlignment="Center"
-                     Text="{Binding DataContext.SelectedGroup.GroupID, RelativeSource={RelativeSource AncestorType=Page}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Margin="0,0,8,0"
+                VerticalAlignment="Center"
+                Text="{helpers:I18n LabelBannerGroupID.Text}" />
+            <TextBox
+                x:Name="txtGroupID"
+                Width="100"
+                VerticalAlignment="Center"
+                Text="{Binding DataContext.SelectedGroup.GroupID, RelativeSource={RelativeSource AncestorType=Page}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <Separator Margin="8,0" />
 
-            <Button x:Name="btnAddTextures"
-                    Command="{Binding AddTexturesCommand}"
-                    Margin="4,0">
-                <StackPanel Orientation="Horizontal" Margin="8,4">
-                    <ui:SymbolIcon Symbol="Add20" Margin="0,0 8,0"></ui:SymbolIcon>
+            <Button
+                x:Name="btnAddTextures"
+                Margin="4,0"
+                Command="{Binding AddTexturesCommand}">
+                <StackPanel Margin="8,4" Orientation="Horizontal">
+                    <ui:SymbolIcon Margin="0,0,8,0" Symbol="Add20" />
                     <TextBlock Text="{helpers:I18n AppButtonAddTextures.Label}" />
                 </StackPanel>
             </Button>
 
-            <Button x:Name="btnDeleteTextures"
-                    Command="{Binding DeleteTexturesCommand}"
-                    Margin="4,0">
-                <StackPanel Orientation="Horizontal" Margin="8,4">
-                    <ui:SymbolIcon Symbol="Delete20" Margin="0,0 8,0"></ui:SymbolIcon>
+            <Button
+                x:Name="btnDeleteTextures"
+                Margin="4,0"
+                Command="{Binding DeleteTexturesCommand}">
+                <StackPanel Margin="8,4" Orientation="Horizontal">
+                    <ui:SymbolIcon Margin="0,0,8,0" Symbol="Delete20" />
                     <TextBlock Text="{helpers:I18n AppButtonDeleteTextures.Label}" />
                 </StackPanel>
             </Button>
         </StackPanel>
 
-        <!-- Icon Grid (Left) -->
-        <ListBox x:Name="listIcons"
-                 Grid.Row="1"
-                 Grid.Column="0"
-                 ItemsSource="{Binding DataContext.SelectedGroup.Icons, RelativeSource={RelativeSource AncestorType=Page}}"
-                 ItemTemplate="{StaticResource IconTextureTemplate}"
-                 SelectionMode="Extended"
-                 SelectionChanged="listIcons_SelectionChanged"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 Padding="2">
+        <!--  Icon Grid (Left)  -->
+        <ListBox
+            x:Name="listIcons"
+            Grid.Row="1"
+            Grid.Column="0"
+            ItemTemplate="{StaticResource IconTextureTemplate}"
+            ItemsSource="{Binding DataContext.SelectedGroup.Icons, RelativeSource={RelativeSource AncestorType=Page}}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            SelectionChanged="listIcons_SelectionChanged"
+            SelectionMode="Extended">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <vwp:VirtualizingWrapPanel
@@ -148,41 +169,49 @@
             </ListBox.ItemsPanel>
         </ListBox>
 
-        <!-- GridSplitter -->
-        <GridSplitter Grid.Row="1" Grid.Column="1"
-                      Width="5"
-                      HorizontalAlignment="Stretch"
-                      Background="{DynamicResource ControlFillColorDefaultBrush}" />
+        <!--  GridSplitter  -->
+        <GridSplitter
+            Grid.Row="1"
+            Grid.Column="1"
+            Width="5"
+            HorizontalAlignment="Stretch"
+            Background="{DynamicResource ControlFillColorDefaultBrush}" />
 
-        <!-- Icon Details Editor (Right) -->
-        <Grid Grid.Row="1" Grid.Column="2" DataContext="{Binding FirstSelectedIcon}">
+        <!--  Icon Details Editor (Right)  -->
+        <Grid
+            Grid.Row="1"
+            Grid.Column="2"
+            DataContext="{Binding FirstSelectedIcon}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <!-- Header -->
-            <Border Grid.Row="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" Padding="16,8">
+            <!--  Header  -->
+            <Border
+                Grid.Row="0"
+                Padding="16,8"
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{helpers:I18n TextIconDetails}"
-                               FontWeight="Bold"
-                               VerticalAlignment="Center"
-                               Margin="0,0,10,0" />
-                    <TextBlock VerticalAlignment="Center"
-                               Foreground="Gray"
-                               Visibility="{Binding DataContext.HasSelectedIcons, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <Run
-                            Text="{Binding DataContext.SelectedGroup.GroupName, RelativeSource={RelativeSource AncestorType=Page}, Mode=OneWay}" />
+                    <TextBlock
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        FontWeight="Bold"
+                        Text="{helpers:I18n TextIconDetails}" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Foreground="Gray"
+                        Visibility="{Binding DataContext.HasSelectedIcons, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Run Text="{Binding DataContext.SelectedGroup.GroupName, RelativeSource={RelativeSource AncestorType=Page}, Mode=OneWay}" />
                         <Run Text=" / #" />
                         <Run Text="{Binding ID, Mode=OneWay}" />
                     </TextBlock>
                 </StackPanel>
             </Border>
 
-            <!-- Details ScrollViewer -->
+            <!--  Details ScrollViewer  -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                <Grid Margin="16"
-                      IsEnabled="{Binding DataContext.HasSelectedIcons, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                <Grid Margin="16" IsEnabled="{Binding DataContext.HasSelectedIcons, RelativeSource={RelativeSource AncestorType=UserControl}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="110" />
                         <ColumnDefinition Width="*" />
@@ -195,93 +224,120 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <!-- UI Sprite Section -->
-                    <TextBlock Grid.Row="0" Grid.Column="0"
-                               Text="{helpers:I18n TextUISprite}"
-                               FontWeight="Bold"
-                               VerticalAlignment="Top"
-                               Margin="0,0,0,8" />
+                    <!--  UI Sprite Section  -->
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Margin="0,0,0,8"
+                        VerticalAlignment="Top"
+                        FontWeight="Bold"
+                        Text="{helpers:I18n TextUISprite}" />
 
-                    <StackPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Top">
-                        <Button x:Name="btnChangeSprite"
-                                Content="{helpers:I18n ButtonChangeEllipses}"
-                                Command="{Binding ChangeSpriteCommand}"
-                                Margin="0,0,0,4"
-                                Padding="8,4" />
-                        <Button x:Name="btnReimportSprite"
-                                Content="{helpers:I18n ButtonReimport}"
-                                Command="{Binding ReimportSpriteCommand}"
-                                Padding="8,4" />
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        VerticalAlignment="Top">
+                        <Button
+                            x:Name="btnChangeSprite"
+                            Margin="0,0,0,4"
+                            Padding="8,4"
+                            Command="{Binding ChangeSpriteCommand}"
+                            Content="{helpers:I18n ButtonChangeEllipses}" />
+                        <Button
+                            x:Name="btnReimportSprite"
+                            Padding="8,4"
+                            Command="{Binding ReimportSpriteCommand}"
+                            Content="{helpers:I18n ButtonReimport}" />
                     </StackPanel>
 
-                    <TextBlock Grid.Row="0" Grid.Column="1"
-                               Text="{Binding SpritePath}"
-                               Style="{StaticResource FileNameStyle}"
-                               Margin="8,0,0,8" />
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Margin="8,0,0,8"
+                        Style="{StaticResource FileNameStyle}"
+                        Text="{Binding SpritePath}" />
 
-                    <Border Grid.Row="1" Grid.Column="1"
-                            Width="256" Height="256"
-                            BorderBrush="Gray" BorderThickness="2"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Margin="8,0,0,0">
+                    <Border
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Width="256"
+                        Height="256"
+                        Margin="8,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        BorderBrush="Gray"
+                        BorderThickness="2">
                         <Grid>
                             <Rectangle Fill="{StaticResource CheckerboardBrush}" />
 
-                            <!-- Loading Indicator -->
-                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
-                                       Visibility="{Binding SpritePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
+                            <!--  Loading Indicator  -->
+                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}" Visibility="{Binding SpritePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
 
-                            <!-- Sprite Preview Image - Async Load -->
-                            <Image Stretch="Uniform"
-                                   helpers:AsyncImageLoader.AsyncSource="{Binding SpritePath}"
-                                   helpers:AsyncImageLoader.DecodePixelWidth="256" />
+                            <!--  Sprite Preview Image - Async Load  -->
+                            <Image
+                                helpers:AsyncImageLoader.AsyncSource="{Binding SpritePath}"
+                                helpers:AsyncImageLoader.DecodePixelWidth="256"
+                                Stretch="Uniform" />
                         </Grid>
                     </Border>
 
-                    <!-- Texture Preview Section -->
-                    <TextBlock Grid.Row="3" Grid.Column="0"
-                               Text="{helpers:I18n TextTexturePreview}"
-                               FontWeight="Bold"
-                               VerticalAlignment="Top"
-                               TextWrapping="Wrap"
-                               Margin="0,0,0,8" />
+                    <!--  Texture Preview Section  -->
+                    <TextBlock
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Margin="0,0,0,8"
+                        VerticalAlignment="Top"
+                        FontWeight="Bold"
+                        Text="{helpers:I18n TextTexturePreview}"
+                        TextWrapping="Wrap" />
 
-                    <StackPanel Grid.Row="4" Grid.Column="0" VerticalAlignment="Top">
-                        <Button x:Name="btnChangeTexture"
-                                Content="{helpers:I18n ButtonChangeEllipses}"
-                                Command="{Binding ChangeTextureCommand}"
-                                Margin="0,0,0,4"
-                                Padding="8,4" />
-                        <Button x:Name="btnReimportTexture"
-                                Content="{helpers:I18n ButtonReimport}"
-                                Command="{Binding ReimportTextureCommand}"
-                                Padding="8,4" />
+                    <StackPanel
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        VerticalAlignment="Top">
+                        <Button
+                            x:Name="btnChangeTexture"
+                            Margin="0,0,0,4"
+                            Padding="8,4"
+                            Command="{Binding ChangeTextureCommand}"
+                            Content="{helpers:I18n ButtonChangeEllipses}" />
+                        <Button
+                            x:Name="btnReimportTexture"
+                            Padding="8,4"
+                            Command="{Binding ReimportTextureCommand}"
+                            Content="{helpers:I18n ButtonReimport}" />
                     </StackPanel>
 
-                    <TextBlock Grid.Row="3" Grid.Column="1"
-                               Text="{Binding TexturePath}"
-                               Style="{StaticResource FileNameStyle}"
-                               Margin="8,0,0,8" />
+                    <TextBlock
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Margin="8,0,0,8"
+                        Style="{StaticResource FileNameStyle}"
+                        Text="{Binding TexturePath}" />
 
-                    <Border Grid.Row="4" Grid.Column="1"
-                            MinWidth="256" MinHeight="256"
-                            MaxWidth="512" MaxHeight="512"
-                            BorderBrush="Gray" BorderThickness="2"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Margin="8,0,0,0">
+                    <Border
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        MinWidth="256"
+                        MinHeight="256"
+                        MaxWidth="512"
+                        MaxHeight="512"
+                        Margin="8,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        BorderBrush="Gray"
+                        BorderThickness="2">
                         <Grid>
                             <Rectangle Fill="{StaticResource CheckerboardBrush}" />
 
-                            <!-- Loading Indicator -->
-                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
-                                       Visibility="{Binding TexturePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
+                            <!--  Loading Indicator  -->
+                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}" Visibility="{Binding TexturePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
 
-                            <!-- Texture Preview Image - Async Load -->
-                            <Image Stretch="Uniform"
-                                   helpers:AsyncImageLoader.AsyncSource="{Binding TexturePath}"
-                                   helpers:AsyncImageLoader.DecodePixelWidth="512" />
+                            <!--  Texture Preview Image - Async Load  -->
+                            <Image
+                                helpers:AsyncImageLoader.AsyncSource="{Binding TexturePath}"
+                                helpers:AsyncImageLoader.DecodePixelWidth="512"
+                                Stretch="Uniform" />
                         </Grid>
                     </Border>
                 </Grid>
