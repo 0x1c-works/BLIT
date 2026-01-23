@@ -10,30 +10,47 @@ namespace BLIT.WPF.Pages.BannerIcons;
 /// </summary>
 public partial class BannerIconGroupEditor : UserControl {
     private readonly BannerIconGroupEditorViewModel? _viewModel = new();
+    private bool _isInitialized = false;
 
     public BannerIconGroupEditor() {
         InitializeComponent();
         // Set DataContext to the internal ViewModel so XAML bindings work
         DataContext = _viewModel;
         
-        // 订阅 Loaded 事件，从父页面获取 SelectedGroup
-        this.Loaded += (s, e) => {
-            if (this.Parent is FrameworkElement parent) {
-                var pageDataContext = parent.DataContext;
-                if (pageDataContext is BannerIconsPageViewModel pageViewModel && _viewModel != null) {
-                    _viewModel.GroupData = pageViewModel.SelectedGroup;
-                    System.Diagnostics.Debug.WriteLine($"[BannerIconGroupEditor] Set GroupData from parent ViewModel: {pageViewModel.SelectedGroup?.GroupID}");
-                    
-                    // 订阅父 ViewModel 的 PropertyChanged 事件
-                    pageViewModel.PropertyChanged += (ps, pe) => {
-                        if (pe.PropertyName == nameof(BannerIconsPageViewModel.SelectedGroup)) {
-                            _viewModel.GroupData = pageViewModel.SelectedGroup;
-                            System.Diagnostics.Debug.WriteLine($"[BannerIconGroupEditor] GroupData updated: {pageViewModel.SelectedGroup?.GroupID}");
-                        }
-                    };
-                }
+        // 订阅 IsVisibleChanged 事件，延迟初始化直到需要显示
+        this.IsVisibleChanged += (s, e) => {
+            if (this.IsVisible && !_isInitialized) {
+                InitializeBindings();
             }
         };
+        
+        // 同时订阅 Loaded 事件作为备选
+        this.Loaded += (s, e) => {
+            if (this.IsVisible && !_isInitialized) {
+                InitializeBindings();
+            }
+        };
+    }
+
+    private void InitializeBindings() {
+        if (_isInitialized) return;
+        _isInitialized = true;
+
+        if (this.Parent is FrameworkElement parent) {
+            var pageDataContext = parent.DataContext;
+            if (pageDataContext is BannerIconsPageViewModel pageViewModel && _viewModel != null) {
+                _viewModel.GroupData = pageViewModel.SelectedGroup;
+                System.Diagnostics.Debug.WriteLine($"[BannerIconGroupEditor] Set GroupData from parent ViewModel: {pageViewModel.SelectedGroup?.GroupID}");
+                
+                // 订阅父 ViewModel 的 PropertyChanged 事件
+                pageViewModel.PropertyChanged += (ps, pe) => {
+                    if (pe.PropertyName == nameof(BannerIconsPageViewModel.SelectedGroup)) {
+                        _viewModel.GroupData = pageViewModel.SelectedGroup;
+                        System.Diagnostics.Debug.WriteLine($"[BannerIconGroupEditor] GroupData updated: {pageViewModel.SelectedGroup?.GroupID}");
+                    }
+                };
+            }
+        }
     }
 
     private void listIcons_SelectionChanged(object sender, SelectionChangedEventArgs e) {

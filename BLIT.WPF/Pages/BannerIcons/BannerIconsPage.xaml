@@ -206,7 +206,8 @@
                                 Visibility="{Binding ShowEmptyHint, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                             <local:BannerIconGroupEditor
-                                Visibility="{Binding HasSelectedGroup, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                x:Name="bannerIconGroupEditor"
+                                Visibility="{Binding DataContext.HasSelectedGroup, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </Grid>
                     </Border>
                 </Grid>

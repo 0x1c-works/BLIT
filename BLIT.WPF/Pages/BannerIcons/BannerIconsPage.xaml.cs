@@ -1,8 +1,5 @@
 using BLIT.WPF.Pages.BannerIcons.Models;
 using BLIT.WPF.Pages.BannerIcons.ViewModels;
-using BLIT.WPF.Services;
-using System;
-using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using Wpf.Ui.Abstractions.Controls;
@@ -36,8 +33,6 @@ public partial class BannerIconsPage : INavigableView<BannerIconsPageViewModel> 
                 comboOutputResolution.SelectedIndex = 1;
             }
         }
-
-        System.Diagnostics.Debug.WriteLine($"BannerIconsPage: Initialization complete, ViewModel={_viewModel?.ViewModel != null}");
     }
 
     // 分组列表选择变化
@@ -50,8 +45,7 @@ public partial class BannerIconsPage : INavigableView<BannerIconsPageViewModel> 
         if (_viewModel?.ViewModel == null || comboOutputResolution.SelectedItem == null) return;
 
         var item = comboOutputResolution.SelectedItem as ComboBoxItem;
-        var tag = item?.Tag as string;
-        if (tag != null) {
+        if (item?.Tag is string tag) {
             _viewModel.ViewModel.OutputResolutionName = tag;
         }
     }
