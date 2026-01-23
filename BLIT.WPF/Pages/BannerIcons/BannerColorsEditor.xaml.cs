@@ -17,7 +17,7 @@ public partial class BannerColorsEditor : UserControl {
         nameof(ProjectData),
         typeof(BannerIconsProject),
         typeof(BannerColorsEditor),
-        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, OnProjectDataChanged));
+        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnProjectDataChanged));
 
     public BannerIconsProject? ProjectData {
         get => (BannerIconsProject?)GetValue(ProjectDataProperty);

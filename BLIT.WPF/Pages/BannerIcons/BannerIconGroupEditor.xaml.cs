@@ -16,7 +16,7 @@ public partial class BannerIconGroupEditor : UserControl {
         nameof(GroupData),
         typeof(BannerGroupEntry),
         typeof(BannerIconGroupEditor),
-        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, OnGroupDataChanged));
+        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnGroupDataChanged));
 
     public BannerGroupEntry? GroupData {
         get => (BannerGroupEntry?)GetValue(GroupDataProperty);
@@ -25,16 +25,18 @@ public partial class BannerIconGroupEditor : UserControl {
 
     private static void OnGroupDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         if (d is BannerIconGroupEditor editor) {
-            System.Diagnostics.Debug.WriteLine($"BannerIconGroupEditor.OnGroupDataChanged called, NewValue={e.NewValue}");
+            System.Diagnostics.Debug.WriteLine($"BannerIconGroupEditor.OnGroupDataChanged called, OldValue={e.OldValue}, NewValue={e.NewValue}");
             // Update the internal ViewModel when the data context changes
             if (editor._viewModel != null) {
                 editor._viewModel.GroupData = e.NewValue as BannerGroupEntry;
+                System.Diagnostics.Debug.WriteLine($"  -> Set ViewModel.GroupData to {editor._viewModel.GroupData}");
             }
         }
     }
 
     public BannerIconGroupEditor() {
         InitializeComponent();
+        // Set DataContext to the internal ViewModel so XAML bindings work
         DataContext = _viewModel;
     }
 

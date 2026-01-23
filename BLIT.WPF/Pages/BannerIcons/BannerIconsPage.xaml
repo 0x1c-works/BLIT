@@ -198,7 +198,8 @@
                                 Visibility="{Binding ShowEmptyHint, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                             <local:BannerIconGroupEditor
-                                GroupData="{Binding SelectedGroup}"
+                                x:Name="bannerIconGroupEditor"
+                                GroupData="{Binding SelectedGroup, Mode=OneWay}"
                                 Visibility="{Binding HasSelectedGroup, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </Grid>
                     </Border>
@@ -208,7 +209,7 @@
             <!--  颜色编辑器标签页  -->
              <TabItem Header="{helpers:I18n PivotBannerColorsEditor.Header}">
                  <local:BannerColorsEditor
-                     ProjectData="{Binding ViewModel}" />
+                     ProjectData="{Binding ViewModel, Mode=OneWay}" />
              </TabItem>
         </TabControl>
     </Grid>
