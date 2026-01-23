@@ -1,7 +1,5 @@
-using System;
 using System.Globalization;
 using System.Resources;
-using System.Windows;
 using System.Windows.Markup;
 
 namespace BLIT.WPF.Helpers;

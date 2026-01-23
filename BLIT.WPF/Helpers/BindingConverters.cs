@@ -3,15 +3,16 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BLIT.WPF.Helpers;
 
 public class InvertBoolConverter : IValueConverter {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) {
         return value is bool b ? !b : value;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) {
         throw new NotImplementedException();
     }
 }
@@ -21,7 +22,7 @@ public class PathToOptimizedBitmapImageConverter : IValueConverter {
     /// Converts a file path to an optimized BitmapImage with specified decode pixel width.
     /// Parameter should be the DecodePixelWidth value (e.g., "128", "256", "512")
     /// </summary>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) {
         if (value is not string path || string.IsNullOrEmpty(path)) {
             return null!;
         }
@@ -39,14 +40,13 @@ public class PathToOptimizedBitmapImageConverter : IValueConverter {
             bitmap.EndInit();
             bitmap.Freeze();
             return bitmap;
-        }
-        catch {
+        } catch {
             // Return null if path is invalid or image cannot be loaded
             return null!;
         }
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) {
         throw new NotImplementedException();
     }
 }
@@ -56,7 +56,7 @@ public class PathToOptimizedBitmapImageConverter : IValueConverter {
 /// Used with MultiBinding to track loading state
 /// </summary>
 public class AsyncPathToBitmapImageConverter : IValueConverter {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) {
         if (value is not string path || string.IsNullOrEmpty(path)) {
             return null!;
         }
@@ -71,7 +71,7 @@ public class AsyncPathToBitmapImageConverter : IValueConverter {
         return null!;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) {
         throw new NotImplementedException();
     }
 
@@ -88,8 +88,7 @@ public class AsyncPathToBitmapImageConverter : IValueConverter {
                 bitmap.Freeze();
                 // Bitmap is loaded but we don't return it here
                 // The actual image will be set via binding update
-            }
-            catch {
+            } catch {
                 // Silently ignore errors
             }
         });
@@ -100,11 +99,11 @@ public class AsyncPathToBitmapImageConverter : IValueConverter {
 /// Checks if a path is empty to show/hide loading indicator
 /// </summary>
 public class StringIsNullOrEmptyConverter : IValueConverter {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) {
         return string.IsNullOrEmpty(value as string);
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) {
         throw new NotImplementedException();
     }
 }

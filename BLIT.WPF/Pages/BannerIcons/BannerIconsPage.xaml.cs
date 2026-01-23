@@ -28,6 +28,7 @@ public partial class BannerIconsPage : Page, INotifyPropertyChanged {
     public BannerIconsProject? ViewModel => _project?.Current;
     public BannerGroupEntry? SelectedGroup => listViewGroups.SelectedItem as BannerGroupEntry;
     public bool HasSelectedGroup => SelectedGroup != null;
+    public bool ShowEmptyHint => !HasSelectedGroup;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -261,6 +262,7 @@ public partial class BannerIconsPage : Page, INotifyPropertyChanged {
     private void listViewGroups_SelectionChanged(object sender, SelectionChangedEventArgs e) {
         OnPropertyChanged(nameof(SelectedGroup));
         OnPropertyChanged(nameof(HasSelectedGroup));
+        OnPropertyChanged(nameof(ShowEmptyHint));
     }
     
     private IConfirmDialogService? _confirmDialog = AppServices.Get<IConfirmDialogService>();

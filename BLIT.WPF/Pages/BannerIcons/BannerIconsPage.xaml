@@ -13,7 +13,10 @@
     VerticalAlignment="Stretch"
     d:DesignHeight="600"
     d:DesignWidth="1000"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}">
     <Page.Resources>
         <helpers:InvertBoolConverter x:Key="InvertBoolConverter" />
 
@@ -48,7 +51,6 @@
         <Border
             Grid.Row="0"
             Padding="24,16"
-            Background="{DynamicResource ApplicationBackgroundBrush}"
             BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
             BorderThickness="0,0,0,1">
             <TextBlock
@@ -61,10 +63,7 @@
         <!--  菜单工具栏  -->
         <Border
             Grid.Row="1"
-            Padding="12,0"
-            Background="#F3F3F3"
-            BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
-            BorderThickness="0,0,0,1">
+            Padding="12,0">
             <Menu VerticalAlignment="Center">
                 <!--  文件菜单  -->
                 <MenuItem
@@ -160,7 +159,7 @@
                     </Grid.ColumnDefinitions>
 
                     <!--  左侧分组列表  -->
-                    <Grid Grid.Column="0" Background="#F9F9F9">
+                    <Grid Grid.Column="0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -170,30 +169,19 @@
                         <Border
                             Grid.Row="0"
                             Padding="16"
-                            Background="#E0E0E0">
+                            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
                             <TextBlock
                                 FontWeight="Bold"
                                 Text="{helpers:I18n TextBannerGroupListTitle.Text}"
                                 TextAlignment="Center" />
                         </Border>
 
-                        <StackPanel Grid.Row="1" Orientation="Horizontal">
-                            <Button
-                                x:Name="btnAddGroup"
-                                Padding="8"
-                                Click="btnAddGroup_Click"
-                                ToolTip="Add Group">
-                                <TextBlock Text="➕ 添加分组" />
-                            </Button>
-                            <Button
-                                x:Name="btnDeleteGroup"
-                                Padding="8"
-                                Click="btnDeleteGroup_Click"
-                                IsEnabled="{Binding HasSelectedGroup, RelativeSource={RelativeSource AncestorType=Page}}"
-                                ToolTip="Delete Group">
-                                <TextBlock Text="🗑️ 删除分组" />
-                            </Button>
-                        </StackPanel>
+                        <Menu Grid.Row="1" FontSize="14">
+                            <ui:MenuItem Click="btnAddGroup_Click" Header="{helpers:I18n ButtonAdd.Content}"
+                                         Icon="{ui:SymbolIcon Symbol=Add20}" />
+                            <ui:MenuItem Click="btnDeleteGroup_Click" Header="{helpers:I18n ButtonDelete.Content}"
+                                         Icon="{ui:SymbolIcon Symbol=Delete20}" />
+                        </Menu>
 
                         <ListBox
                             x:Name="listViewGroups"
@@ -206,13 +194,13 @@
                     <!--  右侧编辑区域  -->
                     <Border
                         Grid.Column="1"
-                        BorderBrush="#E0E0E0"
+                        BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
                         BorderThickness="1,0,0,0">
                         <Grid>
                             <TextBlock
                                 Padding="16"
                                 Text="{helpers:I18n TextNoSelectedBannerGroup.Text}"
-                                Visibility="{Binding HasSelectedGroup, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}" />
+                                Visibility="{Binding ShowEmptyHint, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}" />
 
                             <local:BannerIconGroupEditor
                                 ViewModel="{Binding SelectedGroup, RelativeSource={RelativeSource AncestorType=Page}}"

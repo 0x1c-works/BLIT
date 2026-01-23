@@ -272,12 +272,6 @@
   <data name="LinkHelpWebsite" xml:space="preserve">
     <value>https://blit.0x1.best/zh</value>
   </data>
-  <data name="MenuItemAdd.Text" xml:space="preserve">
-    <value>添加</value>
-  </data>
-  <data name="MenuItemDelete.Text" xml:space="preserve">
-    <value>删除</value>
-  </data>
   <data name="NeedGameRootFolder" xml:space="preserve">
     <value>（请选择游戏安装目录）</value>
   </data>

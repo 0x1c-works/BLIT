@@ -11,6 +11,8 @@
                 <ui:ThemesDictionary Theme="Dark" />
                 <!-- WPF-UI controls dictionary -->
                 <ui:ControlsDictionary />
+                <!-- Theme colors reference for Rider IntelliSense -->
+                <ResourceDictionary Source="Resources/ThemeColors.reference.xaml" />
             </ResourceDictionary.MergedDictionaries>
             
             <!-- Built-in converters -->

@@ -272,12 +272,6 @@ If you prefer not to, the changes will be applied next time when you launch this
   <data name="LinkHelpWebsite" xml:space="preserve">
     <value>https://blit.0x1.best</value>
   </data>
-  <data name="MenuItemAdd.Text" xml:space="preserve">
-    <value>Add</value>
-  </data>
-  <data name="MenuItemDelete.Text" xml:space="preserve">
-    <value>Delete</value>
-  </data>
   <data name="NeedGameRootFolder" xml:space="preserve">
     <value>(Please select the game install folder)</value>
   </data>
