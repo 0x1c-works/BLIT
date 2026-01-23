@@ -115,10 +115,10 @@
                  <Thickness>16,8</Thickness>
              </StackPanel.Margin>
              <TextBlock Text="{helpers:I18n LabelBannerGroupID.Text}" VerticalAlignment="Center" Margin="0,0,8,0"/>
-             <TextBox x:Name="txtGroupID" 
-                      Width="100" 
-                      VerticalAlignment="Center"
-                      Text="{Binding GroupData.GroupID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+              <TextBox x:Name="txtGroupID" 
+                       Width="100" 
+                       VerticalAlignment="Center"
+                       Text="{Binding DataContext.SelectedGroup.GroupID, RelativeSource={RelativeSource AncestorType=Page}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
              
              <Separator  Margin="8,0"/>
              
@@ -142,15 +142,15 @@
          </StackPanel>
          
           <!-- Icon Grid (Left) -->
-          <ListBox x:Name="listIcons" 
-                   Grid.Row="1" 
-                   Grid.Column="0"
-                   ItemsSource="{Binding GroupData.Icons}"
-                   ItemTemplate="{StaticResource IconTextureTemplate}"
-                   SelectionMode="Extended"
-                   SelectionChanged="listIcons_SelectionChanged"
-                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                   Padding="8">
+           <ListBox x:Name="listIcons" 
+                    Grid.Row="1" 
+                    Grid.Column="0"
+                    ItemsSource="{Binding DataContext.SelectedGroup.Icons, RelativeSource={RelativeSource AncestorType=Page}}"
+                    ItemTemplate="{StaticResource IconTextureTemplate}"
+                    SelectionMode="Extended"
+                    SelectionChanged="listIcons_SelectionChanged"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    Padding="8">
              <ListBox.ItemsPanel>
                  <ItemsPanelTemplate>
                      <vwp:VirtualizingWrapPanel 
@@ -184,7 +184,7 @@
                       <TextBlock VerticalAlignment="Center" 
                                  Foreground="Gray"
                                  Visibility="{Binding DataContext.HasSelectedIcons, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
-                          <Run Text="{Binding DataContext.GroupData.GroupName, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}"/>
+                           <Run Text="{Binding DataContext.SelectedGroup.GroupName, RelativeSource={RelativeSource AncestorType=Page}, Mode=OneWay}"/>
                           <Run Text=" / #"/>
                           <Run Text="{Binding ID, Mode=OneWay}"/>
                       </TextBlock>

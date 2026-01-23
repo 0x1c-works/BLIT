@@ -1,13 +1,15 @@
 <UserControl x:Class="BLIT.WPF.Pages.BannerIcons.BannerColorsEditor"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
              xmlns:local="clr-namespace:BLIT.WPF.Pages.BannerIcons"
              xmlns:vm="clr-namespace:BLIT.WPF.Pages.BannerIcons.Models"
-             xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
-             mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="800"
+             x:Name="bannerColorsEditor">
     <UserControl.Resources>
         <SolidColorBrush x:Key="AlternativeRowBackgroundBrush" Color="#1A000000"/>
         
@@ -111,14 +113,14 @@
                 </Button>
             </StackPanel>
             
-            <!-- Color List -->
-            <ListBox x:Name="listViewColors"
-                     Grid.Row="1"
-                     ItemsSource="{Binding ProjectData.Colors}"
-                     ItemTemplate="{StaticResource ColorItemTemplate}"
-                     SelectionMode="Extended"
-                     SelectionChanged="listViewColors_SelectionChanged"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+             <!-- Color List -->
+             <ListBox x:Name="listViewColors"
+                      Grid.Row="1"
+                      ItemsSource="{Binding DataContext.ViewModel.Colors, RelativeSource={RelativeSource AncestorType=Page}}"
+                      ItemTemplate="{StaticResource ColorItemTemplate}"
+                      SelectionMode="Extended"
+                      SelectionChanged="listViewColors_SelectionChanged"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
         </Grid>
         
         <!-- Right Panel: Color Editor -->

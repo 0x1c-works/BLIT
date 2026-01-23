@@ -16,11 +16,11 @@ public partial class BannerIconGroupEditorViewModel : ObservableObject {
 
     private readonly IFileDialogService? _fileDialog = AppServices.Get<IFileDialogService>();
 
-    // 分组数据引用
+    // 分组数据引用 - 这个由父 ViewModel 的 SelectedGroup 提供
     [ObservableProperty]
     private BannerGroupEntry? groupData;
 
-    // UI 状态属性
+    // UI 状态属性 - 本地管理的选择状态
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FirstSelectedIcon))]
     [NotifyPropertyChangedFor(nameof(CanReimportSprite))]

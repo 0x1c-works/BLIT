@@ -12,31 +12,20 @@ namespace BLIT.WPF.Pages.BannerIcons;
 public partial class BannerColorsEditor : UserControl {
     private readonly BannerColorsEditorViewModel? _viewModel = new();
 
-    // Dependency Property for ProjectData (BannerIconsProject data)
-    public static readonly DependencyProperty ProjectDataProperty = DependencyProperty.Register(
-        nameof(ProjectData),
-        typeof(BannerIconsProject),
-        typeof(BannerColorsEditor),
-        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnProjectDataChanged));
-
-    public BannerIconsProject? ProjectData {
-        get => (BannerIconsProject?)GetValue(ProjectDataProperty);
-        set => SetValue(ProjectDataProperty, value);
-    }
-
-    private static void OnProjectDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-        if (d is BannerColorsEditor editor) {
-            System.Diagnostics.Debug.WriteLine($"BannerColorsEditor.OnProjectDataChanged called, NewValue={e.NewValue}");
-            // Update the internal ViewModel when the data context changes
-            if (editor._viewModel != null) {
-                editor._viewModel.ProjectData = e.NewValue as BannerIconsProject;
-            }
-        }
-    }
-
     public BannerColorsEditor() {
         InitializeComponent();
         DataContext = _viewModel;
+        
+        // 订阅 DataContextChanged 事件，从父页面获取 ProjectData
+        this.Loaded += (s, e) => {
+            if (this.Parent is FrameworkElement parent) {
+                var pageDataContext = parent.DataContext;
+                if (pageDataContext is BannerIconsPageViewModel pageViewModel && _viewModel != null) {
+                    _viewModel.ProjectData = pageViewModel.ViewModel;
+                    System.Diagnostics.Debug.WriteLine($"[BannerColorsEditor] Set ProjectData from parent ViewModel: {pageViewModel.ViewModel}");
+                }
+            }
+        };
     }
 
     private void listViewColors_SelectionChanged(object sender, SelectionChangedEventArgs e) {

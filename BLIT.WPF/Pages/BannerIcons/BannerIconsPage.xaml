@@ -6,7 +6,8 @@
     xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
     xmlns:local="clr-namespace:BLIT.WPF.Pages.BannerIcons"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="clr-namespace:BLIT.WPF.Pages.BannerIcons.Models"
+    xmlns:model="clr-namespace:BLIT.WPF.Pages.BannerIcons.Models"
+    xmlns:vm="clr-namespace:BLIT.WPF.Pages.BannerIcons.ViewModels"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="BannerIconsPage"
     HorizontalAlignment="Stretch"
@@ -16,12 +17,13 @@
     mc:Ignorable="d"
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-    Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    >
     <Page.Resources>
         <helpers:InvertBoolConverter x:Key="InvertBoolConverter" />
 
         <!--  分组列表项模板  -->
-        <DataTemplate x:Key="GroupItemTemplate" DataType="{x:Type vm:BannerGroupEntry}">
+        <DataTemplate x:Key="GroupItemTemplate" DataType="{x:Type model:BannerGroupEntry}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -199,17 +201,15 @@
 
                             <local:BannerIconGroupEditor
                                 x:Name="bannerIconGroupEditor"
-                                GroupData="{Binding SelectedGroup, Mode=OneWay}"
                                 Visibility="{Binding HasSelectedGroup, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </Grid>
                     </Border>
                 </Grid>
             </TabItem>
 
-            <!--  颜色编辑器标签页  -->
-             <TabItem Header="{helpers:I18n PivotBannerColorsEditor.Header}">
-                 <local:BannerColorsEditor
-                     ProjectData="{Binding ViewModel, Mode=OneWay}" />
+             <!--  颜色编辑器标签页  -->
+              <TabItem Header="{helpers:I18n PivotBannerColorsEditor.Header}">
+                  <local:BannerColorsEditor />
              </TabItem>
         </TabControl>
     </Grid>

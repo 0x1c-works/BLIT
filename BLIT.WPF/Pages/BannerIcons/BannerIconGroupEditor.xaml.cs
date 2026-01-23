@@ -11,33 +11,29 @@ namespace BLIT.WPF.Pages.BannerIcons;
 public partial class BannerIconGroupEditor : UserControl {
     private readonly BannerIconGroupEditorViewModel? _viewModel = new();
 
-    // Dependency Property for GroupData (BannerGroupEntry data)
-    public static readonly DependencyProperty GroupDataProperty = DependencyProperty.Register(
-        nameof(GroupData),
-        typeof(BannerGroupEntry),
-        typeof(BannerIconGroupEditor),
-        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnGroupDataChanged));
-
-    public BannerGroupEntry? GroupData {
-        get => (BannerGroupEntry?)GetValue(GroupDataProperty);
-        set => SetValue(GroupDataProperty, value);
-    }
-
-    private static void OnGroupDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-        if (d is BannerIconGroupEditor editor) {
-            System.Diagnostics.Debug.WriteLine($"BannerIconGroupEditor.OnGroupDataChanged called, OldValue={e.OldValue}, NewValue={e.NewValue}");
-            // Update the internal ViewModel when the data context changes
-            if (editor._viewModel != null) {
-                editor._viewModel.GroupData = e.NewValue as BannerGroupEntry;
-                System.Diagnostics.Debug.WriteLine($"  -> Set ViewModel.GroupData to {editor._viewModel.GroupData}");
-            }
-        }
-    }
-
     public BannerIconGroupEditor() {
         InitializeComponent();
         // Set DataContext to the internal ViewModel so XAML bindings work
         DataContext = _viewModel;
+        
+        // 订阅 Loaded 事件，从父页面获取 SelectedGroup
+        this.Loaded += (s, e) => {
+            if (this.Parent is FrameworkElement parent) {
+                var pageDataContext = parent.DataContext;
+                if (pageDataContext is BannerIconsPageViewModel pageViewModel && _viewModel != null) {
+                    _viewModel.GroupData = pageViewModel.SelectedGroup;
+                    System.Diagnostics.Debug.WriteLine($"[BannerIconGroupEditor] Set GroupData from parent ViewModel: {pageViewModel.SelectedGroup?.GroupID}");
+                    
+                    // 订阅父 ViewModel 的 PropertyChanged 事件
+                    pageViewModel.PropertyChanged += (ps, pe) => {
+                        if (pe.PropertyName == nameof(BannerIconsPageViewModel.SelectedGroup)) {
+                            _viewModel.GroupData = pageViewModel.SelectedGroup;
+                            System.Diagnostics.Debug.WriteLine($"[BannerIconGroupEditor] GroupData updated: {pageViewModel.SelectedGroup?.GroupID}");
+                        }
+                    };
+                }
+            }
+        };
     }
 
     private void listIcons_SelectionChanged(object sender, SelectionChangedEventArgs e) {
