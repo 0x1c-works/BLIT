@@ -7,7 +7,7 @@ using System.Windows;
 namespace BLIT.WPF;
 
 public partial class App : Application {
-    public new static App Current => (App)Application.Current;
+    public new static App? Current => Application.Current as App;
     //public new Window? MainWindow { get; private set; }
     public IServiceProvider? Services { get; private set; }
 

@@ -7,18 +7,17 @@
     xmlns:local="clr-namespace:BLIT.WPF.Pages.BannerIcons"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:BLIT.WPF.Pages.BannerIcons.Models"
-    xmlns:vm="clr-namespace:BLIT.WPF.Pages.BannerIcons.ViewModels"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:vm="clr-namespace:BLIT.WPF.Pages.BannerIcons.ViewModels"
     Title="BannerIconsPage"
     HorizontalAlignment="Stretch"
     VerticalAlignment="Stretch"
     d:DesignHeight="600"
     d:DesignWidth="1000"
-    mc:Ignorable="d"
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-    >
+    mc:Ignorable="d">
     <Page.Resources>
         <helpers:InvertBoolConverter x:Key="InvertBoolConverter" />
 
@@ -63,67 +62,61 @@
         </Border>
 
         <!--  菜单工具栏  -->
-        <Border
-            Grid.Row="1"
-            Padding="12,0">
+        <Border Grid.Row="1" Padding="12,0">
             <Menu VerticalAlignment="Center">
                 <!--  文件菜单  -->
                 <MenuItem
                     Command="{Binding NewProjectCommand}"
                     Header="{helpers:I18n AppButtonNewProject.Label}"
                     Icon="{ui:SymbolIcon Symbol=Document20}"
-                    ToolTip="{helpers:I18n AppButtonNewProject.Label}">
-                </MenuItem>
+                    ToolTip="{helpers:I18n AppButtonNewProject.Label}" />
 
                 <!--  保存项目  -->
                 <MenuItem
                     Command="{Binding SaveProjectCommand}"
                     Header="{helpers:I18n AppButtonSaveProject.Label}"
                     Icon="{ui:SymbolIcon Symbol=Save20}"
-                    ToolTip="{helpers:I18n AppButtonSaveProject.Label}">
-                </MenuItem>
+                    ToolTip="{helpers:I18n AppButtonSaveProject.Label}" />
 
                 <!--  另存为  -->
                 <MenuItem
                     Command="{Binding SaveProjectAsCommand}"
                     Header="{helpers:I18n AppButtonSaveProjectAs.Label}"
                     Icon="{ui:SymbolIcon Symbol=SaveArrowRight20}"
-                    ToolTip="{helpers:I18n AppButtonSaveProjectAs.Label}">
-                </MenuItem>
+                    ToolTip="{helpers:I18n AppButtonSaveProjectAs.Label}" />
 
                 <!--  打开项目  -->
                 <MenuItem
                     Command="{Binding OpenProjectCommand}"
                     Header="{helpers:I18n AppButtonOpenProject.Label}"
                     Icon="{ui:SymbolIcon Symbol=Folder20}"
-                    ToolTip="{helpers:I18n AppButtonOpenProject.Label}">
+                    ToolTip="{helpers:I18n AppButtonOpenProject.Label}" />
+
+                <!--  分隔符  -->
+                <Separator />
+
+                <!--  导出菜单  -->
+                <MenuItem Header="{helpers:I18n AppButtonExportAll.Label}" Icon="{ui:SymbolIcon Symbol=ArrowExportUp20}">
+                    <MenuItem
+                        Command="{Binding ExportAllCommand}"
+                        Header="{helpers:I18n AppButtonExportAll.Label}"
+                        ToolTip="{helpers:I18n AppButtonExportAll.Label}" />
+                    <MenuItem
+                        Command="{Binding ExportXMLCommand}"
+                        Header="{helpers:I18n AppButtonExportXML.Label}"
+                        ToolTip="{helpers:I18n AppButtonExportXML.Label}" />
                 </MenuItem>
 
                 <!--  分隔符  -->
                 <Separator />
 
-                 <!--  导出菜单  -->
-                 <MenuItem Header="{helpers:I18n AppButtonExportAll.Label}"
-                           Icon="{ui:SymbolIcon Symbol=ArrowExportUp20}">
-                     <MenuItem
-                         Command="{Binding ExportAllCommand}"
-                         Header="{helpers:I18n AppButtonExportAll.Label}"
-                         ToolTip="{helpers:I18n AppButtonExportAll.Label}">
-                     </MenuItem>
-                     <MenuItem
-                         Command="{Binding ExportXMLCommand}"
-                         Header="{helpers:I18n AppButtonExportXML.Label}"
-                         ToolTip="{helpers:I18n AppButtonExportXML.Label}">
-                     </MenuItem>
-                 </MenuItem>
-
-                <!--  分隔符  -->
-                <Separator />
-
                 <!--  纹理分辨率  -->
-                <MenuItem Width="200" IsSubmenuOpen="False" VerticalAlignment="Stretch">
+                <MenuItem
+                    Width="200"
+                    VerticalAlignment="Stretch"
+                    IsSubmenuOpen="False">
                     <MenuItem.Header>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                             <TextBlock
                                 Margin="0,0,6,0"
                                 FontSize="14"
@@ -174,10 +167,14 @@
                         </Border>
 
                         <Menu Grid.Row="1" FontSize="14">
-                            <ui:MenuItem Command="{Binding AddGroupCommand}" Header="{helpers:I18n ButtonAdd.Content}"
-                                         Icon="{ui:SymbolIcon Symbol=Add20}" />
-                            <ui:MenuItem Command="{Binding DeleteGroupCommand}" Header="{helpers:I18n ButtonDelete.Content}"
-                                         Icon="{ui:SymbolIcon Symbol=Delete20}" />
+                            <ui:MenuItem
+                                Command="{Binding AddGroupCommand}"
+                                Header="{helpers:I18n ButtonAdd.Content}"
+                                Icon="{ui:SymbolIcon Symbol=Add20}" />
+                            <ui:MenuItem
+                                Command="{Binding DeleteGroupCommand}"
+                                Header="{helpers:I18n ButtonDelete.Content}"
+                                Icon="{ui:SymbolIcon Symbol=Delete20}" />
                         </Menu>
 
                         <ListBox
@@ -199,18 +196,16 @@
                                 Text="{helpers:I18n TextNoSelectedBannerGroup.Text}"
                                 Visibility="{Binding ShowEmptyHint, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-                            <local:BannerIconGroupEditor
-                                x:Name="bannerIconGroupEditor"
-                                Visibility="{Binding HasSelectedGroup, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            <local:BannerIconGroupEditor x:Name="bannerIconGroupEditor" Visibility="{Binding HasSelectedGroup, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </Grid>
                     </Border>
                 </Grid>
             </TabItem>
 
-             <!--  颜色编辑器标签页  -->
-              <TabItem Header="{helpers:I18n PivotBannerColorsEditor.Header}">
-                  <local:BannerColorsEditor />
-             </TabItem>
+            <!--  颜色编辑器标签页  -->
+            <TabItem Header="{helpers:I18n PivotBannerColorsEditor.Header}">
+                <local:BannerColorsEditor />
+            </TabItem>
         </TabControl>
     </Grid>
 </Page>
