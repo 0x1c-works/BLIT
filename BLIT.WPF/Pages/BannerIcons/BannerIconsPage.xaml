@@ -95,33 +95,20 @@
                 <!--  分隔符  -->
                 <Separator />
 
-                <!--  导出菜单  -->
-                <MenuItem Header="{helpers:I18n AppButtonExportAll.Label}" Icon="{ui:SymbolIcon Symbol=ArrowExportUp20}">
-                    <MenuItem
-                        Command="{Binding ExportAllCommand}"
-                        Header="{helpers:I18n AppButtonExportAll.Label}"
-                        ToolTip="{helpers:I18n AppButtonExportAll.Label}" />
-                    <MenuItem
-                        Command="{Binding ExportXMLCommand}"
-                        Header="{helpers:I18n AppButtonExportXML.Label}"
-                        ToolTip="{helpers:I18n AppButtonExportXML.Label}" />
-                </MenuItem>
-
-                <!--  分隔符  -->
-                <Separator />
 
                 <!--  纹理分辨率  -->
                 <MenuItem
-                    Width="200"
                     VerticalAlignment="Stretch"
                     IsSubmenuOpen="False">
                     <MenuItem.Header>
                         <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                             <TextBlock
-                                Margin="0,0,6,0"
+                                Margin="0,9,6,0"
                                 FontSize="14"
                                 Text="⚙️" />
-                            <TextBlock Text="{helpers:I18n LabelTextureResolution.Text}" />
+                            <TextBlock 
+                                Margin="0,9,6,0"
+                                Text="{helpers:I18n LabelTextureResolution.Text}" />
                             <ComboBox
                                 x:Name="comboOutputResolution"
                                 MinWidth="100"
@@ -135,6 +122,22 @@
                         </StackPanel>
                     </MenuItem.Header>
                 </MenuItem>
+                <!--  分隔符  -->
+                <Separator />
+                <!--  导出菜单  -->
+                    <MenuItem
+                        Command="{Binding ExportAllCommand}"
+                        Header="{helpers:I18n AppButtonExportAll.Label}"
+                        Icon="{ui:SymbolIcon ArrowExportUp20}"
+                        ToolTip="{helpers:I18n AppButtonExportAll.Label}" />
+                    <MenuItem
+                        Command="{Binding ExportXMLCommand}"
+                        Header="{helpers:I18n AppButtonExportXML.Label}"
+                        Icon="{ui:SymbolIcon CodeBlock20}"
+                        ToolTip="{helpers:I18n AppButtonExportXML.Label}" />
+
+                <!--  分隔符  -->
+                <Separator />
             </Menu>
         </Border>
 
@@ -144,7 +147,8 @@
             <TabItem Header="{helpers:I18n PivotBannerGroupsEditor.Header}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="300" />
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
@@ -185,9 +189,14 @@
                             SelectionChanged="listViewGroups_SelectionChanged" />
                     </Grid>
 
+                    <!-- GridSplitter -->
+                    <GridSplitter Grid.Column="1"
+                                  Width="5"
+                                  HorizontalAlignment="Stretch"
+                                  Background="{DynamicResource ControlFillColorDefaultBrush}" />
                     <!--  右侧编辑区域  -->
                     <Border
-                        Grid.Column="1"
+                        Grid.Column="2"
                         BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
                         BorderThickness="1,0,0,0">
                         <Grid>
@@ -196,7 +205,8 @@
                                 Text="{helpers:I18n TextNoSelectedBannerGroup.Text}"
                                 Visibility="{Binding ShowEmptyHint, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-                            <local:BannerIconGroupEditor x:Name="bannerIconGroupEditor" Visibility="{Binding HasSelectedGroup, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            <local:BannerIconGroupEditor
+                                Visibility="{Binding HasSelectedGroup, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </Grid>
                     </Border>
                 </Grid>
