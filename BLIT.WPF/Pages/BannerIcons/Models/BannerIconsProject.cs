@@ -2,6 +2,7 @@ using Autofac;
 using BLIT.Banner;
 using BLIT.WPF.Helpers;
 using BLIT.WPF.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
 using MessagePack;
 using Serilog;
 using System;
@@ -13,7 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace BLIT.WPF.Pages.BannerIcons.Models;
-public class BannerIconsProject : BindableBase, IProject {
+public partial class BannerIconsProject : ObservableObject, IProject {
     /// <summary>
     /// 0 - 6 is occpuied by the native game
     /// </summary>
@@ -53,23 +54,15 @@ public class BannerIconsProject : BindableBase, IProject {
     }
 
     private bool _isExporting = false;
-    public bool IsExporting {
-        get => _isExporting;
-        set {
-            SetProperty(ref _isExporting, value);
-            OnPropertyChanged(nameof(CanExport));
-        }
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanExport))]
+    private bool isExporting;
 
-    private bool _isSavingOrLoading = false;
-    public bool IsSavingOrLoading {
-        get => _isSavingOrLoading;
-        set {
-            SetProperty(ref _isSavingOrLoading, value);
-            OnPropertyChanged(nameof(CanExport));
-        }
-    }
-    public bool CanExport => !_isExporting && !IsSavingOrLoading && (Groups.Any(g => g.CanExport) || Colors.Count > 0);
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanExport))]
+    private bool isSavingOrLoading;
+
+    public bool CanExport => !IsExporting && !IsSavingOrLoading && (Groups.Any(g => g.CanExport) || Colors.Count > 0);
 
     public BannerIconData ToBannerIconData() {
         var data = new BannerIconData();

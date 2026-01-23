@@ -1,12 +1,13 @@
 using BLIT.Banner;
 using BLIT.WPF.Helpers;
 using BLIT.WPF.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
 using MessagePack;
 using System.ComponentModel;
 using System.IO;
 
 namespace BLIT.WPF.Pages.BannerIcons.Models;
-public class BannerIconEntry : BindableBase {
+public partial class BannerIconEntry : ObservableObject {
     public delegate BannerIconEntry Factory(BannerGroupEntry groupVm, string texturePath);
 
     private readonly BannerGroupEntry _groupViewModel;

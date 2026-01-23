@@ -1,5 +1,6 @@
 using BLIT.Banner;
 using BLIT.WPF.Helpers;
+using CommunityToolkit.Mvvm.ComponentModel;
 using MessagePack;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Linq;
 
 namespace BLIT.WPF.Pages.BannerIcons.Models;
 
-public class BannerGroupEntry : BindableBase {
+public partial class BannerGroupEntry : ObservableObject {
     public delegate BannerGroupEntry Factory(int groupID);
 
     private BannerIconsProject _project;

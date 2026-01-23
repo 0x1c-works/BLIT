@@ -1,11 +1,12 @@
 using BLIT.Banner;
 using BLIT.WPF.Helpers;
+using CommunityToolkit.Mvvm.ComponentModel;
 using MessagePack;
 using System.Windows.Media;
 
 namespace BLIT.WPF.Pages.BannerIcons.Models;
 
-public class BannerColorEntry : BindableBase {
+public partial class BannerColorEntry : ObservableObject {
     public delegate BannerColorEntry Factory(int id);
 
     private BannerIconsProject _project;
@@ -22,26 +23,20 @@ public class BannerColorEntry : BindableBase {
             OnPropertyChanged(nameof(CanExport));
         }
     }
-    public Color Color {
-        get => _color;
-        set {
-            if (SetProperty(ref _color, value)) {
-                OnPropertyChanged(nameof(CanExport));
-                OnPropertyChanged(nameof(R));
-                OnPropertyChanged(nameof(G));
-                OnPropertyChanged(nameof(B));
-                OnPropertyChanged(nameof(HexColor));
-            }
-        }
-    }
-    public bool IsForSigil {
-        get => _isForSigil;
-        set => SetProperty(ref _isForSigil, value);
-    }
-    public bool IsForBackground {
-        get => _isForBackground;
-        set => SetProperty(ref _isForBackground, value);
-    }
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanExport))]
+    [NotifyPropertyChangedFor(nameof(R))]
+    [NotifyPropertyChangedFor(nameof(G))]
+    [NotifyPropertyChangedFor(nameof(B))]
+    [NotifyPropertyChangedFor(nameof(HexColor))]
+    private Color color = Color.FromArgb(255, 255, 255, 255);
+    
+    [ObservableProperty]
+    private bool isForSigil = true;
+    
+    [ObservableProperty]
+    private bool isForBackground = true;
 
     public bool CanExport => ID >= 0 && Color.A > 0;
 

@@ -67,58 +67,53 @@
             <Menu VerticalAlignment="Center">
                 <!--  文件菜单  -->
                 <MenuItem
-                    Click="btnNewProject_Click"
+                    Command="{Binding NewProjectCommand}"
                     Header="{helpers:I18n AppButtonNewProject.Label}"
                     Icon="{ui:SymbolIcon Symbol=Document20}"
-                    IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                     ToolTip="{helpers:I18n AppButtonNewProject.Label}">
                 </MenuItem>
 
                 <!--  保存项目  -->
                 <MenuItem
-                    Click="btnSaveProject_Click"
+                    Command="{Binding SaveProjectCommand}"
                     Header="{helpers:I18n AppButtonSaveProject.Label}"
                     Icon="{ui:SymbolIcon Symbol=Save20}"
-                    IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                     ToolTip="{helpers:I18n AppButtonSaveProject.Label}">
                 </MenuItem>
 
                 <!--  另存为  -->
                 <MenuItem
-                    Click="btnSaveProjectAs_Click"
+                    Command="{Binding SaveProjectAsCommand}"
                     Header="{helpers:I18n AppButtonSaveProjectAs.Label}"
                     Icon="{ui:SymbolIcon Symbol=SaveArrowRight20}"
-                    IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                     ToolTip="{helpers:I18n AppButtonSaveProjectAs.Label}">
                 </MenuItem>
 
                 <!--  打开项目  -->
                 <MenuItem
-                    Click="btnOpenProject_Click"
+                    Command="{Binding OpenProjectCommand}"
                     Header="{helpers:I18n AppButtonOpenProject.Label}"
                     Icon="{ui:SymbolIcon Symbol=Folder20}"
-                    IsEnabled="{Binding ViewModel.IsSavingOrLoading, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                     ToolTip="{helpers:I18n AppButtonOpenProject.Label}">
                 </MenuItem>
 
                 <!--  分隔符  -->
                 <Separator />
 
-                <!--  导出菜单  -->
-                <MenuItem Header="{helpers:I18n AppButtonExportAll.Label}"
-                          Icon="{ui:SymbolIcon Symbol=ArrowExportUp20}"
-                          IsEnabled="{Binding ViewModel.CanExport, RelativeSource={RelativeSource AncestorType=Page}}">
-                    <MenuItem
-                        Click="btnExportAll_Click"
-                        Header="{helpers:I18n AppButtonExportAll.Label}"
-                        ToolTip="{helpers:I18n AppButtonExportAll.Label}">
-                    </MenuItem>
-                    <MenuItem
-                        Click="btnExportXML_Click"
-                        Header="{helpers:I18n AppButtonExportXML.Label}"
-                        ToolTip="{helpers:I18n AppButtonExportXML.Label}">
-                    </MenuItem>
-                </MenuItem>
+                 <!--  导出菜单  -->
+                 <MenuItem Header="{helpers:I18n AppButtonExportAll.Label}"
+                           Icon="{ui:SymbolIcon Symbol=ArrowExportUp20}">
+                     <MenuItem
+                         Command="{Binding ExportAllCommand}"
+                         Header="{helpers:I18n AppButtonExportAll.Label}"
+                         ToolTip="{helpers:I18n AppButtonExportAll.Label}">
+                     </MenuItem>
+                     <MenuItem
+                         Command="{Binding ExportXMLCommand}"
+                         Header="{helpers:I18n AppButtonExportXML.Label}"
+                         ToolTip="{helpers:I18n AppButtonExportXML.Label}">
+                     </MenuItem>
+                 </MenuItem>
 
                 <!--  分隔符  -->
                 <Separator />
@@ -177,9 +172,9 @@
                         </Border>
 
                         <Menu Grid.Row="1" FontSize="14">
-                            <ui:MenuItem Click="btnAddGroup_Click" Header="{helpers:I18n ButtonAdd.Content}"
+                            <ui:MenuItem Command="{Binding AddGroupCommand}" Header="{helpers:I18n ButtonAdd.Content}"
                                          Icon="{ui:SymbolIcon Symbol=Add20}" />
-                            <ui:MenuItem Click="btnDeleteGroup_Click" Header="{helpers:I18n ButtonDelete.Content}"
+                            <ui:MenuItem Command="{Binding DeleteGroupCommand}" Header="{helpers:I18n ButtonDelete.Content}"
                                          Icon="{ui:SymbolIcon Symbol=Delete20}" />
                         </Menu>
 
@@ -187,7 +182,7 @@
                             x:Name="listViewGroups"
                             Grid.Row="2"
                             ItemTemplate="{StaticResource GroupItemTemplate}"
-                            ItemsSource="{Binding ViewModel.Groups, RelativeSource={RelativeSource AncestorType=Page}}"
+                            ItemsSource="{Binding ViewModel.Groups}"
                             SelectionChanged="listViewGroups_SelectionChanged" />
                     </Grid>
 
@@ -200,21 +195,21 @@
                             <TextBlock
                                 Padding="16"
                                 Text="{helpers:I18n TextNoSelectedBannerGroup.Text}"
-                                Visibility="{Binding ShowEmptyHint, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}" />
+                                Visibility="{Binding ShowEmptyHint, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                             <local:BannerIconGroupEditor
-                                ViewModel="{Binding SelectedGroup, RelativeSource={RelativeSource AncestorType=Page}}"
-                                Visibility="{Binding HasSelectedGroup, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}" />
+                                ViewModel="{Binding SelectedGroup}"
+                                Visibility="{Binding HasSelectedGroup, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </Grid>
                     </Border>
                 </Grid>
             </TabItem>
 
             <!--  颜色编辑器标签页  -->
-            <TabItem Header="{helpers:I18n PivotBannerColorsEditor.Header}">
-                <local:BannerColorsEditor
-                    ViewModel="{Binding ViewModel, RelativeSource={RelativeSource AncestorType=Page}}" />
-            </TabItem>
+             <TabItem Header="{helpers:I18n PivotBannerColorsEditor.Header}">
+                 <local:BannerColorsEditor
+                     ViewModel="{Binding ViewModel}" />
+             </TabItem>
         </TabControl>
     </Grid>
 </Page>

@@ -84,7 +84,7 @@
             <!-- Toolbar -->
             <StackPanel Grid.Row="0" Orientation="Horizontal" Background="#E0E0E0">
                 <Button x:Name="btnAdd" 
-                        Click="btnAdd_Click"
+                        Command="{Binding AddColorCommand}"
                         Margin="4">
                     <StackPanel Orientation="Horizontal" Margin="8,4">
                         <TextBlock Text="➕" FontSize="14" Margin="0,0,4,0"/>
@@ -93,8 +93,7 @@
                 </Button>
                 
                 <Button x:Name="btnDelete" 
-                        Click="btnDelete_Click"
-                        IsEnabled="{Binding HasSelectedColor, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                        Command="{Binding DeleteColorsCommand}"
                         Margin="4">
                     <StackPanel Orientation="Horizontal" Margin="8,4">
                         <TextBlock Text="🗑" FontSize="14" Margin="0,0,4,0"/>
@@ -103,7 +102,7 @@
                 </Button>
                 
                 <Button x:Name="btnSort" 
-                        Click="btnSort_Click"
+                        Command="{Binding SortColorsCommand}"
                         Margin="4">
                     <StackPanel Orientation="Horizontal" Margin="8,4">
                         <TextBlock Text="⬆⬇" FontSize="14" Margin="0,0,4,0"/>
@@ -115,7 +114,7 @@
             <!-- Color List -->
             <ListBox x:Name="listViewColors"
                      Grid.Row="1"
-                     ItemsSource="{Binding ViewModel.Colors, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                     ItemsSource="{Binding ProjectData.Colors}"
                      ItemTemplate="{StaticResource ColorItemTemplate}"
                      SelectionMode="Extended"
                      SelectionChanged="listViewColors_SelectionChanged"
@@ -126,7 +125,7 @@
         <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
             <Grid Margin="32,16" 
                   HorizontalAlignment="Left"
-                  Visibility="{Binding HasSelectedColor, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                  Visibility="{Binding HasSelectedColor, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="200"/>
@@ -142,7 +141,7 @@
                 <StackPanel Grid.Row="0" Grid.ColumnSpan="2" 
                             Orientation="Horizontal" 
                             Margin="0,0,0,20"
-                            Visibility="{Binding IsSingleSelected, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            Visibility="{Binding IsSingleSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TextBlock Text="ID" 
                                VerticalAlignment="Center" 
                                FontSize="18"
@@ -152,19 +151,19 @@
                              Width="120"
                              VerticalAlignment="Center"
                              FontSize="18"
-                             Text="{Binding FirstSelectedColor.ID, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                             Text="{Binding FirstSelectedColor.ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
                 
                 <!-- Multiple Selection: Title -->
                 <StackPanel Grid.Row="0" Grid.ColumnSpan="2"
                             Orientation="Horizontal"
                             Margin="0,0,0,20"
-                            Visibility="{Binding IsMultipleSelection, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <TextBlock Text="{Binding SelectedColorIDs, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            Visibility="{Binding IsMultipleSelection, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock Text="{Binding SelectedColorIDs}"
                                FontSize="16"
                                FontWeight="Bold"
                                VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding MoreColorsText, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    <TextBlock Text="{Binding MoreColorsText}"
                                FontSize="12"
                                FontWeight="Light"
                                Foreground="Gray"
@@ -177,14 +176,14 @@
                             Orientation="Horizontal"
                             Margin="0,0,0,20">
                     <CheckBox Content="{helpers:I18n TextColorForSigil}"
-                              IsChecked="{Binding IsForSigil, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"/>
+                              IsChecked="{Binding IsForSigil, Mode=TwoWay}"/>
                 </StackPanel>
                 
                 <StackPanel Grid.Row="1" Grid.Column="1"
                             Orientation="Horizontal"
                             Margin="0,0,0,20">
                     <CheckBox Content="{helpers:I18n TextColorForBackground}"
-                              IsChecked="{Binding IsForBackground, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"/>
+                              IsChecked="{Binding IsForBackground, Mode=TwoWay}"/>
                 </StackPanel>
                 
                 <!-- Color Picker (Single Selection Only) -->
@@ -192,7 +191,7 @@
                         BorderBrush="Gray"
                         BorderThickness="1"
                         Padding="10"
-                        Visibility="{Binding IsSingleSelected, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        Visibility="{Binding IsSingleSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <StackPanel>
                         <TextBlock Text="Color" FontWeight="Bold" Margin="0,0,0,10"/>
                         
@@ -202,7 +201,7 @@
                                    Stroke="Gray" 
                                    StrokeThickness="1">
                             <Rectangle.Fill>
-                                <SolidColorBrush Color="{Binding FirstSelectedColor.Color, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}"/>
+                                <SolidColorBrush Color="{Binding FirstSelectedColor.Color, Mode=OneWay}"/>
                             </Rectangle.Fill>
                         </Rectangle>
                         
@@ -218,7 +217,7 @@
                                 <Slider Grid.Column="1" 
                                         x:Name="sliderR"
                                         Minimum="0" Maximum="255" 
-                                        Value="{Binding FirstSelectedColor.R, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
+                                        Value="{Binding FirstSelectedColor.R, Mode=TwoWay}"
                                         ValueChanged="ColorSlider_ValueChanged"/>
                                 <TextBox Grid.Column="2" 
                                          Text="{Binding ElementName=sliderR, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -236,7 +235,7 @@
                                 <Slider Grid.Column="1" 
                                         x:Name="sliderG"
                                         Minimum="0" Maximum="255" 
-                                        Value="{Binding FirstSelectedColor.G, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
+                                        Value="{Binding FirstSelectedColor.G, Mode=TwoWay}"
                                         ValueChanged="ColorSlider_ValueChanged"/>
                                 <TextBox Grid.Column="2" 
                                          Text="{Binding ElementName=sliderG, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -254,7 +253,7 @@
                                 <Slider Grid.Column="1" 
                                         x:Name="sliderB"
                                         Minimum="0" Maximum="255" 
-                                        Value="{Binding FirstSelectedColor.B, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
+                                        Value="{Binding FirstSelectedColor.B, Mode=TwoWay}"
                                         ValueChanged="ColorSlider_ValueChanged"/>
                                 <TextBox Grid.Column="2" 
                                          Text="{Binding ElementName=sliderB, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -271,7 +270,7 @@
                                 <TextBlock Text="Hex:" Grid.Column="0" VerticalAlignment="Center"/>
                                 <TextBox Grid.Column="1" 
                                          x:Name="txtHexColor"
-                                         Text="{Binding FirstSelectedColor.HexColor, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                         Text="{Binding FirstSelectedColor.HexColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             </Grid>
                         </StackPanel>
                     </StackPanel>

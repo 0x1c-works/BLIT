@@ -96,210 +96,207 @@
         </Style>
     </UserControl.Resources>
     
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="5"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        
-        <!-- Toolbar -->
-        <StackPanel Grid.Row="0" Grid.ColumnSpan="3" 
-                    Orientation="Horizontal" 
-                    >
-            <StackPanel.Margin>
-                <Thickness>16,8</Thickness>
-            </StackPanel.Margin>
-            <TextBlock Text="{helpers:I18n LabelBannerGroupID.Text}" VerticalAlignment="Center" Margin="0,0,8,0"/>
-            <TextBox x:Name="txtGroupID" 
-                     Width="100" 
-                     VerticalAlignment="Center"
-                     Text="{Binding ViewModel.GroupID, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            
-            <Separator  Margin="8,0"/>
-            
-            <Button x:Name="btnAddTextures" 
-                    Click="btnAddTextures_Click"
-                    Margin="4,0">
-                <StackPanel Orientation="Horizontal" Margin="8,4">
-                    <ui:SymbolIcon Symbol="Add20" Margin="0,0 8,0"></ui:SymbolIcon>
-                    <TextBlock Text="{helpers:I18n AppButtonAddTextures.Label}"/>
-                </StackPanel>
-            </Button>
-            
-            <Button x:Name="btnDeleteTextures" 
-                    Click="btnDeleteTextures_Click"
-                    IsEnabled="{Binding HasSelectedIcons, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                    Margin="4,0">
-                <StackPanel Orientation="Horizontal" Margin="8,4">
-                    <ui:SymbolIcon Symbol="Delete20" Margin="0,0 8,0"></ui:SymbolIcon>
-                    <TextBlock Text="{helpers:I18n AppButtonDeleteTextures.Label}"/>
-                </StackPanel>
-            </Button>
-        </StackPanel>
-        
-         <!-- Icon Grid (Left) -->
-         <ListBox x:Name="listIcons" 
-                  Grid.Row="1" 
-                  Grid.Column="0"
-                  ItemsSource="{Binding ViewModel.Icons, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                  ItemTemplate="{StaticResource IconTextureTemplate}"
-                  SelectionMode="Extended"
-                  SelectionChanged="listIcons_SelectionChanged"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  Padding="8">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <vwp:VirtualizingWrapPanel 
-                        ItemSize="136,136"
-                        SpacingMode="Uniform"
-                        StretchItems="False"/>
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-        </ListBox>
-        
-        <!-- GridSplitter -->
-        <GridSplitter Grid.Row="1" Grid.Column="1" 
-                      Width="5" 
-                      HorizontalAlignment="Stretch" 
-                      Background="{DynamicResource ControlFillColorDefaultBrush}"/>
-        
-        <!-- Icon Details Editor (Right) -->
-        <Grid Grid.Row="1" Grid.Column="2" DataContext="{Binding FirstSelectedIcon, RelativeSource={RelativeSource AncestorType=UserControl}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <!-- Header -->
-            <Border Grid.Row="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" Padding="16,8">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{helpers:I18n TextIconDetails}" 
-                               FontWeight="Bold" 
-                               VerticalAlignment="Center"
-                               Margin="0,0,10,0"/>
-                    <TextBlock VerticalAlignment="Center" 
-                               Foreground="Gray"
-                               Visibility="{Binding HasSelectedIcons, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <Run Text="{Binding ViewModel.GroupName, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}"/>
-                        <Run Text=" / #"/>
-                        <Run Text="{Binding ID, Mode=OneWay}"/>
-                    </TextBlock>
-                </StackPanel>
-            </Border>
-            
-            <!-- Details ScrollViewer -->
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                <Grid Margin="16" IsEnabled="{Binding HasSelectedIcons, RelativeSource={RelativeSource AncestorType=UserControl}}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="110"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="16"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    
-                    <!-- UI Sprite Section -->
-                    <TextBlock Grid.Row="0" Grid.Column="0" 
-                               Text="{helpers:I18n TextUISprite}"
-                               FontWeight="Bold"
-                               VerticalAlignment="Top"
-                               Margin="0,0,0,8"/>
-                    
-                    <StackPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Top">
-                        <Button x:Name="btnChangeSprite" 
-                                Content="{helpers:I18n ButtonChangeEllipses}"
-                                Click="btnChangeSprite_Click"
-                                Margin="0,0,0,4"
-                                Padding="8,4"/>
-                        <Button x:Name="btnReimportSprite" 
-                                Content="{helpers:I18n ButtonReimport}"
-                                Click="btnReimportSprite_Click"
-                                IsEnabled="{Binding CanReimportSprite, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                Padding="8,4"/>
-                    </StackPanel>
-                    
-                    <TextBlock Grid.Row="0" Grid.Column="1" 
-                               Text="{Binding SpritePath}"
-                               Style="{StaticResource FileNameStyle}"
-                               Margin="8,0,0,8"/>
-                    
-                    <Border Grid.Row="1" Grid.Column="1" 
-                            Width="256" Height="256"
-                            BorderBrush="Gray" BorderThickness="2"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Margin="8,0,0,0">
-                        <Grid>
-                            <Rectangle Fill="#E0E0E0" OpacityMask="{StaticResource CheckerboardBrush}"/>
-                            
-                            <!-- Loading Indicator -->
-                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
-                                       Visibility="{Binding SpritePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}"/>
-                            
-                            <!-- Sprite Preview Image - Async Load -->
-                            <Image Stretch="Uniform" 
-                                   helpers:AsyncImageLoader.AsyncSource="{Binding SpritePath}"
-                                   helpers:AsyncImageLoader.DecodePixelWidth="256"/>
-                        </Grid>
-                    </Border>
-                    
-                    <!-- Texture Preview Section -->
-                    <TextBlock Grid.Row="3" Grid.Column="0" 
-                               Text="{helpers:I18n TextTexturePreview}"
-                               FontWeight="Bold"
-                               VerticalAlignment="Top"
-                               TextWrapping="Wrap"
-                               Margin="0,0,0,8"/>
-                    
-                    <StackPanel Grid.Row="4" Grid.Column="0" VerticalAlignment="Top">
-                        <Button x:Name="btnChangeTexture" 
-                                Content="{helpers:I18n ButtonChangeEllipses}"
-                                Click="btnChangeTexture_Click"
-                                Margin="0,0,0,4"
-                                Padding="8,4"/>
-                        <Button x:Name="btnReimportTexture" 
-                                Content="{helpers:I18n ButtonReimport}"
-                                Click="btnReimportTexture_Click"
-                                IsEnabled="{Binding CanReimportTexture, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                Padding="8,4"/>
-                    </StackPanel>
-                    
-                    <TextBlock Grid.Row="3" Grid.Column="1" 
-                               Text="{Binding TexturePath}"
-                               Style="{StaticResource FileNameStyle}"
-                               Margin="8,0,0,8"/>
-                    
-                    <Border Grid.Row="4" Grid.Column="1" 
-                            MinWidth="256" MinHeight="256"
-                            MaxWidth="512" MaxHeight="512"
-                            BorderBrush="Gray" BorderThickness="2"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Margin="8,0,0,0">
-                        <Grid>
-                            <Rectangle Fill="#E0E0E0" OpacityMask="{StaticResource CheckerboardBrush}"/>
-                            
-                            <!-- Loading Indicator -->
-                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
-                                       Visibility="{Binding TexturePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}"/>
-                            
-                            <!-- Texture Preview Image - Async Load -->
-                            <Image Stretch="Uniform" 
-                                   helpers:AsyncImageLoader.AsyncSource="{Binding TexturePath}"
-                                   helpers:AsyncImageLoader.DecodePixelWidth="512"/>
-                        </Grid>
-                    </Border>
-                </Grid>
-            </ScrollViewer>
-        </Grid>
-    </Grid>
+     <Grid>
+         <Grid.RowDefinitions>
+             <RowDefinition Height="Auto"/>
+             <RowDefinition Height="*"/>
+         </Grid.RowDefinitions>
+         <Grid.ColumnDefinitions>
+             <ColumnDefinition Width="*"/>
+             <ColumnDefinition Width="5"/>
+             <ColumnDefinition Width="*"/>
+         </Grid.ColumnDefinitions>
+         
+         <!-- Toolbar -->
+         <StackPanel Grid.Row="0" Grid.ColumnSpan="3" 
+                     Orientation="Horizontal" 
+                     >
+             <StackPanel.Margin>
+                 <Thickness>16,8</Thickness>
+             </StackPanel.Margin>
+             <TextBlock Text="{helpers:I18n LabelBannerGroupID.Text}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+             <TextBox x:Name="txtGroupID" 
+                      Width="100" 
+                      VerticalAlignment="Center"
+                      Text="{Binding GroupData.GroupID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+             
+             <Separator  Margin="8,0"/>
+             
+             <Button x:Name="btnAddTextures" 
+                     Command="{Binding AddTexturesCommand}"
+                     Margin="4,0">
+                 <StackPanel Orientation="Horizontal" Margin="8,4">
+                     <ui:SymbolIcon Symbol="Add20" Margin="0,0 8,0"></ui:SymbolIcon>
+                     <TextBlock Text="{helpers:I18n AppButtonAddTextures.Label}"/>
+                 </StackPanel>
+             </Button>
+             
+             <Button x:Name="btnDeleteTextures" 
+                     Command="{Binding DeleteTexturesCommand}"
+                     Margin="4,0">
+                 <StackPanel Orientation="Horizontal" Margin="8,4">
+                     <ui:SymbolIcon Symbol="Delete20" Margin="0,0 8,0"></ui:SymbolIcon>
+                     <TextBlock Text="{helpers:I18n AppButtonDeleteTextures.Label}"/>
+                 </StackPanel>
+             </Button>
+         </StackPanel>
+         
+          <!-- Icon Grid (Left) -->
+          <ListBox x:Name="listIcons" 
+                   Grid.Row="1" 
+                   Grid.Column="0"
+                   ItemsSource="{Binding GroupData.Icons}"
+                   ItemTemplate="{StaticResource IconTextureTemplate}"
+                   SelectionMode="Extended"
+                   SelectionChanged="listIcons_SelectionChanged"
+                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                   Padding="8">
+             <ListBox.ItemsPanel>
+                 <ItemsPanelTemplate>
+                     <vwp:VirtualizingWrapPanel 
+                         ItemSize="136,136"
+                         SpacingMode="Uniform"
+                         StretchItems="False"/>
+                 </ItemsPanelTemplate>
+             </ListBox.ItemsPanel>
+         </ListBox>
+         
+         <!-- GridSplitter -->
+         <GridSplitter Grid.Row="1" Grid.Column="1" 
+                       Width="5" 
+                       HorizontalAlignment="Stretch" 
+                       Background="{DynamicResource ControlFillColorDefaultBrush}"/>
+         
+         <!-- Icon Details Editor (Right) -->
+         <Grid Grid.Row="1" Grid.Column="2" DataContext="{Binding FirstSelectedIcon}">
+             <Grid.RowDefinitions>
+                 <RowDefinition Height="Auto"/>
+                 <RowDefinition Height="*"/>
+             </Grid.RowDefinitions>
+             
+              <!-- Header -->
+              <Border Grid.Row="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" Padding="16,8">
+                  <StackPanel Orientation="Horizontal">
+                      <TextBlock Text="{helpers:I18n TextIconDetails}" 
+                                 FontWeight="Bold" 
+                                 VerticalAlignment="Center"
+                                 Margin="0,0,10,0"/>
+                      <TextBlock VerticalAlignment="Center" 
+                                 Foreground="Gray"
+                                 Visibility="{Binding DataContext.HasSelectedIcons, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                          <Run Text="{Binding DataContext.GroupData.GroupName, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}"/>
+                          <Run Text=" / #"/>
+                          <Run Text="{Binding ID, Mode=OneWay}"/>
+                      </TextBlock>
+                  </StackPanel>
+              </Border>
+              
+              <!-- Details ScrollViewer -->
+              <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                  <Grid Margin="16" IsEnabled="{Binding DataContext.HasSelectedIcons, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                     <Grid.ColumnDefinitions>
+                         <ColumnDefinition Width="110"/>
+                         <ColumnDefinition Width="*"/>
+                     </Grid.ColumnDefinitions>
+                     <Grid.RowDefinitions>
+                         <RowDefinition Height="Auto"/>
+                         <RowDefinition Height="Auto"/>
+                         <RowDefinition Height="16"/>
+                         <RowDefinition Height="Auto"/>
+                         <RowDefinition Height="Auto"/>
+                     </Grid.RowDefinitions>
+                     
+                     <!-- UI Sprite Section -->
+                     <TextBlock Grid.Row="0" Grid.Column="0" 
+                                Text="{helpers:I18n TextUISprite}"
+                                FontWeight="Bold"
+                                VerticalAlignment="Top"
+                                Margin="0,0,0,8"/>
+                     
+                     <StackPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Top">
+                         <Button x:Name="btnChangeSprite" 
+                                 Content="{helpers:I18n ButtonChangeEllipses}"
+                                 Command="{Binding ChangeSpriteCommand}"
+                                 Margin="0,0,0,4"
+                                 Padding="8,4"/>
+                         <Button x:Name="btnReimportSprite" 
+                                 Content="{helpers:I18n ButtonReimport}"
+                                 Command="{Binding ReimportSpriteCommand}"
+                                 Padding="8,4"/>
+                     </StackPanel>
+                     
+                     <TextBlock Grid.Row="0" Grid.Column="1" 
+                                Text="{Binding SpritePath}"
+                                Style="{StaticResource FileNameStyle}"
+                                Margin="8,0,0,8"/>
+                     
+                     <Border Grid.Row="1" Grid.Column="1" 
+                             Width="256" Height="256"
+                             BorderBrush="Gray" BorderThickness="2"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Top"
+                             Margin="8,0,0,0">
+                         <Grid>
+                             <Rectangle Fill="#E0E0E0" OpacityMask="{StaticResource CheckerboardBrush}"/>
+                             
+                             <!-- Loading Indicator -->
+                             <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
+                                        Visibility="{Binding SpritePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}"/>
+                             
+                             <!-- Sprite Preview Image - Async Load -->
+                             <Image Stretch="Uniform" 
+                                    helpers:AsyncImageLoader.AsyncSource="{Binding SpritePath}"
+                                    helpers:AsyncImageLoader.DecodePixelWidth="256"/>
+                         </Grid>
+                     </Border>
+                     
+                     <!-- Texture Preview Section -->
+                     <TextBlock Grid.Row="3" Grid.Column="0" 
+                                Text="{helpers:I18n TextTexturePreview}"
+                                FontWeight="Bold"
+                                VerticalAlignment="Top"
+                                TextWrapping="Wrap"
+                                Margin="0,0,0,8"/>
+                     
+                     <StackPanel Grid.Row="4" Grid.Column="0" VerticalAlignment="Top">
+                         <Button x:Name="btnChangeTexture" 
+                                 Content="{helpers:I18n ButtonChangeEllipses}"
+                                 Command="{Binding ChangeTextureCommand}"
+                                 Margin="0,0,0,4"
+                                 Padding="8,4"/>
+                         <Button x:Name="btnReimportTexture" 
+                                 Content="{helpers:I18n ButtonReimport}"
+                                 Command="{Binding ReimportTextureCommand}"
+                                 Padding="8,4"/>
+                     </StackPanel>
+                     
+                     <TextBlock Grid.Row="3" Grid.Column="1" 
+                                Text="{Binding TexturePath}"
+                                Style="{StaticResource FileNameStyle}"
+                                Margin="8,0,0,8"/>
+                     
+                     <Border Grid.Row="4" Grid.Column="1" 
+                             MinWidth="256" MinHeight="256"
+                             MaxWidth="512" MaxHeight="512"
+                             BorderBrush="Gray" BorderThickness="2"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Top"
+                             Margin="8,0,0,0">
+                         <Grid>
+                             <Rectangle Fill="#E0E0E0" OpacityMask="{StaticResource CheckerboardBrush}"/>
+                             
+                             <!-- Loading Indicator -->
+                             <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
+                                        Visibility="{Binding TexturePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}"/>
+                             
+                             <!-- Texture Preview Image - Async Load -->
+                             <Image Stretch="Uniform" 
+                                    helpers:AsyncImageLoader.AsyncSource="{Binding TexturePath}"
+                                    helpers:AsyncImageLoader.DecodePixelWidth="512"/>
+                         </Grid>
+                     </Border>
+                 </Grid>
+             </ScrollViewer>
+         </Grid>
+     </Grid>
 </UserControl>
