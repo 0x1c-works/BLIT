@@ -241,12 +241,12 @@
                             x:Name="btnChangeSprite"
                             Margin="0,0,0,4"
                             Padding="8,4"
-                            Command="{Binding ChangeSpriteCommand}"
+                            Command="{Binding DataContext.ChangeSpriteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                             Content="{helpers:I18n ButtonChangeEllipses}" />
                         <Button
                             x:Name="btnReimportSprite"
                             Padding="8,4"
-                            Command="{Binding ReimportSpriteCommand}"
+                            Command="{Binding DataContext.ReimportSpriteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                             Content="{helpers:I18n ButtonReimport}" />
                     </StackPanel>
 
@@ -299,12 +299,12 @@
                             x:Name="btnChangeTexture"
                             Margin="0,0,0,4"
                             Padding="8,4"
-                            Command="{Binding ChangeTextureCommand}"
+                            Command="{Binding DataContext.ChangeTextureCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                             Content="{helpers:I18n ButtonChangeEllipses}" />
                         <Button
                             x:Name="btnReimportTexture"
                             Padding="8,4"
-                            Command="{Binding ReimportTextureCommand}"
+                            Command="{Binding DataContext.ReimportTextureCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                             Content="{helpers:I18n ButtonReimport}" />
                     </StackPanel>
 
