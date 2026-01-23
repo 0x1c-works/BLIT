@@ -11,20 +11,21 @@ namespace BLIT.WPF.Pages.BannerIcons;
 public partial class BannerIconGroupEditor : UserControl {
     private readonly BannerIconGroupEditorViewModel? _viewModel = new();
 
-    // Dependency Property for ViewModel (BannerGroupEntry data)
-    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
-        nameof(ViewModel),
+    // Dependency Property for GroupData (BannerGroupEntry data)
+    public static readonly DependencyProperty GroupDataProperty = DependencyProperty.Register(
+        nameof(GroupData),
         typeof(BannerGroupEntry),
         typeof(BannerIconGroupEditor),
-        new PropertyMetadata(null, OnViewModelChanged));
+        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, OnGroupDataChanged));
 
-    public BannerGroupEntry? ViewModel {
-        get => (BannerGroupEntry?)GetValue(ViewModelProperty);
-        set => SetValue(ViewModelProperty, value);
+    public BannerGroupEntry? GroupData {
+        get => (BannerGroupEntry?)GetValue(GroupDataProperty);
+        set => SetValue(GroupDataProperty, value);
     }
 
-    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+    private static void OnGroupDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         if (d is BannerIconGroupEditor editor) {
+            System.Diagnostics.Debug.WriteLine($"BannerIconGroupEditor.OnGroupDataChanged called, NewValue={e.NewValue}");
             // Update the internal ViewModel when the data context changes
             if (editor._viewModel != null) {
                 editor._viewModel.GroupData = e.NewValue as BannerGroupEntry;

@@ -12,20 +12,21 @@ namespace BLIT.WPF.Pages.BannerIcons;
 public partial class BannerColorsEditor : UserControl {
     private readonly BannerColorsEditorViewModel? _viewModel = new();
 
-    // Dependency Property for ViewModel (BannerIconsProject data)
-    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
-        nameof(ViewModel),
+    // Dependency Property for ProjectData (BannerIconsProject data)
+    public static readonly DependencyProperty ProjectDataProperty = DependencyProperty.Register(
+        nameof(ProjectData),
         typeof(BannerIconsProject),
         typeof(BannerColorsEditor),
-        new PropertyMetadata(null, OnViewModelChanged));
+        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, OnProjectDataChanged));
 
-    public BannerIconsProject? ViewModel {
-        get => (BannerIconsProject?)GetValue(ViewModelProperty);
-        set => SetValue(ViewModelProperty, value);
+    public BannerIconsProject? ProjectData {
+        get => (BannerIconsProject?)GetValue(ProjectDataProperty);
+        set => SetValue(ProjectDataProperty, value);
     }
 
-    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+    private static void OnProjectDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         if (d is BannerColorsEditor editor) {
+            System.Diagnostics.Debug.WriteLine($"BannerColorsEditor.OnProjectDataChanged called, NewValue={e.NewValue}");
             // Update the internal ViewModel when the data context changes
             if (editor._viewModel != null) {
                 editor._viewModel.ProjectData = e.NewValue as BannerIconsProject;

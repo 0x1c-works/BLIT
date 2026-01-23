@@ -2,16 +2,19 @@ using BLIT.WPF.Pages.BannerIcons.Models;
 using BLIT.WPF.Pages.BannerIcons.ViewModels;
 using BLIT.WPF.Services;
 using System;
+using System.Data;
 using System.Windows;
 using System.Windows.Controls;
+using Wpf.Ui.Abstractions.Controls;
 
 namespace BLIT.WPF.Pages.BannerIcons;
 
 /// <summary>
 /// Banner Icons 编辑页面
 /// </summary>
-public partial class BannerIconsPage : Page {
-    private readonly BannerIconsPageViewModel? _viewModel = new BannerIconsPageViewModel();
+public partial class BannerIconsPage : INavigableView<BannerIconsPageViewModel> {
+    private readonly BannerIconsPageViewModel? _viewModel = new();
+    public BannerIconsPageViewModel ViewModel => _viewModel ?? throw new NullReferenceException("ViewModel is null");
 
     public BannerIconsPage() {
         System.Diagnostics.Debug.WriteLine("BannerIconsPage: Constructor called");
@@ -52,4 +55,5 @@ public partial class BannerIconsPage : Page {
             _viewModel.ViewModel.OutputResolutionName = tag;
         }
     }
+
 }
