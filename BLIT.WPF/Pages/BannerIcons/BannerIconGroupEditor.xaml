@@ -197,7 +197,7 @@
                         Margin="0,0,10,0"
                         VerticalAlignment="Center"
                         FontWeight="Bold"
-                        Text="{helpers:I18n TextIconDetails}" />
+                        Text="{helpers:I18n TextIconDetails.Text}" />
                     <TextBlock
                         VerticalAlignment="Center"
                         Foreground="Gray"
@@ -231,7 +231,7 @@
                         Margin="0,0,0,8"
                         VerticalAlignment="Top"
                         FontWeight="Bold"
-                        Text="{helpers:I18n TextUISprite}" />
+                        Text="{helpers:I18n TextUISprite.Text}" />
 
                     <StackPanel
                         Grid.Row="1"
@@ -241,13 +241,13 @@
                             x:Name="btnChangeSprite"
                             Margin="0,0,0,4"
                             Padding="8,4"
-                            Command="{Binding DataContext.ChangeSpriteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            Content="{helpers:I18n ButtonChangeEllipses}" />
+                            Command="{Binding DataContext.ViewModel.ChangeSpriteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            Content="{helpers:I18n ButtonChangeEllipses.Content}" />
                         <Button
                             x:Name="btnReimportSprite"
                             Padding="8,4"
-                            Command="{Binding DataContext.ReimportSpriteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            Content="{helpers:I18n ButtonReimport}" />
+                            Command="{Binding DataContext.ViewModel.ReimportSpriteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            Content="{helpers:I18n ButtonReimport.Content}" />
                     </StackPanel>
 
                     <TextBlock
@@ -288,7 +288,7 @@
                         Margin="0,0,0,8"
                         VerticalAlignment="Top"
                         FontWeight="Bold"
-                        Text="{helpers:I18n TextTexturePreview}"
+                        Text="{helpers:I18n TextTexturePreview.Text}"
                         TextWrapping="Wrap" />
 
                     <StackPanel
@@ -300,12 +300,12 @@
                             Margin="0,0,0,4"
                             Padding="8,4"
                             Command="{Binding DataContext.ChangeTextureCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            Content="{helpers:I18n ButtonChangeEllipses}" />
+                            Content="{helpers:I18n ButtonChangeEllipses.Content}" />
                         <Button
                             x:Name="btnReimportTexture"
                             Padding="8,4"
                             Command="{Binding DataContext.ReimportTextureCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            Content="{helpers:I18n ButtonReimport}" />
+                            Content="{helpers:I18n ButtonReimport.Content}" />
                     </StackPanel>
 
                     <TextBlock

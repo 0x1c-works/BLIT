@@ -76,7 +76,7 @@ public class FileDialogService : IFileDialogService {
     }
 
     public async Task<IReadOnlyList<string>> OpenFiles(Guid stateGuid, FileType[] fileTypes) {
-        return await Task.Run(() => {
+        return await System.Windows.Application.Current.Dispatcher.InvokeAsync(() => {
             return NativeHelpers.RunCom<IReadOnlyList<string>>(() => {
                 Shell32.IFileOpenDialog fd = CreateFileOpenDialog(stateGuid, Shell32.FILEOPENDIALOGOPTIONS.FOS_ALLOWMULTISELECT);
                 fd.SetFileTypes((uint)fileTypes.Length, fileTypes.Select(ft => ft.ToFilterSpec()).ToArray());
@@ -97,7 +97,7 @@ public class FileDialogService : IFileDialogService {
                 }
                 return files;
             });
-        });
+        }).Task;
     }
 
     private Shell32.IFileOpenDialog CreateFileOpenDialog(Guid stateGuid, Shell32.FILEOPENDIALOGOPTIONS opts = 0) {
