@@ -205,7 +205,7 @@ public partial class BannerIconsPageViewModel : ObservableObject {
             return;
         }
 
-        _loading?.Show(I18n.Current.GetString("TextExporting/Text"));
+        _loading?.Show(I18n.Current.GetString("TextExporting.Text"));
         try {
             ViewModel.IsExporting = true;
             await work();

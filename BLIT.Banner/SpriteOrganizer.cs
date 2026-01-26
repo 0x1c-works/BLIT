@@ -57,6 +57,7 @@ public class SpriteOrganizer {
                 img.Resize(new MagickGeometry(512));
             }
             img.Write(outPath);
+            Console.WriteLine($"Sprite Generated: {outPath}");
         });
     }
 
