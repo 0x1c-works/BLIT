@@ -111,7 +111,7 @@
             <!-- Color List -->
             <ListBox x:Name="listViewColors"
                      Grid.Row="1"
-                     ItemsSource="{Binding DataContext.ViewModel.Colors, RelativeSource={RelativeSource AncestorType=Page}}"
+                     ItemsSource="{Binding Colors}"
                      ItemTemplate="{StaticResource ColorItemTemplate}"
                      SelectionMode="Extended"
                      SelectionChanged="listViewColors_SelectionChanged"
@@ -216,7 +216,7 @@
                                         x:Name="sliderR"
                                         Minimum="0" Maximum="255"
                                         Value="{Binding FirstSelectedColor.R, Mode=TwoWay}"
-                                        ValueChanged="ColorSlider_ValueChanged" />
+                                        />
                                 <TextBox Grid.Column="2"
                                          Text="{Binding ElementName=sliderR, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          Width="40"
@@ -234,7 +234,7 @@
                                         x:Name="sliderG"
                                         Minimum="0" Maximum="255"
                                         Value="{Binding FirstSelectedColor.G, Mode=TwoWay}"
-                                        ValueChanged="ColorSlider_ValueChanged" />
+                                        />
                                 <TextBox Grid.Column="2"
                                          Text="{Binding ElementName=sliderG, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          Width="40"
@@ -252,7 +252,7 @@
                                         x:Name="sliderB"
                                         Minimum="0" Maximum="255"
                                         Value="{Binding FirstSelectedColor.B, Mode=TwoWay}"
-                                        ValueChanged="ColorSlider_ValueChanged" />
+                                        />
                                 <TextBox Grid.Column="2"
                                          Text="{Binding ElementName=sliderB, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          Width="40"

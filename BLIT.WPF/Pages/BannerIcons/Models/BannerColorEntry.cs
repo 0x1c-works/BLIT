@@ -11,7 +11,6 @@ public partial class BannerColorEntry : ObservableObject {
 
     private BannerIconsProject _project;
     private int _id;
-    private Color _color = Color.FromArgb(255, 255, 255, 255);
     private bool _isForSigil = true;
     private bool _isForBackground = true;
 
@@ -30,7 +29,7 @@ public partial class BannerColorEntry : ObservableObject {
     [NotifyPropertyChangedFor(nameof(G))]
     [NotifyPropertyChangedFor(nameof(B))]
     [NotifyPropertyChangedFor(nameof(HexColor))]
-    private Color color = Color.FromArgb(255, 255, 255, 255);
+    private Color _color = Color.FromArgb(255, 255, 255, 255);
     
     [ObservableProperty]
     private bool isForSigil = true;
@@ -42,38 +41,35 @@ public partial class BannerColorEntry : ObservableObject {
 
     // Individual RGB component properties for XAML binding
     public byte R {
-        get => _color.R;
+        get => Color.R;
         set {
-            if (_color.R != value) {
-                Color = Color.FromArgb(_color.A, value, _color.G, _color.B);
-                OnPropertyChanged(nameof(R));
+            if (Color.R != value) {
+                Color = Color.FromArgb(Color.A, value, Color.G, Color.B);
             }
         }
     }
 
     public byte G {
-        get => _color.G;
+        get => Color.G;
         set {
-            if (_color.G != value) {
-                Color = Color.FromArgb(_color.A, _color.R, value, _color.B);
-                OnPropertyChanged(nameof(G));
+            if (Color.G != value) {
+                Color = Color.FromArgb(Color.A, Color.R, value, Color.B);
             }
         }
     }
 
     public byte B {
-        get => _color.B;
+        get => Color.B;
         set {
-            if (_color.B != value) {
-                Color = Color.FromArgb(_color.A, _color.R, _color.G, value);
-                OnPropertyChanged(nameof(B));
+            if (Color.B != value) {
+                Color = Color.FromArgb(Color.A, Color.R, Color.G, value);
             }
         }
     }
 
     // Hex color property for text input binding
     public string HexColor {
-        get => $"#{_color.R:X2}{_color.G:X2}{_color.B:X2}";
+        get => $"#{Color.R:X2}{Color.G:X2}{Color.B:X2}";
         set {
             if (string.IsNullOrWhiteSpace(value)) return;
 

@@ -33,17 +33,6 @@ public partial class BannerColorsEditor : UserControl {
             _viewModel.OnSelectionChanged(listViewColors.SelectedItems.Cast<BannerColorEntry>());
         }
     }
-
-    private void ColorSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-        if (_viewModel?.FirstSelectedColor == null) return;
-        
-        // Update the color from RGB sliders
-        byte r = (byte)sliderR.Value;
-        byte g = (byte)sliderG.Value;
-        byte b = (byte)sliderB.Value;
-        
-        _viewModel.FirstSelectedColor.Color = Color.FromArgb(255, r, g, b);
-    }
 }
 
 // Extension class to add R, G, B, HexColor properties to BannerColorEntry

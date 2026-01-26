@@ -15,20 +15,29 @@ public partial class BannerColorsEditorViewModel : ObservableObject {
 
     // 项目数据引用
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Colors))]
     private BannerIconsProject? projectData;
 
     // UI 状态属性
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FirstSelectedColor))]
+    [NotifyPropertyChangedFor(nameof(HasSelectedColor))]
     [NotifyPropertyChangedFor(nameof(IsSingleSelected))]
     [NotifyPropertyChangedFor(nameof(IsMultipleSelection))]
     [NotifyPropertyChangedFor(nameof(SelectedColorIDs))]
     [NotifyPropertyChangedFor(nameof(MoreColorsText))]
-    private IEnumerable<BannerColorEntry> selectedColors = [];
+    [NotifyPropertyChangedFor(nameof(IsForSigil))]
+    [NotifyPropertyChangedFor(nameof(IsForBackground))]
+    private IEnumerable<BannerColorEntry> _selectedColors = [];
 
     // 计算属性
     public BannerColorEntry? FirstSelectedColor => SelectedColors.FirstOrDefault();
     public bool HasSelectedColor => SelectedColors.Any();
+    
+    /// <summary>
+    /// 颜色列表，从 ProjectData 中暴露
+    /// </summary>
+    public IEnumerable<BannerColorEntry>? Colors => ProjectData?.Colors;
     public bool IsSingleSelected => SelectedColors.Count() == 1;
     public bool IsMultipleSelection => SelectedColors.Count() > 1;
 
