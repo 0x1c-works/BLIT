@@ -63,22 +63,8 @@ public class IconListDropHandler : IDropTarget {
         // Insert at target position
         icons.Insert(targetIndex, sourceIcon);
 
-        // Refresh cell indices for proper display
-        if (dropInfo.TargetItem is BannerIconEntry targetEntry) {
-            var group = GetGroupFromIcon(targetEntry, dropInfo);
-            group?.RefreshCellIndex();
-        }
-    }
-
-    /// <summary>
-    /// Helper to get the group that contains the icon
-    /// This is needed to refresh the cell indices
-    /// </summary>
-    private BannerGroupEntry? GetGroupFromIcon(BannerIconEntry icon, IDropInfo dropInfo) {
-        // The drop target is part of a BannerGroupEntry
-        // We can traverse up the visual tree or access through the data context
-        // For now, we'll rely on the fact that the icon knows its position
-        // and the icons collection parent will handle refreshing
-        return null; // Will be handled by the collection change event
+        // The collection change event will trigger RefreshCellIndex
+        // through BannerGroupEntry._icons_CollectionChanged
+        // No need to call it manually here
     }
 }
