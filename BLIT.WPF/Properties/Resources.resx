@@ -416,4 +416,7 @@ It may take a while if there are a lot of assets</value>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
   </data>
+  <data name="AppButtonSort.Label" xml:space="preserve">
+    <value>Sort</value>
+  </data>
 </root>
