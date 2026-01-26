@@ -3,10 +3,7 @@ using BLIT.WPF.Pages.BannerIcons.Models;
 using BLIT.WPF.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace BLIT.WPF.Pages.BannerIcons.ViewModels;
 
@@ -15,6 +12,9 @@ public partial class BannerIconGroupEditorViewModel : ObservableObject {
     private static readonly Guid GUID_SPRITE_DIALOG = new("7fb7d0f4-e50d-4fa3-a890-ae0775bca3d8");
 
     private readonly IFileDialogService? _fileDialog = AppServices.Get<IFileDialogService>();
+    
+    // 记录当前选中的图标，用于管理事件订阅
+    private BannerIconEntry? _currentSelectedIcon;
 
     // 分组数据引用 - 这个由父 ViewModel 的 SelectedGroup 提供
     [ObservableProperty]
@@ -23,19 +23,22 @@ public partial class BannerIconGroupEditorViewModel : ObservableObject {
     // UI 状态属性 - 本地管理的选择状态
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FirstSelectedIcon))]
+    [NotifyPropertyChangedFor(nameof(HasSelectedIcons))]
     [NotifyPropertyChangedFor(nameof(CanReimportSprite))]
     [NotifyPropertyChangedFor(nameof(CanReimportTexture))]
     private IEnumerable<BannerIconEntry> selectedIcons = [];
 
+    public bool CanReimportSprite {
+        get => FirstSelectedIcon != null && ImageHelper.IsValidImage(FirstSelectedIcon.SpritePath);
+    }
+    
+    public bool CanReimportTexture {
+        get => FirstSelectedIcon != null && ImageHelper.IsValidImage(FirstSelectedIcon.TexturePath);
+    }
+
     // 计算属性
     public BannerIconEntry? FirstSelectedIcon => SelectedIcons.FirstOrDefault();
     public bool HasSelectedIcons => SelectedIcons.Any();
-    
-    public bool CanReimportSprite =>
-        FirstSelectedIcon != null && ImageHelper.IsValidImage(FirstSelectedIcon.SpritePath);
-    
-    public bool CanReimportTexture =>
-        FirstSelectedIcon != null && ImageHelper.IsValidImage(FirstSelectedIcon.TexturePath);
 
     // ============ RelayCommand 们 ============
 
@@ -113,7 +116,38 @@ public partial class BannerIconGroupEditorViewModel : ObservableObject {
 
     // ============ 事件处理 ============
 
+    private void OnSelectedIconPropertyChanged(object? sender, PropertyChangedEventArgs e) {
+        if (e.PropertyName == nameof(BannerIconEntry.SpritePath)||e.PropertyName == nameof(BannerIconEntry.TexturePath)) {
+            UpdateCanReimportAssets();
+        }
+    }
+
+     private void UpdateCanReimportAssets() {
+        // 显式通知 RelayCommand 重新评估 CanExecute
+        ChangeSpriteCommand.NotifyCanExecuteChanged();
+        ReimportSpriteCommand.NotifyCanExecuteChanged();
+        ChangeTextureCommand.NotifyCanExecuteChanged();
+        ReimportTextureCommand.NotifyCanExecuteChanged();
+    }
+
     public void OnSelectionChanged(IEnumerable<BannerIconEntry> icons) {
+        // 取消旧图标的订阅
+        if (_currentSelectedIcon != null) {
+            _currentSelectedIcon.PropertyChanged -= OnSelectedIconPropertyChanged;
+        }
+
+        // 更新选中的图标集合
         SelectedIcons = icons;
+        
+        // 更新当前选中图标引用
+        _currentSelectedIcon = FirstSelectedIcon;
+        
+        // 订阅新图标的属性变化
+        if (_currentSelectedIcon != null) {
+            _currentSelectedIcon.PropertyChanged += OnSelectedIconPropertyChanged;
+        }
+
+        // 更新 CanReimport 属性值
+        UpdateCanReimportAssets();
     }
 }

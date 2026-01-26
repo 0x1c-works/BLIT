@@ -9,13 +9,13 @@ namespace BLIT.WPF.Pages.BannerIcons;
 /// Banner Icon Group Editor User Control
 /// </summary>
 public partial class BannerIconGroupEditor : UserControl {
-    private readonly BannerIconGroupEditorViewModel? _viewModel = new();
+    public readonly BannerIconGroupEditorViewModel ViewModel = new();
     private bool _isInitialized = false;
 
     public BannerIconGroupEditor() {
         InitializeComponent();
         // Set DataContext to the internal ViewModel so XAML bindings work
-        DataContext = _viewModel;
+        DataContext = ViewModel;
         
         // 订阅 IsVisibleChanged 事件，延迟初始化直到需要显示
         this.IsVisibleChanged += (s, e) => {
@@ -38,14 +38,14 @@ public partial class BannerIconGroupEditor : UserControl {
 
         if (this.Parent is FrameworkElement parent) {
             var pageDataContext = parent.DataContext;
-            if (pageDataContext is BannerIconsPageViewModel pageViewModel && _viewModel != null) {
-                _viewModel.GroupData = pageViewModel.SelectedGroup;
+            if (pageDataContext is BannerIconsPageViewModel pageViewModel && ViewModel != null) {
+                ViewModel.GroupData = pageViewModel.SelectedGroup;
                 System.Diagnostics.Debug.WriteLine($"[BannerIconGroupEditor] Set GroupData from parent ViewModel: {pageViewModel.SelectedGroup?.GroupID}");
                 
                 // 订阅父 ViewModel 的 PropertyChanged 事件
                 pageViewModel.PropertyChanged += (ps, pe) => {
                     if (pe.PropertyName == nameof(BannerIconsPageViewModel.SelectedGroup)) {
-                        _viewModel.GroupData = pageViewModel.SelectedGroup;
+                        ViewModel.GroupData = pageViewModel.SelectedGroup;
                         System.Diagnostics.Debug.WriteLine($"[BannerIconGroupEditor] GroupData updated: {pageViewModel.SelectedGroup?.GroupID}");
                     }
                 };
@@ -54,8 +54,8 @@ public partial class BannerIconGroupEditor : UserControl {
     }
 
     private void listIcons_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-        if (_viewModel != null) {
-            _viewModel.OnSelectionChanged(listIcons.SelectedItems.Cast<BannerIconEntry>());
+        if (ViewModel != null) {
+            ViewModel.OnSelectionChanged(listIcons.SelectedItems.Cast<BannerIconEntry>());
         }
     }
 }

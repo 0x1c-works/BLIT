@@ -13,7 +13,8 @@
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    >
     <UserControl.Resources>
         <!--  Converters  -->
         <helpers:PathToOptimizedBitmapImageConverter x:Key="PathToOptimizedBitmapImageConverter" />
@@ -180,8 +181,7 @@
         <!--  Icon Details Editor (Right)  -->
         <Grid
             Grid.Row="1"
-            Grid.Column="2"
-            DataContext="{Binding FirstSelectedIcon}">
+            Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -202,9 +202,9 @@
                         VerticalAlignment="Center"
                         Foreground="Gray"
                         Visibility="{Binding DataContext.HasSelectedIcons, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <Run Text="{Binding DataContext.SelectedGroup.GroupName, RelativeSource={RelativeSource AncestorType=Page}, Mode=OneWay}" />
-                        <Run Text=" / #" />
-                        <Run Text="{Binding ID, Mode=OneWay}" />
+                         <Run Text="{Binding DataContext.SelectedGroup.GroupName, RelativeSource={RelativeSource AncestorType=Page}, Mode=OneWay}" />
+                         <Run Text=" / #" />
+                         <Run Text="{Binding DataContext.FirstSelectedIcon.ID, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}" />
                     </TextBlock>
                 </StackPanel>
             </Border>
@@ -241,12 +241,12 @@
                             x:Name="btnChangeSprite"
                             Margin="0,0,0,4"
                             Padding="8,4"
-                            Command="{Binding DataContext.ViewModel.ChangeSpriteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            Command="{Binding DataContext.ChangeSpriteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                             Content="{helpers:I18n ButtonChangeEllipses.Content}" />
                         <Button
                             x:Name="btnReimportSprite"
                             Padding="8,4"
-                            Command="{Binding DataContext.ViewModel.ReimportSpriteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            Command="{Binding DataContext.ReimportSpriteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                             Content="{helpers:I18n ButtonReimport.Content}" />
                     </StackPanel>
 
@@ -255,7 +255,7 @@
                         Grid.Column="1"
                         Margin="8,0,0,8"
                         Style="{StaticResource FileNameStyle}"
-                        Text="{Binding SpritePath}" />
+                        Text="{Binding DataContext.FirstSelectedIcon.SpritePath, RelativeSource={RelativeSource AncestorType=UserControl}}" />
 
                     <Border
                         Grid.Row="1"
@@ -271,11 +271,11 @@
                             <Rectangle Fill="{StaticResource CheckerboardBrush}" />
 
                             <!--  Loading Indicator  -->
-                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}" Visibility="{Binding SpritePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
+                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}" Visibility="{Binding DataContext.FirstSelectedIcon.SpritePath, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
 
                             <!--  Sprite Preview Image - Async Load  -->
                             <Image
-                                helpers:AsyncImageLoader.AsyncSource="{Binding SpritePath}"
+                                helpers:AsyncImageLoader.AsyncSource="{Binding DataContext.FirstSelectedIcon.SpritePath, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                 helpers:AsyncImageLoader.DecodePixelWidth="256"
                                 Stretch="Uniform" />
                         </Grid>
@@ -313,7 +313,7 @@
                         Grid.Column="1"
                         Margin="8,0,0,8"
                         Style="{StaticResource FileNameStyle}"
-                        Text="{Binding TexturePath}" />
+                        Text="{Binding DataContext.FirstSelectedIcon.TexturePath, RelativeSource={RelativeSource AncestorType=UserControl}}" />
 
                     <Border
                         Grid.Row="4"
@@ -331,11 +331,11 @@
                             <Rectangle Fill="{StaticResource CheckerboardBrush}" />
 
                             <!--  Loading Indicator  -->
-                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}" Visibility="{Binding TexturePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
+                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}" Visibility="{Binding DataContext.FirstSelectedIcon.TexturePath, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
 
                             <!--  Texture Preview Image - Async Load  -->
                             <Image
-                                helpers:AsyncImageLoader.AsyncSource="{Binding TexturePath}"
+                                helpers:AsyncImageLoader.AsyncSource="{Binding DataContext.FirstSelectedIcon.TexturePath, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                 helpers:AsyncImageLoader.DecodePixelWidth="512"
                                 Stretch="Uniform" />
                         </Grid>
