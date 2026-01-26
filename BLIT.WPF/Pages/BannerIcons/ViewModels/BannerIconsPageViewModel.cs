@@ -51,6 +51,14 @@ public partial class BannerIconsPageViewModel : ObservableObject {
             _viewModel = value;
             if (_viewModel != null) {
                 _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+                // 立即更新所有命令状态，因为可能在订阅前属性已经改变
+                SaveProjectCommand.NotifyCanExecuteChanged();
+                SaveProjectAsCommand.NotifyCanExecuteChanged();
+                OpenProjectCommand.NotifyCanExecuteChanged();
+                AddGroupCommand.NotifyCanExecuteChanged();
+                DeleteGroupCommand.NotifyCanExecuteChanged();
+                ExportAllCommand.NotifyCanExecuteChanged();
+                ExportXMLCommand.NotifyCanExecuteChanged();
             }
             OnPropertyChanged();
             OnPropertyChanged(nameof(CanSaveProject));
