@@ -94,6 +94,9 @@ public partial class BannerIconsPageViewModel : ObservableObject {
 
         _loading.Show(I18n.Current.GetString("PleaseWait"));
         await _project.Load(openedFilePath);
+        
+        // 重新设置 ViewModel 以确保新项目的事件处理器被订阅
+        // Load() 内部会创建新的 Current，所以必须在这里重新赋值才能触发 setter
         ViewModel = _project.Current;
         SelectedGroup = ViewModel?.Groups.FirstOrDefault();
 
