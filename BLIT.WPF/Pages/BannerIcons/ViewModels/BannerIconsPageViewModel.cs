@@ -24,6 +24,11 @@ public partial class BannerIconsPageViewModel : ObservableObject {
     private static readonly Guid GUID_EXPORT_DIALOG = new("0c5f39f0-1a31-4d85-a9ee-7ad0cfd690b6");
     private static readonly Guid GUID_PROJECT_DIALOG = new("f86d402a-33de-4f62-8c2b-c5e75428c018");
 
+    public BannerIconsPageViewModel() {
+        // 初始化时设置 ViewModel，以便订阅事件
+        ViewModel = _project?.Current;
+    }
+
     // UI 状态属性
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasSelectedGroup))]
@@ -78,7 +83,7 @@ public partial class BannerIconsPageViewModel : ObservableObject {
         await Save(true);
     }
 
-    [RelayCommand(CanExecute = nameof(CanSaveProject))]
+    [RelayCommand]
     public async Task OpenProject() {
         if (_project == null || _fileDialog == null || _loading == null) return;
 

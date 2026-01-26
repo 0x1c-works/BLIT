@@ -24,6 +24,16 @@ public partial class BannerIconsPage : INavigableView<BannerIconsPageViewModel> 
     private void OnPageLoaded(object sender, RoutedEventArgs e) {
         System.Diagnostics.Debug.WriteLine("BannerIconsPage: Page loaded");
 
+        // 订阅 ViewModel 的属性变化，以便在 ViewModel 改变时更新 DataContext
+        if (_viewModel != null) {
+            _viewModel.PropertyChanged += (s, args) => {
+                if (args.PropertyName == nameof(BannerIconsPageViewModel.ViewModel)) {
+                    // 重新设置 DataContext 以确保绑定更新
+                    DataContext = _viewModel;
+                }
+            };
+        }
+
         // 设置输出分辨率默认值
         if (_viewModel?.ViewModel != null) {
             var resolutionName = _viewModel.ViewModel.OutputResolutionName;
