@@ -186,8 +186,11 @@
             SelectionMode="Extended"
             dd:DragDrop.IsDragSource="True"
             dd:DragDrop.IsDropTarget="True"
-            dd:DragDrop.UseDefaultDragAdorner="True"
-            dd:DragDrop.UseDefaultEffectDataTemplate="True">
+            dd:DragDrop.UseDefaultDragAdorner="False"
+            dd:DragDrop.DragAdornerTemplate="{StaticResource IconDragAdornerTemplate}"
+            dd:DragDrop.UseDefaultEffectDataTemplate="False"
+            VirtualizingPanel.CacheLength="200"
+            VirtualizingPanel.CacheLengthUnit="Pixel">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <vwp:VirtualizingWrapPanel
