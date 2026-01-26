@@ -30,8 +30,30 @@ public partial class BannerIconsPageViewModel : ObservableObject {
     [NotifyPropertyChangedFor(nameof(ShowEmptyHint))]
     private BannerGroupEntry? selectedGroup;
 
+    partial void OnSelectedGroupChanged(BannerGroupEntry? value) {
+        DeleteGroupCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(CanDeleteGroup));
+    }
+
     // 数据模型引用
-    public BannerIconsProject? ViewModel => _project?.Current;
+    private BannerIconsProject? _viewModel;
+    public BannerIconsProject? ViewModel {
+        get => _viewModel;
+        private set {
+            if (_viewModel != null) {
+                _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            }
+            _viewModel = value;
+            if (_viewModel != null) {
+                _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+            }
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(CanSaveProject));
+            OnPropertyChanged(nameof(CanAddGroup));
+            OnPropertyChanged(nameof(CanDeleteGroup));
+            OnPropertyChanged(nameof(CanExport));
+        }
+    }
 
     // 计算属性
     public bool HasSelectedGroup => SelectedGroup != null;
@@ -43,7 +65,7 @@ public partial class BannerIconsPageViewModel : ObservableObject {
     public async Task NewProject() {
         if (_project == null) return;
         await _project.NewProject();
-        OnPropertyChanged(nameof(ViewModel));
+        ViewModel = _project.Current;
     }
 
     [RelayCommand(CanExecute = nameof(CanSaveProject))]
@@ -67,13 +89,12 @@ public partial class BannerIconsPageViewModel : ObservableObject {
 
         _loading.Show(I18n.Current.GetString("PleaseWait"));
         await _project.Load(openedFilePath);
+        ViewModel = _project.Current;
         SelectedGroup = ViewModel?.Groups.FirstOrDefault();
 
         // 等待 UI 更新
         await Task.Delay(200);
         _loading.Hide();
-
-        OnPropertyChanged(nameof(ViewModel));
     }
 
     [RelayCommand(CanExecute = nameof(CanExport))]
@@ -208,7 +229,26 @@ public partial class BannerIconsPageViewModel : ObservableObject {
         _loading.Hide();
     }
 
-    // ============ 事件处理 ============
+     // ============ 事件处理 ============
+
+    private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
+        // 当 ViewModel 的依赖属性改变时，通知相关命令和计算属性更新
+        if (e.PropertyName == nameof(BannerIconsProject.IsSavingOrLoading)) {
+            SaveProjectCommand.NotifyCanExecuteChanged();
+            SaveProjectAsCommand.NotifyCanExecuteChanged();
+            OpenProjectCommand.NotifyCanExecuteChanged();
+            AddGroupCommand.NotifyCanExecuteChanged();
+            DeleteGroupCommand.NotifyCanExecuteChanged();
+            OnPropertyChanged(nameof(CanSaveProject));
+            OnPropertyChanged(nameof(CanAddGroup));
+            OnPropertyChanged(nameof(CanDeleteGroup));
+        } else if (e.PropertyName == nameof(BannerIconsProject.CanExport) || 
+                   e.PropertyName == nameof(BannerIconsProject.IsExporting)) {
+            ExportAllCommand.NotifyCanExecuteChanged();
+            ExportXMLCommand.NotifyCanExecuteChanged();
+            OnPropertyChanged(nameof(CanExport));
+        }
+    }
 
     public void OnSelectionChanged(BannerGroupEntry? group) {
         SelectedGroup = group;
