@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using BLIT.Banner;
 using BLIT.scripts.Common;
 using BLIT.scripts.Services;
@@ -206,7 +206,7 @@ public class BannerIconsProject : BindableBase, IProject {
     public async Task<string> ExportAll(string outFolderPath) {
         var merger = new TextureMerger(_settings.Banner.TextureOutputResolution);
         await Task.WhenAll(GetExportingGroups().Select(g =>
-            Task.Factory.StartNew(() => {
+            Task.Run(() => {
                 merger.Merge(outFolderPath, g.GroupID, g.Icons.Select(icon => icon.TexturePath).ToArray());
             })
         ));

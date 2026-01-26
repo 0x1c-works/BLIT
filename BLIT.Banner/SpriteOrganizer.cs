@@ -1,4 +1,4 @@
-﻿using ImageMagick;
+using ImageMagick;
 using System.Text;
 using System.Xml;
 
@@ -49,11 +49,15 @@ public class SpriteOrganizer {
     private static async Task ResizeAndSave(string outDir, IconSprite icon) {
         (var groupID, var iconID, var filePath, var _) = icon;
         var outPath = Path.Join(EnsureGroupFolder(outDir, groupID), $"{iconID}.png");
-        using var img = new MagickImage(filePath);
-        if (img.Width != 512 && img.Height != 512) {
-            img.Resize(new MagickGeometry(512));
-        }
-        await img.WriteAsync(outPath);
+        
+        // Run ImageMagick operations on thread pool to avoid deadlocks
+        await Task.Run(() => {
+            using var img = new MagickImage(filePath);
+            if (img.Width != 512 && img.Height != 512) {
+                img.Resize(new MagickGeometry(512));
+            }
+            img.Write(outPath);
+        });
     }
 
     private static string GetAtlasID(int groupID) {
