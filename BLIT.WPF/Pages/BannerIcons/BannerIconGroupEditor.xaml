@@ -97,6 +97,29 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="Gray" />
         </Style>
+
+        <!--  High-Performance Drag Adorner Template for Icon List  -->
+        <!--  Shows small thumbnail (64x64) for fast rendering during drag  -->
+        <DataTemplate x:Key="IconDragAdornerTemplate" DataType="{x:Type vm:BannerIconEntry}">
+            <Border Width="64" Height="64" Background="#CC000000" CornerRadius="4" BorderBrush="#FFFF9800" BorderThickness="2">
+                <Grid>
+                    <!--  Checkerboard Background  -->
+                    <Rectangle Fill="{StaticResource CheckerboardBrush}" Opacity="0.3" />
+
+                    <!--  Loading Indicator  -->
+                    <TextBlock
+                        Style="{StaticResource LoadingSpinnerStyle}"
+                        FontSize="16"
+                        Visibility="{Binding TexturePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
+
+                    <!--  Small Thumbnail (64x64, no async loading for performance)  -->
+                    <Image
+                        RenderOptions.BitmapScalingMode="LowQuality"
+                        Source="{Binding TexturePath, Converter={StaticResource PathToOptimizedBitmapImageConverter}, ConverterParameter=64}"
+                        Stretch="Uniform" />
+                </Grid>
+            </Border>
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid>
