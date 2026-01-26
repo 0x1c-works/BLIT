@@ -11,7 +11,7 @@ public partial class BannerIconEntry : ObservableObject {
     public delegate BannerIconEntry Factory(BannerGroupEntry groupVm, string texturePath);
 
     private readonly BannerGroupEntry _groupViewModel;
-    private string _texturePath = string.Empty;
+    private string _texturePath;
     private string _spritePath = string.Empty;
     private int _cellIndex;
     private readonly ISettingsService _settings;
@@ -50,7 +50,7 @@ public partial class BannerIconEntry : ObservableObject {
             OnPropertyChanged(nameof(AtlasName));
         }
     }
-    public int AtlasIndex => CellIndex / (TextureMerger.ROWS * TextureMerger.COLS);
+    public int AtlasIndex => CellIndex / (int)(TextureMerger.ROWS * TextureMerger.COLS);
 
     public string AtlasName => BannerUtils.GetAtlasName(_groupViewModel.GroupID, AtlasIndex);
     public int ID => BannerUtils.GetIconID(_groupViewModel.GroupID, CellIndex);

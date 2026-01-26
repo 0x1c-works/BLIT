@@ -32,7 +32,7 @@ public class SpriteUnpacker {
         }
     }
 }
-public record SpriteRegion(int X, int Y, int Width, int Height) {
+public record SpriteRegion(int X, int Y, uint Width, uint Height) {
     public static SpriteRegion FromString(string args) {
         var parts = args.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
         return parts.Length != 4
@@ -41,9 +41,9 @@ public record SpriteRegion(int X, int Y, int Width, int Height) {
             ? throw new ArgumentException($"invalid sprite x: {parts[0]}")
             : !int.TryParse(parts[1], out var y)
             ? throw new ArgumentException($"invalid sprite y: {parts[1]}")
-            : !int.TryParse(parts[2], out var w)
+            : !uint.TryParse(parts[2], out var w)
             ? throw new ArgumentException($"invalid sprite w: {parts[2]}")
-            : !int.TryParse(parts[3], out var h)
+            : !uint.TryParse(parts[3], out var h)
             ? throw new ArgumentException($"invalid sprite h: {parts[3]}")
             : new SpriteRegion(x, y, w, h);
     }
@@ -54,8 +54,8 @@ public record SpriteRegion(int X, int Y, int Width, int Height) {
 public class SpriteInfo {
     public string Atlas { get; set; } = "";
     public string ID { get; set; } = "";
-    public int Width { get; set; }
-    public int Height { get; set; }
+    public uint Width { get; set; }
+    public uint Height { get; set; }
     public int X { get; set; }
     public int Y { get; set; }
 

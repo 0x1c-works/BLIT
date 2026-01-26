@@ -3,10 +3,10 @@
 namespace BLIT.Banner;
 
 public class TextureMerger {
-    public const int ROWS = 4;
-    public const int COLS = 4;
+    public const uint ROWS = 4;
+    public const uint COLS = 4;
     private static readonly string TEXTURE_SUB_FOLDER = Path.Join("AssetSources", "BannerIcons");
-    private static readonly Dictionary<OutputResolution, int> CELL_SIZES = new()
+    private static readonly Dictionary<OutputResolution, uint> CELL_SIZES = new()
     {
         {OutputResolution.Res2K,512 },
         {OutputResolution.Res4K,1024 },
@@ -24,7 +24,6 @@ public class TextureMerger {
     }
 
     public void Merge(string outDir, int groupID, string[] sourceFileNames) {
-        using var collection = new MagickImageCollection();
         var outBasePath = Path.Join(EnsureOutFolder(outDir), BannerUtils.GetGroupName(groupID));
 
         var next = sourceFileNames;
@@ -40,7 +39,7 @@ public class TextureMerger {
         MagickImageCollection? row = null;
         try {
             while (index < ROWS * COLS) {
-                var processedCount = MakeRow(tex, sourceFileNames.Skip(index).Take(COLS));
+                var processedCount = MakeRow(tex, sourceFileNames.Skip(index).Take((int)COLS));
                 if (processedCount == 0) {
                     break;
                 }
@@ -63,13 +62,14 @@ public class TextureMerger {
     }
 
     private int MakeRow(MagickImageCollection tex, IEnumerable<string> files) {
-        if (!files.Any()) {
+        IEnumerable<string> enumerable = files as string[] ?? files.ToArray();
+        if (!enumerable.Any()) {
             return 0;
         }
 
         using var row = new MagickImageCollection();
         var count = 0;
-        foreach (var file in files) {
+        foreach (var file in enumerable) {
             row.Add(ResizeCell(new MagickImage(file)));
             count++;
         }
@@ -97,7 +97,7 @@ public class TextureMerger {
         MagickGeometry geo = GetCellGeometry();
         image.Resize(geo);
         image.Crop(geo, Gravity.Center);
-        image.RePage();
+        image.ResetPage();
         return image;
     }
 }

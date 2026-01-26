@@ -49,7 +49,7 @@ public class BannerIconEntry : BindableBase {
             OnPropertyChanged(nameof(AtlasName));
         }
     }
-    public int AtlasIndex => CellIndex / (TextureMerger.ROWS * TextureMerger.COLS);
+    public int AtlasIndex => CellIndex / (int)(TextureMerger.ROWS * TextureMerger.COLS);
 
     public string AtlasName => BannerUtils.GetAtlasName(_groupViewModel.GroupID, AtlasIndex);
     public int ID => BannerUtils.GetIconID(_groupViewModel.GroupID, CellIndex);
