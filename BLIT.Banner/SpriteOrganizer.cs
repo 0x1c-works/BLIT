@@ -1,6 +1,7 @@
 using ImageMagick;
 using System.Diagnostics;
 using System.Text;
+using System.Threading;
 using System.Xml;
 using BLIT.Banner.Performance;
 using BLIT.Utils.Logging;
@@ -10,6 +11,7 @@ namespace BLIT.Banner;
 public record IconSprite(int GroupID, int IconID, string RawPath, bool AlwaysLoad = true);
 
 public class SpriteOrganizer {
+    const int MaxConcurrency = 10;
     private static readonly string SPRITE_SUB_FOLDER = Path.Join("GUI", "SpriteParts");
 
     public static async Task CollectToSpriteParts(
@@ -22,24 +24,30 @@ public class SpriteOrganizer {
         }
 
         // Initialize performance tracker
-        var tracker = new SpritePerformanceTracker(logger ?? new NullLogger(), outDir);
+        var tracker = new SpritePerformanceTracker(logger ?? new NullLogger(), outDir) {
+            IsEnabled = false,
+        };
+        tracker.Start();
         var iconList = icons.ToList();
         tracker.SetTotalCount(iconList.Count);
 
-        // Process all icons in parallel, with performance tracking
-        var tasks = iconList.Select(icon => {
+        // Process all icons in parallel with concurrency control
+        var semaphore = new SemaphoreSlim(MaxConcurrency, MaxConcurrency);
+        
+        var tasks = iconList.Select(async icon => {
             var iconId = $"{icon.GroupID}_{icon.IconID}";
             tracker.StartIcon(iconId, icon.GroupID);
             
-            return ResizeAndSave(outDir, icon, tracker)
-                .ContinueWith(task => {
-                    if (task.IsFaulted) {
-                        var errorMessage = task.Exception?.InnerException?.Message ?? task.Exception?.Message ?? "Unknown error";
-                        tracker.CompleteIcon(iconId, false, errorMessage);
-                    } else {
-                        tracker.CompleteIcon(iconId, true);
-                    }
-                });
+            await semaphore.WaitAsync();
+            try {
+                await ResizeAndSave(outDir, icon, tracker);
+                tracker.CompleteIcon(iconId, true);
+            } catch (Exception ex) {
+                var errorMessage = ex.InnerException?.Message ?? ex.Message ?? "Unknown error";
+                tracker.CompleteIcon(iconId, false, errorMessage);
+            } finally {
+                semaphore.Release();
+            }
         });
 
         await Task.WhenAll(tasks);
@@ -87,6 +95,7 @@ public class SpriteOrganizer {
         var dir = Path.Join(EnsureSpriteFolder(outDir), GetAtlasID(groupID));
         return Directory.CreateDirectory(dir).FullName;
     }
+
 
     private static async Task ResizeAndSave(string outDir, IconSprite icon, SpritePerformanceTracker tracker) {
         (var groupID, var iconID, var filePath, var _) = icon;

@@ -9,6 +9,22 @@ public class StepTiming {
 }
 
 /// <summary>
+/// Represents comprehensive statistics for a processing step
+/// Includes count, totals, and percentile metrics (avg, median, P95, P99)
+/// </summary>
+public class StepStatistics {
+    public string StepName { get; set; } = string.Empty;
+    public long Count { get; set; }                  // Number of times step was executed
+    public long TotalMs { get; set; }               // Total time across all executions
+    public long AverageMs { get; set; }             // Average time (Mean)
+    public long MedianMs { get; set; }              // Median time (50th percentile)
+    public long MinMs { get; set; }                 // Minimum time
+    public long MaxMs { get; set; }                 // Maximum time
+    public long P95Ms { get; set; }                 // 95th percentile (shows anomalies)
+    public long P99Ms { get; set; }                 // 99th percentile (shows extreme anomalies)
+}
+
+/// <summary>
 /// Represents the processing result of a single icon
 /// </summary>
 public class IconProcessingResult {
