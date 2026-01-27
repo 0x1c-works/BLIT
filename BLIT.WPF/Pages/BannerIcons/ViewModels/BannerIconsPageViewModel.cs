@@ -124,7 +124,7 @@ public partial class BannerIconsPageViewModel : ObservableObject {
                 ToastVariant.Success,
                 Message: string.Format(I18n.Current.GetString("ExportSuccess"), outDir),
                 Action: new(
-                    I18n.Current.GetString("ButtonOpenFolder/Content"),
+                    I18n.Current.GetString("ButtonOpenFolder.Content"),
                     (s, e) => FileHelpers.OpenFolderInExplorer(outDir))));
         });
     }
@@ -140,7 +140,7 @@ public partial class BannerIconsPageViewModel : ObservableObject {
                 ToastVariant.Success,
                 Message: string.Format(I18n.Current.GetString("SaveXMLSuccess"), Path.Join(outDir, "banner_icons.xml")),
                 Action: new(
-                    I18n.Current.GetString("ButtonOpenFolder/Content"),
+                    I18n.Current.GetString("ButtonOpenFolder.Content"),
                     (s, e) => FileHelpers.OpenFolderInExplorer(outDir ?? ""))));
             return Task.CompletedTask;
         });
@@ -164,8 +164,8 @@ public partial class BannerIconsPageViewModel : ObservableObject {
         if (confirmDialog == null) return;
 
         var result = await confirmDialog.ShowDanger(
-            I18n.Current.GetString("DialogDeleteBannerGroup/Title"),
-            string.Format(I18n.Current.GetString("DialogDeleteBannerGroup/Content"), SelectedGroup!.GroupID));
+            I18n.Current.GetString("DialogDeleteBannerGroup.Title"),
+            string.Format(I18n.Current.GetString("DialogDeleteBannerGroup.Content"), SelectedGroup!.GroupID));
 
         if (result != ContentDialogResult.Primary) {
             return;

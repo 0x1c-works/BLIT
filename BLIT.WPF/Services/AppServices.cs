@@ -1,9 +1,11 @@
 using Autofac;
+using Autofac.Builder;
 using Autofac.Extensions.DependencyInjection;
 using BLIT.WPF.Pages.BannerIcons.Models;
 using BLIT.WPF.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Wpf.Ui;
 
 namespace BLIT.WPF.Services;
 
@@ -74,3 +76,4 @@ public class AppServices {
             .OnActivated(async (e) => await e.Instance.NewProject());
     }
 }
+

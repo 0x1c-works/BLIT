@@ -74,5 +74,8 @@
 
         <!--  Loading Overlay  -->
         <controls:LoadingOverlay />
+
+        <!--  Snackbar Container  -->
+        <controls:SnackbarContainer />
     </Grid>
 </Window>

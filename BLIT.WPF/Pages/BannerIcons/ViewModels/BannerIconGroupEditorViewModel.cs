@@ -64,8 +64,8 @@ public partial class BannerIconGroupEditorViewModel : ObservableObject {
         if (confirmDialog == null) return;
 
         var result = await confirmDialog.ShowDanger(
-            I18n.Current.GetString("DialogDeleteBannerIcon/Title"),
-            string.Format(I18n.Current.GetString("DialogDeleteBannerIcon/Content"), SelectedIcons.Count()));
+            I18n.Current.GetString("DialogDeleteBannerIcon.Title"),
+            string.Format(I18n.Current.GetString("DialogDeleteBannerIcon.Content"), SelectedIcons.Count()));
 
         if (result == ContentDialogResult.Primary) {
             GroupData.DeleteIcons(SelectedIcons);
