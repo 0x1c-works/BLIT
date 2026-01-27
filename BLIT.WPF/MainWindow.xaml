@@ -1,4 +1,4 @@
-<Window
+<ui:FluentWindow
     x:Class="BLIT.WPF.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -14,21 +14,28 @@
     Height="720"
     Background="{ui:ThemeResource ApplicationBackgroundBrush}"
     Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    ExtendsContentIntoTitleBar="True"
+    WindowBackdropType="Mica"
+    WindowCornerPreference="Default"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <!--  NavigationView in left panel  -->
         <ui:NavigationView
+            Grid.Row="1"
             x:Name="MainNavigationView"
-            Grid.Column="0"
-            IsBackButtonVisible="Auto"
+            IsBackButtonVisible="Collapsed"
             IsPaneToggleVisible="True"
             PaneDisplayMode="Left"
-            PaneTitle="{helpers:I18n AppTitle.Text}">
+            OpenPaneLength="200"
+            Padding="42,0"
+            >
 
             <ui:NavigationView.Resources>
                 <!--  【终极修复】重写 Template，物理移除 ScrollViewer  -->
@@ -51,11 +58,10 @@
                     <Setter Property="VerticalAlignment" Value="Stretch" />
                 </Style>
             </ui:NavigationView.Resources>
-
+            
             <!--  Menu Items  -->
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem
-                    x:Name="NavItem_BannerIcons"
                     Content="{helpers:I18n AppNavMenuBanner.Content}"
                     Icon="{ui:SymbolIcon Home24}"
                     Tag="BannerIcons"
@@ -70,12 +76,26 @@
                     Icon="{ui:SymbolIcon QuestionCircle24}"
                     Tag="Help" />
             </ui:NavigationView.FooterMenuItems>
+            <ui:NavigationView.ContentOverlay>
+                <Grid>
+
+                    <!--  Snackbar Container  -->
+                    <controls:SnackbarContainer />
+                </Grid>
+            </ui:NavigationView.ContentOverlay>
         </ui:NavigationView>
-
+        
         <!--  Loading Overlay  -->
-        <controls:LoadingOverlay />
+        <controls:LoadingOverlay Grid.Row="1"/>
 
-        <!--  Snackbar Container  -->
-        <controls:SnackbarContainer />
+        <ui:TitleBar
+            x:Name="TitleBar"
+            Title="{helpers:I18n AppTitle.Text}"
+            Grid.Row="0"
+            CloseWindowByDoubleClickOnIcon="True">
+            <ui:TitleBar.Icon>
+                <ui:ImageIcon Source="pack://application:,,,/Assets/StoreLogo.png" />
+            </ui:TitleBar.Icon>
+        </ui:TitleBar>
     </Grid>
-</Window>
+</ui:FluentWindow>
