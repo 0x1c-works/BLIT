@@ -193,7 +193,12 @@ public partial class BannerIconsProject : ObservableObject, IProject {
                 merger.Merge(outFolderPath, g.GroupID, g.Icons.Select(icon => icon.TexturePath).ToArray());
             })
         ));
-        await SpriteOrganizer.CollectToSpriteParts(outFolderPath, ToIconSprites());
+        
+        // Create logger adapter to pass WPF's Serilog configuration to BLIT.Banner
+        var serilogLogger = Log.ForContext<BannerIconsProject>();
+        var logger = new SerilogLoggerAdapter(serilogLogger);
+        
+        await SpriteOrganizer.CollectToSpriteParts(outFolderPath, ToIconSprites(), logger);
         return ExportXML(outFolderPath);
 
     }
