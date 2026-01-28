@@ -19,6 +19,12 @@ public partial class MainWindow {
     
     private void MainWindow_Loaded(object sender, RoutedEventArgs e) {
         Log.Information($"MainWindow loaded. NavigationView items count: {MainNavigationView.MenuItems.Count}");
+        
+        // Auto-navigate to BannerIcons page on startup
+        if (MainNavigationView.MenuItems.Count > 0) {
+            MainNavigationView.Navigate(typeof(Pages.BannerIcons.BannerIconsPage));
+            Log.Information("Auto-navigated to BannerIcons page on startup");
+        }
     }
 
 
