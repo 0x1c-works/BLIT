@@ -1,5 +1,6 @@
-using BLIT.WPF.Helpers;
+using CommunityToolkit.Mvvm.ComponentModel;
 using BLIT.WPF.Services;
+using BLIT.WPF.Helpers;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -11,7 +12,7 @@ namespace BLIT.WPF.Pages.Settings;
 /// <summary>
 /// Represents a single scan folder entry with edit state management
 /// </summary>
-public class ScanFolderItem : BindableBase {
+public partial class ScanFolderItem : ObservableObject {
     private string _relativePath = "";
     public string RelativePath {
         get => _relativePath;

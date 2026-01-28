@@ -1,5 +1,5 @@
 using Autofac;
-using BLIT.WPF.Helpers;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -26,7 +26,7 @@ public interface IProject : INotifyPropertyChanged, IStreamReadWrite {
     void AfterLoaded();
 }
 
-internal class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T : IProject {
+internal class ProjectService<T> : ObservableObject, IProjectService<T>, IDisposable where T : IProject {
     private ILifetimeScope? _scope;
     private T? _vm;
     
