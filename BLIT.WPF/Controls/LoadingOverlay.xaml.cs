@@ -6,10 +6,6 @@ using System.Windows.Media.Animation;
 namespace BLIT.WPF.Controls;
 
 public partial class LoadingOverlay : UserControl {
-    // Cached Storyboards to prevent IDE cleanup and improve performance
-    private Storyboard? _fadeInStoryboard;
-    private Storyboard? _fadeOutStoryboard;
-
     public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(
         nameof(Message),
         typeof(string),
@@ -52,18 +48,13 @@ public partial class LoadingOverlay : UserControl {
         typeof(LoadingOverlay),
         new PropertyMetadata("0%"));
 
+    // Cached Storyboards to prevent IDE cleanup and improve performance
+    private Storyboard? _fadeInStoryboard;
+    private Storyboard? _fadeOutStoryboard;
+
     public LoadingOverlay() {
         InitializeComponent();
         Loaded += OnLoaded;
-    }
-
-    private void OnLoaded(object sender, RoutedEventArgs e) {
-        // Cache Storyboards from resources - this makes IDE recognize they're being used
-        _fadeInStoryboard = (Storyboard?)Resources["FadeInStoryboard"];
-        _fadeOutStoryboard = (Storyboard?)Resources["FadeOutStoryboard"];
-        
-        // Register with loading service
-        AppServices.Get<ILoadingService>()?.RegisterControl(this);
     }
 
     public string Message {
@@ -120,6 +111,15 @@ public partial class LoadingOverlay : UserControl {
                 }
             }
         }
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e) {
+        // Cache Storyboards from resources - this makes IDE recognize they're being used
+        _fadeInStoryboard = (Storyboard?)Resources["FadeInStoryboard"];
+        _fadeOutStoryboard = (Storyboard?)Resources["FadeOutStoryboard"];
+
+        // Register with loading service
+        AppServices.Get<ILoadingService>()?.RegisterControl(this);
     }
 
     private static void OnProgressChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
