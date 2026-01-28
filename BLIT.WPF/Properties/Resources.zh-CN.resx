@@ -354,6 +354,9 @@
   <data name="TextCreatorValue.Text" xml:space="preserve">
     <value>陈小一 ㊙️ Wizcas</value>
   </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>© 2026 blit.0x1.best | 陈小一 ㊙️ Wizcas</value>
+  </data>
   <data name="TextCustomBannerColorStartID.Text" xml:space="preserve">
     <value>自定义颜色起始ID：</value>
   </data>
@@ -410,6 +413,9 @@
   <data name="ThemeLight" xml:space="preserve">
     <value>亮色</value>
   </data>
+  <data name="ThemeHighContrast" xml:space="preserve">
+    <value>高对比度</value>
+  </data>
   <data name="WarningNoSpriteScanFolders.Message" xml:space="preserve">
     <value>尚未设置图标扫描目录，添加贴图时将不会自动匹配UI图标。</value>
   </data>
@@ -421,5 +427,11 @@
   </data>
   <data name="AppButtonSort.Label" xml:space="preserve">
     <value>排序</value>
+  </data>
+  <data name="ViewTutorials" xml:space="preserve">
+    <value>查看使用说明</value>
+  </data>
+  <data name="SubmitIssue" xml:space="preserve">
+    <value>报告错误或请求新功能</value>
   </data>
 </root>

@@ -1,11 +1,11 @@
 <Page x:Class="BLIT.WPF.Pages.Settings.SettingsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-      mc:Ignorable="d" 
+      mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="800"
       ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
       ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
@@ -15,9 +15,9 @@
     <ScrollViewer>
         <StackPanel Margin="32">
             <!-- Appearance -->
-            <TextBlock Text="{helpers:I18n TextAppearanceTitle.Text}" 
-                       Style="{StaticResource SectionTitleStyle}"/>
-            
+            <TextBlock Text="{helpers:I18n TextAppearanceTitle.Text}"
+                       Style="{StaticResource SectionTitleStyle}" />
+
             <!-- Theme Selection -->
             <ui:CardControl Margin="0,8,0,12" Icon="{ui:SymbolIcon Color24}">
                 <ui:CardControl.Header>
@@ -36,14 +36,14 @@
                             Text="Select which app theme to display" />
                     </Grid>
                 </ui:CardControl.Header>
-                <ComboBox x:Name="ThemeComboBox" 
-                          Width="200" 
+                <ComboBox x:Name="ThemeComboBox"
+                          Width="200"
                           HorizontalAlignment="Left"
                           Margin="0,0,0,0"
                           SelectionChanged="ThemeComboBox_SelectionChanged">
-                    <ComboBoxItem Content="{helpers:I18n ThemeLight}"/>
+                    <ComboBoxItem Content="{helpers:I18n ThemeLight}" />
                     <ComboBoxItem Content="{helpers:I18n ThemeDark}" />
-                    <ComboBoxItem Content="High Contrast"/>
+                    <ComboBoxItem Content="{helpers:I18n ThemeHighContrast}" />
                 </ComboBox>
             </ui:CardControl>
 
@@ -65,23 +65,23 @@
                             Text="Select your preferred language" />
                     </Grid>
                 </ui:CardControl.Header>
-                <ComboBox x:Name="LanguageComboBox" 
-                          Width="200" 
+                <ComboBox x:Name="LanguageComboBox"
+                          Width="200"
                           HorizontalAlignment="Left"
                           Margin="0,0,0,0"
                           SelectionChanged="LanguageComboBox_SelectionChanged">
-                    <ComboBoxItem Content="English" Tag="en-US"/>
-                    <ComboBoxItem Content="简体中文" Tag="zh-CN"/>
+                    <ComboBoxItem Content="English" Tag="en-US" />
+                    <ComboBoxItem Content="简体中文" Tag="zh-CN" />
                 </ComboBox>
             </ui:CardControl>
 
             <!-- About -->
-            <TextBlock Text="{helpers:I18n TextAboutTitle.Text}" 
-                       Style="{StaticResource SectionTitleStyle}"/>
-            
-            <!-- Version -->
-            <ui:CardControl Margin="0,8,0,12">
-                <ui:CardControl.Header>
+            <TextBlock Text="{helpers:I18n TextAboutTitle.Text}"
+                       Style="{StaticResource SectionTitleStyle}" />
+
+            <ui:CardExpander ContentPadding="0"
+                             Icon="{ui:ImageIcon 'pack://application:,,,/Assets/StoreLogo.png', Width=50, Height=50}">
+                <ui:CardExpander.Header>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -95,38 +95,61 @@
                             Grid.Row="0"
                             Grid.Column="0"
                             FontTypography="Body"
-                            Text="{helpers:I18n TextVersion.Text}" />
+                            Text="{helpers:I18n AppTitle.Text}" />
+                        <ui:TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                            Text="{helpers:I18n Copyright}" />
                         <TextBlock
                             Grid.Row="0"
                             Grid.RowSpan="2"
                             Grid.Column="1"
-                            Margin="0,0,0,0"
+                            Margin="0,0,16,0"
                             VerticalAlignment="Center"
                             Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                            Text="0.1.0 (WPF)" />
+                            Text="{Binding Version, Mode=OneWay}" />
                     </Grid>
-                </ui:CardControl.Header>
-            </ui:CardControl>
-
-            <!-- Creator -->
-            <ui:CardControl Margin="0,0,0,0">
-                <ui:CardControl.Header>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <ui:TextBlock
-                            Grid.Row="0"
-                            FontTypography="Body"
-                            Text="{helpers:I18n TextCreator.Text}" />
-                        <ui:TextBlock
-                            Grid.Row="1"
-                            Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                            Text="{helpers:I18n TextCreatorValue.Text}" />
-                    </Grid>
-                </ui:CardControl.Header>
-            </ui:CardControl>
+                </ui:CardExpander.Header>
+                <StackPanel>
+                    <ui:Anchor
+                        Margin="0"
+                        Padding="16"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch"
+                        Background="Transparent"
+                        BorderThickness="0,1,0,0"
+                        CornerRadius="0"
+                        NavigateUri="https://github.com/0x1c-works/BLIT/issues/new">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{helpers:I18n SubmitIssue}" />
+                            <ui:SymbolIcon Grid.Column="1" Symbol="Link24" />
+                        </Grid>
+                    </ui:Anchor>
+                    <ui:Anchor
+                        Margin="0"
+                        Padding="16"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch"
+                        Background="Transparent"
+                        BorderThickness="0,1,0,1"
+                        CornerRadius="0"
+                        NavigateUri="https://blit.0x1.best/">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{helpers:I18n ViewTutorials}" />
+                            <ui:SymbolIcon Grid.Column="1" Symbol="Link24" />
+                        </Grid>
+                    </ui:Anchor>
+                </StackPanel>
+            </ui:CardExpander>
         </StackPanel>
     </ScrollViewer>
 </Page>

@@ -354,6 +354,9 @@ The relative paths are based on the texture import location.</value>
   <data name="TextCreatorValue.Text" xml:space="preserve">
     <value>Wizcas Chen</value>
   </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>© 2026 blit.0x1.best | Wizcas Chen</value>
+  </data>
   <data name="TextCustomBannerColorStartID.Text" xml:space="preserve">
     <value>Custom color start ID:</value>
   </data>
@@ -410,6 +413,9 @@ It may take a while if there are a lot of assets</value>
   <data name="ThemeLight" xml:space="preserve">
     <value>Light</value>
   </data>
+  <data name="ThemeHighContrast" xml:space="preserve">
+    <value>High Contrast</value>
+  </data>
   <data name="WarningNoSpriteScanFolders.Message" xml:space="preserve">
     <value>You haven't set any sprite scan path. The editor will not find banner icon sprites automatically when adding textures.</value>
   </data>
@@ -421,5 +427,11 @@ It may take a while if there are a lot of assets</value>
   </data>
   <data name="AppButtonSort.Label" xml:space="preserve">
     <value>Sort</value>
+  </data>
+  <data name="ViewTutorials" xml:space="preserve">
+    <value>View Tutorials</value>
+  </data>
+  <data name="SubmitIssue" xml:space="preserve">
+    <value>Report a bug or request a feature</value>
   </data>
 </root>
