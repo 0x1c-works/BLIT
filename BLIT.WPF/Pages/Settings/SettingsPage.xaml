@@ -1,25 +1,102 @@
-<Page x:Class="BLIT.WPF.Pages.Settings.SettingsPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
-      xmlns:local="clr-namespace:BLIT.WPF.Pages.Settings"
-      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-      mc:Ignorable="d"
-      d:DesignHeight="450" d:DesignWidth="800"
-      ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
-      ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-      Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-      Title="SettingsPage"
-      Loaded="Page_Loaded">
+<Page
+    x:Class="BLIT.WPF.Pages.Settings.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
+    xmlns:local="clr-namespace:BLIT.WPF.Pages.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="SettingsPage"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Loaded="Page_Loaded"
+    mc:Ignorable="d">
     <ScrollViewer>
         <StackPanel Margin="32">
-            <!-- Appearance -->
-            <TextBlock Text="{helpers:I18n TextAppearanceTitle.Text}"
-                       Style="{StaticResource SectionTitleStyle}" />
 
-            <!-- Theme Selection -->
+            <!--  Banner Settings  -->
+            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{helpers:I18n TextBannerSettingsTitle.Text}" />
+
+            <ui:Card Margin="0,8,0,12">
+
+                <StackPanel>
+                    <!--  Scan Folders Editor  -->
+                    <local:BannerSpriteScanFoldersEditor x:Name="BannerSpriteScanFoldersEditor" Margin="0,0,0,16" />
+
+                    <!--  Group Start ID  -->
+                    <Grid Margin="0,0,0,16" VerticalAlignment="Top">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Width="300"
+                            Margin="0,0,0,16"
+                            VerticalAlignment="Center">
+                            <ui:TextBlock
+                                Margin="0,0,0,4"
+                                FontTypography="Body"
+                                Text="{helpers:I18n TextCustomBannerGroupStartID.Text}"
+                                TextWrapping="Wrap" />
+                            <TextBlock
+                                FontSize="12"
+                                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                Text="{helpers:I18n TextCustomBannerGroupStartIDExplain.Text}"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:NumberBox
+                            x:Name="NumberBoxGroupStartID"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Width="200"
+                            Maximum="99999"
+                            Minimum="7"
+                            SpinButtonPlacementMode="Compact"
+                            Value="{Binding Banner.CustomGroupStartID, Mode=TwoWay}" />
+
+                        <!--  Color Start ID  -->
+                        <StackPanel
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Width="300"
+                            VerticalAlignment="Center">
+                            <ui:TextBlock
+                                Margin="0,0,0,4"
+                                FontTypography="Body"
+                                Text="{helpers:I18n TextCustomBannerColorStartID.Text}"
+                                TextWrapping="Wrap" />
+                            <TextBlock
+                                FontSize="12"
+                                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                Text="{helpers:I18n TextCustomBannerColorStartIDExplain.Text}"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:NumberBox
+                            x:Name="NumberBoxColorStartID"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Width="200"
+                            Maximum="999999"
+                            Minimum="194"
+                            SpinButtonPlacementMode="Compact"
+                            Value="{Binding Banner.CustomColorStartID, Mode=TwoWay}" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+            <!--  Appearance  -->
+            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{helpers:I18n TextAppearanceTitle.Text}" />
+
+            <!--  Theme Selection  -->
             <ui:CardControl Margin="0,8,0,12" Icon="{ui:SymbolIcon Color24}">
                 <ui:CardControl.Header>
                     <Grid>
@@ -37,18 +114,19 @@
                             Text="Select which app theme to display" />
                     </Grid>
                 </ui:CardControl.Header>
-                <ComboBox x:Name="ThemeComboBox"
-                          Width="200"
-                          HorizontalAlignment="Left"
-                          Margin="0,0,0,0"
-                          SelectionChanged="ThemeComboBox_SelectionChanged">
+                <ComboBox
+                    x:Name="ThemeComboBox"
+                    Width="200"
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Left"
+                    SelectionChanged="ThemeComboBox_SelectionChanged">
                     <ComboBoxItem Content="{helpers:I18n ThemeLight}" />
                     <ComboBoxItem Content="{helpers:I18n ThemeDark}" />
                     <ComboBoxItem Content="{helpers:I18n ThemeHighContrast}" />
                 </ComboBox>
             </ui:CardControl>
 
-            <!-- Language Selection -->
+            <!--  Language Selection  -->
             <ui:CardControl Margin="0,0,0,0" Icon="{ui:SymbolIcon LocalLanguage24}">
                 <ui:CardControl.Header>
                     <Grid>
@@ -66,83 +144,21 @@
                             Text="Select your preferred language" />
                     </Grid>
                 </ui:CardControl.Header>
-                <ComboBox x:Name="LanguageComboBox"
-                          Width="200"
-                          HorizontalAlignment="Left"
-                          Margin="0,0,0,0"
-                          SelectionChanged="LanguageComboBox_SelectionChanged">
+                <ComboBox
+                    x:Name="LanguageComboBox"
+                    Width="200"
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Left"
+                    SelectionChanged="LanguageComboBox_SelectionChanged">
                     <ComboBoxItem Content="English" Tag="en-US" />
                     <ComboBoxItem Content="简体中文" Tag="zh-CN" />
                 </ComboBox>
             </ui:CardControl>
 
-            <!-- Banner Settings -->
-            <TextBlock Text="{helpers:I18n TextBannerSettingsTitle.Text}"
-                       Style="{StaticResource SectionTitleStyle}" />
+            <!--  About  -->
+            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{helpers:I18n TextAboutTitle.Text}" />
 
-            <ui:CardControl Margin="0,8,0,12" Icon="{ui:SymbolIcon Link24}">
-                <ui:CardControl.Header>
-                    <ui:TextBlock FontTypography="Body" Text="{helpers:I18n TextBannerSettingsTitle.Text}" />
-                </ui:CardControl.Header>
-
-                <StackPanel>
-                    <!-- Scan Folders Editor -->
-                    <local:BannerSpriteScanFoldersEditor x:Name="BannerSpriteScanFoldersEditor" Margin="0,0,0,16" />
-
-                    <!-- Group Start ID -->
-                    <Grid Margin="0,0,0,16">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                            <ui:TextBlock FontTypography="Body"
-                                          Text="{helpers:I18n TextCustomBannerGroupStartID.Text}" />
-                            <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                       Text="{helpers:I18n TextCustomBannerGroupStartIDExplain.Text}"
-                                       TextWrapping="Wrap"
-                                       FontSize="12" />
-                        </StackPanel>
-                        <ui:NumberBox x:Name="NumberBoxGroupStartID"
-                                      Grid.Column="1"
-                                      Width="200"
-                                      Minimum="7"
-                                      Maximum="99999"
-                                      SpinButtonPlacementMode="Compact"
-                                      Value="{Binding Banner.CustomGroupStartID, Mode=TwoWay}" />
-                    </Grid>
-
-                    <!-- Color Start ID -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                            <ui:TextBlock FontTypography="Body"
-                                          Text="{helpers:I18n TextCustomBannerColorStartID.Text}" />
-                            <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                       Text="{helpers:I18n TextCustomBannerColorStartIDExplain.Text}"
-                                       TextWrapping="Wrap"
-                                       FontSize="12" />
-                        </StackPanel>
-                        <ui:NumberBox x:Name="NumberBoxColorStartID"
-                                      Grid.Column="1"
-                                      Width="200"
-                                      Minimum="194"
-                                      Maximum="999999"
-                                      SpinButtonPlacementMode="Compact"
-                                      Value="{Binding Banner.CustomColorStartID, Mode=TwoWay}" />
-                    </Grid>
-                </StackPanel>
-            </ui:CardControl>
-
-            <!-- About -->
-            <TextBlock Text="{helpers:I18n TextAboutTitle.Text}"
-                       Style="{StaticResource SectionTitleStyle}" />
-
-            <ui:CardExpander ContentPadding="0"
-                             Icon="{ui:ImageIcon 'pack://application:,,,/Assets/StoreLogo.png', Width=50, Height=50}">
+            <ui:CardExpander ContentPadding="0" Icon="{ui:ImageIcon 'pack://application:,,,/Assets/StoreLogo.png', Width=50, Height=50}">
                 <ui:CardExpander.Header>
                     <Grid>
                         <Grid.RowDefinitions>

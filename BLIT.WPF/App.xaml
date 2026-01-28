@@ -19,9 +19,6 @@
             <!-- Built-in converters -->
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             
-            <!-- Custom converters -->
-            <local:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
-            
             <!-- Custom brushes -->
             <SolidColorBrush x:Key="Danger" Color="#AA3232"/>
             <SolidColorBrush x:Key="Warn" Color="#FFBB00"/>

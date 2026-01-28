@@ -1,114 +1,120 @@
-<UserControl x:Class="BLIT.WPF.Pages.Settings.BannerSpriteScanFoldersEditor"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-             mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="600"
-             ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
-             ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-             Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+<UserControl
+    x:Class="BLIT.WPF.Pages.Settings.BannerSpriteScanFoldersEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DesignHeight="300"
+    d:DesignWidth="600"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    mc:Ignorable="d">
     <StackPanel>
-        <!-- Header -->
-        <ui:TextBlock FontTypography="Body"
-                      Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                      Text="{helpers:I18n TextBannerSpriteScanFolders.Text}"
-                      Margin="0,0,0,0" />
-        <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                   Text="{helpers:I18n TextBannerSpriteScanFoldersExplain.Text}"
-                   TextWrapping="Wrap"
-                   FontSize="12"
-                   Margin="0,4,0,8" />
+        <!--  Header  -->
+        <ui:TextBlock
+            Margin="0,0,0,0"
+            FontTypography="Body"
+            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+            Text="{helpers:I18n TextBannerSpriteScanFolders.Text}" />
+        <TextBlock
+            Margin="0,4,0,8"
+            FontSize="12"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+            Text="{helpers:I18n TextBannerSpriteScanFoldersExplain.Text}"
+            TextWrapping="Wrap" />
 
-        <!-- List and Buttons -->
+        <!--  List and Buttons  -->
         <Grid Margin="0,8,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <!-- ListView for folders -->
-            <Border Grid.Column="0"
-                    Background="{DynamicResource ControlAltFillColorSecondaryBrush}"
-                    BorderBrush="{DynamicResource ControlElevationBorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="4"
-                    MinHeight="150"
-                    MaxHeight="200">
+            <!--  ListView for folders  -->
+            <Border
+                Grid.Column="0"
+                MinHeight="150"
+                MaxHeight="200"
+                Background="{DynamicResource ControlAltFillColorSecondaryBrush}"
+                BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="4">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ui:ListView x:Name="ListViewScanFolders"
-                                 ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                 SelectionMode="Single"
-                                 SelectionChanged="ListViewScanFolders_SelectionChanged"
-                                 Padding="0">
+                    <ui:ListView
+                        x:Name="ListViewScanFolders"
+                        Padding="0"
+                        HorizontalContentAlignment="Stretch"
+                        ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                        SelectionChanged="ListViewScanFolders_SelectionChanged"
+                        SelectionMode="Single">
                         <ui:ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Height="40" 
-                                  Margin="0"
-                                  HorizontalAlignment="Stretch">
-                                    <!-- Display Mode (Label) -->
+                            <DataTemplate>
+                                <Grid Height="40" Margin="0">
+                                    <!--  Display Mode (Label)  -->
                                     <TextBlock
                                         x:Name="LabelPath"
-                                        Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Invert}"
-                                        Text="{Binding RelativePath, Mode=OneWay}"
-                                        VerticalAlignment="Center"
                                         Margin="12,0,0,0"
-                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                        Text="{Binding RelativePath, Mode=OneWay}"
+                                        Visibility="{Binding IsViewing, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-                                    <!-- Edit Mode (TextBox with Accept/Cancel buttons) -->
-                                    <Grid
-                                        Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                        Margin="0">
+                                    <!--  Edit Mode (TextBox with Accept/Cancel buttons)  -->
+                                    <Grid Margin="0" Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBox Grid.Column="0"
-                                                 x:Name="EditPath"
-                                                 Text="{Binding RelativePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                 Padding="8,2"
-                                                 Margin="8,4"
-                                                 KeyDown="EditPath_KeyDown"
-                                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                 Background="{DynamicResource ControlFillColorDefaultBrush}" />
+                                        <TextBox
+                                            x:Name="EditPath"
+                                            Grid.Column="0"
+                                            Margin="8,4"
+                                            Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                            KeyDown="EditPath_KeyDown"
+                                            Text="{Binding RelativePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                                        <!-- Accept Button -->
-                                        <Button Grid.Column="1"
-                                                x:Name="BtnAccept"
-                                                Width="32"
-                                                Height="32"
-                                                Margin="2,4"
-                                                Padding="0"
-                                                Click="BtnAccept_Click"
-                                                ToolTip="Accept">
-                                            <ui:SymbolIcon Symbol="CheckmarkCircle24" FontSize="16" />
+                                        <!--  Accept Button  -->
+                                        <Button
+                                            x:Name="BtnAccept"
+                                            Grid.Column="1"
+                                            Width="32"
+                                            Height="32"
+                                            Margin="2,4"
+                                            Padding="0"
+                                            Click="BtnAccept_Click"
+                                            ToolTip="Accept">
+                                            <ui:SymbolIcon FontSize="16" Symbol="CheckmarkCircle24" />
                                         </Button>
 
-                                        <!-- Cancel Button -->
-                                        <Button Grid.Column="2"
-                                                x:Name="BtnCancel"
-                                                Width="32"
-                                                Height="32"
-                                                Margin="2,4,8,4"
-                                                Padding="0"
-                                                Click="BtnCancel_Click"
-                                                ToolTip="Cancel">
-                                            <ui:SymbolIcon Symbol="DismissCircle24" FontSize="16" />
+                                        <!--  Cancel Button  -->
+                                        <Button
+                                            x:Name="BtnCancel"
+                                            Grid.Column="2"
+                                            Width="32"
+                                            Height="32"
+                                            Margin="2,4,8,4"
+                                            Padding="0"
+                                            Click="BtnCancel_Click"
+                                            ToolTip="Cancel">
+                                            <ui:SymbolIcon FontSize="16" Symbol="DismissCircle24" />
                                         </Button>
                                     </Grid>
 
-                                    <!-- Error Message -->
-                                    <TextBlock x:Name="ErrorMessage"
-                                               Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                               Text="{Binding ErrorMessage, Mode=OneWay}"
-                                               Foreground="{DynamicResource SystemErrorTextColor}"
-                                               Margin="12,0,0,0"
-                                               VerticalAlignment="Center"
-                                               FontSize="11" />
+                                    <!--  Error Message  -->
+                                    <TextBlock
+                                        x:Name="ErrorMessage"
+                                        Margin="12,0,0,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="11"
+                                        Foreground="{DynamicResource SystemErrorTextColor}"
+                                        Text="{Binding ErrorMessage, Mode=OneWay}"
+                                        Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                 </Grid>
                             </DataTemplate>
                         </ui:ListView.ItemTemplate>
@@ -124,29 +130,33 @@
                 </ScrollViewer>
             </Border>
 
-            <!-- Buttons (Add, Edit, Delete) -->
-            <StackPanel Grid.Column="1"
-                        Margin="8,0,0,0"
-                        VerticalAlignment="Top">
-                <Button x:Name="BtnAdd"
-                        Content="{helpers:I18n ButtonAdd.Content}"
-                        Width="80"
-                        Height="36"
-                        Margin="0,0,0,4"
-                        Click="BtnAdd_Click" />
-                <Button x:Name="BtnEdit"
-                        Content="{helpers:I18n ButtonEdit.Content}"
-                        Width="80"
-                        Height="36"
-                        Margin="0,0,0,4"
-                        Click="BtnEdit_Click"
-                        IsEnabled="False" />
-                <Button x:Name="BtnDelete"
-                        Content="{helpers:I18n ButtonDelete.Content}"
-                        Width="80"
-                        Height="36"
-                        Click="BtnDelete_Click"
-                        IsEnabled="False" />
+            <!--  Buttons (Add, Edit, Delete)  -->
+            <StackPanel
+                Grid.Column="1"
+                Margin="8,0,0,0"
+                VerticalAlignment="Top">
+                <Button
+                    x:Name="BtnAdd"
+                    Width="80"
+                    Height="36"
+                    Margin="0,0,0,4"
+                    Click="BtnAdd_Click"
+                    Content="{helpers:I18n ButtonAdd.Content}" />
+                <Button
+                    x:Name="BtnEdit"
+                    Width="80"
+                    Height="36"
+                    Margin="0,0,0,4"
+                    Click="BtnEdit_Click"
+                    Content="{helpers:I18n ButtonEdit.Content}"
+                    IsEnabled="False" />
+                <Button
+                    x:Name="BtnDelete"
+                    Width="80"
+                    Height="36"
+                    Click="BtnDelete_Click"
+                    Content="{helpers:I18n ButtonDelete.Content}"
+                    IsEnabled="False" />
             </StackPanel>
         </Grid>
     </StackPanel>

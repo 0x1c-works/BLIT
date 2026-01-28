@@ -26,9 +26,12 @@ public class ScanFolderItem : BindableBase {
                 OnPropertyChanged(nameof(HasError));
                 _errorMessage = "";
                 OnPropertyChanged(nameof(ErrorMessage));
+                OnPropertyChanged(nameof(IsViewing));
             }
         }
     }
+
+    public bool IsViewing => !IsEditing;
 
     private string _errorMessage = "";
     public string ErrorMessage {
@@ -91,21 +94,9 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
         // Normalize path separators
         path = path.Replace('\\', '/');
 
-        // Check for absolute paths
-        if (path.StartsWith('/') || path.StartsWith("C:") || 
-            path.Contains(":\\") || Regex.IsMatch(path, @"^[A-Za-z]:")) {
-            return false;
-        }
-
         // Check for invalid characters
         var invalidChars = new[] { '|', '*', '?', '"', '<', '>' };
         if (path.Any(c => invalidChars.Contains(c))) {
-            return false;
-        }
-
-        // Path must contain only valid characters for relative paths
-        // Allow: letters, numbers, dots, forward/backward slashes, underscores, hyphens
-        if (!Regex.IsMatch(path, @"^[a-zA-Z0-9\.\/_\-]+$")) {
             return false;
         }
 
