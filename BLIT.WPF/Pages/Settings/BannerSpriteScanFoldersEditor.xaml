@@ -6,7 +6,10 @@
              xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="600">
+             d:DesignHeight="300" d:DesignWidth="600"
+             ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+             ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+             Foreground="{DynamicResource TextFillColorPrimaryBrush}">
     <StackPanel>
         <!-- Header -->
         <ui:TextBlock FontTypography="Body"
@@ -35,33 +38,29 @@
                     MinHeight="150"
                     MaxHeight="200">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ListView x:Name="ListViewScanFolders"
-                              ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                              SelectionMode="Single"
-                              SelectionChanged="ListViewScanFolders_SelectionChanged"
-                              Padding="0">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Height="40" Margin="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
+                    <ui:ListView x:Name="ListViewScanFolders"
+                                 ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                 SelectionMode="Single"
+                                 SelectionChanged="ListViewScanFolders_SelectionChanged"
+                                 Padding="0">
+                        <ui:ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Height="40" 
+                                  Margin="0"
+                                  HorizontalAlignment="Stretch">
                                     <!-- Display Mode (Label) -->
-                                    <TextBlock Grid.Column="0"
-                                               x:Name="LabelPath"
-                                               Visibility="{Binding IsEditing, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"
-                                               Text="{Binding RelativePath, Mode=OneWay}"
-                                               VerticalAlignment="Center"
-                                               Margin="12,0,0,0"
-                                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                    <TextBlock
+                                        x:Name="LabelPath"
+                                        Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Invert}"
+                                        Text="{Binding RelativePath, Mode=OneWay}"
+                                        VerticalAlignment="Center"
+                                        Margin="12,0,0,0"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
                                     <!-- Edit Mode (TextBox with Accept/Cancel buttons) -->
-                                    <Grid Grid.Column="0"
-                                          Grid.ColumnSpan="2"
-                                          Visibility="{Binding IsEditing, Converter={StaticResource BoolToVisibilityConverter}}"
-                                          Margin="0">
+                                    <Grid
+                                        Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        Margin="0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
@@ -103,10 +102,8 @@
                                     </Grid>
 
                                     <!-- Error Message -->
-                                    <TextBlock Grid.Column="0"
-                                               Grid.ColumnSpan="2"
-                                               x:Name="ErrorMessage"
-                                               Visibility="{Binding HasError, Converter={StaticResource BoolToVisibilityConverter}}"
+                                    <TextBlock x:Name="ErrorMessage"
+                                               Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                Text="{Binding ErrorMessage, Mode=OneWay}"
                                                Foreground="{DynamicResource SystemErrorTextColor}"
                                                Margin="12,0,0,0"
@@ -114,7 +111,7 @@
                                                FontSize="11" />
                                 </Grid>
                             </DataTemplate>
-                        </ListView.ItemTemplate>
+                        </ui:ListView.ItemTemplate>
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="Padding" Value="0" />
@@ -123,7 +120,7 @@
                                 <Setter Property="BorderBrush" Value="{DynamicResource ControlElevationBorderBrush}" />
                             </Style>
                         </ListView.ItemContainerStyle>
-                    </ListView>
+                    </ui:ListView>
                 </ScrollViewer>
             </Border>
 
