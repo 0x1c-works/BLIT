@@ -331,7 +331,7 @@
   </data>
   <data name="TextBannerSpriteScanFoldersExplain.Text" xml:space="preserve">
     <value>请在此处添加可能包含图标文件的文件夹相对路径。
-dd</value>
+导入旗帜图案贴图时，会自动扫描相对路径下的同名图标文件并绑定到贴图上。</value>
   </data>
   <data name="TextChange.Text" xml:space="preserve">
     <value>更改</value>

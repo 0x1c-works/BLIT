@@ -331,7 +331,7 @@ If you prefer not to, the changes will be applied next time when you launch this
   </data>
   <data name="TextBannerSpriteScanFoldersExplain.Text" xml:space="preserve">
     <value>Manage the relative paths to folders where the sprites are likely to be found.
-The relative paths are based on the texture import location.</value>
+When importing textures, the application will scan the sprite files with the same file name in the relative paths, and bind them to the textures automatically.</value>
   </data>
   <data name="TextChange.Text" xml:space="preserve">
     <value>Change</value>
