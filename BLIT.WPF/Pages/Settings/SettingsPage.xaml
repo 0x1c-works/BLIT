@@ -120,7 +120,7 @@
                         Background="Transparent"
                         BorderThickness="0,1,0,0"
                         CornerRadius="0"
-                        NavigateUri="https://github.com/0x1c-works/BLIT/issues/new">
+                        NavigateUri="https://github.com/0x1-works/BLIT/issues/new">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
