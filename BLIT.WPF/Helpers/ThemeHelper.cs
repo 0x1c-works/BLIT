@@ -70,7 +70,7 @@ public static class ThemeHelper {
             var settingsPath = GetSettingsFilePath();
             if (File.Exists(settingsPath)) {
                 var themeStr = File.ReadAllText(settingsPath);
-                if (Enum.TryParse<Theme>(themeStr, out Theme theme)) {
+                if (Enum.TryParse(themeStr, out Theme theme)) {
                     return theme;
                 }
             }
