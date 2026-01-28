@@ -188,6 +188,7 @@
                             Grid.Row="2"
                             ItemTemplate="{StaticResource GroupItemTemplate}"
                             ItemsSource="{Binding ViewModel.Groups}"
+                            SelectedItem="{Binding SelectedGroup, Mode=TwoWay}"
                             SelectionChanged="listViewGroups_SelectionChanged"
                             dd:DragDrop.IsDragSource="True"
                             dd:DragDrop.IsDropTarget="True"

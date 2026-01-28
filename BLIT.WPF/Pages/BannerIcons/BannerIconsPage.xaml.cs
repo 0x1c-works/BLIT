@@ -53,7 +53,8 @@ public partial class BannerIconsPage : INavigableView<BannerIconsPageViewModel> 
 
     // 分组列表选择变化
     private void listViewGroups_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-        _viewModel?.OnSelectionChanged(listViewGroups.SelectedItem as BannerGroupEntry);
+        // SelectionChanged 事件处理器现在由 SelectedItem 绑定处理
+        // 但保留此处理器以防需要其他副作用
     }
 
     // 输出分辨率选择
