@@ -1,5 +1,6 @@
 using Autofac;
 using BLIT.Banner;
+using BLIT.Banner.Progress;
 using BLIT.WPF.Helpers;
 using BLIT.WPF.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -186,19 +187,94 @@ public partial class BannerIconsProject : ObservableObject, IProject {
         OnPropertyChanged(nameof(CanExport));
     }
 
-    public async Task<string> ExportAll(string outFolderPath) {
+    public async Task<string> ExportAll(string outFolderPath, IProgress<ExportProgressData>? progress = null) {
+        var iconsList = ToIconSprites().ToList();
+        var exportingGroups = GetExportingGroups().ToList();
+        
+        // Calculate texture counts per group
+        var groupTextureMap = new Dictionary<int, int>();
+        int textureCount = 0;
+        foreach (var group in exportingGroups) {
+            var icons = group.Icons.Select(icon => icon.TexturePath).ToArray();
+            // Estimate: 16 icons per texture (4x4 grid), so divide by 16 and round up
+            int groupTextures = (icons.Length + 15) / 16;
+            groupTextureMap[group.GroupID] = groupTextures;
+            textureCount += groupTextures;
+        }
+        
+        // Calculate total progress units:
+        // - Texture generation: textureCount units
+        // - Sprite processing: iconsList.Count units
+        // - XML generation: 1 unit
+        int totalProgress = textureCount + iconsList.Count + 1;
+        int currentProgress = 0;
+        object lockObj = new object();
+        
+        // Create unified progress handler
+        var unifiedProgress = new Progress<ExportProgressData>(data => {
+            lock (lockObj) {
+                // Update based on stage
+                if (data.CurrentStage == "Texture") {
+                    // Texture progress: data.ProcessedCount is texture index
+                    currentProgress = data.ProcessedCount;
+                } else if (data.CurrentStage == "Sprite") {
+                    // Sprite progress: data.ProcessedCount is icon count
+                    currentProgress = textureCount + data.ProcessedCount;
+                } else if (data.CurrentStage == "XML") {
+                    // XML progress: already at final stage
+                    currentProgress = textureCount + iconsList.Count;
+                }
+                
+                progress?.Report(new ExportProgressData(currentProgress, totalProgress, data.CurrentStage));
+            }
+        });
+        
         var merger = new TextureMerger(_settings.Banner.TextureOutputResolution);
-        await Task.WhenAll(GetExportingGroups().Select(g =>
-            Task.Run(() => {
-                merger.Merge(outFolderPath, g.GroupID, g.Icons.Select(icon => icon.TexturePath).ToArray());
-            })
-        ));
+        
+        // Merge textures from all exporting groups with proper progress tracking
+        // Use a thread-safe counter to track completed textures across all groups
+        int completedTextures = 0;
+        object textureCountLock = new object();
+        
+        var textureMergeTasks = new List<Task>();
+        
+        foreach (var group in exportingGroups) {
+            var groupID = group.GroupID;
+            var textureFileNames = group.Icons.Select(icon => icon.TexturePath).ToArray();
+            
+            var task = Task.Run(() => {
+                // Create progress adapter that tracks completed texture count
+                var groupProgress = new Progress<ExportProgressData>(data => {
+                    if (data.CurrentStage == "Texture") {
+                        // Each texture completion increments the global counter
+                        lock (textureCountLock) {
+                            completedTextures++;
+                            ((IProgress<ExportProgressData>)unifiedProgress).Report(new ExportProgressData(
+                                completedTextures,
+                                textureCount,
+                                "Texture"));
+                        }
+                    }
+                });
+                
+                merger.Merge(outFolderPath, groupID, textureFileNames, groupProgress);
+            });
+            
+            textureMergeTasks.Add(task);
+        }
+        
+        await Task.WhenAll(textureMergeTasks);
         
         // Create logger adapter to pass WPF's Serilog configuration to BLIT.Banner
         var serilogLogger = Log.ForContext<BannerIconsProject>();
         var logger = new SerilogLoggerAdapter(serilogLogger);
         
-        await SpriteOrganizer.CollectToSpriteParts(outFolderPath, ToIconSprites(), logger);
+         // Collect sprites with progress tracking
+         await SpriteOrganizer.CollectToSpriteParts(outFolderPath, iconsList, logger, unifiedProgress);
+         
+         // Report XML generation completion
+         ((IProgress<ExportProgressData>)unifiedProgress).Report(new ExportProgressData(totalProgress, totalProgress, "XML"));
+        
         return ExportXML(outFolderPath);
 
     }

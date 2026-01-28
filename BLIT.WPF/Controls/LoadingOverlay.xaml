@@ -4,6 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:local="clr-namespace:BLIT.WPF.Helpers"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid x:Name="RootGrid" Visibility="Collapsed">
@@ -13,18 +14,40 @@
                     Padding="24"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal">
-                    <ui:ProgressRing 
-                        IsIndeterminate="True"
-                        Width="32" 
-                        Height="32"
-                        Margin="0,0,16,0" />
-                    <TextBlock 
-                        x:Name="MessageText"
-                        VerticalAlignment="Center"
-                        Foreground="White"
-                        FontSize="14"
-                        Text="{Binding Message, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                    <!-- Progress Ring + Message -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <ui:ProgressRing 
+                            IsIndeterminate="True"
+                            Width="32" 
+                            Height="32"
+                            Margin="0,0,16,0" />
+                        <TextBlock 
+                            x:Name="MessageText"
+                            VerticalAlignment="Center"
+                            Foreground="White"
+                            FontSize="14"
+                            Text="{Binding Message, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                    </StackPanel>
+                    
+                    <!-- Progress Text (shown only when IsShowingProgress is True) -->
+                    <StackPanel Orientation="Vertical" 
+                                Margin="0,16,0,0"
+                                Visibility="{Binding IsShowingProgress, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVisibility}}">
+                        <TextBlock 
+                            x:Name="ProgressText"
+                            Foreground="White"
+                            FontSize="12"
+                            TextAlignment="Center"
+                            Text="{Binding ProgressDisplayText, RelativeSource={RelativeSource AncestorType=UserControl}, StringFormat='({0})'}" />
+                        <TextBlock 
+                            x:Name="PercentageText"
+                            Foreground="White"
+                            FontSize="11"
+                            TextAlignment="Center"
+                            Margin="0,4,0,0"
+                            Text="{Binding ProgressPercentageString, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                    </StackPanel>
                 </StackPanel>
             </Border>
         </Border>

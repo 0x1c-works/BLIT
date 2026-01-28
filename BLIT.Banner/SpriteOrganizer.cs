@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 using BLIT.Banner.Performance;
+using BLIT.Banner.Progress;
 using BLIT.Utils.Logging;
 
 namespace BLIT.Banner;
@@ -17,7 +18,8 @@ public class SpriteOrganizer {
     public static async Task CollectToSpriteParts(
         string outDir, 
         IEnumerable<IconSprite> icons,
-        ILogger? logger = null) {
+        ILogger? logger = null,
+        IProgress<ExportProgressData>? progress = null) {
         
         if (!string.IsNullOrEmpty(outDir)) {
             outDir = Directory.CreateDirectory(outDir).FullName;
@@ -33,6 +35,8 @@ public class SpriteOrganizer {
 
         // Process all icons in parallel with concurrency control
         var semaphore = new SemaphoreSlim(MaxConcurrency, MaxConcurrency);
+        int processedCount = 0;
+        object lockObj = new object();
         
         var tasks = iconList.Select(async icon => {
             var iconId = $"{icon.GroupID}_{icon.IconID}";
@@ -42,9 +46,21 @@ public class SpriteOrganizer {
             try {
                 await ResizeAndSave(outDir, icon, tracker);
                 tracker.CompleteIcon(iconId, true);
+                
+                // Report progress for this icon
+                lock (lockObj) {
+                    processedCount++;
+                    progress?.Report(new ExportProgressData(processedCount, iconList.Count, "Sprite"));
+                }
             } catch (Exception ex) {
                 var errorMessage = ex.InnerException?.Message ?? ex.Message ?? "Unknown error";
                 tracker.CompleteIcon(iconId, false, errorMessage);
+                
+                // Still report progress even on failure
+                lock (lockObj) {
+                    processedCount++;
+                    progress?.Report(new ExportProgressData(processedCount, iconList.Count, "Sprite"));
+                }
             } finally {
                 semaphore.Release();
             }

@@ -1,3 +1,4 @@
+using BLIT.Banner.Progress;
 using BLIT.WPF.Helpers;
 using BLIT.WPF.Pages.BannerIcons.Models;
 using BLIT.WPF.Services;
@@ -119,7 +120,30 @@ public partial class BannerIconsPageViewModel : ObservableObject {
         if (string.IsNullOrEmpty(outFolderPath)) return;
 
         await DoExportAsync(async () => {
-            var outDir = await ViewModel!.ExportAll(outFolderPath);
+            // Calculate total progress upfront for UI initialization
+            var iconsList = ViewModel!.ToIconSprites().ToList();
+            var exportingGroups = ViewModel!.GetExportingGroups().ToList();
+            
+            // Calculate texture count
+            int textureCount = 0;
+            foreach (var group in exportingGroups) {
+                var icons = group.Icons.Select(icon => icon.TexturePath).ToArray();
+                int groupTextures = (icons.Length + 15) / 16;
+                textureCount += groupTextures;
+            }
+            
+            // Total = Texture + Sprite + XML
+            int totalProgress = textureCount + iconsList.Count + 1;
+            
+            // Initialize UI with total count and show initial (0/total) 0%
+            _loading?.ShowProgress(I18n.Current.GetString("TextExporting.Text"), totalProgress);
+            
+            // Create progress handler for ExportAll operation
+            var progress = new Progress<ExportProgressData>(data => {
+                _loading?.UpdateProgress(data.ProcessedCount);
+            });
+            
+            var outDir = await ViewModel!.ExportAll(outFolderPath, progress);
             _notification?.Notify(new(
                 ToastVariant.Success,
                 Message: string.Format(I18n.Current.GetString("ExportSuccess"), outDir),
@@ -134,6 +158,9 @@ public partial class BannerIconsPageViewModel : ObservableObject {
         var outFolderPath = await SelectOutFolder();
         if (string.IsNullOrEmpty(outFolderPath)) return;
 
+        // Show simple loading dialog (no progress) for XML export
+        _loading?.Show(I18n.Current.GetString("TextExporting.Text"));
+        
         await DoExportAsync(() => {
             var outDir = ViewModel!.ExportXML(outFolderPath);
             _notification?.Notify(new(
@@ -205,7 +232,6 @@ public partial class BannerIconsPageViewModel : ObservableObject {
             return;
         }
 
-        _loading?.Show(I18n.Current.GetString("TextExporting.Text"));
         try {
             ViewModel.IsExporting = true;
             await work();
