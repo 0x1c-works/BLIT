@@ -160,7 +160,7 @@
     <value>设置</value>
   </data>
   <data name="AppNavMenuHelp.Content" xml:space="preserve">
-    <value>使用教程</value>
+    <value>使用说明</value>
   </data>
   <data name="PageLoading.Message" xml:space="preserve">
     <value>正在打开 {0}...</value>
@@ -430,9 +430,6 @@
   </data>
   <data name="AppButtonSort.Label" xml:space="preserve">
     <value>排序</value>
-  </data>
-  <data name="ViewTutorials" xml:space="preserve">
-    <value>查看使用说明</value>
   </data>
   <data name="SubmitIssue" xml:space="preserve">
     <value>报告错误或请求新功能</value>

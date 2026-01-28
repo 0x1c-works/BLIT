@@ -160,7 +160,7 @@
     <value>Settings</value>
   </data>
   <data name="AppNavMenuHelp.Content" xml:space="preserve">
-    <value>Tutorials</value>
+    <value>Help</value>
   </data>
   <data name="PageLoading.Message" xml:space="preserve">
     <value>Opening {0}...</value>
@@ -431,10 +431,7 @@ It may take a while if there are a lot of assets</value>
   <data name="AppButtonSort.Label" xml:space="preserve">
     <value>Sort</value>
   </data>
-  <data name="ViewTutorials" xml:space="preserve">
-    <value>View Tutorials</value>
-  </data>
-   <data name="SubmitIssue" xml:space="preserve">
+  <data name="SubmitIssue" xml:space="preserve">
      <value>Report a bug or request a feature</value>
    </data>
    <data name="TextInvalidPath.Text" xml:space="preserve">
