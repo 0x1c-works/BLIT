@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <!-- 版本号各部分定义 -->
+    <MajorVersion>1</MajorVersion>
+    <MinorVersion>0</MinorVersion>
+    <PatchVersion>0</PatchVersion>
+    <BuildNumber>1</BuildNumber>
+
+    <!-- 组合版本号 (3段) -->
+    <Version>$(MajorVersion).$(MinorVersion).$(PatchVersion)</Version>
+
+    <!-- 组合版本号 (4段) - 用于 Assembly 和 UI 显示 -->
+    <AssemblyVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion).$(BuildNumber)</AssemblyVersion>
+    <FileVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion).$(BuildNumber)</FileVersion>
+    <InformationalVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion).$(BuildNumber)</InformationalVersion>
+  </PropertyGroup>
+</Project>

@@ -1,5 +1,5 @@
+using BLIT.WPF.Helpers;
 using BLIT.WPF.Settings;
-using System.Reflection;
 
 namespace BLIT.WPF.Services;
 
@@ -13,13 +13,5 @@ public class SettingsService(GlobalSettings global, BannerSettings banner) : ISe
     public GlobalSettings Global { get; } = global;
     public BannerSettings Banner { get; } = banner;
 
-    public string Version {
-        get {
-            var version = Assembly.GetExecutingAssembly()
-                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                ?.InformationalVersion ?? "Unknown";
-
-            return version;
-        }
-    }
+    public string Version => VersionHelper.GetFullVersion();
 }
