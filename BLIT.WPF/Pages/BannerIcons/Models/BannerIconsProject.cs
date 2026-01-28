@@ -11,38 +11,27 @@ using System.IO;
 
 namespace BLIT.WPF.Pages.BannerIcons.Models;
 
-public partial class BannerIconsProject : ObservableObject, IProject {
+public partial class BannerIconsProject(
+    ISettingsService settings,
+    BannerGroupEntry.Factory bannerGroupFactory,
+    BannerColorEntry.Factory colorFactory)
+    : ObservableObject, IProject {
     /// <summary>
     ///     0 - 6 is occpuied by the native game
     /// </summary>
-    public const int MIN_GROUP_ID = 7;
+    private const int MinGroupId = 7;
 
     /// <summary>
     ///     0-193 is occupied by the native game
     /// </summary>
-    public const int MIN_COLOR_ID = 194;
+    private const int MinColorId = 194;
 
-    private readonly BannerColorEntry.Factory _colorFactory;
-    private readonly BannerGroupEntry.Factory _groupFactory;
-
-    private readonly ISettingsService _settings;
-
-    private bool _isExporting = false;
 
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(CanExport))]
-    private bool isExporting;
+    private bool _isExporting;
 
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(CanExport))]
-    private bool isSavingOrLoading;
-
-    public BannerIconsProject(
-        ISettingsService settings,
-        BannerGroupEntry.Factory bannerGroupFactory,
-        BannerColorEntry.Factory colorFactory) {
-        _settings = settings;
-        _groupFactory = bannerGroupFactory;
-        _colorFactory = colorFactory;
-    }
+    private bool _isSavingOrLoading;
 
     public ObservableCollection<BannerGroupEntry> Groups { get; } = new();
     public ObservableCollection<BannerColorEntry> Colors { get; } = new();
@@ -50,13 +39,13 @@ public partial class BannerIconsProject : ObservableObject, IProject {
 
     public string OutputResolutionName {
         get =>
-            _settings.Banner.TextureOutputResolution switch {
+            settings.Banner.TextureOutputResolution switch {
                 OutputResolution.Res2K => "2K",
                 OutputResolution.Res4K => "4K",
                 _ => I18n.Current.GetString("PleaseSelect")
             };
         set {
-            _settings.Banner.TextureOutputResolution = Enum.TryParse(value, out OutputResolution enumValue)
+            settings.Banner.TextureOutputResolution = Enum.TryParse(value, out OutputResolution enumValue)
                 ? enumValue
                 : OutputResolution.INVALID;
             OnPropertyChanged();
@@ -83,11 +72,11 @@ public partial class BannerIconsProject : ObservableObject, IProject {
             Groups.Clear();
             Colors.Clear();
             foreach (BannerGroupEntry.SaveData groupData in data.Groups) {
-                Groups.Add(groupData.Load(_groupFactory));
+                Groups.Add(groupData.Load(bannerGroupFactory));
             }
 
             foreach (BannerColorEntry.SaveData colorData in data.Colors) {
-                Colors.Add(colorData.Load(_colorFactory));
+                Colors.Add(colorData.Load(colorFactory));
             }
         } catch (Exception ex) { Log.Error(ex, "error in loading the banner project"); } finally {
             IsSavingOrLoading = false;
@@ -122,21 +111,21 @@ public partial class BannerIconsProject : ObservableObject, IProject {
     }
 
     public IEnumerable<BannerGroupEntry> GetExportingGroups() {
-        return Groups.Where(g => g?.CanExport ?? false).OrderBy(g => g.GroupID);
+        return Groups.Where(g => g.CanExport).OrderBy(g => g.GroupID);
     }
 
     public IEnumerable<BannerColorEntry> GetExportingColors() {
-        return Colors.Where(c => c?.CanExport ?? false);
+        return Colors.Where(c => c.CanExport);
     }
 
     public void AddGroup() {
-        BannerGroupEntry newGroup = _groupFactory(GetNextGroupID());
+        BannerGroupEntry newGroup = bannerGroupFactory(GetNextGroupID());
         newGroup.PropertyChanged += OnGroupPropertyChanged;
         Groups.Add(newGroup);
         OnPropertyChanged(nameof(CanExport));
     }
 
-    public void DeleteGroup(BannerGroupEntry group) {
+    public void DeleteGroup(BannerGroupEntry? group) {
         if (group is null) {
             return;
         }
@@ -152,7 +141,7 @@ public partial class BannerIconsProject : ObservableObject, IProject {
     }
 
     public void AddColor() {
-        Colors.Add(_colorFactory(GetNextColorID()));
+        Colors.Add(colorFactory(GetNextColorID()));
     }
 
     public void DeleteColors(IEnumerable<BannerColorEntry> colors) {
@@ -167,19 +156,19 @@ public partial class BannerIconsProject : ObservableObject, IProject {
     }
 
     public int GetNextGroupID() {
-        return Groups.Count > 0 ? Groups.Max(g => g.GroupID) + 1 : _settings.Banner.CustomGroupStartID;
+        return Groups.Count > 0 ? Groups.Max(g => g.GroupID) + 1 : settings.Banner.CustomGroupStartID;
     }
 
     public int GetNextColorID() {
-        return Colors.Count > 0 ? Colors.Max(c => c.ID) + 1 : _settings.Banner.CustomColorStartID;
+        return Colors.Count > 0 ? Colors.Max(c => c.ID) + 1 : settings.Banner.CustomColorStartID;
     }
 
     public int ValidateGroupID(int oldID, int newID) {
-        return ValidateID(oldID, newID, MIN_GROUP_ID, id => Groups.Any(g => g.GroupID == id), GetNextGroupID);
+        return ValidateID(oldID, newID, MinGroupId, id => Groups.Any(g => g.GroupID == id), GetNextGroupID);
     }
 
     public int ValidateColorID(int oldID, int newID) {
-        return ValidateID(oldID, newID, MIN_COLOR_ID, id => Colors.Any(g => g.ID == id), GetNextColorID);
+        return ValidateID(oldID, newID, MinColorId, id => Colors.Any(g => g.ID == id), GetNextColorID);
     }
 
     private int ValidateID(int oldID, int newID, int minValidID, Func<int, bool> isIDOccupied, Func<int> getNextID) {
@@ -203,20 +192,13 @@ public partial class BannerIconsProject : ObservableObject, IProject {
         }
     }
 
-    public async Task<string> ExportAll(string outFolderPath, IProgress<ExportProgressData>? progress = null) {
+    public async Task<string?> ExportAll(string outFolderPath, IProgress<ExportProgressData>? progress = null) {
         List<IconSprite> iconsList = ToIconSprites().ToList();
         List<BannerGroupEntry> exportingGroups = GetExportingGroups().ToList();
 
         // Calculate texture counts per group
-        var groupTextureMap = new Dictionary<int, int>();
-        var textureCount = 0;
-        foreach (BannerGroupEntry group in exportingGroups) {
-            var icons = group.Icons.Select(icon => icon.TexturePath).ToArray();
-            // Estimate: 16 icons per texture (4x4 grid), so divide by 16 and round up
-            var groupTextures = (icons.Length + 15) / 16;
-            groupTextureMap[group.GroupID] = groupTextures;
-            textureCount += groupTextures;
-        }
+        var textureCount = exportingGroups.Select(group => group.Icons.Select(icon => icon.TexturePath).ToArray())
+            .Select(icons => (icons.Length + 15) / 16).Sum();
 
         // Calculate total progress units:
         // - Texture generation: textureCount units
@@ -245,7 +227,7 @@ public partial class BannerIconsProject : ObservableObject, IProject {
             }
         });
 
-        var merger = new TextureMerger(_settings.Banner.TextureOutputResolution);
+        var merger = new TextureMerger(settings.Banner.TextureOutputResolution);
 
         // Merge textures from all exporting groups with proper progress tracking
         // Use a thread-safe counter to track completed textures across all groups

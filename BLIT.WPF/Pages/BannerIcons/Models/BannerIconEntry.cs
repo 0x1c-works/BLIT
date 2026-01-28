@@ -136,9 +136,9 @@ public class BannerIconEntry : ObservableObject {
     public class SaveData {
         [Key(2)] public int CellIndex;
 
-        [Key(1)] public string SpritePath;
+        [Key(1)] public string SpritePath = string.Empty;
 
-        [Key(0)] public string TexturePath;
+        [Key(0)] public string TexturePath = string.Empty;
 
         public SaveData(BannerIconEntry vm) {
             TexturePath = vm.TexturePath;

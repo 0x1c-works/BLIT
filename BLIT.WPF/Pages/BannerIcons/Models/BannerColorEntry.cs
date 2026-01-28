@@ -24,12 +24,10 @@ public partial class BannerColorEntry : ObservableObject {
     private Color _color = Color.FromArgb(255, 255, 255, 255);
 
     private int _id;
-    private bool _isForBackground = true;
-    private bool _isForSigil = true;
 
-    [ObservableProperty] private bool isForBackground = true;
+    [ObservableProperty] private bool _isForBackground = true;
 
-    [ObservableProperty] private bool isForSigil = true;
+    [ObservableProperty] private bool _isForSigil = true;
 
     public BannerColorEntry(BannerIconsProject project, int id) {
         _project = project;

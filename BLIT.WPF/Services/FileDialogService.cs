@@ -63,9 +63,16 @@ public class FileDialogService : IFileDialogService {
 
                 // Locate the suggested file if exists
                 if (ParseFilePath(suggestedPath, out var dir, out var fileName)) {
-                    var folderItem = Shell32.SHCreateItemFromParsingName<Shell32.IShellItem>(dir);
-                    fd.SetFolder(folderItem);
-                    fd.SetFileName(fileName);
+                    if (dir != null) {
+                        var folderItem = Shell32.SHCreateItemFromParsingName<Shell32.IShellItem>(dir);
+                        if (folderItem != null) {
+                            fd.SetFolder(folderItem);
+                        }
+                    }
+
+                    if (fileName != null) {
+                        fd.SetFileName(fileName);
+                    }
                 }
 
                 if (IsUserCancelled(fd.Show(NativeHelpers.GetHwnd()))) {
@@ -125,10 +132,10 @@ public class FileDialogService : IFileDialogService {
                 throw new HRESULTException(hr, "error in CoCreateInstance for a FileSaveDialog");
             }
 
-            var fd = (Shell32.IFileSaveDialog)ppv;
+            var fd = (Shell32.IFileSaveDialog)ppv!;
 
             fd.SetClientGuid(stateGuid);
-            fd.SetDefaultFolder(Shell32.KNOWNFOLDERID.FOLDERID_DocumentsLibrary.GetIShellItem());
+            fd.SetDefaultFolder(Shell32.KNOWNFOLDERID.FOLDERID_DocumentsLibrary.GetIShellItem() ?? throw new InvalidOperationException());
             fd.SetOptions(fd.GetOptions() | Shell32.FILEOPENDIALOGOPTIONS.FOS_FORCEFILESYSTEM);
             if (fileTypes.Length > 0) {
                 fd.SetDefaultExtension(fileTypes[0].Extension);
@@ -137,9 +144,16 @@ public class FileDialogService : IFileDialogService {
             fd.SetFileTypes((uint)fileTypes.Length, fileTypes.Select(ft => ft.ToFilterSpec()).ToArray());
 
             if (overwritingFilePath != null && ParseFilePath(overwritingFilePath, out var dir, out var fileName)) {
-                var folder = Shell32.SHCreateItemFromParsingName<Shell32.IShellItem>(dir);
-                fd.SetFolder(folder);
-                fd.SetFileName(fileName);
+                if (dir != null) {
+                    var folder = Shell32.SHCreateItemFromParsingName<Shell32.IShellItem>(dir);
+                    if (folder != null) {
+                        fd.SetFolder(folder);
+                    }
+                }
+
+                if (fileName != null) {
+                    fd.SetFileName(fileName);
+                }
             } else if (!string.IsNullOrWhiteSpace(suggestedFileName)) {
                 var ext = Path.GetExtension(suggestedFileName).TrimStart('.');
                 fd.SetDefaultExtension(ext);
@@ -164,10 +178,10 @@ public class FileDialogService : IFileDialogService {
             throw new HRESULTException(hr, "error in CoCreateInstance for a FileOpenDialog");
         }
 
-        var fd = (Shell32.IFileOpenDialog)ppv;
+        var fd = (Shell32.IFileOpenDialog)ppv!;
 
         fd.SetClientGuid(stateGuid);
-        fd.SetDefaultFolder(Shell32.KNOWNFOLDERID.FOLDERID_DocumentsLibrary.GetIShellItem());
+        fd.SetDefaultFolder(Shell32.KNOWNFOLDERID.FOLDERID_DocumentsLibrary.GetIShellItem() ?? throw new InvalidOperationException());
         fd.SetOptions(fd.GetOptions() | Shell32.FILEOPENDIALOGOPTIONS.FOS_FORCEFILESYSTEM | opts);
         return fd;
     }

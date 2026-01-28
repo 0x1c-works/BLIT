@@ -169,6 +169,9 @@ public partial class BannerIconsPageViewModel : ObservableObject {
             });
 
             var outDir = await ViewModel!.ExportAll(outFolderPath, progress);
+            if (string.IsNullOrEmpty(outDir)) {
+                return;
+            }
             _notification?.Notify(new Notification(
                 ToastVariant.Success,
                 string.Format(I18n.Current.GetString("ExportSuccess"), outDir),

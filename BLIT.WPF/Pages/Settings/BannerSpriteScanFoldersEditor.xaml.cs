@@ -178,10 +178,10 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
 
     private void EditPath_KeyDown(object sender, KeyEventArgs e) {
         if (e.Key == Key.Enter) {
-            BtnAccept_Click(null, null);
+            BtnAccept_Click(sender, e);
             e.Handled = true;
         } else if (e.Key == Key.Escape) {
-            BtnCancel_Click(null, null);
+            BtnCancel_Click(sender, e);
             e.Handled = true;
         }
     }
