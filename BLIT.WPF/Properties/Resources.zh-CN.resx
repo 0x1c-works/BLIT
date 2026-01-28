@@ -162,6 +162,9 @@
   <data name="AppNavMenuHelp.Content" xml:space="preserve">
     <value>使用教程</value>
   </data>
+  <data name="PageLoading.Message" xml:space="preserve">
+    <value>正在打开 {0}...</value>
+  </data>
   <data name="AppTitle.Text" xml:space="preserve">
     <value>BLIT - 战团MOD图片助手</value>
     <comment>The main window's title</comment>

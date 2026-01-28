@@ -162,6 +162,9 @@
   <data name="AppNavMenuHelp.Content" xml:space="preserve">
     <value>Tutorials</value>
   </data>
+  <data name="PageLoading.Message" xml:space="preserve">
+    <value>Opening {0}...</value>
+  </data>
   <data name="AppTitle.Text" xml:space="preserve">
     <value>BLIT - Bannerlord Image Tool</value>
     <comment>The main window's title</comment>

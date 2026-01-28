@@ -1,6 +1,7 @@
 using BLIT.WPF.Services;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
 
 namespace BLIT.WPF.Controls;
 
@@ -84,7 +85,25 @@ public partial class LoadingOverlay : UserControl {
 
     public bool IsLoading {
         get => RootGrid.Visibility == Visibility.Visible;
-        set => RootGrid.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+        set {
+            if (value) {
+                // Show with fade-in animation
+                RootGrid.Visibility = Visibility.Visible;
+                var fadeInStoryboard = (Storyboard)FindResource("FadeInStoryboard");
+                fadeInStoryboard?.Begin();
+            } else {
+                // Hide with fade-out animation
+                var fadeOutStoryboard = (Storyboard)FindResource("FadeOutStoryboard");
+                if (fadeOutStoryboard != null) {
+                    fadeOutStoryboard.Completed += (s, e) => {
+                        RootGrid.Visibility = Visibility.Collapsed;
+                    };
+                    fadeOutStoryboard.Begin();
+                } else {
+                    RootGrid.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
     }
 
     public LoadingOverlay() {

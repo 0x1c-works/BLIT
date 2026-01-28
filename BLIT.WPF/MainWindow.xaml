@@ -81,6 +81,7 @@
                     x:Name="NavItem_Help"
                     Content="{helpers:I18n AppNavMenuHelp.Content}"
                     Icon="{ui:SymbolIcon QuestionCircle24}"
+                    Command="{Binding OpenHelp}"
                     Tag="Help" />
             </ui:NavigationView.FooterMenuItems>
             <ui:NavigationView.ContentOverlay>
