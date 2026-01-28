@@ -116,6 +116,14 @@ public partial class BannerIconGroupEditorViewModel : ObservableObject {
 
     // ============ 事件处理 ============
 
+    partial void OnGroupDataChanged(BannerGroupEntry? oldValue, BannerGroupEntry? newValue) {
+        // 当分组数据改变时，清空已选中的图标
+        if (oldValue != newValue) {
+            SelectedIcons = [];
+            _currentSelectedIcon = null;
+        }
+    }
+
     private void OnSelectedIconPropertyChanged(object? sender, PropertyChangedEventArgs e) {
         if (e.PropertyName == nameof(BannerIconEntry.SpritePath)||e.PropertyName == nameof(BannerIconEntry.TexturePath)) {
             UpdateCanReimportAssets();

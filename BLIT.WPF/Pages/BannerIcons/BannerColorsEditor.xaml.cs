@@ -11,21 +11,46 @@ namespace BLIT.WPF.Pages.BannerIcons;
 /// </summary>
 public partial class BannerColorsEditor : UserControl {
     private readonly BannerColorsEditorViewModel? _viewModel = new();
+    private bool _isInitialized = false;
 
     public BannerColorsEditor() {
         InitializeComponent();
         DataContext = _viewModel;
         
-        // 订阅 DataContextChanged 事件，从父页面获取 ProjectData
-        this.Loaded += (s, e) => {
-            if (this.Parent is FrameworkElement parent) {
-                var pageDataContext = parent.DataContext;
-                if (pageDataContext is BannerIconsPageViewModel pageViewModel && _viewModel != null) {
-                    _viewModel.ProjectData = pageViewModel.ViewModel;
-                    System.Diagnostics.Debug.WriteLine($"[BannerColorsEditor] Set ProjectData from parent ViewModel: {pageViewModel.ViewModel}");
-                }
+        // 订阅 IsVisibleChanged 事件，延迟初始化直到需要显示
+        this.IsVisibleChanged += (s, e) => {
+            if (this.IsVisible && !_isInitialized) {
+                InitializeBindings();
             }
         };
+        
+        // 同时订阅 Loaded 事件作为备选
+        this.Loaded += (s, e) => {
+            if (this.IsVisible && !_isInitialized) {
+                InitializeBindings();
+            }
+        };
+    }
+
+    private void InitializeBindings() {
+        if (_isInitialized) return;
+        _isInitialized = true;
+
+        if (this.Parent is FrameworkElement parent) {
+            var pageDataContext = parent.DataContext;
+            if (pageDataContext is BannerIconsPageViewModel pageViewModel && _viewModel != null) {
+                _viewModel.ProjectData = pageViewModel.ViewModel;
+                System.Diagnostics.Debug.WriteLine($"[BannerColorsEditor] Set ProjectData from parent ViewModel: {pageViewModel.ViewModel}");
+                
+                // 订阅父 ViewModel 的 PropertyChanged 事件
+                pageViewModel.PropertyChanged += (ps, pe) => {
+                    if (pe.PropertyName == nameof(BannerIconsPageViewModel.ViewModel)) {
+                        _viewModel.ProjectData = pageViewModel.ViewModel;
+                        System.Diagnostics.Debug.WriteLine($"[BannerColorsEditor] ProjectData updated: {pageViewModel.ViewModel}");
+                    }
+                };
+            }
+        }
     }
 
     private void listViewColors_SelectionChanged(object sender, SelectionChangedEventArgs e) {

@@ -111,6 +111,13 @@ public partial class BannerColorsEditorViewModel : ObservableObject {
 
     // ============ 事件处理 ============
 
+    partial void OnProjectDataChanged(BannerIconsProject? oldValue, BannerIconsProject? newValue) {
+        // 当项目数据改变时，清空已选中的颜色
+        if (oldValue != newValue) {
+            SelectedColors = [];
+        }
+    }
+
     public void OnSelectionChanged(IEnumerable<BannerColorEntry> colors) {
         SelectedColors = colors;
     }

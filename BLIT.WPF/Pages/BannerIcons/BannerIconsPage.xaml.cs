@@ -1,5 +1,6 @@
 using BLIT.WPF.Pages.BannerIcons.Models;
 using BLIT.WPF.Pages.BannerIcons.ViewModels;
+using BLIT.WPF.Services;
 using System.Windows;
 using System.Windows.Controls;
 using Wpf.Ui.Abstractions.Controls;
@@ -59,5 +60,4 @@ public partial class BannerIconsPage : INavigableView<BannerIconsPageViewModel> 
             _viewModel.ViewModel.OutputResolutionName = tag;
         }
     }
-
 }

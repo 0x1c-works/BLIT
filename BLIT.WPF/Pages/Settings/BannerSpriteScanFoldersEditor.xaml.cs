@@ -19,18 +19,9 @@ public partial class ScanFolderItem : ObservableObject {
         set => SetProperty(ref _relativePath, value);
     }
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsViewing))]
     private bool _isEditing;
-    public bool IsEditing {
-        get => _isEditing;
-        set {
-            if (SetProperty(ref _isEditing, value)) {
-                OnPropertyChanged(nameof(HasError));
-                _errorMessage = "";
-                OnPropertyChanged(nameof(ErrorMessage));
-                OnPropertyChanged(nameof(IsViewing));
-            }
-        }
-    }
 
     public bool IsViewing => !IsEditing;
 

@@ -20,8 +20,6 @@
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     mc:Ignorable="d">
     <Page.Resources>
-        <helpers:InvertBoolConverter x:Key="InvertBoolConverter" />
-
         <!--  分组列表项模板  -->
         <DataTemplate x:Key="GroupItemTemplate" DataType="{x:Type model:BannerGroupEntry}">
             <Grid>
@@ -55,11 +53,15 @@
             Padding="24,16"
             BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
             BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal">
             <TextBlock
                 FontSize="28"
                 FontWeight="SemiBold"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                Text="{helpers:I18n AppTitle.Text}" />
+                Text="{helpers:I18n AppNavMenuBanner.Content}" />
+            <TextBlock VerticalAlignment="Bottom" Text="{Binding ProjectName}"
+                       Margin="16,0,0,0" FontSize="24" Foreground="{DynamicResource TextFillColorTertiaryBrush}"/>
+            </StackPanel>
         </Border>
 
         <!--  菜单工具栏  -->

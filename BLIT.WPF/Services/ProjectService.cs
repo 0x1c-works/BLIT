@@ -26,24 +26,19 @@ public interface IProject : INotifyPropertyChanged, IStreamReadWrite {
     void AfterLoaded();
 }
 
-internal class ProjectService<T> : ObservableObject, IProjectService<T>, IDisposable where T : IProject {
+internal partial class ProjectService<T> : ObservableObject, IProjectService<T>, IDisposable where T : IProject {
     private ILifetimeScope? _scope;
     private T? _vm;
-    
+
     public T? Current {
         get => _vm;
         set => SetProperty(ref _vm, value);
     }
 
-    private string? _file;
-    public string? CurrentFile {
-        get => _file;
-        private set {
-            SetProperty(ref _file, value);
-            OnPropertyChanged(nameof(Name));
-        }
-    }
-    
+    [ObservableProperty] 
+    [NotifyPropertyChangedFor(nameof(Name))]
+    private string? _currentFile;
+
     public string Name {
         get {
             var path = CurrentFile;
@@ -58,6 +53,8 @@ internal class ProjectService<T> : ObservableObject, IProjectService<T>, IDispos
         if (onLoad != null) {
             await onLoad(vm);
         }
+
+        CurrentFile = null;
         Current = vm;
         vm.AfterLoaded();
         return Current;
@@ -67,6 +64,7 @@ internal class ProjectService<T> : ObservableObject, IProjectService<T>, IDispos
         if (Current == null) {
             throw new InvalidOperationException("No current project to save");
         }
+
         using Stream s = File.OpenWrite(filePath);
         await Current.Write(s);
         CurrentFile = filePath;
