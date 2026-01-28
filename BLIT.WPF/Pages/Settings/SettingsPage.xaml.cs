@@ -1,5 +1,6 @@
 using BLIT.WPF.Helpers;
 using BLIT.WPF.Services;
+using BLIT.WPF.Settings;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,7 +9,7 @@ namespace BLIT.WPF.Pages.Settings;
 
 public partial class SettingsPage : Page {
     private readonly ISettingsService? _settings = AppServices.Get<ISettingsService>();
-    private bool _isInitialized = false;
+    private bool _isInitialized;
 
     public SettingsPage() {
         InitializeComponent();
@@ -25,7 +26,7 @@ public partial class SettingsPage : Page {
     private void LoadCurrentSettings() {
         // Load current theme
         ThemeComboBox.SelectedIndex = (int)ThemeHelper.CurrentTheme;
-        
+
         // Load current language based on CurrentUICulture
         var currentLang = CultureInfo.CurrentUICulture.Name;
         if (currentLang.StartsWith("zh", StringComparison.OrdinalIgnoreCase)) {
@@ -39,11 +40,11 @@ public partial class SettingsPage : Page {
     }
 
     private void LoadBannerSettings() {
-        var bannerSettings = _settings?.Banner;
+        BannerSettings? bannerSettings = _settings?.Banner;
         if (bannerSettings != null) {
             // Load scan folders
             BannerSpriteScanFoldersEditor.LoadFolders(bannerSettings.SpriteScanFolders);
-            
+
             // Load number boxes
             NumberBoxGroupStartID.Value = bannerSettings.CustomGroupStartID;
             NumberBoxColorStartID.Value = bannerSettings.CustomColorStartID;
@@ -61,7 +62,7 @@ public partial class SettingsPage : Page {
         if (LanguageComboBox.SelectedIndex >= 0 && _isInitialized) {
             var selectedItem = LanguageComboBox.SelectedItem as ComboBoxItem;
             var lang = selectedItem?.Tag as string ?? "en-US";
-            
+
             // Check if language actually changed
             if (lang != I18n.GetSavedLanguage()) {
                 I18n.SetLanguage(lang);
@@ -69,4 +70,3 @@ public partial class SettingsPage : Page {
         }
     }
 }
-

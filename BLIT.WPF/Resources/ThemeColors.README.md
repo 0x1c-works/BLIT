@@ -34,34 +34,40 @@
 ### 2. 主要颜色分类
 
 #### 背景颜色
+
 - `ApplicationBackgroundBrush` - 应用主背景
 - `SolidBackgroundFillColorBaseBrush` - 实心背景基础色
 - `SolidBackgroundFillColorSecondaryBrush` - 实心背景次级色
 - `SolidBackgroundFillColorTertiaryBrush` - 实心背景三级色
 
 #### 文本颜色
+
 - `TextFillColorPrimaryBrush` - 主文本（高对比度）
 - `TextFillColorSecondaryBrush` - 副文本
 - `TextFillColorTertiaryBrush` - 三级文本
 - `TextFillColorDisabledBrush` - 禁用文本
 
 #### 控件填充色
+
 - `ControlFillColorDefaultBrush` - 标准控件填充
 - `ControlFillColorSecondaryBrush` - 二级控件填充
 - `ControlFillColorTertiaryBrush` - 三级控件填充
 - `ControlFillColorDisabledBrush` - 禁用状态
 
 #### 卡片和容器
+
 - `CardBackgroundFillColorDefaultBrush` - 卡片背景
 - `CardStrokeColorDefaultBrush` - 卡片边框
 - `LayerFillColorDefaultBrush` - 图层填充
 
 #### 边框和分隔符
+
 - `ControlStrokeColorDefaultBrush` - 标准边框
 - `DividerStrokeColorDefaultBrush` - 分隔线
 - `SurfaceStrokeColorDefaultBrush` - 表面边框
 
 #### 系统状态颜色
+
 - `SystemFillColorSuccessBrush` - 成功状态
 - `SystemFillColorCautionBrush` - 警告状态
 - `SystemFillColorCriticalBrush` - 错误/关键状态
@@ -75,12 +81,14 @@
 ```
 
 按 `Ctrl+Space` 会显示所有可用的主题颜色资源，包括：
+
 - 所有 `*Brush` 资源（推荐使用）
 - 所有 `*Color` 资源（用于高级场景）
 
 ## 常见用途示例
 
 ### 工具栏背景
+
 ```xaml
 <Border Background="{DynamicResource ApplicationBackgroundBrush}" 
         BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
@@ -88,12 +96,14 @@
 ```
 
 ### 按钮样式
+
 ```xaml
 <Button Background="{DynamicResource ControlFillColorDefaultBrush}"
         Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
 ```
 
 ### 卡片容器
+
 ```xaml
 <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
         BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
@@ -101,6 +111,7 @@
 ```
 
 ### 禁用状态
+
 ```xaml
 <TextBlock Foreground="{DynamicResource TextFillColorDisabledBrush}"/>
 <Button Background="{DynamicResource ControlFillColorDisabledBrush}"/>

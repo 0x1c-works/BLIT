@@ -10,6 +10,9 @@ public interface ILoadingService {
 
 public class LoadingService : ILoadingService {
     private LoadingOverlay _overlay;
+
+    #region ILoadingService Members
+
     public void Hide() {
         if (_overlay != null) {
             _overlay.IsLoading = false;
@@ -17,7 +20,10 @@ public class LoadingService : ILoadingService {
     }
 
     public void RegisterControl(LoadingOverlay overlay) {
-        if (overlay == _overlay) return;
+        if (overlay == _overlay) {
+            return;
+        }
+
         Hide();
         _overlay = overlay;
     }
@@ -28,4 +34,6 @@ public class LoadingService : ILoadingService {
             _overlay.IsLoading = true;
         }
     }
+
+    #endregion
 }

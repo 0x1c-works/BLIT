@@ -6,21 +6,17 @@ using System.Text;
 namespace BLIT.Banner.Performance;
 
 /// <summary>
-/// Tracks performance metrics for sprite collection and generation
-/// Thread-safe implementation for parallel icon processing
+///     Tracks performance metrics for sprite collection and generation
+///     Thread-safe implementation for parallel icon processing
 /// </summary>
 public class SpritePerformanceTracker {
+    private readonly object _countLock = new();
     private readonly ILogger _logger;
     private readonly string _outDir;
     private readonly ConcurrentDictionary<string, IconProcessingResult> _results;
     private Stopwatch? _overallStopwatch;
-    private int _totalCount = 0;
-    private int _processedCount = 0;
-    private readonly object _countLock = new();
-
-    public DateTime StartTime { get; private set; }
-    public DateTime EndTime { get; private set; }
-    public bool IsEnabled { get; set; }
+    private int _processedCount;
+    private int _totalCount;
 
     public SpritePerformanceTracker(ILogger logger, string outDir) {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -28,21 +24,34 @@ public class SpritePerformanceTracker {
         _results = new ConcurrentDictionary<string, IconProcessingResult>();
     }
 
+    public DateTime StartTime { get; private set; }
+    public DateTime EndTime { get; private set; }
+    public bool IsEnabled { get; set; }
+
     public void Start() {
-        if (!IsEnabled) return;
+        if (!IsEnabled) {
+            return;
+        }
+
         StartTime = DateTime.Now;
         _overallStopwatch = Stopwatch.StartNew();
         _logger.Information("=== Sprite Collection Performance Tracking Started ===");
     }
 
     public void SetTotalCount(int count) {
-        if (!IsEnabled) return;
+        if (!IsEnabled) {
+            return;
+        }
+
         _totalCount = count;
         _logger.Information($"Total icons to process: {count}");
     }
 
     public void StartIcon(string iconId, int groupId) {
-        if (!IsEnabled) return;
+        if (!IsEnabled) {
+            return;
+        }
+
         var result = new IconProcessingResult {
             IconID = iconId, GroupID = groupId, StartTime = DateTime.Now, Success = true
         };
@@ -50,8 +59,11 @@ public class SpritePerformanceTracker {
     }
 
     public void RecordStep(string iconId, string stepName, long elapsedMs) {
-        if (!IsEnabled) return;
-        if (_results.TryGetValue(iconId, out var result)) {
+        if (!IsEnabled) {
+            return;
+        }
+
+        if (_results.TryGetValue(iconId, out IconProcessingResult? result)) {
             result.StepTimings.Add(new StepTiming { StepName = stepName, ElapsedMilliseconds = elapsedMs });
 
             // Update total time
@@ -60,8 +72,11 @@ public class SpritePerformanceTracker {
     }
 
     public void CompleteIcon(string iconId, bool success, string? errorMessage = null) {
-        if (!IsEnabled) return;
-        if (_results.TryGetValue(iconId, out var result)) {
+        if (!IsEnabled) {
+            return;
+        }
+
+        if (_results.TryGetValue(iconId, out IconProcessingResult? result)) {
             result.Success = success;
             result.ErrorMessage = errorMessage;
             result.EndTime = DateTime.Now;
@@ -90,7 +105,10 @@ public class SpritePerformanceTracker {
     }
 
     public void PrintFinalReport() {
-        if (!IsEnabled) return;
+        if (!IsEnabled) {
+            return;
+        }
+
         _overallStopwatch?.Stop();
         EndTime = DateTime.Now;
 
@@ -99,7 +117,10 @@ public class SpritePerformanceTracker {
     }
 
     public void SaveReportToFile(string logDir) {
-        if (!IsEnabled) return;
+        if (!IsEnabled) {
+            return;
+        }
+
         _overallStopwatch?.Stop();
         EndTime = DateTime.Now;
 
@@ -149,11 +170,11 @@ public class SpritePerformanceTracker {
         sb.AppendLine();
 
         // Top slowest icons
-        var slowestIcons = GetTopSlowest(5);
+        List<IconProcessingResult> slowestIcons = GetTopSlowest(5);
         if (slowestIcons.Count > 0) {
             sb.AppendLine("─── Top 5 Slowest Icons ───");
-            for (int i = 0; i < slowestIcons.Count; i++) {
-                var icon = slowestIcons[i];
+            for (var i = 0; i < slowestIcons.Count; i++) {
+                IconProcessingResult icon = slowestIcons[i];
                 sb.AppendLine($"{i + 1}. Icon {icon.IconID} (GroupID: {icon.GroupID}) - {icon.TotalMilliseconds}ms");
             }
 
@@ -161,15 +182,15 @@ public class SpritePerformanceTracker {
         }
 
         // Time distribution by step with advanced statistics
-        var stepStatistics = CalculateStepStatistics();
+        Dictionary<string, StepStatistics> stepStatistics = CalculateStepStatistics();
         if (stepStatistics.Count > 0) {
             sb.AppendLine("─── Step Statistics (Advanced) ───");
             sb.AppendLine("Format: Step | Count | Total | Avg | Median | Min | Max | P95 | P99");
             sb.AppendLine();
 
             var totalTime = stepStatistics.Values.Sum(s => s.TotalMs);
-            foreach (var stat in stepStatistics.Values.OrderByDescending(s => s.TotalMs)) {
-                var percentage = totalTime > 0 ? (stat.TotalMs * 100.0 / totalTime) : 0;
+            foreach (StepStatistics stat in stepStatistics.Values.OrderByDescending(s => s.TotalMs)) {
+                var percentage = totalTime > 0 ? stat.TotalMs * 100.0 / totalTime : 0;
                 sb.AppendLine($"{stat.StepName}");
                 sb.AppendLine($"  Count: {stat.Count} | Total: {stat.TotalMs}ms ({percentage:F1}%)");
                 sb.AppendLine(
@@ -183,8 +204,9 @@ public class SpritePerformanceTracker {
         // Failed icons list
         if (failureCount > 0) {
             sb.AppendLine("─── Failed Icons ───");
-            var failedIcons = _results.Where(r => !r.Value.Success).OrderBy(r => r.Key);
-            foreach (var icon in failedIcons) {
+            IOrderedEnumerable<KeyValuePair<string, IconProcessingResult>> failedIcons =
+                _results.Where(r => !r.Value.Success).OrderBy(r => r.Key);
+            foreach (KeyValuePair<string, IconProcessingResult> icon in failedIcons) {
                 sb.AppendLine($"[✗] Icon {icon.Key} (GroupID: {icon.Value.GroupID}): {icon.Value.ErrorMessage}");
             }
 
@@ -193,12 +215,12 @@ public class SpritePerformanceTracker {
 
         // Detailed icon processing list (all icons with detailed steps)
         sb.AppendLine("─── Detailed Processing Information ───");
-        foreach (var icon in _results.OrderBy(r => r.Key)) {
-            var result = icon.Value;
+        foreach (KeyValuePair<string, IconProcessingResult> icon in _results.OrderBy(r => r.Key)) {
+            IconProcessingResult result = icon.Value;
             if (result.Success) {
                 sb.AppendLine($"Icon {result.IconID} (GroupID: {result.GroupID}): {result.TotalMilliseconds}ms");
                 if (result.StepTimings.Count > 0) {
-                    foreach (var step in result.StepTimings) {
+                    foreach (StepTiming step in result.StepTimings) {
                         sb.AppendLine($"  ├─ {step.StepName}: {step.ElapsedMilliseconds}ms");
                     }
                 }
@@ -223,15 +245,15 @@ public class SpritePerformanceTracker {
     }
 
     /// <summary>
-    /// Calculates comprehensive statistics for each processing step
-    /// Including count, totals, average, median, min, max, and percentiles (P95, P99)
+    ///     Calculates comprehensive statistics for each processing step
+    ///     Including count, totals, average, median, min, max, and percentiles (P95, P99)
     /// </summary>
     private Dictionary<string, StepStatistics> CalculateStepStatistics() {
         var stepData = new Dictionary<string, List<long>>();
 
         // Collect all measurements per step
-        foreach (var result in _results.Values) {
-            foreach (var step in result.StepTimings) {
+        foreach (IconProcessingResult result in _results.Values) {
+            foreach (StepTiming step in result.StepTimings) {
                 if (!stepData.ContainsKey(step.StepName)) {
                     stepData[step.StepName] = new List<long>();
                 }
@@ -243,7 +265,7 @@ public class SpritePerformanceTracker {
         var statistics = new Dictionary<string, StepStatistics>();
 
         foreach (var stepName in stepData.Keys) {
-            var measurements = stepData[stepName];
+            List<long> measurements = stepData[stepName];
             measurements.Sort(); // Sort for percentile calculations
 
             var stats = new StepStatistics {
@@ -265,17 +287,25 @@ public class SpritePerformanceTracker {
     }
 
     /// <summary>
-    /// Calculates the percentile value from a sorted list of measurements
+    ///     Calculates the percentile value from a sorted list of measurements
     /// </summary>
     private long GetPercentile(List<long> sortedMeasurements, int percentile) {
-        if (sortedMeasurements.Count == 0) return 0;
-        if (percentile <= 0) return sortedMeasurements.First();
-        if (percentile >= 100) return sortedMeasurements.Last();
+        if (sortedMeasurements.Count == 0) {
+            return 0;
+        }
+
+        if (percentile <= 0) {
+            return sortedMeasurements.First();
+        }
+
+        if (percentile >= 100) {
+            return sortedMeasurements.Last();
+        }
 
         // Linear interpolation method
-        double index = (percentile / 100.0) * (sortedMeasurements.Count - 1);
-        int lowerIndex = (int)Math.Floor(index);
-        int upperIndex = (int)Math.Ceiling(index);
+        var index = percentile / 100.0 * (sortedMeasurements.Count - 1);
+        var lowerIndex = (int)Math.Floor(index);
+        var upperIndex = (int)Math.Ceiling(index);
 
         if (lowerIndex == upperIndex) {
             return sortedMeasurements[lowerIndex];
@@ -283,8 +313,8 @@ public class SpritePerformanceTracker {
 
         double lowerValue = sortedMeasurements[lowerIndex];
         double upperValue = sortedMeasurements[upperIndex];
-        double fraction = index - lowerIndex;
+        var fraction = index - lowerIndex;
 
-        return (long)Math.Round(lowerValue + (upperValue - lowerValue) * fraction);
+        return (long)Math.Round(lowerValue + ((upperValue - lowerValue) * fraction));
     }
 }

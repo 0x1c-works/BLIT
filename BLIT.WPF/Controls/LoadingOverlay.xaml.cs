@@ -48,6 +48,13 @@ public partial class LoadingOverlay : UserControl {
         typeof(LoadingOverlay),
         new PropertyMetadata("0%"));
 
+    public LoadingOverlay() {
+        InitializeComponent();
+        Loaded += (s, e) => {
+            AppServices.Get<ILoadingService>()?.RegisterControl(this);
+        };
+    }
+
     public string Message {
         get => (string)GetValue(MessageProperty);
         set => SetValue(MessageProperty, value);
@@ -106,13 +113,6 @@ public partial class LoadingOverlay : UserControl {
         }
     }
 
-    public LoadingOverlay() {
-        InitializeComponent();
-        Loaded += (s, e) => {
-            AppServices.Get<ILoadingService>()?.RegisterControl(this);
-        };
-    }
-
     private static void OnProgressChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         if (d is LoadingOverlay overlay) {
             overlay.UpdateProgressDisplay();
@@ -121,7 +121,7 @@ public partial class LoadingOverlay : UserControl {
 
     private void UpdateProgressDisplay() {
         ProgressDisplayText = $"{CurrentProgress}/{TotalProgress}";
-        double percentage = TotalProgress > 0 ? (CurrentProgress * 100.0 / TotalProgress) : 0;
+        var percentage = TotalProgress > 0 ? CurrentProgress * 100.0 / TotalProgress : 0;
         ProgressPercentage = percentage;
         ProgressPercentageString = $"{percentage:F0}%";
     }

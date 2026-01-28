@@ -158,7 +158,8 @@
             <!--  About  -->
             <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{helpers:I18n TextAboutTitle.Text}" />
 
-            <ui:CardExpander ContentPadding="0" Icon="{ui:ImageIcon 'pack://application:,,,/Assets/StoreLogo.png', Width=50, Height=50}">
+            <ui:CardExpander ContentPadding="0"
+                             Icon="{ui:ImageIcon 'pack://application:,,,/Assets/StoreLogo.png', Width=50, Height=50}">
                 <ui:CardExpander.Header>
                     <Grid>
                         <Grid.RowDefinitions>

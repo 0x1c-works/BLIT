@@ -1,20 +1,17 @@
 using Autofac;
-using Autofac.Builder;
 using Autofac.Extensions.DependencyInjection;
 using BLIT.WPF.Pages.BannerIcons.Models;
 using BLIT.WPF.Settings;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using Wpf.Ui;
 
 namespace BLIT.WPF.Services;
 
 public class AppServices {
     public static IContainer Container { get; private set; } = null!;
-    
+
     public static IServiceProvider Configure() {
         var builder = new ContainerBuilder();
-        
+
         // Singleton services
         builder.RegisterType<FileDialogService>().AsImplementedInterfaces().SingleInstance();
         builder.RegisterType<ConfirmDialogService>().AsImplementedInterfaces().SingleInstance();
@@ -23,7 +20,7 @@ public class AppServices {
 
         // Singleton components
         builder.RegisterType<GlobalSettings>().SingleInstance();
-        builder.Register((ctx) => BannerSettings.Load()).SingleInstance();
+        builder.Register(ctx => BannerSettings.Load()).SingleInstance();
         RegisterProjectService<BannerIconsProject>(builder);
 
         // Scoped services
@@ -34,23 +31,23 @@ public class AppServices {
         builder.RegisterType<BannerGroupEntry>().InstancePerDependency();
         builder.RegisterType<BannerColorEntry>().InstancePerDependency();
         builder.RegisterType<BannerIconEntry>().InstancePerDependency();
-        
+
         // Register factories
-        builder.Register<BannerGroupEntry.Factory>((ctx) => {
+        builder.Register<BannerGroupEntry.Factory>(ctx => {
             var container = ctx.Resolve<ILifetimeScope>();
-            return (groupID) => container.Resolve<BannerGroupEntry>(
+            return groupID => container.Resolve<BannerGroupEntry>(
                 new TypedParameter(typeof(int), groupID)
             );
         }).InstancePerLifetimeScope();
-        
-        builder.Register<BannerColorEntry.Factory>((ctx) => {
+
+        builder.Register<BannerColorEntry.Factory>(ctx => {
             var container = ctx.Resolve<ILifetimeScope>();
-            return (id) => container.Resolve<BannerColorEntry>(
+            return id => container.Resolve<BannerColorEntry>(
                 new TypedParameter(typeof(int), id)
             );
         }).InstancePerLifetimeScope();
-        
-        builder.Register<BannerIconEntry.Factory>((ctx) => {
+
+        builder.Register<BannerIconEntry.Factory>(ctx => {
             var container = ctx.Resolve<ILifetimeScope>();
             return (groupVm, texturePath) => container.Resolve<BannerIconEntry>(
                 new TypedParameter(typeof(BannerGroupEntry), groupVm),
@@ -66,6 +63,7 @@ public class AppServices {
         if (App.Current?.Services == null) {
             return null;
         }
+
         return App.Current.Services.GetService<T>();
     }
 
@@ -73,7 +71,6 @@ public class AppServices {
         builder.RegisterType<ProjectService<T>>()
             .As<IProjectService<T>>()
             .SingleInstance()
-            .OnActivated(async (e) => await e.Instance.NewProject());
+            .OnActivated(async e => await e.Instance.NewProject());
     }
 }
-

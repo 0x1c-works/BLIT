@@ -6,14 +6,28 @@ using System.ComponentModel;
 using System.IO;
 
 namespace BLIT.Win.Pages.BannerIcons.Models;
+
 public class BannerIconEntry : BindableBase {
+    #region Delegates
+
     public delegate BannerIconEntry Factory(BannerGroupEntry groupVm, string texturePath);
 
+    #endregion
+
     private readonly BannerGroupEntry _groupViewModel;
-    private string _texturePath;
-    private string _spritePath;
-    private int _cellIndex;
     private readonly ISettingsService _settings;
+    private int _cellIndex;
+    private string _spritePath;
+    private string _texturePath;
+
+    public BannerIconEntry(BannerGroupEntry groupVm, string texturePath, ISettingsService settings) {
+        _groupViewModel = groupVm;
+        _texturePath = texturePath;
+        _settings = settings;
+        _settings = settings;
+
+        _groupViewModel.PropertyChanged += _viewModel_PropertyChanged;
+    }
 
     public string TexturePath {
         get => _texturePath;
@@ -26,6 +40,7 @@ public class BannerIconEntry : BindableBase {
             }
         }
     }
+
     public string SpritePath {
         get => _spritePath;
         set {
@@ -37,6 +52,7 @@ public class BannerIconEntry : BindableBase {
             }
         }
     }
+
     public int CellIndex {
         get => _cellIndex;
         set {
@@ -49,21 +65,13 @@ public class BannerIconEntry : BindableBase {
             OnPropertyChanged(nameof(AtlasName));
         }
     }
+
     public int AtlasIndex => CellIndex / (int)(TextureMerger.ROWS * TextureMerger.COLS);
 
     public string AtlasName => BannerUtils.GetAtlasName(_groupViewModel.GroupID, AtlasIndex);
     public int ID => BannerUtils.GetIconID(_groupViewModel.GroupID, CellIndex);
 
     public bool IsValid => ImageHelper.IsValidImage(TexturePath) && AtlasIndex >= 0;
-
-    public BannerIconEntry(BannerGroupEntry groupVm, string texturePath, ISettingsService settings) {
-        _groupViewModel = groupVm;
-        _texturePath = texturePath;
-        _settings = settings;
-        _settings = settings;
-
-        _groupViewModel.PropertyChanged += _viewModel_PropertyChanged;
-    }
 
     private void _viewModel_PropertyChanged(object sender, PropertyChangedEventArgs e) {
         if (e.PropertyName == nameof(BannerGroupEntry.GroupName)) {
@@ -73,28 +81,36 @@ public class BannerIconEntry : BindableBase {
     }
 
     public void ReloadSprite() {
-        if (string.IsNullOrEmpty(SpritePath)) return;
+        if (string.IsNullOrEmpty(SpritePath)) {
+            return;
+        }
+
         var oldPath = SpritePath;
         SpritePath = oldPath + "1";
         SpritePath = oldPath;
     }
+
     public void ReloadTexture() {
-        if (string.IsNullOrEmpty(TexturePath)) return;
+        if (string.IsNullOrEmpty(TexturePath)) {
+            return;
+        }
+
         var oldPath = TexturePath;
         TexturePath = oldPath + "1";
         TexturePath = oldPath;
     }
 
     public BannerIcon ToBannerIcon() {
-        return new BannerIcon() {
+        return new BannerIcon {
             ID = ID,
             MaterialName = AtlasName,
             TextureIndex = CellIndex,
-            Comment = Path.GetFileNameWithoutExtension(TexturePath),
+            Comment = Path.GetFileNameWithoutExtension(TexturePath)
         };
     }
+
     public IconSprite ToIconSprite() {
-        return new(_groupViewModel.GroupID, ID, _spritePath);
+        return new IconSprite(_groupViewModel.GroupID, ID, _spritePath);
     }
 
     public void AutoScanSprite() {
@@ -113,20 +129,22 @@ public class BannerIconEntry : BindableBase {
         }
     }
 
+    #region Nested type: SaveData
+
     [MessagePackObject]
     public class SaveData {
-        [Key(0)]
-        public string TexturePath;
-        [Key(1)]
-        public string SpritePath;
-        [Key(2)]
-        public int CellIndex;
+        [Key(2)] public int CellIndex;
+
+        [Key(1)] public string SpritePath;
+
+        [Key(0)] public string TexturePath;
 
         public SaveData(BannerIconEntry vm) {
             TexturePath = vm.TexturePath;
             SpritePath = vm.SpritePath;
             CellIndex = vm.CellIndex;
         }
+
         public SaveData() { }
 
         public BannerIconEntry Load(BannerGroupEntry groupVM, Factory factory) {
@@ -136,4 +154,6 @@ public class BannerIconEntry : BindableBase {
             return vm;
         }
     }
+
+    #endregion
 }

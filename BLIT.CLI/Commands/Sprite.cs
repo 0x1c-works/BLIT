@@ -1,19 +1,16 @@
-using BLIT.Sprite;
-using ConsoleAppFramework;
+﻿using BLIT.Sprite;
 
 namespace BLIT.CLI.Commands;
 
 /// <summary>Sprite unpacking commands.</summary>
-public class SpriteCommands
-{
+public class SpriteCommands {
     private readonly SpriteUnpacker _unpacker = new();
 
     /// <summary>Unpack a single sprite image.</summary>
     /// <param name="srcFile">Source sprite file path.</param>
     /// <param name="dimensions">Sprite dimensions as WxH format.</param>
     /// <param name="outFile">Output file path.</param>
-    public void UnpackSingle(string srcFile, string dimensions, string outFile)
-    {
+    public void UnpackSingle(string srcFile, string dimensions, string outFile) {
         _unpacker.UnpackSingle(srcFile, outFile, SpriteRegion.FromString(dimensions));
     }
 
@@ -23,8 +20,7 @@ public class SpriteCommands
     /// <param name="outDir">Output directory for unpacked sprites.</param>
     /// <param name="srcExt">Source file extension (default: png).</param>
     /// <param name="outExt">Output file extension (default: png).</param>
-    public void UnpackCsv(string csvFile, string srcDir, string outDir, string srcExt = "png", string outExt = "png")
-    {
+    public void UnpackCsv(string csvFile, string srcDir, string outDir, string srcExt = "png", string outExt = "png") {
         _unpacker.UnpackFromCSV(csvFile, srcDir, outDir, srcExt, outExt);
     }
 }

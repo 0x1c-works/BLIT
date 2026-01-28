@@ -8,12 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.10.2" />
-    <PackageReference Include="OpenCCNET" Version="1.1.0" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.10.2"/>
+    <PackageReference Include="OpenCCNET" Version="1.1.0"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BLIT.Utils\BLIT.Utils.csproj" />
+    <ProjectReference Include="..\BLIT.Utils\BLIT.Utils.csproj"/>
   </ItemGroup>
 
   <ItemGroup>

@@ -5,6 +5,8 @@ using System.Windows.Media;
 namespace BLIT.WPF.Helpers;
 
 public class WPFColorFormatter : IMessagePackFormatter<Color> {
+    #region IMessagePackFormatter<Color> Members
+
     public Color Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options) {
         var a = reader.ReadByte();
         var r = reader.ReadByte();
@@ -19,4 +21,6 @@ public class WPFColorFormatter : IMessagePackFormatter<Color> {
         writer.Write(value.G);
         writer.Write(value.B);
     }
+
+    #endregion
 }

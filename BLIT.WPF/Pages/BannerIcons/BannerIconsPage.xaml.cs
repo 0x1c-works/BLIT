@@ -1,6 +1,6 @@
 using BLIT.WPF.Pages.BannerIcons.Models;
 using BLIT.WPF.Pages.BannerIcons.ViewModels;
-using BLIT.WPF.Services;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using Wpf.Ui.Abstractions.Controls;
@@ -8,22 +8,27 @@ using Wpf.Ui.Abstractions.Controls;
 namespace BLIT.WPF.Pages.BannerIcons;
 
 /// <summary>
-/// Banner Icons 编辑页面
+///     Banner Icons 编辑页面
 /// </summary>
 public partial class BannerIconsPage : INavigableView<BannerIconsPageViewModel> {
     private readonly BannerIconsPageViewModel? _viewModel = new();
-    public BannerIconsPageViewModel ViewModel => _viewModel ?? throw new NullReferenceException("ViewModel is null");
 
     public BannerIconsPage() {
-        System.Diagnostics.Debug.WriteLine("BannerIconsPage: Constructor called");
+        Debug.WriteLine("BannerIconsPage: Constructor called");
         InitializeComponent();
 
         DataContext = _viewModel;
         Loaded += OnPageLoaded;
     }
 
+    #region INavigableView<BannerIconsPageViewModel> Members
+
+    public BannerIconsPageViewModel ViewModel => _viewModel ?? throw new NullReferenceException("ViewModel is null");
+
+    #endregion
+
     private void OnPageLoaded(object sender, RoutedEventArgs e) {
-        System.Diagnostics.Debug.WriteLine("BannerIconsPage: Page loaded");
+        Debug.WriteLine("BannerIconsPage: Page loaded");
 
         // 订阅 ViewModel 的属性变化，以便在 ViewModel 改变时更新 DataContext
         if (_viewModel != null) {
@@ -53,7 +58,9 @@ public partial class BannerIconsPage : INavigableView<BannerIconsPageViewModel> 
 
     // 输出分辨率选择
     private void comboOutputResolution_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-        if (_viewModel?.ViewModel == null || comboOutputResolution.SelectedItem == null) return;
+        if (_viewModel?.ViewModel == null || comboOutputResolution.SelectedItem == null) {
+            return;
+        }
 
         var item = comboOutputResolution.SelectedItem as ComboBoxItem;
         if (item?.Tag is string tag) {

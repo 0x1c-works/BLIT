@@ -10,8 +10,8 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Linq;
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.Resources.Core;
 using Windows.Globalization;
-
 using AppLifecycleInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -20,17 +20,20 @@ using AppLifecycleInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 namespace BLIT.Win.Pages.Settings;
 
 /// <summary>
-/// An empty page that can be used on its own or navigated to within a Frame.
+///     An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
 public sealed partial class SettingsPage : Page {
     public readonly Tuple<string, string>[] Languages = new[] {
-        new Tuple<string, string>("English", "en"),
-        new Tuple<string, string>("简体中文", "zh"),
+        new Tuple<string, string>("English", "en"), new Tuple<string, string>("简体中文", "zh")
     };
 
-    private SettingsViewModel ViewModel { get; } = new();
-
     private GlobalSettings _globalSettings = AppServices.Get<GlobalSettings>();
+
+    public SettingsPage() {
+        InitializeComponent();
+    }
+
+    private SettingsViewModel ViewModel { get; } = new();
 
     private string AppVersion {
         get {
@@ -39,9 +42,7 @@ public sealed partial class SettingsPage : Page {
         }
     }
 
-    public SettingsPage() {
-        InitializeComponent();
-    }
+    private string CurrentLang => ResourceContext.GetForViewIndependentUse().Languages[0];
 
     private void btnOpenLogFolder_Click(object sender, RoutedEventArgs e) {
         FileHelpers.OpenFolderInExplorer(Logging.Folder);
@@ -50,11 +51,12 @@ public sealed partial class SettingsPage : Page {
     private async void cboLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e) {
         var selected = (e.AddedItems.FirstOrDefault() as Tuple<string, string>)?.Item2;
         if (selected == CurrentLang || CurrentLang.StartsWith(selected)) { return; }
+
         ApplicationLanguages.PrimaryLanguageOverride = selected;
         ContentDialogResult result = await AppServices.Get<IConfirmDialogService>().ShowWarn(this,
             I18n.Current.GetString("DialogChangeLanguage/Title"),
             I18n.Current.GetString("DialogChangeLanguage/Content")
-            );
+        );
         if (result == ContentDialogResult.Primary) {
             // FIXME: WinUI3 seems not able to change language at runtime. So I have to restart the app as a workaround.
             //        See: https://github.com/microsoft/microsoft-ui-xaml/issues/5940
@@ -68,10 +70,9 @@ public sealed partial class SettingsPage : Page {
         if (item == null) {
             item = Languages.FirstOrDefault(item => current.StartsWith(item.Item2));
         }
+
         cboLanguage.SelectedItem = item;
     }
-
-    private string CurrentLang { get => Windows.ApplicationModel.Resources.Core.ResourceContext.GetForViewIndependentUse().Languages[0]; }
 
     private void toggleTheme_Loaded(object sender, RoutedEventArgs e) {
         ((ToggleSwitch)sender).IsOn = !ThemeHelper.IsDarkTheme;

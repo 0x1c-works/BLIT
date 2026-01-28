@@ -9,6 +9,7 @@ using BLIT.Win.Services;
 using BLIT.Win.Theming;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Sentry;
 using System;
@@ -25,10 +26,12 @@ using Windows.Storage;
 namespace BLIT.Win;
 
 /// <summary>
-/// An empty window that can be used on its own or navigated to within a Frame.
+///     An empty window that can be used on its own or navigated to within a Frame.
 /// </summary>
 public sealed partial class MainWindow : ThemedWindow {
-    private ViewModel Model { get; } = new ViewModel();
+    private static readonly Dictionary<string, NavPage> TAGGED_PAGES = new() {
+        { "BannerIcons", new NavPage(typeof(BannerIconsPage), OnProjectPageLoad<BannerIconsProject>) }
+    };
 
     public MainWindow() {
         InitializeComponent();
@@ -38,6 +41,8 @@ public sealed partial class MainWindow : ThemedWindow {
 
         Activated += MainWindow_Activated;
     }
+
+    private ViewModel Model { get; } = new();
 
     private void MainWindow_Activated(object sender, WindowActivatedEventArgs args) {
         AppTitleText.Foreground = args.WindowActivationState == WindowActivationState.Deactivated
@@ -69,17 +74,9 @@ public sealed partial class MainWindow : ThemedWindow {
         AppNav.SelectedItem = AppNav.SettingsItem;
     }
 
-    private record NavPage(Type Type, Action<NavigationView, NavigationViewItem> OnLoad);
-
-    private static readonly Dictionary<string, NavPage> TAGGED_PAGES = new() {
-        {"BannerIcons",new(typeof(BannerIconsPage), OnProjectPageLoad<BannerIconsProject>)},
-    };
-
     private static void OnProjectPageLoad<T>(NavigationView view, NavigationViewItem item) where T : IProject {
-        IProjectService<T> project = AppServices.Get<IProjectService<T>>();
-        void UpdateHeader() {
-            view.Header = new NavPageHeaderInfo(item.Content.ToString(), project?.Name, false);
-        }
+        var project = AppServices.Get<IProjectService<T>>();
+        void UpdateHeader() => view.Header = new NavPageHeaderInfo(item.Content.ToString(), project?.Name);
         UpdateHeader();
         project.PropertyChanged += (s, e) => {
             if (e.PropertyName == nameof(project.Name)) {
@@ -88,16 +85,24 @@ public sealed partial class MainWindow : ThemedWindow {
         };
     }
 
-    private void navHelp_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e) {
-        SentrySdk.AddBreadcrumb("Visit help", category: "ui.nav");
+    private void navHelp_Tapped(object sender, TappedRoutedEventArgs e) {
+        SentrySdk.AddBreadcrumb("Visit help", "ui.nav");
         Process.Start(new ProcessStartInfo {
-            FileName = I18n.Current.GetString("LinkHelpWebsite"),
-            UseShellExecute = true,
+            FileName = I18n.Current.GetString("LinkHelpWebsite"), UseShellExecute = true
         });
     }
 
+    #region Nested type: NavPage
+
+    private record NavPage(Type Type, Action<NavigationView, NavigationViewItem> OnLoad);
+
+    #endregion
+
+    #region Nested type: ViewModel
+
     public class ViewModel : INotifyPropertyChanged {
         private StorageFolder _rootFolder;
+
         public StorageFolder RootFolder {
             get => _rootFolder;
             set {
@@ -110,14 +115,24 @@ public sealed partial class MainWindow : ThemedWindow {
             }
         }
 
+        #region INotifyPropertyChanged Members
+
         public event PropertyChangedEventHandler PropertyChanged;
 
+        #endregion
+
         private void OnPropertyChanged([CallerMemberName] string prop = null) {
-            PropertyChanged?.Invoke(this, new(prop));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
+
+    #endregion
 }
+
 public record NavPageHeaderInfo(string Title, string SubTitle = null, bool IsModified = false) {
     public bool HasSubTitle { get; set; } = true;
-    public string SubTitle { get; init; } = string.IsNullOrWhiteSpace(SubTitle) ? I18n.Current.GetString("Placeholder/NewProject") : SubTitle;
+
+    public string SubTitle { get; init; } = string.IsNullOrWhiteSpace(SubTitle)
+        ? I18n.Current.GetString("Placeholder/NewProject")
+        : SubTitle;
 }

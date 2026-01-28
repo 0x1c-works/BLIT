@@ -1,4 +1,5 @@
 using BLIT.WPF.Helpers;
+using BLIT.WPF.Pages.BannerIcons;
 using BLIT.WPF.Services;
 using CommunityToolkit.Mvvm.Input;
 using Serilog;
@@ -6,34 +7,35 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
 using Wpf.Ui.Controls;
 using TextBlock = System.Windows.Controls.TextBlock;
+using Timer = System.Timers.Timer;
 
 namespace BLIT.WPF;
 
 public partial class MainWindow {
-    private ViewModel Model { get; } = new();
-    private System.Timers.Timer? _loadingDelayTimer;
     private const int LoadingDelayMs = 300; // Delay before showing loading overlay
+    private Timer? _loadingDelayTimer;
 
     public MainWindow() {
         InitializeComponent();
         DataContext = Model;
-        
+
         Loaded += MainWindow_Loaded;
     }
-    
+
+    private ViewModel Model { get; } = new();
+
     private void MainWindow_Loaded(object sender, RoutedEventArgs e) {
         Log.Information($"MainWindow loaded. NavigationView items count: {MainNavigationView.MenuItems.Count}");
-        
+
         // Subscribe to navigation events
         MainNavigationView.Navigating += MainNavigationView_Navigating;
         MainNavigationView.Navigated += MainNavigationView_Navigated;
-        
+
         // Auto-navigate to BannerIcons page on startup
         if (MainNavigationView.MenuItems.Count > 0) {
-            MainNavigationView.Navigate(typeof(Pages.BannerIcons.BannerIconsPage));
+            MainNavigationView.Navigate(typeof(BannerIconsPage));
             Log.Information("Auto-navigated to BannerIcons page on startup");
         }
     }
@@ -41,13 +43,13 @@ public partial class MainWindow {
     private void MainNavigationView_Navigating(object sender, RoutedEventArgs args) {
         if (sender is NavigationView navView) {
             // Get the currently navigating page type from the selected item
-            var selectedItem = navView.SelectedItem as Wpf.Ui.Controls.NavigationViewItem;
-            var pageType = selectedItem?.TargetPageType;
-            
+            var selectedItem = navView.SelectedItem as NavigationViewItem;
+            Type? pageType = selectedItem?.TargetPageType;
+
             Log.Information($"Navigation starting to: {pageType?.Name}");
-            
+
             // Get the menu item name
-            string? menuItemName = GetMenuItemNameForPageType(pageType);
+            var menuItemName = GetMenuItemNameForPageType(pageType);
             if (menuItemName != null) {
                 // Start a timer to show loading overlay after delay (to avoid flicker on fast loads)
                 StartLoadingDelayTimer(menuItemName);
@@ -57,19 +59,21 @@ public partial class MainWindow {
 
     private void MainNavigationView_Navigated(object sender, RoutedEventArgs args) {
         if (sender is NavigationView navView) {
-            var selectedItem = navView.SelectedItem as Wpf.Ui.Controls.NavigationViewItem;
-            var pageType = selectedItem?.TargetPageType;
-            
+            var selectedItem = navView.SelectedItem as NavigationViewItem;
+            Type? pageType = selectedItem?.TargetPageType;
+
             Log.Information($"Navigation completed to: {pageType?.Name}");
         }
-        
+
         // Stop the timer and hide loading overlay
         StopLoadingDelayTimer();
         HideLoadingOverlay();
     }
 
     private string? GetMenuItemNameForPageType(Type? pageType) {
-        if (pageType == null) return null;
+        if (pageType == null) {
+            return null;
+        }
 
         // Search in MenuItems
         foreach (var item in MainNavigationView.MenuItems) {
@@ -105,10 +109,10 @@ public partial class MainWindow {
     private void StartLoadingDelayTimer(string menuItemName) {
         StopLoadingDelayTimer();
 
-        _loadingDelayTimer = new System.Timers.Timer(LoadingDelayMs);
+        _loadingDelayTimer = new Timer(LoadingDelayMs);
         _loadingDelayTimer.Elapsed += (s, e) => {
             StopLoadingDelayTimer();
-            
+
             // Show loading overlay on the UI thread
             Dispatcher.Invoke(() => {
                 ShowLoadingOverlay(menuItemName);
@@ -128,12 +132,12 @@ public partial class MainWindow {
 
     private void ShowLoadingOverlay(string menuItemName) {
         try {
-            string message = I18n.Current.GetString("PageLoading.Message");
-            string formattedMessage = string.Format(message, menuItemName);
-            
+            var message = I18n.Current.GetString("PageLoading.Message");
+            var formattedMessage = string.Format(message, menuItemName);
+
             var loadingService = AppServices.Get<ILoadingService>();
             loadingService?.Show(formattedMessage);
-            
+
             Log.Information($"Loading overlay shown: {formattedMessage}");
         } catch (Exception ex) {
             Log.Error($"Error showing loading overlay: {ex.Message}");
@@ -143,18 +147,21 @@ public partial class MainWindow {
     private void HideLoadingOverlay() {
         try {
             StopLoadingDelayTimer();
-            
+
             var loadingService = AppServices.Get<ILoadingService>();
             loadingService?.Hide();
-            
+
             Log.Information("Loading overlay hidden");
         } catch (Exception ex) {
             Log.Error($"Error hiding loading overlay: {ex.Message}");
         }
     }
 
+    #region Nested type: ViewModel
+
     public partial class ViewModel : INotifyPropertyChanged {
         private string? _rootFolder;
+
         public string? RootFolder {
             get => _rootFolder;
             set {
@@ -167,42 +174,41 @@ public partial class MainWindow {
             }
         }
 
+        #region INotifyPropertyChanged Members
+
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        #endregion
 
         private void OnPropertyChanged([CallerMemberName] string? prop = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
-        
+
         [RelayCommand]
         public void OpenHelp() {
             try {
                 Log.Information("Opening help in browser");
-                SentrySdk.AddBreadcrumb("Visit help", category: "ui.nav");
-            
-                string helpUrl = I18n.Current.GetString("LinkHelpWebsite");
+                SentrySdk.AddBreadcrumb("Visit help", "ui.nav");
+
+                var helpUrl = I18n.Current.GetString("LinkHelpWebsite");
                 Log.Information($"Help URL: {helpUrl}");
-            
-                Process.Start(new ProcessStartInfo {
-                    FileName = helpUrl,
-                    UseShellExecute = true,
-                });
-            
+
+                Process.Start(new ProcessStartInfo { FileName = helpUrl, UseShellExecute = true });
+
                 Log.Information("Help URL opened successfully");
             } catch (Exception ex) {
                 Log.Error($"Failed to open help URL: {ex.Message}");
             }
         }
     }
+
+    #endregion
 }
 
 public record NavPageHeaderInfo(string Title, string? SubTitle = null, bool IsModified = false) {
     public bool HasSubTitle { get; set; } = true;
-    public string SubTitle { get; init; } = string.IsNullOrWhiteSpace(SubTitle) 
-        ? I18n.Current.GetString("Placeholder.NewProject") 
+
+    public string SubTitle { get; init; } = string.IsNullOrWhiteSpace(SubTitle)
+        ? I18n.Current.GetString("Placeholder.NewProject")
         : SubTitle;
 }
-
-
-
-
-

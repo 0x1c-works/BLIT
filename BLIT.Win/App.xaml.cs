@@ -10,6 +10,7 @@ using Sentry.Protocol;
 using Serilog;
 using System;
 using System.Security;
+using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArgs;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -17,17 +18,12 @@ using System.Security;
 namespace BLIT.Win;
 
 /// <summary>
-/// Provides application-specific behavior to supplement the default Application class.
+///     Provides application-specific behavior to supplement the default Application class.
 /// </summary>
 public partial class App : Application {
-    public static new App Current => Application.Current as App;
-    public I18n I18n { get; } = new I18n(new ResourceLoader(), new ResourceManager());
-    public Window MainWindow { get; private set; }
-    public IServiceProvider Services { get; }
-
     /// <summary>
-    /// Initializes the singleton application object.  This is the first line of authored code
-    /// executed, and as such is the logical equivalent of main() or WinMain().
+    ///     Initializes the singleton application object.  This is the first line of authored code
+    ///     executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App() {
         SentrySdk.Init(o => {
@@ -52,9 +48,14 @@ public partial class App : Application {
         Log.Information("BLIT started.");
     }
 
+    public static new App Current => Application.Current as App;
+    public I18n I18n { get; } = new(new ResourceLoader(), new ResourceManager());
+    public Window MainWindow { get; private set; }
+    public IServiceProvider Services { get; }
+
     // Use this attribute to ensure all types of exceptions are handled.
     [SecurityCritical]
-    private void OnUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e) {
+    private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) {
         // Get a reference to the exception, because the Exception property is cleared when accessed.
         Exception exception = e.Exception;
         if (exception != null) {
@@ -69,7 +70,7 @@ public partial class App : Application {
     }
 
     /// <summary>
-    /// Invoked when the application is launched.
+    ///     Invoked when the application is launched.
     /// </summary>
     /// <param name="args">Details about the launch request and process.</param>
     protected override void OnLaunched(LaunchActivatedEventArgs args) {

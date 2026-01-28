@@ -16,4 +16,3 @@ public class GlobalSettings : BindableBase {
 
     public string GameRootFolderPath => GameRootFolder?.Path ?? I18n.Current.GetString("NeedGameRootFolder");
 }
-

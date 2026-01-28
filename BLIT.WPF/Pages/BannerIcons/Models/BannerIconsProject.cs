@@ -1,4 +1,3 @@
-using Autofac;
 using BLIT.Banner;
 using BLIT.Banner.Progress;
 using BLIT.WPF.Helpers;
@@ -6,24 +5,35 @@ using BLIT.WPF.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using MessagePack;
 using Serilog;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BLIT.WPF.Pages.BannerIcons.Models;
+
 public partial class BannerIconsProject : ObservableObject, IProject {
     /// <summary>
-    /// 0 - 6 is occpuied by the native game
+    ///     0 - 6 is occpuied by the native game
     /// </summary>
     public const int MIN_GROUP_ID = 7;
+
     /// <summary>
-    /// 0-193 is occupied by the native game
+    ///     0-193 is occupied by the native game
     /// </summary>
     public const int MIN_COLOR_ID = 194;
+
+    private readonly BannerColorEntry.Factory _colorFactory;
+    private readonly BannerGroupEntry.Factory _groupFactory;
+
+    private readonly ISettingsService _settings;
+
+    private bool _isExporting = false;
+
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(CanExport))]
+    private bool isExporting;
+
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(CanExport))]
+    private bool isSavingOrLoading;
 
     public BannerIconsProject(
         ISettingsService settings,
@@ -34,51 +44,79 @@ public partial class BannerIconsProject : ObservableObject, IProject {
         _colorFactory = colorFactory;
     }
 
-    private readonly ISettingsService _settings;
-    private readonly BannerGroupEntry.Factory _groupFactory;
-    private readonly BannerColorEntry.Factory _colorFactory;
-
     public ObservableCollection<BannerGroupEntry> Groups { get; } = new();
     public ObservableCollection<BannerColorEntry> Colors { get; } = new();
     public string? CurrentFilePath { get; set; }
 
     public string OutputResolutionName {
-        get => _settings.Banner.TextureOutputResolution switch {
-            OutputResolution.Res2K => "2K",
-            OutputResolution.Res4K => "4K",
-            _ => I18n.Current.GetString("PleaseSelect"),
-        };
+        get =>
+            _settings.Banner.TextureOutputResolution switch {
+                OutputResolution.Res2K => "2K",
+                OutputResolution.Res4K => "4K",
+                _ => I18n.Current.GetString("PleaseSelect")
+            };
         set {
-            _settings.Banner.TextureOutputResolution = Enum.TryParse(value, out OutputResolution enumValue) ? enumValue : OutputResolution.INVALID;
+            _settings.Banner.TextureOutputResolution = Enum.TryParse(value, out OutputResolution enumValue)
+                ? enumValue
+                : OutputResolution.INVALID;
             OnPropertyChanged();
         }
     }
 
-    private bool _isExporting = false;
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(CanExport))]
-    private bool isExporting;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(CanExport))]
-    private bool isSavingOrLoading;
-
     public bool CanExport => !IsExporting && !IsSavingOrLoading && (Groups.Any(g => g.CanExport) || Colors.Count > 0);
+
+    #region IProject Members
+
+    public async Task Write(Stream s) {
+        try {
+            IsSavingOrLoading = true;
+            await MessagePackSerializer.SerializeAsync(s, new SaveData(this));
+        } catch (Exception ex) { Log.Error(ex, "error in saving the banner project"); } finally {
+            IsSavingOrLoading = false;
+        }
+    }
+
+    public async Task Read(Stream s) {
+        try {
+            IsSavingOrLoading = true;
+            var data = await MessagePackSerializer.DeserializeAsync<SaveData>(s);
+            Groups.Clear();
+            Colors.Clear();
+            foreach (BannerGroupEntry.SaveData groupData in data.Groups) {
+                Groups.Add(groupData.Load(_groupFactory));
+            }
+
+            foreach (BannerColorEntry.SaveData colorData in data.Colors) {
+                Colors.Add(colorData.Load(_colorFactory));
+            }
+        } catch (Exception ex) { Log.Error(ex, "error in loading the banner project"); } finally {
+            IsSavingOrLoading = false;
+        }
+    }
+
+    public void AfterLoaded() {
+        OnPropertyChanged(nameof(CanExport));
+    }
+
+    #endregion
 
     public BannerIconData ToBannerIconData() {
         var data = new BannerIconData();
         foreach (BannerGroupEntry group in GetExportingGroups()) {
             data.IconGroups.Add(group.ToBannerIconGroup());
         }
+
         foreach (BannerColorEntry color in GetExportingColors()) {
             data.BannerColors.Add(color.ToBannerColor());
         }
+
         return data;
     }
+
     public IEnumerable<IconSprite> ToIconSprites() {
         return GetExportingGroups().Aggregate(new List<IconSprite>(), (icons, g) => {
             icons.AddRange(g.Icons.Where(icon => !string.IsNullOrWhiteSpace(icon.SpritePath))
-                                  .Select(icon => icon.ToIconSprite()));
+                .Select(icon => icon.ToIconSprite()));
             return icons;
         });
     }
@@ -86,6 +124,7 @@ public partial class BannerIconsProject : ObservableObject, IProject {
     public IEnumerable<BannerGroupEntry> GetExportingGroups() {
         return Groups.Where(g => g?.CanExport ?? false).OrderBy(g => g.GroupID);
     }
+
     public IEnumerable<BannerColorEntry> GetExportingColors() {
         return Colors.Where(c => c?.CanExport ?? false);
     }
@@ -115,15 +154,18 @@ public partial class BannerIconsProject : ObservableObject, IProject {
     public void AddColor() {
         Colors.Add(_colorFactory(GetNextColorID()));
     }
+
     public void DeleteColors(IEnumerable<BannerColorEntry> colors) {
         BannerColorEntry[] deleting = colors.ToArray();
         foreach (BannerColorEntry color in deleting) {
             Colors.Remove(color);
         }
     }
+
     public void SortColors() {
         Colors.SortStable(BannerColorEntry.Compare);
     }
+
     public int GetNextGroupID() {
         return Groups.Count > 0 ? Groups.Max(g => g.GroupID) + 1 : _settings.Banner.CustomGroupStartID;
     }
@@ -133,83 +175,57 @@ public partial class BannerIconsProject : ObservableObject, IProject {
     }
 
     public int ValidateGroupID(int oldID, int newID) {
-        return ValidateID(oldID, newID, MIN_GROUP_ID, (id) => Groups.Any(g => g.GroupID == id), GetNextGroupID);
+        return ValidateID(oldID, newID, MIN_GROUP_ID, id => Groups.Any(g => g.GroupID == id), GetNextGroupID);
     }
+
     public int ValidateColorID(int oldID, int newID) {
-        return ValidateID(oldID, newID, MIN_COLOR_ID, (id) => Colors.Any(g => g.ID == id), GetNextColorID);
+        return ValidateID(oldID, newID, MIN_COLOR_ID, id => Colors.Any(g => g.ID == id), GetNextColorID);
     }
 
     private int ValidateID(int oldID, int newID, int minValidID, Func<int, bool> isIDOccupied, Func<int> getNextID) {
-        if (oldID == newID) return newID;
+        if (oldID == newID) {
+            return newID;
+        }
 
         var direction = newID - oldID > 0;
         while (isIDOccupied(newID)) {
             newID += direction ? 1 : -1;
         }
+
         if (newID < minValidID) { newID = getNextID(); }
+
         return newID;
     }
 
     private void OnGroupPropertyChanged(object? sender, PropertyChangedEventArgs e) {
         OnPropertyChanged(nameof(CanExport));
         if (e.PropertyName == nameof(BannerGroupEntry.GroupID)) {
-
         }
-    }
-
-    public async Task Write(Stream s) {
-        try {
-            IsSavingOrLoading = true;
-            await MessagePackSerializer.SerializeAsync(s, new SaveData(this));
-        } catch (Exception ex) { Log.Error(ex, "error in saving the banner project"); } finally {
-            IsSavingOrLoading = false;
-        }
-    }
-
-    public async Task Read(Stream s) {
-        try {
-            IsSavingOrLoading = true;
-            SaveData data = await MessagePackSerializer.DeserializeAsync<SaveData>(s);
-            Groups.Clear();
-            Colors.Clear();
-            foreach (BannerGroupEntry.SaveData groupData in data.Groups) {
-                Groups.Add(groupData.Load(_groupFactory));
-            }
-            foreach (BannerColorEntry.SaveData colorData in data.Colors) {
-                Colors.Add(colorData.Load(_colorFactory));
-            }
-        } catch (Exception ex) { Log.Error(ex, "error in loading the banner project"); } finally {
-            IsSavingOrLoading = false;
-        }
-    }
-
-    public void AfterLoaded() {
-        OnPropertyChanged(nameof(CanExport));
     }
 
     public async Task<string> ExportAll(string outFolderPath, IProgress<ExportProgressData>? progress = null) {
-        var iconsList = ToIconSprites().ToList();
-        var exportingGroups = GetExportingGroups().ToList();
-        
+        List<IconSprite> iconsList = ToIconSprites().ToList();
+        List<BannerGroupEntry> exportingGroups = GetExportingGroups().ToList();
+
         // Calculate texture counts per group
         var groupTextureMap = new Dictionary<int, int>();
-        int textureCount = 0;
-        foreach (var group in exportingGroups) {
+        var textureCount = 0;
+        foreach (BannerGroupEntry group in exportingGroups) {
             var icons = group.Icons.Select(icon => icon.TexturePath).ToArray();
             // Estimate: 16 icons per texture (4x4 grid), so divide by 16 and round up
-            int groupTextures = (icons.Length + 15) / 16;
+            var groupTextures = (icons.Length + 15) / 16;
             groupTextureMap[group.GroupID] = groupTextures;
             textureCount += groupTextures;
         }
-        
+
         // Calculate total progress units:
         // - Texture generation: textureCount units
         // - Sprite processing: iconsList.Count units
         // - XML generation: 1 unit
-        int totalProgress = textureCount + iconsList.Count + 1;
-        int currentProgress = 0;
-        object lockObj = new object();
-        
+        var totalProgress = textureCount + iconsList.Count + 1;
+        var currentProgress = 0;
+        var lockObj = new object();
+
         // Create unified progress handler
         var unifiedProgress = new Progress<ExportProgressData>(data => {
             lock (lockObj) {
@@ -224,25 +240,25 @@ public partial class BannerIconsProject : ObservableObject, IProject {
                     // XML progress: already at final stage
                     currentProgress = textureCount + iconsList.Count;
                 }
-                
+
                 progress?.Report(new ExportProgressData(currentProgress, totalProgress, data.CurrentStage));
             }
         });
-        
+
         var merger = new TextureMerger(_settings.Banner.TextureOutputResolution);
-        
+
         // Merge textures from all exporting groups with proper progress tracking
         // Use a thread-safe counter to track completed textures across all groups
-        int completedTextures = 0;
-        object textureCountLock = new object();
-        
+        var completedTextures = 0;
+        var textureCountLock = new object();
+
         var textureMergeTasks = new List<Task>();
-        
-        foreach (var group in exportingGroups) {
+
+        foreach (BannerGroupEntry group in exportingGroups) {
             var groupID = group.GroupID;
             var textureFileNames = group.Icons.Select(icon => icon.TexturePath).ToArray();
-            
-            var task = Task.Run(() => {
+
+            Task task = Task.Run(() => {
                 // Create progress adapter that tracks completed texture count
                 var groupProgress = new Progress<ExportProgressData>(data => {
                     if (data.CurrentStage == "Texture") {
@@ -256,49 +272,54 @@ public partial class BannerIconsProject : ObservableObject, IProject {
                         }
                     }
                 });
-                
+
                 merger.Merge(outFolderPath, groupID, textureFileNames, groupProgress);
             });
-            
+
             textureMergeTasks.Add(task);
         }
-        
-        await Task.WhenAll(textureMergeTasks);
-        
-        // Create logger adapter to pass WPF's Serilog configuration to BLIT.Banner
-        var serilogLogger = Log.ForContext<BannerIconsProject>();
-        var logger = new SerilogLoggerAdapter(serilogLogger);
-        
-         // Collect sprites with progress tracking
-         await SpriteOrganizer.CollectToSpriteParts(outFolderPath, iconsList, logger, unifiedProgress);
-         
-         // Report XML generation completion
-         ((IProgress<ExportProgressData>)unifiedProgress).Report(new ExportProgressData(totalProgress, totalProgress, "XML"));
-        
-        return ExportXML(outFolderPath);
 
+        await Task.WhenAll(textureMergeTasks);
+
+        // Create logger adapter to pass WPF's Serilog configuration to BLIT.Banner
+        ILogger serilogLogger = Log.ForContext<BannerIconsProject>();
+        var logger = new SerilogLoggerAdapter(serilogLogger);
+
+        // Collect sprites with progress tracking
+        await SpriteOrganizer.CollectToSpriteParts(outFolderPath, iconsList, logger, unifiedProgress);
+
+        // Report XML generation completion
+        ((IProgress<ExportProgressData>)unifiedProgress).Report(new ExportProgressData(totalProgress, totalProgress,
+            "XML"));
+
+        return ExportXML(outFolderPath);
     }
+
     public string? ExportXML(string outFolderPath) {
         if (!string.IsNullOrWhiteSpace(outFolderPath)) {
             ToBannerIconData().SaveToXml(outFolderPath);
             SpriteOrganizer.GenerateConfigXML(outFolderPath, ToIconSprites());
             return outFolderPath;
         }
+
         return null;
     }
 
+    #region Nested type: SaveData
 
     [MessagePackObject]
     public class SaveData {
-        [Key(0)]
-        public BannerGroupEntry.SaveData[] Groups = new BannerGroupEntry.SaveData[] { };
-        [Key(1)]
-        public BannerColorEntry.SaveData[] Colors = new BannerColorEntry.SaveData[] { };
+        [Key(1)] public BannerColorEntry.SaveData[] Colors = new BannerColorEntry.SaveData[] { };
+
+        [Key(0)] public BannerGroupEntry.SaveData[] Groups = new BannerGroupEntry.SaveData[] { };
 
         public SaveData(BannerIconsProject vm) {
             Groups = vm.Groups.Select(g => new BannerGroupEntry.SaveData(g)).ToArray();
             Colors = vm.Colors.Select(g => new BannerColorEntry.SaveData(g)).ToArray();
         }
+
         public SaveData() { }
     }
+
+    #endregion
 }

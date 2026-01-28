@@ -8,23 +8,24 @@ using Microsoft.UI.Xaml.Controls;
 namespace BLIT.Win.Controls;
 
 public sealed partial class LoadingOverlay : UserControl {
-    public readonly static DependencyProperty MessageProperty = DependencyProperty.Register(
+    public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(
         nameof(Message),
         typeof(string),
         typeof(LoadingOverlay),
         new PropertyMetadata("Loading..."));
 
+    public LoadingOverlay() {
+        InitializeComponent();
+        AppServices.Get<ILoadingService>().RegisterControl(this);
+    }
+
     public string Message {
         get => (string)GetValue(MessageProperty);
         set => SetValue(MessageProperty, value);
     }
+
     public bool IsLoading {
         get => loadingControl.IsLoading;
         set => loadingControl.IsLoading = value;
-    }
-
-    public LoadingOverlay() {
-        InitializeComponent();
-        AppServices.Get<ILoadingService>().RegisterControl(this);
     }
 }

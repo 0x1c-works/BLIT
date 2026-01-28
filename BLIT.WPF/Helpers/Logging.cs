@@ -1,29 +1,31 @@
 using Serilog;
 using Serilog.Events;
-using System;
 using System.IO;
 
 namespace BLIT.WPF.Helpers;
 
 public class Logging {
-    public static string Folder => Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "BLIT.WPF",
-        "logs"
-    );
+    public static string Folder =>
+        Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "BLIT.WPF",
+            "logs"
+        );
 
     public static void Initialize() {
         var logPath = Path.Combine(Folder, "log-.txt");
-        
+
         // Ensure log directory exists
         Directory.CreateDirectory(Folder);
 
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .WriteTo.Debug()
-            .WriteTo.File(logPath, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: LogEventLevel.Information)
+            .WriteTo.File(logPath, rollingInterval: RollingInterval.Day,
+                restrictedToMinimumLevel: LogEventLevel.Information)
             .WriteTo.Sentry(o => {
-                o.Dsn = "https://4e3afdb2d984e01e08d30e685b29b725@o4510494475878400.ingest.us.sentry.io/4510747015643136";
+                o.Dsn =
+                    "https://4e3afdb2d984e01e08d30e685b29b725@o4510494475878400.ingest.us.sentry.io/4510747015643136";
                 // Enable logs to be sent to Sentry
                 o.EnableLogs = true;
                 // Debug and higher are stored as breadcrumbs (default is Information)

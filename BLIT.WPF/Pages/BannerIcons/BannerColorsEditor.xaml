@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
-             xmlns:local="clr-namespace:BLIT.WPF.Pages.BannerIcons"
              xmlns:vm="clr-namespace:BLIT.WPF.Pages.BannerIcons.Models"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d"
@@ -78,7 +77,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Left Panel: Color List -->
-        <Grid Grid.Column="0" >
+        <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -87,25 +86,22 @@
             <!-- Toolbar -->
             <Menu Grid.Row="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
                 <MenuItem x:Name="btnAdd"
-                        Command="{Binding AddColorCommand}"
-                        Header="{helpers:I18n AppButtonAddColor.Label}"
-                        Icon="{ui:SymbolIcon Add20}"
-                        Margin="4">
-                </MenuItem>
+                          Command="{Binding AddColorCommand}"
+                          Header="{helpers:I18n AppButtonAddColor.Label}"
+                          Icon="{ui:SymbolIcon Add20}"
+                          Margin="4" />
 
                 <MenuItem x:Name="btnDelete"
-                        Command="{Binding DeleteColorsCommand}"
-                        Header="{helpers:I18n AppButtonDeleteColors.Label}"
-                        Icon="{ui:SymbolIcon Delete20}"
-                        Margin="4">
-                </MenuItem>
+                          Command="{Binding DeleteColorsCommand}"
+                          Header="{helpers:I18n AppButtonDeleteColors.Label}"
+                          Icon="{ui:SymbolIcon Delete20}"
+                          Margin="4" />
 
                 <MenuItem x:Name="btnSort"
-                        Command="{Binding SortColorsCommand}"
-                        Header="{helpers:I18n AppButtonSort.Label}"
-                        Icon="{ui:SymbolIcon ArrowSort20}"
-                        Margin="4">
-                </MenuItem>
+                          Command="{Binding SortColorsCommand}"
+                          Header="{helpers:I18n AppButtonSort.Label}"
+                          Icon="{ui:SymbolIcon ArrowSort20}"
+                          Margin="4" />
             </Menu>
 
             <!-- Color List -->
@@ -117,7 +113,7 @@
                      SelectionChanged="listViewColors_SelectionChanged"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
         </Grid>
-        
+
         <GridSplitter Grid.Column="1" Width="5"
                       Background="{DynamicResource ControlFillColorDefaultBrush}" />
 
@@ -215,8 +211,7 @@
                                 <Slider Grid.Column="1"
                                         x:Name="sliderR"
                                         Minimum="0" Maximum="255"
-                                        Value="{Binding FirstSelectedColor.R, Mode=TwoWay}"
-                                        />
+                                        Value="{Binding FirstSelectedColor.R, Mode=TwoWay}" />
                                 <TextBox Grid.Column="2"
                                          Text="{Binding ElementName=sliderR, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          Width="40"
@@ -233,8 +228,7 @@
                                 <Slider Grid.Column="1"
                                         x:Name="sliderG"
                                         Minimum="0" Maximum="255"
-                                        Value="{Binding FirstSelectedColor.G, Mode=TwoWay}"
-                                        />
+                                        Value="{Binding FirstSelectedColor.G, Mode=TwoWay}" />
                                 <TextBox Grid.Column="2"
                                          Text="{Binding ElementName=sliderG, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          Width="40"
@@ -251,8 +245,7 @@
                                 <Slider Grid.Column="1"
                                         x:Name="sliderB"
                                         Minimum="0" Maximum="255"
-                                        Value="{Binding FirstSelectedColor.B, Mode=TwoWay}"
-                                        />
+                                        Value="{Binding FirstSelectedColor.B, Mode=TwoWay}" />
                                 <TextBox Grid.Column="2"
                                          Text="{Binding ElementName=sliderB, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          Width="40"

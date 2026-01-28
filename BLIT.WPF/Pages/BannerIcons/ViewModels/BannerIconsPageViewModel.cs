@@ -1,20 +1,18 @@
+using BLIT.Banner;
 using BLIT.Banner.Progress;
 using BLIT.WPF.Helpers;
 using BLIT.WPF.Pages.BannerIcons.Models;
 using BLIT.WPF.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
+using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BLIT.WPF.Pages.BannerIcons.ViewModels;
 
 public partial class BannerIconsPageViewModel : ObservableObject {
-    // 注入的服务
-    private readonly IProjectService<BannerIconsProject>? _project =
-        AppServices.Get<IProjectService<BannerIconsProject>>();
+    private static readonly Guid GUID_EXPORT_DIALOG = new("0c5f39f0-1a31-4d85-a9ee-7ad0cfd690b6");
+    private static readonly Guid GUID_PROJECT_DIALOG = new("f86d402a-33de-4f62-8c2b-c5e75428c018");
 
     private readonly IFileDialogService? _fileDialog =
         AppServices.Get<IFileDialogService>();
@@ -25,13 +23,12 @@ public partial class BannerIconsPageViewModel : ObservableObject {
     private readonly INotificationService? _notification =
         AppServices.Get<INotificationService>();
 
-    private static readonly Guid GUID_EXPORT_DIALOG = new("0c5f39f0-1a31-4d85-a9ee-7ad0cfd690b6");
-    private static readonly Guid GUID_PROJECT_DIALOG = new("f86d402a-33de-4f62-8c2b-c5e75428c018");
+    // 注入的服务
+    private readonly IProjectService<BannerIconsProject>? _project =
+        AppServices.Get<IProjectService<BannerIconsProject>>();
 
-    public BannerIconsPageViewModel() {
-        // 初始化时设置 ViewModel，以便订阅事件
-        ViewModel = _project?.Current;
-    }
+    // 数据模型引用
+    private BannerIconsProject? _viewModel;
 
     // UI 状态属性
     [ObservableProperty]
@@ -39,13 +36,10 @@ public partial class BannerIconsPageViewModel : ObservableObject {
     [NotifyPropertyChangedFor(nameof(ShowEmptyHint))]
     private BannerGroupEntry? selectedGroup;
 
-    partial void OnSelectedGroupChanged(BannerGroupEntry? value) {
-        DeleteGroupCommand.NotifyCanExecuteChanged();
-        OnPropertyChanged(nameof(CanDeleteGroup));
+    public BannerIconsPageViewModel() {
+        // 初始化时设置 ViewModel，以便订阅事件
+        ViewModel = _project?.Current;
     }
-
-    // 数据模型引用
-    private BannerIconsProject? _viewModel;
 
     public BannerIconsProject? ViewModel {
         get => _viewModel;
@@ -83,11 +77,26 @@ public partial class BannerIconsPageViewModel : ObservableObject {
     public string ProjectName =>
         string.IsNullOrEmpty(_project?.Name) ? I18n.Current.GetString("Placeholder.NewProject") : _project.Name;
 
+    // ============ CanExecute 方法 ============
+
+    private bool CanSaveProject => ViewModel != null && !ViewModel.IsSavingOrLoading;
+    private bool CanAddGroup => ViewModel != null && !ViewModel.IsSavingOrLoading;
+    private bool CanDeleteGroup => HasSelectedGroup && ViewModel != null && !ViewModel.IsSavingOrLoading;
+    private bool CanExport => ViewModel?.CanExport ?? false;
+
+    partial void OnSelectedGroupChanged(BannerGroupEntry? value) {
+        DeleteGroupCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(CanDeleteGroup));
+    }
+
     // ============ RelayCommand 们 ============
 
     [RelayCommand]
     public async Task NewProject() {
-        if (_project == null) return;
+        if (_project == null) {
+            return;
+        }
+
         await _project.NewProject();
         ViewModel = _project.Current;
         SelectedGroup = null;
@@ -105,7 +114,9 @@ public partial class BannerIconsPageViewModel : ObservableObject {
 
     [RelayCommand]
     public async Task OpenProject() {
-        if (_project == null || _fileDialog == null || _loading == null) return;
+        if (_project == null || _fileDialog == null || _loading == null) {
+            return;
+        }
 
         var openedFilePath =
             await _fileDialog.OpenFile(GUID_PROJECT_DIALOG, new[] { CommonFileTypes.BannerIconsProject });
@@ -129,23 +140,25 @@ public partial class BannerIconsPageViewModel : ObservableObject {
     [RelayCommand(CanExecute = nameof(CanExport))]
     public async Task ExportAll() {
         var outFolderPath = await SelectOutFolder();
-        if (string.IsNullOrEmpty(outFolderPath)) return;
+        if (string.IsNullOrEmpty(outFolderPath)) {
+            return;
+        }
 
         await DoExportAsync(async () => {
             // Calculate total progress upfront for UI initialization
-            var iconsList = ViewModel!.ToIconSprites().ToList();
-            var exportingGroups = ViewModel!.GetExportingGroups().ToList();
+            List<IconSprite> iconsList = ViewModel!.ToIconSprites().ToList();
+            List<BannerGroupEntry> exportingGroups = ViewModel!.GetExportingGroups().ToList();
 
             // Calculate texture count
-            int textureCount = 0;
-            foreach (var group in exportingGroups) {
+            var textureCount = 0;
+            foreach (BannerGroupEntry group in exportingGroups) {
                 var icons = group.Icons.Select(icon => icon.TexturePath).ToArray();
-                int groupTextures = (icons.Length + 15) / 16;
+                var groupTextures = (icons.Length + 15) / 16;
                 textureCount += groupTextures;
             }
 
             // Total = Texture + Sprite + XML
-            int totalProgress = textureCount + iconsList.Count + 1;
+            var totalProgress = textureCount + iconsList.Count + 1;
 
             // Initialize UI with total count and show initial (0/total) 0%
             _loading?.ShowProgress(I18n.Current.GetString("TextExporting.Text"), totalProgress);
@@ -156,10 +169,10 @@ public partial class BannerIconsPageViewModel : ObservableObject {
             });
 
             var outDir = await ViewModel!.ExportAll(outFolderPath, progress);
-            _notification?.Notify(new(
+            _notification?.Notify(new Notification(
                 ToastVariant.Success,
-                Message: string.Format(I18n.Current.GetString("ExportSuccess"), outDir),
-                Action: new(
+                string.Format(I18n.Current.GetString("ExportSuccess"), outDir),
+                Action: new NotificationAction(
                     I18n.Current.GetString("ButtonOpenFolder.Content"),
                     (s, e) => FileHelpers.OpenFolderInExplorer(outDir))));
         });
@@ -168,17 +181,19 @@ public partial class BannerIconsPageViewModel : ObservableObject {
     [RelayCommand(CanExecute = nameof(CanExport))]
     public async Task ExportXML() {
         var outFolderPath = await SelectOutFolder();
-        if (string.IsNullOrEmpty(outFolderPath)) return;
+        if (string.IsNullOrEmpty(outFolderPath)) {
+            return;
+        }
 
         // Show simple loading dialog (no progress) for XML export
         _loading?.Show(I18n.Current.GetString("TextExporting.Text"));
 
         await DoExportAsync(() => {
             var outDir = ViewModel!.ExportXML(outFolderPath);
-            _notification?.Notify(new(
+            _notification?.Notify(new Notification(
                 ToastVariant.Success,
-                Message: string.Format(I18n.Current.GetString("SaveXMLSuccess"), Path.Join(outDir, "banner_icons.xml")),
-                Action: new(
+                string.Format(I18n.Current.GetString("SaveXMLSuccess"), Path.Join(outDir, "banner_icons.xml")),
+                Action: new NotificationAction(
                     I18n.Current.GetString("ButtonOpenFolder.Content"),
                     (s, e) => FileHelpers.OpenFolderInExplorer(outDir ?? ""))));
             return Task.CompletedTask;
@@ -187,7 +202,9 @@ public partial class BannerIconsPageViewModel : ObservableObject {
 
     [RelayCommand(CanExecute = nameof(CanAddGroup))]
     public void AddGroup() {
-        if (ViewModel == null) return;
+        if (ViewModel == null) {
+            return;
+        }
 
         ViewModel.AddGroup();
         SelectedGroup = ViewModel.Groups.LastOrDefault();
@@ -200,9 +217,11 @@ public partial class BannerIconsPageViewModel : ObservableObject {
         }
 
         var confirmDialog = AppServices.Get<IConfirmDialogService>();
-        if (confirmDialog == null) return;
+        if (confirmDialog == null) {
+            return;
+        }
 
-        var result = await confirmDialog.ShowDanger(
+        ContentDialogResult result = await confirmDialog.ShowDanger(
             I18n.Current.GetString("DialogDeleteBannerGroup.Title"),
             string.Format(I18n.Current.GetString("DialogDeleteBannerGroup.Content"), SelectedGroup!.GroupID));
 
@@ -220,20 +239,13 @@ public partial class BannerIconsPageViewModel : ObservableObject {
         }
     }
 
-    // ============ CanExecute 方法 ============
-
-    private bool CanSaveProject => ViewModel != null && !ViewModel.IsSavingOrLoading;
-    private bool CanAddGroup => ViewModel != null && !ViewModel.IsSavingOrLoading;
-    private bool CanDeleteGroup => HasSelectedGroup && ViewModel != null && !ViewModel.IsSavingOrLoading;
-    private bool CanExport => ViewModel?.CanExport ?? false;
-
     // ============ 辅助方法 ============
 
     private async Task<string?> SelectOutFolder() {
         try {
             return await _fileDialog!.OpenFolder(GUID_EXPORT_DIALOG);
         } catch (FileNotFoundException ex) {
-            _notification?.Notify(new(ToastVariant.Error,
+            _notification?.Notify(new Notification(ToastVariant.Error,
                 string.Format(I18n.Current.GetString("TargetPathNotFound"), ex.Message)));
         }
 
@@ -249,10 +261,10 @@ public partial class BannerIconsPageViewModel : ObservableObject {
             ViewModel.IsExporting = true;
             await work();
         } catch (Exception ex) {
-            _notification?.Notify(new(
+            _notification?.Notify(new Notification(
                 ToastVariant.Error,
-                Message: ex.Message,
-                Title: string.Format(
+                ex.Message,
+                string.Format(
                     I18n.Current.GetString("ErrorWhen"),
                     I18n.Current.GetString("OperationExporting"))));
         } finally {
@@ -262,7 +274,9 @@ public partial class BannerIconsPageViewModel : ObservableObject {
     }
 
     private async Task Save(bool force) {
-        if (_project == null || _fileDialog == null || _loading == null) return;
+        if (_project == null || _fileDialog == null || _loading == null) {
+            return;
+        }
 
         var filePath = _project.CurrentFile;
         if (force || string.IsNullOrEmpty(filePath)) {
@@ -286,7 +300,7 @@ public partial class BannerIconsPageViewModel : ObservableObject {
 
     // ============ 事件处理 ============
 
-    private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e) {
         // 当 ViewModel 的依赖属性改变时，通知相关命令和计算属性更新
         if (e.PropertyName == nameof(BannerIconsProject.IsSavingOrLoading)) {
             SaveProjectCommand.NotifyCanExecuteChanged();

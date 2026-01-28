@@ -63,7 +63,8 @@
                                         Visibility="{Binding IsViewing, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                                     <!--  Edit Mode (TextBox with Accept/Cancel buttons)  -->
-                                    <Grid Margin="0" Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <Grid Margin="0"
+                                          Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />

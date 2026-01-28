@@ -1,6 +1,7 @@
+using BLIT.CLI.Commands;
 using ConsoleAppFramework;
 
-var app = ConsoleApp.Create();
-app.Add<BLIT.CLI.Commands.BannerCommands>();
-app.Add<BLIT.CLI.Commands.SpriteCommands>();
+ConsoleApp.ConsoleAppBuilder app = ConsoleApp.Create();
+app.Add<BannerCommands>();
+app.Add<SpriteCommands>();
 await app.RunAsync(args);

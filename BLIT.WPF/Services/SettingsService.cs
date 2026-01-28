@@ -10,8 +10,12 @@ public interface ISettingsService {
 }
 
 public class SettingsService(GlobalSettings global, BannerSettings banner) : ISettingsService {
+    #region ISettingsService Members
+
     public GlobalSettings Global { get; } = global;
     public BannerSettings Banner { get; } = banner;
 
     public string Version => VersionHelper.GetFullVersion();
+
+    #endregion
 }

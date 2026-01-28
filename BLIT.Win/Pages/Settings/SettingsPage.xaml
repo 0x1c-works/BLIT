@@ -12,11 +12,6 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <Style x:Key="HorizontalBlockStyle" TargetType="StackPanel">
-            <Setter Property="Orientation" Value="Horizontal" />
-            <Setter Property="Margin" Value="0,16,0,0" />
-            <Setter Property="Spacing" Value="8" />
-        </Style>
         <Style x:Key="SectionGridStyle" TargetType="Grid">
             <Setter Property="RowSpacing" Value="10" />
             <Setter Property="ColumnSpacing" Value="16" />

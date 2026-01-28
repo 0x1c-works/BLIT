@@ -1,5 +1,5 @@
-using ImageMagick;
 using BLIT.Banner.Progress;
+using ImageMagick;
 
 namespace BLIT.Banner;
 
@@ -7,11 +7,11 @@ public class TextureMerger {
     public const uint ROWS = 4;
     public const uint COLS = 4;
     private static readonly string TEXTURE_SUB_FOLDER = Path.Join("AssetSources", "BannerIcons");
-    private static readonly Dictionary<OutputResolution, uint> CELL_SIZES = new()
-    {
-        {OutputResolution.Res2K,512 },
-        {OutputResolution.Res4K,1024 },
+
+    private static readonly Dictionary<OutputResolution, uint> CELL_SIZES = new() {
+        { OutputResolution.Res2K, 512 }, { OutputResolution.Res4K, 1024 }
     };
+
     private readonly OutputResolution _resolution;
 
     public TextureMerger(OutputResolution resolution) {
@@ -24,9 +24,10 @@ public class TextureMerger {
         return Directory.CreateDirectory(dir).FullName;
     }
 
-    public void Merge(string outDir, int groupID, string[] sourceFileNames, IProgress<ExportProgressData>? progress = null) {
+    public void Merge(string outDir, int groupID, string[] sourceFileNames,
+        IProgress<ExportProgressData>? progress = null) {
         var outBasePath = Path.Join(EnsureOutFolder(outDir), BannerUtils.GetGroupName(groupID));
-        
+
         var next = sourceFileNames;
         var index = 0;
         while (next.Length > 0) {
@@ -34,7 +35,8 @@ public class TextureMerger {
         }
     }
 
-    private string[] MakeSingleTexture(string outBasePath, int texIndex, string[] sourceFileNames, IProgress<ExportProgressData>? progress = null) {
+    private string[] MakeSingleTexture(string outBasePath, int texIndex, string[] sourceFileNames,
+        IProgress<ExportProgressData>? progress = null) {
         var index = 0;
         using var tex = new MagickImageCollection();
         MagickImageCollection? row = null;
@@ -47,7 +49,8 @@ public class TextureMerger {
 
                 index += processedCount;
             }
-             if (tex.Count > 0) {
+
+            if (tex.Count > 0) {
                 // output tex
                 var outputFile = $"{outBasePath}_{texIndex + 1:d2}.psd";
                 IMagickImage<ushort> output = tex.AppendVertically();
@@ -55,11 +58,12 @@ public class TextureMerger {
                 output.Extent(GetTextureGeometry(), Gravity.Northwest);
                 output.Write(outputFile);
                 Console.WriteLine($"Generated: {outputFile}");
-                
+
                 // Report progress for this texture - just signal completion
                 // The caller (BannerIconsProject) manages the total count
                 progress?.Report(new ExportProgressData(1, 1, "Texture"));
             }
+
             return sourceFileNames.Skip(index).ToArray();
         } finally {
             row?.Dispose();
@@ -78,11 +82,13 @@ public class TextureMerger {
             row.Add(ResizeCell(new MagickImage(file)));
             count++;
         }
+
         if (row.Count > 0) {
             IMagickImage<ushort> rowTex = row.AppendHorizontally();
             rowTex.BackgroundColor = MagickColor.FromRgba(0, 0, 0, 0);
             tex.Add(rowTex);
         }
+
         return count;
     }
 
@@ -110,6 +116,5 @@ public class TextureMerger {
 public enum OutputResolution {
     INVALID = -1,
     Res2K,
-    Res4K,
+    Res4K
 }
-

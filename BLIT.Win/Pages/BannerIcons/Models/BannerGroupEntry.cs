@@ -11,13 +11,26 @@ using Windows.Storage;
 namespace BLIT.Win.Pages.BannerIcons.Models;
 
 public class BannerGroupEntry : BindableBase {
+    #region Delegates
+
     public delegate BannerGroupEntry Factory(int groupID);
 
-    private BannerIconsProject _project;
-    public ObservableCollection<BannerIconEntry> Icons { get; } = new();
+    #endregion
+
+    private readonly Lazy<BannerIconEntry.Factory> _iconFactory;
+
+    private readonly BannerIconsProject _project;
 
     private int _groupID = 7;
-    private readonly Lazy<BannerIconEntry.Factory> _iconFactory;
+
+    public BannerGroupEntry(BannerIconsProject project, int groupID, Lazy<BannerIconEntry.Factory> iconFactory) {
+        _project = project;
+        GroupID = groupID;
+        _iconFactory = iconFactory;
+        Icons.CollectionChanged += _icons_CollectionChanged;
+    }
+
+    public ObservableCollection<BannerIconEntry> Icons { get; } = new();
 
     public int GroupID {
         get => _groupID;
@@ -27,27 +40,23 @@ public class BannerGroupEntry : BindableBase {
             OnPropertyChanged(nameof(GroupName));
         }
     }
+
     public string GroupName => BannerUtils.GetGroupName(GroupID);
 
     public bool CanExport => Icons.Count > 0;
-
-    public BannerGroupEntry(BannerIconsProject project, int groupID, Lazy<BannerIconEntry.Factory> iconFactory) {
-        _project = project;
-        GroupID = groupID;
-        _iconFactory = iconFactory;
-        Icons.CollectionChanged += _icons_CollectionChanged;
-    }
 
     private void _icons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
         if (e.Action != NotifyCollectionChangedAction.Reset) {
             RefreshCellIndex();
         }
+
         OnPropertyChanged(nameof(Icons));
         OnPropertyChanged(nameof(CanExport));
     }
 
     public void AddIcons(IEnumerable<StorageFile> files) {
-        bool IsIconAdded(BannerIconEntry icon, StorageFile file) => icon.TexturePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase);
+        bool IsIconAdded(BannerIconEntry icon, StorageFile file) =>
+            icon.TexturePath.Equals(file.Path, StringComparison.InvariantCultureIgnoreCase);
 
         IEnumerable<BannerIconEntry> newIcons = files
             .Where(file => !Icons.Any(icon => IsIconAdded(icon, file)))
@@ -57,11 +66,13 @@ public class BannerGroupEntry : BindableBase {
             Icons.Add(icon);
             icon.AutoScanSprite();
         }
+
         foreach (BannerIconEntry icon in existingIcons) {
             icon.ReloadSprite();
             icon.ReloadTexture();
         }
     }
+
     public void DeleteIcons(IEnumerable<BannerIconEntry> icons) {
         var queue = new Queue<BannerIconEntry>(icons);
         while (queue.Count > 0) {
@@ -75,6 +86,7 @@ public class BannerGroupEntry : BindableBase {
             }
         }
     }
+
     public void RefreshCellIndex() {
         for (var i = 0; i < Icons.Count; i++) {
             Icons[i].CellIndex = i;
@@ -82,28 +94,27 @@ public class BannerGroupEntry : BindableBase {
     }
 
     public BannerIconGroup ToBannerIconGroup() {
-        var group = new BannerIconGroup() {
-            ID = GroupID,
-            Name = GroupName,
-            IsPattern = false,
-        };
+        var group = new BannerIconGroup { ID = GroupID, Name = GroupName, IsPattern = false };
         foreach (BannerIconEntry icon in Icons) {
             group.Icons.Add(icon.ToBannerIcon());
         }
+
         return group;
     }
 
+    #region Nested type: SaveData
+
     [MessagePackObject]
     public class SaveData {
-        [Key(0)]
-        public int GroupID;
-        [Key(1)]
-        public BannerIconEntry.SaveData[] Icons = new BannerIconEntry.SaveData[] { };
+        [Key(0)] public int GroupID;
+
+        [Key(1)] public BannerIconEntry.SaveData[] Icons = new BannerIconEntry.SaveData[] { };
 
         public SaveData(BannerGroupEntry vm) {
             GroupID = vm.GroupID;
             Icons = vm.Icons.Select(icon => new BannerIconEntry.SaveData(icon)).ToArray();
         }
+
         public SaveData() { }
 
         public BannerGroupEntry Load(Factory factory) {
@@ -111,7 +122,10 @@ public class BannerGroupEntry : BindableBase {
             foreach (BannerIconEntry.SaveData icon in Icons) {
                 vm.Icons.Add(icon.Load(vm, vm._iconFactory.Value));
             }
+
             return vm;
         }
     }
+
+    #endregion
 }

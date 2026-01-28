@@ -21,21 +21,19 @@ using Windows.Storage;
 namespace BLIT.Win.Pages.BannerIcons;
 
 /// <summary>
-/// An empty page that can be used on its own or navigated to within a Frame.
+///     An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
 public sealed partial class BannerIconsPage : Page {
     private static readonly Guid GUID_EXPORT_DIALOG = new("0c5f39f0-1a31-4d85-a9ee-7ad0cfd690b6");
     private static readonly Guid GUID_PROJECT_DIALOG = new("f86d402a-33de-4f62-8c2b-c5e75428c018");
-    private readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
     private readonly IFileDialogService _fileDialog = AppServices.Get<IFileDialogService>();
-    private readonly IProjectService<BannerIconsProject> _project = AppServices.Get<IProjectService<BannerIconsProject>>();
     private readonly ILoadingService _loading = AppServices.Get<ILoadingService>();
     private readonly INotificationService _notification = AppServices.Get<INotificationService>();
 
-    private BannerIconsProject ViewModel { get => _project.Current; }
-    private BannerGroupEntry SelectedGroup { get => listViewGroups.SelectedItem as BannerGroupEntry; }
-    private bool HasSelectedGroup { get => SelectedGroup is not null; }
-    private bool ShouldShowEmptyHint { get => !HasSelectedGroup; }
+    private readonly IProjectService<BannerIconsProject> _project =
+        AppServices.Get<IProjectService<BannerIconsProject>>();
+
+    private readonly ISettingsService _settings = AppServices.Get<ISettingsService>();
 
     public BannerIconsPage() {
         InitializeComponent();
@@ -43,21 +41,29 @@ public sealed partial class BannerIconsPage : Page {
         Loaded += OnPageLoaded;
     }
 
+    private BannerIconsProject ViewModel => _project.Current;
+    private BannerGroupEntry SelectedGroup => listViewGroups.SelectedItem as BannerGroupEntry;
+    private bool HasSelectedGroup => SelectedGroup is not null;
+    private bool ShouldShowEmptyHint => !HasSelectedGroup;
+
     private void OnPageLoaded(object sender, RoutedEventArgs e) {
         if (_settings.Banner.SpriteScanFolders.Count == 0) {
             Toast toast = null;
             toast = _notification.Notify(new Notification(
                 ToastVariant.Warning,
-                Message: I18n.Current.GetString("WarningNoSpriteScanFolders/Message"),
+                I18n.Current.GetString("WarningNoSpriteScanFolders/Message"),
                 TimeoutSeconds: 30,
-                Action: new(
+                Action: new NotificationAction(
                     I18n.Current.GetString("ButtonToSettings/Content"),
                     (s, e) => {
-                        SentrySdk.AddBreadcrumb("open settings", category: "ui.help");
-                        if (toast != null) toast.IsOpen = false;
+                        SentrySdk.AddBreadcrumb("open settings", "ui.help");
+                        if (toast != null) {
+                            toast.IsOpen = false;
+                        }
+
                         (App.Current.MainWindow as MainWindow)?.NavigateToSettings();
                     })
-                ));
+            ));
         }
     }
 
@@ -71,23 +77,25 @@ public sealed partial class BannerIconsPage : Page {
         if (sender is not MenuFlyoutItem item) {
             return;
         }
+
         ViewModel.OutputResolutionName = item.Tag as string;
     }
 
     private void btnImport_Click(object sender, RoutedEventArgs e) {
-
     }
 
     private async void btnExportAll_Click(object sender, RoutedEventArgs e) {
         StorageFolder outFolder = await SelectOutFolder();
-        if (outFolder == null) return;
+        if (outFolder == null) {
+            return;
+        }
 
         await DoExportAsync(async () => {
             var outDir = await ViewModel.ExportAll(outFolder);
-            _notification.Notify(new(
+            _notification.Notify(new Notification(
                 ToastVariant.Success,
-                Message: string.Format(I18n.Current.GetString("ExportSuccess"), outDir),
-                Action: new(
+                string.Format(I18n.Current.GetString("ExportSuccess"), outDir),
+                Action: new NotificationAction(
                     I18n.Current.GetString("ButtonOpenFolder/Content"),
                     (s, e) => FileHelpers.OpenFolderInExplorer(outDir))));
         });
@@ -95,14 +103,16 @@ public sealed partial class BannerIconsPage : Page {
 
     private async void btnExportXML_Click(object sender, RoutedEventArgs e) {
         StorageFolder outFolder = await SelectOutFolder();
-        if (outFolder == null) return;
+        if (outFolder == null) {
+            return;
+        }
 
         await DoExportAsync(() => {
             var outDir = ViewModel.ExportXML(outFolder);
-            _notification.Notify(new(
+            _notification.Notify(new Notification(
                 ToastVariant.Success,
-                Message: string.Format(I18n.Current.GetString("SaveXMLSuccess"), Path.Join(outDir, "banner_icons.xml")),
-                Action: new(
+                string.Format(I18n.Current.GetString("SaveXMLSuccess"), Path.Join(outDir, "banner_icons.xml")),
+                Action: new NotificationAction(
                     I18n.Current.GetString("ButtonOpenFolder/Content"),
                     (s, e) => FileHelpers.OpenFolderInExplorer(outDir))));
             return Task.CompletedTask;
@@ -114,9 +124,10 @@ public sealed partial class BannerIconsPage : Page {
         try {
             outFolder = await AppServices.Get<IFileDialogService>().OpenFolder(GUID_EXPORT_DIALOG);
         } catch (NotFoundException ex) {
-            _notification.Notify(new(ToastVariant.Error,
-                                     string.Format(I18n.Current.GetString("TargetPathNotFound"), ex.FaultPath)));
+            _notification.Notify(new Notification(ToastVariant.Error,
+                string.Format(I18n.Current.GetString("TargetPathNotFound"), ex.FaultPath)));
         }
+
         return outFolder;
     }
 
@@ -130,10 +141,10 @@ public sealed partial class BannerIconsPage : Page {
             ViewModel.IsExporting = true;
             await work();
         } catch (Exception ex) {
-            AppServices.Get<INotificationService>().Notify(new(
+            AppServices.Get<INotificationService>().Notify(new Notification(
                 ToastVariant.Error,
-                Message: ex.Message,
-                Title: string.Format(
+                ex.Message,
+                string.Format(
                     I18n.Current.GetString("ErrorWhen"),
                     I18n.Current.GetString("OperationExporting"))));
         } finally {
@@ -159,6 +170,7 @@ public sealed partial class BannerIconsPage : Page {
         if (result != ContentDialogResult.Primary) {
             return;
         }
+
         var selectedIndex = listViewGroups.SelectedIndex;
         ViewModel.DeleteGroup(SelectedGroup);
         if (listViewGroups.Items.Count > 0) {
@@ -177,10 +189,12 @@ public sealed partial class BannerIconsPage : Page {
     }
 
     private async void btnOpenProject_Click(object sender, RoutedEventArgs e) {
-        StorageFile openedFile = await _fileDialog.OpenFile(GUID_PROJECT_DIALOG, new[] { CommonFileTypes.BannerIconsProject });
+        StorageFile openedFile =
+            await _fileDialog.OpenFile(GUID_PROJECT_DIALOG, new[] { CommonFileTypes.BannerIconsProject });
         if (openedFile is null) {
             return;
         }
+
         _loading.Show(I18n.Current.GetString("PleaseWait"));
         await _project.Load(openedFile);
         listViewGroups.SelectedItem = ViewModel.Groups.FirstOrDefault();
@@ -197,13 +211,15 @@ public sealed partial class BannerIconsPage : Page {
         var filePath = _project.CurrentFile?.Path;
         if (force || string.IsNullOrEmpty(filePath)) {
             filePath = _fileDialog.SaveFile(GUID_PROJECT_DIALOG,
-                                            new[] { CommonFileTypes.BannerIconsProject },
-                                            "banner_icons",
-                                            filePath);
+                new[] { CommonFileTypes.BannerIconsProject },
+                "banner_icons",
+                filePath);
         }
+
         if (string.IsNullOrEmpty(filePath)) {
             return;
         }
+
         _loading.Show(I18n.Current.GetString("PleaseWait"));
         await _project.Save(filePath);
         // wait for the UI to update

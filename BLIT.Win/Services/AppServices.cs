@@ -9,6 +9,7 @@ namespace BLIT.Win.Services;
 
 public class AppServices {
     public static IContainer Container { get; private set; }
+
     public static IServiceProvider Configure() {
         var builder = new ContainerBuilder();
         // Singleton services
@@ -19,7 +20,7 @@ public class AppServices {
 
         // Singleton components
         builder.RegisterType<GlobalSettings>().SingleInstance();
-        builder.Register((ctx) => BannerSettings.Load()).SingleInstance();
+        builder.Register(ctx => BannerSettings.Load()).SingleInstance();
         RegisterProjectService<BannerIconsProject>(builder);
 
         // Scoped services
@@ -43,6 +44,6 @@ public class AppServices {
         builder.RegisterType<ProjectService<T>>()
             .As<IProjectService<T>>()
             .SingleInstance()
-            .OnActivated(async (e) => await e.Instance.NewProject());
+            .OnActivated(async e => await e.Instance.NewProject());
     }
 }

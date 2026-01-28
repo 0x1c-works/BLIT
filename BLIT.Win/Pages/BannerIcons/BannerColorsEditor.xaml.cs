@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CP = CommunityToolkit.WinUI.UI.Controls.ColorPicker;
+
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -18,6 +19,14 @@ namespace BLIT.Win.Pages.BannerIcons;
 
 public sealed partial class BannerColorsEditor : UserControl {
     private const int TITLE_MAX_COUNT = 3;
+
+    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        nameof(ViewModel), typeof(BannerIconsProject), typeof(BannerColorsEditor), new PropertyMetadata(null));
+
+    public BannerColorsEditor() {
+        InitializeComponent();
+    }
+
     public BannerIconsProject ViewModel {
         get => GetValue(ViewModelProperty) as BannerIconsProject;
         set {
@@ -25,34 +34,30 @@ public sealed partial class BannerColorsEditor : UserControl {
             Bindings.Update();
         }
     }
-    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
-        nameof(ViewModel), typeof(BannerIconsProject), typeof(BannerColorsEditor), new PropertyMetadata(null));
 
-    public IEnumerable<BannerColorEntry> SelectedColors { get => listViewColors.SelectedItems.Cast<BannerColorEntry>(); }
-    public BannerColorEntry FirstSelectedColor { get => SelectedColors.FirstOrDefault(); }
-    public bool HasSelectedColor { get => SelectedColors.Any(); }
-    public bool IsSingleSelected { get => listViewColors.SelectedItems.Count == 1; }
-    public bool IsMultipleSelection { get => SelectedColors.Count() > 1; }
+    public IEnumerable<BannerColorEntry> SelectedColors => listViewColors.SelectedItems.Cast<BannerColorEntry>();
+    public BannerColorEntry FirstSelectedColor => SelectedColors.FirstOrDefault();
+    public bool HasSelectedColor => SelectedColors.Any();
+    public bool IsSingleSelected => listViewColors.SelectedItems.Count == 1;
+    public bool IsMultipleSelection => SelectedColors.Count() > 1;
+
     public bool IsForSigil {
         get => GetMultiSelectionFlag(c => c.IsForSigil);
         set => SetMultiSelectionFlag((c, v) => c.IsForSigil = v, value);
     }
+
     public bool IsForBackground {
         get => GetMultiSelectionFlag(c => c.IsForBackground);
         set => SetMultiSelectionFlag((c, v) => c.IsForBackground = v, value);
     }
-    public string SelectedColorIDs {
-        get => string.Join(", ", SelectedColors.Take(TITLE_MAX_COUNT).Select(c => c.ID));
-    }
+
+    public string SelectedColorIDs => string.Join(", ", SelectedColors.Take(TITLE_MAX_COUNT).Select(c => c.ID));
+
     public string MoreColorsText {
         get {
             var moreCount = SelectedColors.Count() - TITLE_MAX_COUNT;
             return moreCount > 0 ? string.Format(I18n.Current.GetString("AndMore"), moreCount) : string.Empty;
         }
-    }
-
-    public BannerColorsEditor() {
-        InitializeComponent();
     }
 
     private async void btnChangeColor_Click(object sender, RoutedEventArgs e) {
@@ -66,7 +71,7 @@ public sealed partial class BannerColorsEditor : UserControl {
         dialog.PrimaryButtonText = I18n.Current.GetString("ButtonOK/Content");
         dialog.SecondaryButtonText = I18n.Current.GetString("ButtonCancel/Content");
         dialog.DefaultButton = ContentDialogButton.Primary;
-        var colorPicker = new CP() { Color = vm.Color };
+        var colorPicker = new CP { Color = vm.Color };
         dialog.Content = colorPicker;
         ContentDialogResult result = await dialog.ShowAsync().AsTask();
         if (result == ContentDialogResult.Primary) {
@@ -93,9 +98,9 @@ public sealed partial class BannerColorsEditor : UserControl {
         }
 
         if (await AppServices.Get<IConfirmDialogService>().ShowDanger(
-            this,
-            I18n.Current.GetString("DialogDeleteColor/Title"),
-            string.Format(I18n.Current.GetString("DialogDeleteColor/Content"), SelectedColors.Count()))
+                this,
+                I18n.Current.GetString("DialogDeleteColor/Title"),
+                string.Format(I18n.Current.GetString("DialogDeleteColor/Content"), SelectedColors.Count()))
             != ContentDialogResult.Primary) {
             return;
         }
@@ -111,7 +116,10 @@ public sealed partial class BannerColorsEditor : UserControl {
     }
 
     private bool GetMultiSelectionFlag(Func<BannerColorEntry, bool> getter) {
-        if (!HasSelectedColor) return false;
+        if (!HasSelectedColor) {
+            return false;
+        }
+
         return SelectedColors.All(c => getter?.Invoke(c) ?? false);
     }
 

@@ -1,9 +1,7 @@
 using Autofac;
 using CommunityToolkit.Mvvm.ComponentModel;
-using System;
 using System.ComponentModel;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace BLIT.WPF.Services;
 
@@ -27,17 +25,26 @@ public interface IProject : INotifyPropertyChanged, IStreamReadWrite {
 }
 
 internal partial class ProjectService<T> : ObservableObject, IProjectService<T>, IDisposable where T : IProject {
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(Name))]
+    private string? _currentFile;
+
     private ILifetimeScope? _scope;
     private T? _vm;
+
+    #region IDisposable Members
+
+    public void Dispose() {
+        _scope?.Dispose();
+    }
+
+    #endregion
+
+    #region IProjectService<T> Members
 
     public T? Current {
         get => _vm;
         set => SetProperty(ref _vm, value);
     }
-
-    [ObservableProperty] 
-    [NotifyPropertyChangedFor(nameof(Name))]
-    private string? _currentFile;
 
     public string Name {
         get {
@@ -49,7 +56,7 @@ internal partial class ProjectService<T> : ObservableObject, IProjectService<T>,
     public async Task<T> NewProject(Func<T, Task>? onLoad = null) {
         Dispose();
         _scope = AppServices.Container.BeginLifetimeScope(typeof(T).Name);
-        T vm = _scope.Resolve<T>();
+        var vm = _scope.Resolve<T>();
         if (onLoad != null) {
             await onLoad(vm);
         }
@@ -76,7 +83,5 @@ internal partial class ProjectService<T> : ObservableObject, IProjectService<T>,
         CurrentFile = file;
     }
 
-    public void Dispose() {
-        _scope?.Dispose();
-    }
+    #endregion
 }

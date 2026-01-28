@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BLIT.Banner\BLIT.Banner.csproj" />
-    <ProjectReference Include="..\BLIT.Sprite\BLIT.Sprite.csproj" />
+    <ProjectReference Include="..\BLIT.Banner\BLIT.Banner.csproj"/>
+    <ProjectReference Include="..\BLIT.Sprite\BLIT.Sprite.csproj"/>
   </ItemGroup>
 
 </Project>

@@ -1,23 +1,22 @@
-using System;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace BLIT.WPF.Helpers;
 
 public class PathToOptimizedBitmapImageConverter : IValueConverter {
+    #region IValueConverter Members
+
     /// <summary>
-    /// Converts a file path to an optimized BitmapImage with specified decode pixel width.
-    /// Parameter should be the DecodePixelWidth value (e.g., "128", "256", "512")
+    ///     Converts a file path to an optimized BitmapImage with specified decode pixel width.
+    ///     Parameter should be the DecodePixelWidth value (e.g., "128", "256", "512")
     /// </summary>
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) {
         if (value is not string path || string.IsNullOrEmpty(path)) {
             return null!;
         }
 
-        if (!int.TryParse(parameter?.ToString() ?? "128", out int decodePixelWidth)) {
+        if (!int.TryParse(parameter?.ToString() ?? "128", out var decodePixelWidth)) {
             decodePixelWidth = 128;
         }
 
@@ -39,19 +38,23 @@ public class PathToOptimizedBitmapImageConverter : IValueConverter {
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) {
         throw new NotImplementedException();
     }
+
+    #endregion
 }
 
 /// <summary>
-/// Async image loader - Returns null immediately, loads image in background
-/// Used with MultiBinding to track loading state
+///     Async image loader - Returns null immediately, loads image in background
+///     Used with MultiBinding to track loading state
 /// </summary>
 public class AsyncPathToBitmapImageConverter : IValueConverter {
+    #region IValueConverter Members
+
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) {
         if (value is not string path || string.IsNullOrEmpty(path)) {
             return null!;
         }
 
-        if (!int.TryParse(parameter?.ToString() ?? "128", out int decodePixelWidth)) {
+        if (!int.TryParse(parameter?.ToString() ?? "128", out var decodePixelWidth)) {
             decodePixelWidth = 128;
         }
 
@@ -64,6 +67,8 @@ public class AsyncPathToBitmapImageConverter : IValueConverter {
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) {
         throw new NotImplementedException();
     }
+
+    #endregion
 
     private static void LoadImageAsync(string path, int decodePixelWidth, string bindingPath) {
         // Load in background thread
@@ -86,9 +91,11 @@ public class AsyncPathToBitmapImageConverter : IValueConverter {
 }
 
 /// <summary>
-/// Checks if a path is empty to show/hide loading indicator
+///     Checks if a path is empty to show/hide loading indicator
 /// </summary>
 public class StringIsNullOrEmptyConverter : IValueConverter {
+    #region IValueConverter Members
+
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) {
         return string.IsNullOrEmpty(value as string);
     }
@@ -96,4 +103,6 @@ public class StringIsNullOrEmptyConverter : IValueConverter {
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) {
         throw new NotImplementedException();
     }
+
+    #endregion
 }

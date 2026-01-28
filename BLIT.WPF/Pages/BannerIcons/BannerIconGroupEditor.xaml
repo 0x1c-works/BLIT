@@ -14,12 +14,10 @@
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-    mc:Ignorable="d"
-    >
+    mc:Ignorable="d">
     <UserControl.Resources>
         <!--  Converters  -->
         <helpers:PathToOptimizedBitmapImageConverter x:Key="PathToOptimizedBitmapImageConverter" />
-        <helpers:AsyncPathToBitmapImageConverter x:Key="AsyncPathToBitmapImageConverter" />
         <helpers:StringIsNullOrEmptyConverter x:Key="StringIsNullOrEmptyConverter" />
 
         <!--  Loading Indicator Style  -->
@@ -47,7 +45,8 @@
                 <Rectangle Fill="{StaticResource CheckerboardBrush}" />
 
                 <!--  Loading Indicator (shown when path is empty or loading)  -->
-                <TextBlock Style="{StaticResource LoadingSpinnerStyle}" Visibility="{Binding TexturePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
+                <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
+                           Visibility="{Binding TexturePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
 
                 <!--  Icon Image - Async Load  -->
                 <Image
@@ -101,7 +100,8 @@
         <!--  High-Performance Drag Adorner Template for Icon List  -->
         <!--  Shows small thumbnail (64x64) for fast rendering during drag  -->
         <DataTemplate x:Key="IconDragAdornerTemplate" DataType="{x:Type vm:BannerIconEntry}">
-            <Border Width="64" Height="64" Background="#CC000000" CornerRadius="4" BorderBrush="#FFFF9800" BorderThickness="2">
+            <Border Width="64" Height="64" Background="#CC000000" CornerRadius="4" BorderBrush="#FFFF9800"
+                    BorderThickness="2">
                 <Grid>
                     <!--  Checkerboard Background  -->
                     <Rectangle Fill="{StaticResource CheckerboardBrush}" Opacity="0.3" />
@@ -233,16 +233,19 @@
                         VerticalAlignment="Center"
                         Foreground="Gray"
                         Visibility="{Binding DataContext.HasSelectedIcons, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
-                         <Run Text="{Binding DataContext.SelectedGroup.GroupName, RelativeSource={RelativeSource AncestorType=Page}, Mode=OneWay}" />
-                         <Run Text=" / #" />
-                         <Run Text="{Binding DataContext.FirstSelectedIcon.ID, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}" />
+                        <Run
+                            Text="{Binding DataContext.SelectedGroup.GroupName, RelativeSource={RelativeSource AncestorType=Page}, Mode=OneWay}" />
+                        <Run Text=" / #" />
+                        <Run
+                            Text="{Binding DataContext.FirstSelectedIcon.ID, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}" />
                     </TextBlock>
                 </StackPanel>
             </Border>
 
             <!--  Details ScrollViewer  -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                <Grid Margin="16" IsEnabled="{Binding DataContext.HasSelectedIcons, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                <Grid Margin="16"
+                      IsEnabled="{Binding DataContext.HasSelectedIcons, RelativeSource={RelativeSource AncestorType=UserControl}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="110" />
                         <ColumnDefinition Width="*" />
@@ -302,7 +305,8 @@
                             <Rectangle Fill="{StaticResource CheckerboardBrush}" />
 
                             <!--  Loading Indicator  -->
-                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}" Visibility="{Binding DataContext.FirstSelectedIcon.SpritePath, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
+                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
+                                       Visibility="{Binding DataContext.FirstSelectedIcon.SpritePath, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
 
                             <!--  Sprite Preview Image - Async Load  -->
                             <Image
@@ -362,7 +366,8 @@
                             <Rectangle Fill="{StaticResource CheckerboardBrush}" />
 
                             <!--  Loading Indicator  -->
-                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}" Visibility="{Binding DataContext.FirstSelectedIcon.TexturePath, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
+                            <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
+                                       Visibility="{Binding DataContext.FirstSelectedIcon.TexturePath, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
 
                             <!--  Texture Preview Image - Async Load  -->
                             <Image

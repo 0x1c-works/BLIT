@@ -28,14 +28,25 @@ public interface IProject : INotifyPropertyChanged, IStreamReadWrite {
 }
 
 internal class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable where T : IProject {
+    private StorageFile _file;
     private ILifetimeScope _scope;
     private T _vm;
+
+    #region IDisposable Members
+
+    public void Dispose() {
+        _scope?.Dispose();
+    }
+
+    #endregion
+
+    #region IProjectService<T> Members
+
     public T Current {
         get => _vm;
         set => SetProperty(ref _vm, value);
     }
 
-    private StorageFile _file;
     public StorageFile CurrentFile {
         get => _file;
         private set {
@@ -43,6 +54,7 @@ internal class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable
             OnPropertyChanged(nameof(Name));
         }
     }
+
     public string Name {
         get {
             var path = CurrentFile?.Path;
@@ -53,26 +65,27 @@ internal class ProjectService<T> : BindableBase, IProjectService<T>, IDisposable
     public async Task<T> NewProject(Func<T, Task> onLoad = null) {
         Dispose();
         _scope = AppServices.Container.BeginLifetimeScope(typeof(T).Name);
-        T vm = _scope.Resolve<T>();
+        var vm = _scope.Resolve<T>();
         if (onLoad != null) {
             await onLoad(vm);
         }
+
         Current = vm;
         vm.AfterLoaded();
         return Current;
     }
+
     public async Task Save(string filePath) {
         using Stream s = File.OpenWrite(filePath);
         await Current.Write(s);
         CurrentFile = await StorageFile.GetFileFromPathAsync(filePath);
     }
+
     public async Task Load(StorageFile file) {
         using Stream s = await file.OpenStreamForReadAsync();
         await NewProject(vm => vm.Read(s));
         CurrentFile = file;
     }
 
-    public void Dispose() {
-        _scope?.Dispose();
-    }
+    #endregion
 }

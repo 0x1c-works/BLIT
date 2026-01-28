@@ -8,11 +8,15 @@ public interface ISettingsService {
 }
 
 public class SettingsService : ISettingsService {
-    public GlobalSettings Global { get; }
-    public BannerSettings Banner { get; }
-
     public SettingsService(GlobalSettings global, BannerSettings banner) {
         Global = global;
         Banner = banner;
     }
+
+    #region ISettingsService Members
+
+    public GlobalSettings Global { get; }
+    public BannerSettings Banner { get; }
+
+    #endregion
 }

@@ -12,17 +12,17 @@ using Microsoft.UI.Xaml.Input;
 namespace BLIT.Win.Pages.Settings;
 
 public sealed partial class BannerSpriteScanFoldersEditor : UserControl {
-    public BannerSettingsViewModel ViewModel {
-        get => GetValue(ViewModelProperty) as BannerSettingsViewModel;
-        set => SetValue(ViewModelProperty, value);
-    }
-
     public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
         nameof(ViewModel), typeof(BannerSettingsViewModel), typeof(BannerSpriteScanFoldersEditor),
         new PropertyMetadata(null));
 
     public BannerSpriteScanFoldersEditor() {
         InitializeComponent();
+    }
+
+    public BannerSettingsViewModel ViewModel {
+        get => GetValue(ViewModelProperty) as BannerSettingsViewModel;
+        set => SetValue(ViewModelProperty, value);
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e) {
@@ -39,7 +39,8 @@ public sealed partial class BannerSpriteScanFoldersEditor : UserControl {
     }
 
     private void listViewBannerSrpiteScanFolders_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-        ViewModel.SelectedSpriteScanFolderIndex = e.AddedItems.Count == 0 ? -1 : listViewBannerSrpiteScanFolders.SelectedIndex;
+        ViewModel.SelectedSpriteScanFolderIndex =
+            e.AddedItems.Count == 0 ? -1 : listViewBannerSrpiteScanFolders.SelectedIndex;
     }
 
     private void listViewBannerSrpiteScanFolders_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e) {

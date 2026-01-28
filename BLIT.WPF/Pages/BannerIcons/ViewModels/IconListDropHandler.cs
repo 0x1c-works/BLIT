@@ -6,10 +6,12 @@ using System.Windows;
 namespace BLIT.WPF.Pages.BannerIcons.ViewModels;
 
 /// <summary>
-/// Drag and drop handler for icon list (within same group)
-/// Supports reordering icons by dragging within the list
+///     Drag and drop handler for icon list (within same group)
+///     Supports reordering icons by dragging within the list
 /// </summary>
 public class IconListDropHandler : IDropTarget {
+    #region IDropTarget Members
+
     public void DragOver(IDropInfo dropInfo) {
         // Only accept drops from BannerIconEntry within the same list
         if (dropInfo.Data is not BannerIconEntry sourceIcon) {
@@ -25,7 +27,7 @@ public class IconListDropHandler : IDropTarget {
 
         // Allow move operation
         dropInfo.Effects = DragDropEffects.Move;
-        
+
         // Show insert position indicator
         dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
     }
@@ -44,8 +46,8 @@ public class IconListDropHandler : IDropTarget {
             return;
         }
 
-        int sourceIndex = icons.IndexOf(sourceIcon);
-        int targetIndex = icons.IndexOf(targetIcon);
+        var sourceIndex = icons.IndexOf(sourceIcon);
+        var targetIndex = icons.IndexOf(targetIcon);
 
         // Don't move if source and target are the same
         if (sourceIndex == targetIndex) {
@@ -67,4 +69,6 @@ public class IconListDropHandler : IDropTarget {
         // through BannerGroupEntry._icons_CollectionChanged
         // No need to call it manually here
     }
+
+    #endregion
 }

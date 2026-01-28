@@ -1,54 +1,60 @@
-using System;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using Wpf.Ui.Appearance;
 
 namespace BLIT.WPF.Helpers;
 
 /// <summary>
-/// WPF theme management helper using WPF UI library
+///     WPF theme management helper using WPF UI library
 /// </summary>
 public static class ThemeHelper {
-    private const string THEME_PREFERENCE_KEY = "theme";
-    
+    #region Theme enum
+
     public enum Theme {
         Light,
         Dark,
         HighContrast
     }
 
+    #endregion
+
+    private const string THEME_PREFERENCE_KEY = "theme";
+
     private static Window? _currentWindow;
-    private static Theme _currentTheme = Theme.Dark;
 
     /// <summary>
-    /// Gets the current theme
+    ///     Gets the current theme
     /// </summary>
-    public static Theme CurrentTheme => _currentTheme;
+    public static Theme CurrentTheme { get; private set; } = Theme.Dark;
 
     /// <summary>
-    /// Checks if current theme is dark
+    ///     Checks if current theme is dark
     /// </summary>
-    public static bool IsDarkTheme => _currentTheme == Theme.Dark;
+    public static bool IsDarkTheme => CurrentTheme == Theme.Dark;
 
     public static void OnAppStart() {
-        _currentTheme = GetSavedTheme();
+        CurrentTheme = GetSavedTheme();
     }
 
     public static void Initialize(Window window) {
         _currentWindow = window;
-        ApplyTheme(_currentTheme);
+        ApplyTheme(CurrentTheme);
     }
 
     public static void SetTheme(Theme theme) {
-        _currentTheme = theme;
+        CurrentTheme = theme;
         SaveTheme(theme);
         ApplyTheme(theme);
     }
 
     private static void ApplyTheme(Theme theme) {
-        if (Application.Current == null) return;
+        if (Application.Current == null) {
+            return;
+        }
 
         // Convert to WPF UI ApplicationTheme
-        var appTheme = theme switch {
+        ApplicationTheme appTheme = theme switch {
             Theme.Light => ApplicationTheme.Light,
             Theme.Dark => ApplicationTheme.Dark,
             Theme.HighContrast => ApplicationTheme.HighContrast,
@@ -56,32 +62,34 @@ public static class ThemeHelper {
         };
 
         ApplicationThemeManager.Apply(appTheme);
-        System.Diagnostics.Debug.WriteLine($"Theme changed to: {theme}");
+        Debug.WriteLine($"Theme changed to: {theme}");
     }
 
     private static Theme GetSavedTheme() {
         try {
             var settingsPath = GetSettingsFilePath();
-            if (System.IO.File.Exists(settingsPath)) {
-                var themeStr = System.IO.File.ReadAllText(settingsPath);
-                if (Enum.TryParse<Theme>(themeStr, out var theme)) {
+            if (File.Exists(settingsPath)) {
+                var themeStr = File.ReadAllText(settingsPath);
+                if (Enum.TryParse<Theme>(themeStr, out Theme theme)) {
                     return theme;
                 }
             }
         } catch {
             // Ignore errors
         }
+
         return Theme.Dark;
     }
 
     private static void SaveTheme(Theme theme) {
         try {
             var settingsPath = GetSettingsFilePath();
-            var dir = System.IO.Path.GetDirectoryName(settingsPath);
+            var dir = Path.GetDirectoryName(settingsPath);
             if (!string.IsNullOrEmpty(dir)) {
-                System.IO.Directory.CreateDirectory(dir);
+                Directory.CreateDirectory(dir);
             }
-            System.IO.File.WriteAllText(settingsPath, theme.ToString());
+
+            File.WriteAllText(settingsPath, theme.ToString());
         } catch {
             // Ignore errors
         }
@@ -89,6 +97,6 @@ public static class ThemeHelper {
 
     private static string GetSettingsFilePath() {
         var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        return System.IO.Path.Combine(localAppData, "BLIT.WPF", THEME_PREFERENCE_KEY);
+        return Path.Combine(localAppData, "BLIT.WPF", THEME_PREFERENCE_KEY);
     }
 }

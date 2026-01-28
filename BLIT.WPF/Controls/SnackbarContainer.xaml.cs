@@ -1,11 +1,10 @@
-using System.Windows.Controls;
 using BLIT.WPF.Services;
-using Wpf.Ui;
+using System.Windows.Controls;
 
 namespace BLIT.WPF.Controls;
 
 /// <summary>
-/// Snackbar container that sets up the SnackbarPresenter for the SnackbarService.
+///     Snackbar container that sets up the SnackbarPresenter for the SnackbarService.
 /// </summary>
 public partial class SnackbarContainer : UserControl {
     public SnackbarContainer() {

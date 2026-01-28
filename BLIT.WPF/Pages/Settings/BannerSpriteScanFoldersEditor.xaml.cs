@@ -1,8 +1,7 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-using BLIT.WPF.Services;
 using BLIT.WPF.Helpers;
+using BLIT.WPF.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,28 +9,15 @@ using System.Windows.Input;
 namespace BLIT.WPF.Pages.Settings;
 
 /// <summary>
-/// Represents a single scan folder entry with edit state management
+///     Represents a single scan folder entry with edit state management
 /// </summary>
 public partial class ScanFolderItem : ObservableObject {
-    private string _relativePath = "";
-    public string RelativePath {
-        get => _relativePath;
-        set => SetProperty(ref _relativePath, value);
-    }
+    private string _errorMessage = "";
 
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsViewing))]
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(IsViewing))]
     private bool _isEditing;
 
-    public bool IsViewing => !IsEditing;
-
-    private string _errorMessage = "";
-    public string ErrorMessage {
-        get => _errorMessage;
-        set => SetProperty(ref _errorMessage, value);
-    }
-
-    public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
+    private string _relativePath = "";
 
     public ScanFolderItem() {
         IsEditing = true; // New items start in edit mode
@@ -41,15 +27,33 @@ public partial class ScanFolderItem : ObservableObject {
         RelativePath = path;
         IsEditing = false;
     }
+
+    public string RelativePath {
+        get => _relativePath;
+        set => SetProperty(ref _relativePath, value);
+    }
+
+    public bool IsViewing => !IsEditing;
+
+    public string ErrorMessage {
+        get => _errorMessage;
+        set => SetProperty(ref _errorMessage, value);
+    }
+
+    public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
 }
 
 /// <summary>
-/// Editor control for managing banner sprite scan folders
+///     Editor control for managing banner sprite scan folders
 /// </summary>
 public partial class BannerSpriteScanFoldersEditor : UserControl {
+    private readonly ISettingsService? _settings = AppServices.Get<ISettingsService>();
     private ObservableCollection<ScanFolderItem>? _folders;
     private ScanFolderItem? _previousPathBackup;
-    private readonly ISettingsService? _settings = AppServices.Get<ISettingsService>();
+
+    public BannerSpriteScanFoldersEditor() {
+        InitializeComponent();
+    }
 
     public ObservableCollection<ScanFolderItem>? ItemsSource {
         get => _folders;
@@ -61,12 +65,8 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
         }
     }
 
-    public BannerSpriteScanFoldersEditor() {
-        InitializeComponent();
-    }
-
     /// <summary>
-    /// Load folders from settings
+    ///     Load folders from settings
     /// </summary>
     public void LoadFolders(IEnumerable<string> folders) {
         _folders = new ObservableCollection<ScanFolderItem>(
@@ -76,7 +76,7 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
     }
 
     /// <summary>
-    /// Validate if a path is a legal relative path
+    ///     Validate if a path is a legal relative path
     /// </summary>
     private bool IsValidRelativePath(string path) {
         if (string.IsNullOrWhiteSpace(path)) {
@@ -96,7 +96,9 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
     }
 
     private void BtnAdd_Click(object sender, RoutedEventArgs e) {
-        if (_folders == null) return;
+        if (_folders == null) {
+            return;
+        }
 
         var newItem = new ScanFolderItem();
         _folders.Add(newItem);
@@ -105,7 +107,9 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
     }
 
     private void BtnEdit_Click(object sender, RoutedEventArgs e) {
-        if (ListViewScanFolders.SelectedItem is not ScanFolderItem item) return;
+        if (ListViewScanFolders.SelectedItem is not ScanFolderItem item) {
+            return;
+        }
 
         _previousPathBackup = new ScanFolderItem(item.RelativePath);
         item.IsEditing = true;
@@ -125,7 +129,9 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
     }
 
     private void BtnAccept_Click(object sender, RoutedEventArgs e) {
-        if (ListViewScanFolders.SelectedItem is not ScanFolderItem item) return;
+        if (ListViewScanFolders.SelectedItem is not ScanFolderItem item) {
+            return;
+        }
 
         // Validate the path
         if (!IsValidRelativePath(item.RelativePath)) {
@@ -135,7 +141,7 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
 
         // Check for duplicates (case-insensitive)
         var normalizedPath = item.RelativePath.Replace('\\', '/').ToLower();
-        var isDuplicate = _folders?.Any(f => 
+        var isDuplicate = _folders?.Any(f =>
             f != item && f.RelativePath.Replace('\\', '/').ToLower() == normalizedPath
         ) ?? false;
 
@@ -151,7 +157,9 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
     }
 
     private void BtnCancel_Click(object sender, RoutedEventArgs e) {
-        if (ListViewScanFolders.SelectedItem is not ScanFolderItem item) return;
+        if (ListViewScanFolders.SelectedItem is not ScanFolderItem item) {
+            return;
+        }
 
         // If it's a new item with empty path, remove it
         if (string.IsNullOrEmpty(_previousPathBackup?.RelativePath)) {
@@ -179,18 +187,20 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
     }
 
     private void ListViewScanFolders_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-        bool hasSelection = ListViewScanFolders.SelectedItem != null;
+        var hasSelection = ListViewScanFolders.SelectedItem != null;
         BtnEdit.IsEnabled = hasSelection;
         BtnDelete.IsEnabled = hasSelection;
     }
 
     /// <summary>
-    /// Save folders back to settings
+    ///     Save folders back to settings
     /// </summary>
     private void SaveFolders() {
-        if (_settings?.Banner == null || _folders == null) return;
+        if (_settings?.Banner == null || _folders == null) {
+            return;
+        }
 
-        var paths = _folders
+        List<string> paths = _folders
             .Where(f => !f.IsEditing && !string.IsNullOrWhiteSpace(f.RelativePath))
             .Select(f => f.RelativePath)
             .ToList();

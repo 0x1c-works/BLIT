@@ -2,16 +2,12 @@ using BLIT.WPF.Helpers;
 using BLIT.WPF.Services;
 using Sentry.Protocol;
 using Serilog;
-using System.Globalization;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace BLIT.WPF;
 
 public partial class App : Application {
-    public new static App? Current => Application.Current as App;
-    //public new Window? MainWindow { get; private set; }
-    public IServiceProvider? Services { get; private set; }
-
     public App() {
         // Initialize Sentry
         SentrySdk.Init(o => {
@@ -31,7 +27,12 @@ public partial class App : Application {
         Log.Information("BLIT.WPF started.");
     }
 
-    private void OnUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e) {
+    public static new App? Current => Application.Current as App;
+
+    //public new Window? MainWindow { get; private set; }
+    public IServiceProvider? Services { get; private set; }
+
+    private void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) {
         Exception exception = e.Exception;
         if (exception != null) {
             exception.Data[Mechanism.HandledKey] = false;
@@ -51,4 +52,3 @@ public partial class App : Application {
         //MainWindow.Show();
     }
 }
-

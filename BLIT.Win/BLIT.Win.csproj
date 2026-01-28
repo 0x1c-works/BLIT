@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
@@ -38,45 +38,45 @@
   <!-- Just ensure AppxPackageSigningEnabled=True (already set above) -->
 
   <ItemGroup>
-    <Compile Remove="dist\**" />
-    <EmbeddedResource Remove="dist\**" />
-    <None Remove="dist\**" />
-    <Page Remove="dist\**" />
+    <Compile Remove="dist\**"/>
+    <EmbeddedResource Remove="dist\**"/>
+    <None Remove="dist\**"/>
+    <Page Remove="dist\**"/>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\Square150x150Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <Content Include="Assets\empty-asset.png" />
-    <Content Include="Assets\transparent-bg.png" />
+    <Content Include="Assets\SplashScreen.scale-200.png"/>
+    <Content Include="Assets\LockScreenLogo.scale-200.png"/>
+    <Content Include="Assets\Square150x150Logo.scale-200.png"/>
+    <Content Include="Assets\Square44x44Logo.scale-200.png"/>
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png"/>
+    <Content Include="Assets\StoreLogo.png"/>
+    <Content Include="Assets\Wide310x150Logo.scale-200.png"/>
+    <Content Include="Assets\empty-asset.png"/>
+    <Content Include="Assets\transparent-bg.png"/>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="8.0.0" />
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="9.0.0" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
-    <PackageReference Include="MessagePack" Version="2.5.140" />
+    <PackageReference Include="Autofac" Version="8.0.0"/>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="9.0.0"/>
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2"/>
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2"/>
+    <PackageReference Include="MessagePack" Version="2.5.140"/>
     <PackageReference Include="MessagePackAnalyzer" Version="2.5.140">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
-    <PackageReference Include="Sentry" Version="6.0.0" />
-    <PackageReference Include="Sentry.Serilog" Version="6.0.0" />
-    <PackageReference Include="Serilog" Version="4.3.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
-    <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
-    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
-    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.4.17" />
-    <Manifest Include="$(ApplicationManifest)" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000"/>
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428"/>
+    <PackageReference Include="Sentry" Version="6.0.0"/>
+    <PackageReference Include="Sentry.Serilog" Version="6.0.0"/>
+    <PackageReference Include="Serilog" Version="4.3.0"/>
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1"/>
+    <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0"/>
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
+    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.4.17"/>
+    <Manifest Include="$(ApplicationManifest)"/>
   </ItemGroup>
 
   <!-- 
@@ -85,10 +85,10 @@
     package has not yet been restored.
   -->
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-    <ProjectCapability Include="Msix" />
+    <ProjectCapability Include="Msix"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BLIT.Banner\BLIT.Banner.csproj" />
+    <ProjectReference Include="..\BLIT.Banner\BLIT.Banner.csproj"/>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\LoadingOverlay.xaml">
@@ -145,7 +145,7 @@
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
   <ItemGroup>
-    <PRIResource Remove="dist\**" />
+    <PRIResource Remove="dist\**"/>
   </ItemGroup>
 
   <!-- Override test artifacts generation for Store submission -->

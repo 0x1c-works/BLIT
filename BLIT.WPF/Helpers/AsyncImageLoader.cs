@@ -1,24 +1,14 @@
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using System.Threading.Tasks;
 
 namespace BLIT.WPF.Helpers;
 
 /// <summary>
-/// Attached behavior for async image loading with caching
+///     Attached behavior for async image loading with caching
 /// </summary>
 public static class AsyncImageLoader {
-    private static readonly object CacheLock = new object();
-    
-    public static string GetAsyncSource(DependencyObject obj) {
-        return (string)obj.GetValue(AsyncSourceProperty);
-    }
-
-    public static void SetAsyncSource(DependencyObject obj, string value) {
-        obj.SetValue(AsyncSourceProperty, value);
-    }
+    private static readonly object CacheLock = new();
 
     public static readonly DependencyProperty AsyncSourceProperty =
         DependencyProperty.RegisterAttached(
@@ -26,6 +16,21 @@ public static class AsyncImageLoader {
             typeof(string),
             typeof(AsyncImageLoader),
             new PropertyMetadata(null, OnAsyncSourceChanged));
+
+    public static readonly DependencyProperty DecodePixelWidthProperty =
+        DependencyProperty.RegisterAttached(
+            "DecodePixelWidth",
+            typeof(int),
+            typeof(AsyncImageLoader),
+            new PropertyMetadata(128));
+
+    public static string GetAsyncSource(DependencyObject obj) {
+        return (string)obj.GetValue(AsyncSourceProperty);
+    }
+
+    public static void SetAsyncSource(DependencyObject obj, string value) {
+        obj.SetValue(AsyncSourceProperty, value);
+    }
 
     public static int GetDecodePixelWidth(DependencyObject obj) {
         return (int)obj.GetValue(DecodePixelWidthProperty);
@@ -35,18 +40,13 @@ public static class AsyncImageLoader {
         obj.SetValue(DecodePixelWidthProperty, value);
     }
 
-    public static readonly DependencyProperty DecodePixelWidthProperty =
-        DependencyProperty.RegisterAttached(
-            "DecodePixelWidth",
-            typeof(int),
-            typeof(AsyncImageLoader),
-            new PropertyMetadata(128));
-
     private static void OnAsyncSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-        if (d is not Image image) return;
+        if (d is not Image image) {
+            return;
+        }
 
-        string source = (string)e.NewValue;
-        int decodePixelWidth = GetDecodePixelWidth(image);
+        var source = (string)e.NewValue;
+        var decodePixelWidth = GetDecodePixelWidth(image);
 
         if (string.IsNullOrEmpty(source)) {
             image.Source = null;
@@ -72,8 +72,7 @@ public static class AsyncImageLoader {
                 image.Dispatcher.BeginInvoke(() => {
                     image.Source = bitmap;
                 });
-            }
-            catch {
+            } catch {
                 // Silently ignore errors - image stays empty
                 image.Dispatcher.BeginInvoke(() => {
                     image.Source = null;

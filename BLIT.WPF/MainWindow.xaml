@@ -5,7 +5,6 @@
     xmlns:controls="clr-namespace:BLIT.WPF.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
-    xmlns:local="clr-namespace:BLIT.WPF"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:banners="clr-namespace:BLIT.WPF.Pages.BannerIcons"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -35,8 +34,7 @@
             IsPaneToggleVisible="True"
             PaneDisplayMode="Left"
             OpenPaneLength="200"
-            Padding="42,0"
-            >
+            Padding="42,0">
 
             <ui:NavigationView.Resources>
                 <!--  【终极修复】重写 Template，物理移除 ScrollViewer  -->
@@ -59,7 +57,7 @@
                     <Setter Property="VerticalAlignment" Value="Stretch" />
                 </Style>
             </ui:NavigationView.Resources>
-            
+
             <!--  Menu Items  -->
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem
@@ -75,8 +73,8 @@
                     x:Name="NavItem_Settings"
                     Content="{helpers:I18n AppNavMenuSettings.Content}"
                     Icon="{ui:SymbolIcon Settings20}"
-                    Tag="Settings" 
-                    TargetPageType="settings:SettingsPage"  />
+                    Tag="Settings"
+                    TargetPageType="settings:SettingsPage" />
                 <ui:NavigationViewItem
                     x:Name="NavItem_Help"
                     Content="{helpers:I18n AppNavMenuHelp.Content}"
@@ -92,9 +90,9 @@
                 </Grid>
             </ui:NavigationView.ContentOverlay>
         </ui:NavigationView>
-        
+
         <!--  Loading Overlay  -->
-        <controls:LoadingOverlay Grid.Row="1"/>
+        <controls:LoadingOverlay Grid.Row="1" />
 
         <ui:TitleBar
             x:Name="TitleBar"

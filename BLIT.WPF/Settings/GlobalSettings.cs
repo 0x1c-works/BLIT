@@ -1,9 +1,9 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 using BLIT.WPF.Helpers;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace BLIT.WPF.Settings;
 
-public partial class GlobalSettings : ObservableObject {
+public class GlobalSettings : ObservableObject {
     private string? _gameRootFolder;
 
     public string? GameRootFolder {

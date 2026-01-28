@@ -1,5 +1,6 @@
 ﻿using BLIT.Banner;
 using BLIT.Win.Helpers;
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Helpers;
 using MessagePack;
 using Windows.UI;
@@ -7,13 +8,22 @@ using Windows.UI;
 namespace BLIT.Win.Pages.BannerIcons.Models;
 
 public class BannerColorEntry : BindableBase {
+    #region Delegates
+
     public delegate BannerColorEntry Factory(int id);
 
-    private BannerIconsProject _project;
-    private int _id;
+    #endregion
+
+    private readonly BannerIconsProject _project;
     private Color _color = Color.FromArgb(255, 255, 255, 255);
-    private bool _isForSigil = true;
+    private int _id;
     private bool _isForBackground = true;
+    private bool _isForSigil = true;
+
+    public BannerColorEntry(BannerIconsProject project, int id) {
+        _project = project;
+        ID = id;
+    }
 
     public int ID {
         get => _id;
@@ -23,6 +33,7 @@ public class BannerColorEntry : BindableBase {
             OnPropertyChanged(nameof(CanExport));
         }
     }
+
     public Color Color {
         get => _color;
         set {
@@ -30,10 +41,12 @@ public class BannerColorEntry : BindableBase {
             OnPropertyChanged(nameof(CanExport));
         }
     }
+
     public bool IsForSigil {
         get => _isForSigil;
         set => SetProperty(ref _isForSigil, value);
     }
+
     public bool IsForBackground {
         get => _isForBackground;
         set => SetProperty(ref _isForBackground, value);
@@ -41,17 +54,12 @@ public class BannerColorEntry : BindableBase {
 
     public bool CanExport => ID >= 0 && Color.A > 0;
 
-    public BannerColorEntry(BannerIconsProject project, int id) {
-        _project = project;
-        ID = id;
-    }
-
     public BannerColor ToBannerColor() {
         return new BannerColor {
             ID = ID,
             Hex = ColorToHex(Color),
             PlayerCanChooseForSigil = IsForSigil,
-            PlayerCanChooseForBackground = IsForBackground,
+            PlayerCanChooseForBackground = IsForBackground
         };
     }
 
@@ -59,17 +67,64 @@ public class BannerColorEntry : BindableBase {
         return $"0xff{color.R:X2}{color.G:X2}{color.B:X2}";
     }
 
+    public static int Compare(BannerColorEntry x, BannerColorEntry y) {
+        HsvColor hsv1 = x.Color.ToHsv();
+        HsvColor hsv2 = y.Color.ToHsv();
+
+        if (hsv1.H == 360) {
+            hsv1.H = 0;
+        }
+
+        if (hsv2.H == 360) {
+            hsv2.H = 0;
+        }
+
+        var deltaH = hsv1.H - hsv2.H;
+        var deltaS = hsv1.S - hsv2.S;
+        var deltaV = hsv1.V - hsv2.V;
+
+        // for greyscale, sort from white to black
+        if (hsv1.S == 0 && hsv2.S == 0) {
+            return deltaV == 1 ? -1 : deltaV == 0 ? 1 : deltaV > 0 ? -1 : 1;
+        }
+
+        // greyscale always is at the start
+        if (hsv1.S == 0) {
+            return -1;
+        }
+
+        if (hsv2.S == 0) {
+            return 1;
+        }
+
+        // For normal colors, sort by H (inc) > S (desc) > V (desc)
+        if (deltaH != 0) {
+            return deltaH > 0 ? 1 : -1;
+        }
+
+        if (deltaS != 0) {
+            return deltaS > 0 ? -1 : 1;
+        }
+
+        if (deltaV != 0) {
+            return deltaV > 0 ? -1 : 1;
+        }
+
+        return 0;
+    }
+
+    #region Nested type: SaveData
+
     [MessagePackObject]
     public class SaveData {
-        [Key(0)]
-        public int ID;
-        [Key(1)]
-        [MessagePackFormatter(typeof(WinUIColorFormatter))]
+        [Key(1)] [MessagePackFormatter(typeof(WinUIColorFormatter))]
         public Color Color;
-        [Key(2)]
-        public bool IsForSigil;
-        [Key(3)]
-        public bool IsForBackground;
+
+        [Key(0)] public int ID;
+
+        [Key(3)] public bool IsForBackground;
+
+        [Key(2)] public bool IsForSigil;
 
         public SaveData(BannerColorEntry vm) {
             ID = vm.ID;
@@ -77,7 +132,9 @@ public class BannerColorEntry : BindableBase {
             IsForSigil = vm.IsForSigil;
             IsForBackground = vm.IsForBackground;
         }
+
         public SaveData() { }
+
         public BannerColorEntry Load(Factory factory) {
             BannerColorEntry vm = factory(ID);
             vm.Color = Color;
@@ -86,31 +143,6 @@ public class BannerColorEntry : BindableBase {
             return vm;
         }
     }
-    public static int Compare(BannerColorEntry x, BannerColorEntry y) {
-        CommunityToolkit.WinUI.HsvColor hsv1 = x.Color.ToHsv();
-        CommunityToolkit.WinUI.HsvColor hsv2 = y.Color.ToHsv();
 
-        if (hsv1.H == 360) hsv1.H = 0;
-        if (hsv2.H == 360) hsv2.H = 0;
-
-        var deltaH = hsv1.H - hsv2.H;
-        var deltaS = hsv1.S - hsv2.S;
-        var deltaV = hsv1.V - hsv2.V;
-
-        // for greyscale, sort from white to black
-        if (hsv1.S == 0 && hsv2.S == 0) {
-            return deltaV == 1 ? -1 : deltaV == 0 ? 1 : (deltaV > 0 ? -1 : 1);
-        }
-        // greyscale always is at the start
-        if (hsv1.S == 0) return -1;
-        if (hsv2.S == 0) return 1;
-
-        // For normal colors, sort by H (inc) > S (desc) > V (desc)
-        if (deltaH != 0) return deltaH > 0 ? 1 : -1;
-        if (deltaS != 0) return deltaS > 0 ? -1 : 1;
-        if (deltaV != 0) return deltaV > 0 ? -1 : 1;
-
-        return 0;
-    }
+    #endregion
 }
-

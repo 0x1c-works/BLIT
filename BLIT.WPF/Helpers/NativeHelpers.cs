@@ -1,19 +1,18 @@
-using System;
+using Serilog;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
-using Serilog;
 using Vanara.PInvoke;
 
 namespace BLIT.WPF.Helpers;
 
 public static class NativeHelpers {
     public static IntPtr GetHwnd(Window? wnd = null) {
-        var window = wnd ?? Application.Current.MainWindow;
+        Window? window = wnd ?? Application.Current.MainWindow;
         if (window == null) {
             return IntPtr.Zero;
         }
+
         return new WindowInteropHelper(window).Handle;
     }
 
@@ -25,10 +24,11 @@ public static class NativeHelpers {
         if (!IsCurrentThreadSTA()) {
             throw new InvalidOperationException("The current thread must be STA.");
         }
+
         try {
             var hr = (int)Ole32.CoInitialize();
-            return hr < HRESULT.S_OK 
-                ? throw new HRESULTException(hr, "Failed to initialize the COM components") 
+            return hr < HRESULT.S_OK
+                ? throw new HRESULTException(hr, "Failed to initialize the COM components")
                 : func();
         } catch (COMException ex) {
             Log.Error(ex, "COMException during COM operation: {Exception}");
@@ -40,8 +40,9 @@ public static class NativeHelpers {
 }
 
 public class HRESULTException : Exception {
-    public HRESULT HRESULT { get; }
     public HRESULTException(HRESULT hr, string message) : base(message) {
         HRESULT = hr;
     }
+
+    public HRESULT HRESULT { get; }
 }

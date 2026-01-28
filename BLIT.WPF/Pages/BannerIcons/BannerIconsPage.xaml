@@ -9,7 +9,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:BLIT.WPF.Pages.BannerIcons.Models"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:vm="clr-namespace:BLIT.WPF.Pages.BannerIcons.ViewModels"
     Title="BannerIconsPage"
     HorizontalAlignment="Stretch"
     VerticalAlignment="Stretch"
@@ -54,13 +53,13 @@
             BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
             BorderThickness="0,0,0,1">
             <StackPanel Orientation="Horizontal">
-            <TextBlock
-                FontSize="28"
-                FontWeight="SemiBold"
-                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                Text="{helpers:I18n AppNavMenuBanner.Content}" />
-            <TextBlock VerticalAlignment="Bottom" Text="{Binding ProjectName}"
-                       Margin="16,0,0,0" FontSize="24" Foreground="{DynamicResource TextFillColorTertiaryBrush}"/>
+                <TextBlock
+                    FontSize="28"
+                    FontWeight="SemiBold"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Text="{helpers:I18n AppNavMenuBanner.Content}" />
+                <TextBlock VerticalAlignment="Bottom" Text="{Binding ProjectName}"
+                           Margin="16,0,0,0" FontSize="24" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
             </StackPanel>
         </Border>
 
@@ -109,7 +108,7 @@
                                 Margin="0,9,6,0"
                                 FontSize="14"
                                 Text="⚙️" />
-                            <TextBlock 
+                            <TextBlock
                                 Margin="0,9,6,0"
                                 Text="{helpers:I18n LabelTextureResolution.Text}" />
                             <ComboBox
@@ -128,16 +127,16 @@
                 <!--  分隔符  -->
                 <Separator />
                 <!--  导出菜单  -->
-                    <MenuItem
-                        Command="{Binding ExportAllCommand}"
-                        Header="{helpers:I18n AppButtonExportAll.Label}"
-                        Icon="{ui:SymbolIcon ArrowExportUp20}"
-                        ToolTip="{helpers:I18n AppButtonExportAll.Label}" />
-                    <MenuItem
-                        Command="{Binding ExportXMLCommand}"
-                        Header="{helpers:I18n AppButtonExportXML.Label}"
-                        Icon="{ui:SymbolIcon CodeBlock20}"
-                        ToolTip="{helpers:I18n AppButtonExportXML.Label}" />
+                <MenuItem
+                    Command="{Binding ExportAllCommand}"
+                    Header="{helpers:I18n AppButtonExportAll.Label}"
+                    Icon="{ui:SymbolIcon ArrowExportUp20}"
+                    ToolTip="{helpers:I18n AppButtonExportAll.Label}" />
+                <MenuItem
+                    Command="{Binding ExportXMLCommand}"
+                    Header="{helpers:I18n AppButtonExportXML.Label}"
+                    Icon="{ui:SymbolIcon CodeBlock20}"
+                    ToolTip="{helpers:I18n AppButtonExportXML.Label}" />
 
                 <!--  分隔符  -->
                 <Separator />

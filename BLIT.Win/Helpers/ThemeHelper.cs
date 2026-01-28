@@ -5,7 +5,7 @@ using Windows.Storage;
 namespace BLIT.Win.Helpers;
 
 /// <summary>
-/// Modified from https://github.com/microsoft/WinUI-Gallery/blob/main/WinUIGallery/Helper/ThemeHelper.cs
+///     Modified from https://github.com/microsoft/WinUI-Gallery/blob/main/WinUIGallery/Helper/ThemeHelper.cs
 /// </summary>
 public static class ThemeHelper {
     private const string THEME_PREFERENCE_KEY = "theme";
@@ -14,8 +14,8 @@ public static class ThemeHelper {
 #endif
 
     /// <summary>
-    /// Gets the current actual theme of the app based on the requested theme of the
-    /// root element, or if that value is Default, the requested theme of the Application.
+    ///     Gets the current actual theme of the app based on the requested theme of the
+    ///     root element, or if that value is Default, the requested theme of the Application.
     /// </summary>
     public static ElementTheme ActualTheme {
         get {
@@ -30,7 +30,7 @@ public static class ThemeHelper {
     }
 
     /// <summary>
-    /// Gets or sets (with LocalSettings persistence) the RequestedTheme of the root element.
+    ///     Gets or sets (with LocalSettings persistence) the RequestedTheme of the root element.
     /// </summary>
     public static ElementTheme RootTheme {
         get {
@@ -51,6 +51,16 @@ public static class ThemeHelper {
         }
     }
 
+    public static bool IsDarkTheme {
+        get {
+            if (RootTheme == ElementTheme.Default) {
+                return Application.Current.RequestedTheme == ApplicationTheme.Dark;
+            }
+
+            return RootTheme == ElementTheme.Dark;
+        }
+    }
+
     public static void OnAppStart() {
         Application.Current.RequestedTheme = ElementThemeToApplicationTheme(GetSavedTheme());
     }
@@ -61,15 +71,6 @@ public static class ThemeHelper {
         CurrentApplicationWindow = App.Current.MainWindow;
         RootTheme = GetSavedTheme();
 #endif
-    }
-
-    public static bool IsDarkTheme {
-        get {
-            if (RootTheme == ElementTheme.Default) {
-                return Application.Current.RequestedTheme == ApplicationTheme.Dark;
-            }
-            return RootTheme == ElementTheme.Dark;
-        }
     }
 
     private static ElementTheme GetSavedTheme() {

@@ -1,6 +1,3 @@
-using BLIT.WPF.Helpers;
-using System;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace BLIT.WPF.Services;
@@ -18,8 +15,10 @@ public interface IConfirmDialogService {
 }
 
 public class ConfirmDialogService : IConfirmDialogService {
+    #region IConfirmDialogService Members
+
     public Task<ContentDialogResult> Show(string title, string content, string primaryButton, string secondaryButton) {
-        var result = MessageBox.Show(
+        MessageBoxResult result = MessageBox.Show(
             content,
             title,
             MessageBoxButton.YesNo,
@@ -27,11 +26,13 @@ public class ConfirmDialogService : IConfirmDialogService {
             MessageBoxResult.No
         );
 
-        return Task.FromResult(result == MessageBoxResult.Yes ? ContentDialogResult.Primary : ContentDialogResult.Secondary);
+        return Task.FromResult(result == MessageBoxResult.Yes
+            ? ContentDialogResult.Primary
+            : ContentDialogResult.Secondary);
     }
 
     public Task<ContentDialogResult> ShowWarn(string title, string content) {
-        var result = MessageBox.Show(
+        MessageBoxResult result = MessageBox.Show(
             content,
             title,
             MessageBoxButton.OKCancel,
@@ -39,11 +40,13 @@ public class ConfirmDialogService : IConfirmDialogService {
             MessageBoxResult.Cancel
         );
 
-        return Task.FromResult(result == MessageBoxResult.OK ? ContentDialogResult.Primary : ContentDialogResult.Secondary);
+        return Task.FromResult(result == MessageBoxResult.OK
+            ? ContentDialogResult.Primary
+            : ContentDialogResult.Secondary);
     }
 
     public Task<ContentDialogResult> ShowDanger(string title, string content) {
-        var result = MessageBox.Show(
+        MessageBoxResult result = MessageBox.Show(
             content,
             title,
             MessageBoxButton.YesNo,
@@ -51,6 +54,10 @@ public class ConfirmDialogService : IConfirmDialogService {
             MessageBoxResult.No
         );
 
-        return Task.FromResult(result == MessageBoxResult.Yes ? ContentDialogResult.Primary : ContentDialogResult.Secondary);
+        return Task.FromResult(result == MessageBoxResult.Yes
+            ? ContentDialogResult.Primary
+            : ContentDialogResult.Secondary);
     }
+
+    #endregion
 }

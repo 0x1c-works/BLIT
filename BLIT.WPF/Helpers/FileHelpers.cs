@@ -5,15 +5,16 @@ using Vanara.PInvoke;
 namespace BLIT.WPF.Helpers;
 
 /// <summary>
-/// A struct that represents a file type.
-/// Note that the extension should not contain the asterisk (*) or the dot (.).
+///     A struct that represents a file type.
+///     Note that the extension should not contain the asterisk (*) or the dot (.).
 /// </summary>
 /// <param name="DisplayName"></param>
 /// <param name="Extension"></param>
 public record struct FileType(string DisplayName, string Extension) {
     public string Extension { get; init; } = Extension.StartsWith(".") ? Extension[1..] : Extension;
+
     public Shell32.COMDLG_FILTERSPEC ToFilterSpec() {
-        return new Shell32.COMDLG_FILTERSPEC() { pszName = DisplayName, pszSpec = $"*.{Extension}" };
+        return new Shell32.COMDLG_FILTERSPEC { pszName = DisplayName, pszSpec = $"*.{Extension}" };
     }
 }
 
