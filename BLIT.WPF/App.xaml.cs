@@ -2,6 +2,7 @@ using BLIT.WPF.Helpers;
 using BLIT.WPF.Services;
 using Sentry.Protocol;
 using Serilog;
+using System.Globalization;
 using System.Windows;
 
 namespace BLIT.WPF;
@@ -22,8 +23,9 @@ public partial class App : Application {
 
         DispatcherUnhandledException += OnUnhandledException;
 
-        // Initialize logging and services
+        // Initialize logging, theme and language
         ThemeHelper.OnAppStart();
+        I18n.InitializeLanguage();
         Logging.Initialize();
         Services = AppServices.Configure();
         Log.Information("BLIT.WPF started.");
@@ -49,3 +51,4 @@ public partial class App : Application {
         //MainWindow.Show();
     }
 }
+

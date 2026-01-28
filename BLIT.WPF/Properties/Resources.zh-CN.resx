@@ -156,6 +156,9 @@
   <data name="AppNavMenuBanner.Content" xml:space="preserve">
     <value>自定义旗帜</value>
   </data>
+  <data name="AppNavMenuSettings.Content" xml:space="preserve">
+    <value>设置</value>
+  </data>
   <data name="AppNavMenuHelp.Content" xml:space="preserve">
     <value>使用教程</value>
   </data>

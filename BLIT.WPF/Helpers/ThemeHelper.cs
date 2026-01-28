@@ -1,10 +1,11 @@
 using System;
 using System.Windows;
+using Wpf.Ui.Appearance;
 
 namespace BLIT.WPF.Helpers;
 
 /// <summary>
-/// WPF theme management helper
+/// WPF theme management helper using WPF UI library
 /// </summary>
 public static class ThemeHelper {
     private const string THEME_PREFERENCE_KEY = "theme";
@@ -12,7 +13,7 @@ public static class ThemeHelper {
     public enum Theme {
         Light,
         Dark,
-        System
+        HighContrast
     }
 
     private static Window? _currentWindow;
@@ -46,8 +47,15 @@ public static class ThemeHelper {
     private static void ApplyTheme(Theme theme) {
         if (Application.Current == null) return;
 
-        // For now, we'll just log the theme change
-        // You can implement custom theme dictionaries later
+        // Convert to WPF UI ApplicationTheme
+        var appTheme = theme switch {
+            Theme.Light => ApplicationTheme.Light,
+            Theme.Dark => ApplicationTheme.Dark,
+            Theme.HighContrast => ApplicationTheme.HighContrast,
+            _ => ApplicationTheme.Dark
+        };
+
+        ApplicationThemeManager.Apply(appTheme);
         System.Diagnostics.Debug.WriteLine($"Theme changed to: {theme}");
     }
 

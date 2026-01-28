@@ -7,8 +7,9 @@
     xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
     xmlns:local="clr-namespace:BLIT.WPF"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:pages="clr-namespace:BLIT.WPF.Pages.BannerIcons"
+    xmlns:banners="clr-namespace:BLIT.WPF.Pages.BannerIcons"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:settings="clr-namespace:BLIT.WPF.Pages.Settings"
     Title="{helpers:I18n AppTitle.Text}"
     Width="1440"
     Height="720"
@@ -65,11 +66,17 @@
                     Content="{helpers:I18n AppNavMenuBanner.Content}"
                     Icon="{ui:SymbolIcon Home24}"
                     Tag="BannerIcons"
-                    TargetPageType="pages:BannerIconsPage" />
+                    TargetPageType="banners:BannerIconsPage" />
             </ui:NavigationView.MenuItems>
 
             <!--  Footer Menu Items  -->
             <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem
+                    x:Name="NavItem_Settings"
+                    Content="{helpers:I18n AppNavMenuSettings.Content}"
+                    Icon="{ui:SymbolIcon Settings20}"
+                    Tag="Settings" 
+                    TargetPageType="settings:SettingsPage"  />
                 <ui:NavigationViewItem
                     x:Name="NavItem_Help"
                     Content="{helpers:I18n AppNavMenuHelp.Content}"

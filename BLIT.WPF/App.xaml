@@ -6,10 +6,10 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <!-- WPF-UI Theme Resources -->
+            <!-- WPF-UI Theme Resources - Dynamically loaded based on theme setting -->
             <ResourceDictionary.MergedDictionaries>
-                <!-- Dark theme -->
-                <ui:ThemesDictionary Theme="Dark" />
+                <!-- Dark theme (default) -->
+                <ui:ThemesDictionary Theme="Dark" x:Name="ThemeDict" />
                 <!-- WPF-UI controls dictionary -->
                 <ui:ControlsDictionary />
                 <!-- Theme colors reference for Rider IntelliSense -->
