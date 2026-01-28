@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -431,7 +431,13 @@ It may take a while if there are a lot of assets</value>
   <data name="ViewTutorials" xml:space="preserve">
     <value>View Tutorials</value>
   </data>
-  <data name="SubmitIssue" xml:space="preserve">
-    <value>Report a bug or request a feature</value>
-  </data>
-</root>
+   <data name="SubmitIssue" xml:space="preserve">
+     <value>Report a bug or request a feature</value>
+   </data>
+   <data name="TextInvalidPath.Text" xml:space="preserve">
+     <value>Invalid relative path</value>
+   </data>
+   <data name="TextBannerSpriteScanFoldersPlaceholder" xml:space="preserve">
+     <value>e.g., ../Sprites</value>
+   </data>
+ </root>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -431,7 +431,13 @@
   <data name="ViewTutorials" xml:space="preserve">
     <value>查看使用说明</value>
   </data>
-  <data name="SubmitIssue" xml:space="preserve">
-    <value>报告错误或请求新功能</value>
-  </data>
-</root>
+   <data name="SubmitIssue" xml:space="preserve">
+     <value>报告错误或请求新功能</value>
+   </data>
+   <data name="TextInvalidPath.Text" xml:space="preserve">
+     <value>无效的相对路径</value>
+   </data>
+   <data name="TextBannerSpriteScanFoldersPlaceholder" xml:space="preserve">
+     <value>例如: ../图标</value>
+   </data>
+ </root>

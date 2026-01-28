@@ -33,6 +33,21 @@ public partial class SettingsPage : Page {
         } else {
             LanguageComboBox.SelectedIndex = 0; // English
         }
+
+        // Load Banner Settings
+        LoadBannerSettings();
+    }
+
+    private void LoadBannerSettings() {
+        var bannerSettings = _settings?.Banner;
+        if (bannerSettings != null) {
+            // Load scan folders
+            BannerSpriteScanFoldersEditor.LoadFolders(bannerSettings.SpriteScanFolders);
+            
+            // Load number boxes
+            NumberBoxGroupStartID.Value = bannerSettings.CustomGroupStartID;
+            NumberBoxColorStartID.Value = bannerSettings.CustomColorStartID;
+        }
     }
 
     private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -54,3 +69,4 @@ public partial class SettingsPage : Page {
         }
     }
 }
+
