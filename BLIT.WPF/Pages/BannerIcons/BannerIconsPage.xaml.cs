@@ -1,7 +1,5 @@
-using BLIT.WPF.Helpers;
 using BLIT.WPF.Pages.BannerIcons.Models;
 using BLIT.WPF.Pages.BannerIcons.ViewModels;
-using BLIT.WPF.Services;
 using System.Windows;
 using System.Windows.Controls;
 using Wpf.Ui.Abstractions.Controls;
@@ -26,33 +24,24 @@ public partial class BannerIconsPage : INavigableView<BannerIconsPageViewModel> 
     private void OnPageLoaded(object sender, RoutedEventArgs e) {
         System.Diagnostics.Debug.WriteLine("BannerIconsPage: Page loaded");
 
-        var loadingService = AppServices.Get<ILoadingService>();
-        loadingService?.Show(I18n.Current.GetString("PageLoading.BannerIcons.Text"));
-        
-        try {
-            // 订阅 ViewModel 的属性变化，以便在 ViewModel 改变时更新 DataContext
-            if (_viewModel != null) {
-                _viewModel.PropertyChanged += (s, args) => {
-                    if (args.PropertyName == nameof(BannerIconsPageViewModel.ViewModel)) {
-                        // 重新设置 DataContext 以确保绑定更新
-                        DataContext = _viewModel;
-                    }
-                };
-            }
-
-            // 设置输出分辨率默认值
-            if (_viewModel?.ViewModel != null) {
-                var resolutionName = _viewModel.ViewModel.OutputResolutionName;
-                if (resolutionName == "2K") {
-                    comboOutputResolution.SelectedIndex = 0;
-                } else if (resolutionName == "4K") {
-                    comboOutputResolution.SelectedIndex = 1;
+        // 订阅 ViewModel 的属性变化，以便在 ViewModel 改变时更新 DataContext
+        if (_viewModel != null) {
+            _viewModel.PropertyChanged += (s, args) => {
+                if (args.PropertyName == nameof(BannerIconsPageViewModel.ViewModel)) {
+                    // 重新设置 DataContext 以确保绑定更新
+                    DataContext = _viewModel;
                 }
+            };
+        }
+
+        // 设置输出分辨率默认值
+        if (_viewModel?.ViewModel != null) {
+            var resolutionName = _viewModel.ViewModel.OutputResolutionName;
+            if (resolutionName == "2K") {
+                comboOutputResolution.SelectedIndex = 0;
+            } else if (resolutionName == "4K") {
+                comboOutputResolution.SelectedIndex = 1;
             }
-        } finally {
-            Dispatcher.BeginInvoke(() => {
-                loadingService?.Hide();
-            }, System.Windows.Threading.DispatcherPriority.Background);
         }
     }
 

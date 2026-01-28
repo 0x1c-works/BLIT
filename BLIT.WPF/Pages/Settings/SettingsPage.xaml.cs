@@ -17,17 +17,8 @@ public partial class SettingsPage : Page {
 
     private void Page_Loaded(object sender, RoutedEventArgs e) {
         if (!_isInitialized) {
-            var loadingService = AppServices.Get<ILoadingService>();
-            loadingService?.Show(I18n.Current.GetString("PageLoading.Settings.Text"));
-            
-            try {
-                LoadCurrentSettings();
-                _isInitialized = true;
-            } finally {
-                Dispatcher.BeginInvoke(() => {
-                    loadingService?.Hide();
-                }, System.Windows.Threading.DispatcherPriority.Background);
-            }
+            LoadCurrentSettings();
+            _isInitialized = true;
         }
     }
 

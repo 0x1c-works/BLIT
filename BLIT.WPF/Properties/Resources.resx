@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -433,11 +433,5 @@ It may take a while if there are a lot of assets</value>
   </data>
   <data name="SubmitIssue" xml:space="preserve">
     <value>Report a bug or request a feature</value>
-  </data>
-  <data name="PageLoading.BannerIcons.Text" xml:space="preserve">
-    <value>Loading Banner Icons...</value>
-  </data>
-  <data name="PageLoading.Settings.Text" xml:space="preserve">
-    <value>Loading Settings...</value>
   </data>
 </root>
