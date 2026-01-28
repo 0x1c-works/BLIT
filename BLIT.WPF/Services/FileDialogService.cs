@@ -135,7 +135,8 @@ public class FileDialogService : IFileDialogService {
             var fd = (Shell32.IFileSaveDialog)ppv!;
 
             fd.SetClientGuid(stateGuid);
-            fd.SetDefaultFolder(Shell32.KNOWNFOLDERID.FOLDERID_DocumentsLibrary.GetIShellItem() ?? throw new InvalidOperationException());
+            fd.SetDefaultFolder(Shell32.KNOWNFOLDERID.FOLDERID_DocumentsLibrary.GetIShellItem() ??
+                                throw new InvalidOperationException());
             fd.SetOptions(fd.GetOptions() | Shell32.FILEOPENDIALOGOPTIONS.FOS_FORCEFILESYSTEM);
             if (fileTypes.Length > 0) {
                 fd.SetDefaultExtension(fileTypes[0].Extension);
@@ -181,7 +182,8 @@ public class FileDialogService : IFileDialogService {
         var fd = (Shell32.IFileOpenDialog)ppv!;
 
         fd.SetClientGuid(stateGuid);
-        fd.SetDefaultFolder(Shell32.KNOWNFOLDERID.FOLDERID_DocumentsLibrary.GetIShellItem() ?? throw new InvalidOperationException());
+        fd.SetDefaultFolder(Shell32.KNOWNFOLDERID.FOLDERID_DocumentsLibrary.GetIShellItem() ??
+                            throw new InvalidOperationException());
         fd.SetOptions(fd.GetOptions() | Shell32.FILEOPENDIALOGOPTIONS.FOS_FORCEFILESYSTEM | opts);
         return fd;
     }

@@ -6,6 +6,10 @@ using System.Windows.Media.Animation;
 namespace BLIT.WPF.Controls;
 
 public partial class LoadingOverlay : UserControl {
+    // Cached Storyboards to prevent IDE cleanup and improve performance
+    private Storyboard? _fadeInStoryboard;
+    private Storyboard? _fadeOutStoryboard;
+
     public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(
         nameof(Message),
         typeof(string),
@@ -50,9 +54,16 @@ public partial class LoadingOverlay : UserControl {
 
     public LoadingOverlay() {
         InitializeComponent();
-        Loaded += (s, e) => {
-            AppServices.Get<ILoadingService>()?.RegisterControl(this);
-        };
+        Loaded += OnLoaded;
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e) {
+        // Cache Storyboards from resources - this makes IDE recognize they're being used
+        _fadeInStoryboard = (Storyboard?)Resources["FadeInStoryboard"];
+        _fadeOutStoryboard = (Storyboard?)Resources["FadeOutStoryboard"];
+        
+        // Register with loading service
+        AppServices.Get<ILoadingService>()?.RegisterControl(this);
     }
 
     public string Message {
@@ -96,16 +107,14 @@ public partial class LoadingOverlay : UserControl {
             if (value) {
                 // Show with fade-in animation
                 RootGrid.Visibility = Visibility.Visible;
-                var fadeInStoryboard = (Storyboard)FindResource("FadeInStoryboard");
-                fadeInStoryboard?.Begin();
+                _fadeInStoryboard?.Begin();
             } else {
                 // Hide with fade-out animation
-                var fadeOutStoryboard = (Storyboard)FindResource("FadeOutStoryboard");
-                if (fadeOutStoryboard != null) {
-                    fadeOutStoryboard.Completed += (s, e) => {
+                if (_fadeOutStoryboard != null) {
+                    _fadeOutStoryboard.Completed += (s, e) => {
                         RootGrid.Visibility = Visibility.Collapsed;
                     };
-                    fadeOutStoryboard.Begin();
+                    _fadeOutStoryboard.Begin();
                 } else {
                     RootGrid.Visibility = Visibility.Collapsed;
                 }
