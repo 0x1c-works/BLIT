@@ -46,7 +46,7 @@
 
                 <!--  Loading Indicator (shown when path is empty or loading)  -->
                 <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
-                           Visibility="{Binding TexturePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
+                           Visibility="{Binding IsNoTexture, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                 <!--  Icon Image - Async Load  -->
                 <Image
@@ -55,7 +55,8 @@
                     Stretch="Uniform" />
 
                 <!--  Atlas Name Overlay (Top)  -->
-                <Grid VerticalAlignment="Top" Background="{ui:ThemeResource SurfaceStrokeColorDefaultBrush}" Opacity="0.5">
+                <Grid VerticalAlignment="Top" Background="{ui:ThemeResource SurfaceStrokeColorDefaultBrush}"
+                      Opacity="0.5">
                     <TextBlock
                         Margin="2"
                         FontSize="10"
@@ -110,7 +111,7 @@
                     <TextBlock
                         Style="{StaticResource LoadingSpinnerStyle}"
                         FontSize="16"
-                        Visibility="{Binding TexturePath, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
+                        Visibility="{Binding IsNoTexture, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                     <!--  Small Thumbnail (64x64, no async loading for performance)  -->
                     <Image
@@ -306,7 +307,7 @@
 
                             <!--  Loading Indicator  -->
                             <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
-                                       Visibility="{Binding DataContext.FirstSelectedIcon.SpritePath, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
+                                       Visibility="{Binding DataContext.FirstSelectedIcon.IsNoSprite, RelativeSource={RelativeSource AncestorType=UserControl},Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                             <!--  Sprite Preview Image - Async Load  -->
                             <Image
@@ -367,7 +368,7 @@
 
                             <!--  Loading Indicator  -->
                             <TextBlock Style="{StaticResource LoadingSpinnerStyle}"
-                                       Visibility="{Binding DataContext.FirstSelectedIcon.TexturePath, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource StringIsNullOrEmptyConverter}, ConverterParameter=Visibility}" />
+                                       Visibility="{Binding DataContext.FirstSelectedIcon.IsNoTexture, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                             <!--  Texture Preview Image - Async Load  -->
                             <Image

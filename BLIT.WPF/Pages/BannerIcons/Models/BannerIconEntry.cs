@@ -42,6 +42,8 @@ public class BannerIconEntry : ObservableObject {
         }
     }
 
+    public bool IsNoTexture => string.IsNullOrEmpty(_texturePath);
+
     public string SpritePath {
         get => _spritePath;
         set {
@@ -53,6 +55,8 @@ public class BannerIconEntry : ObservableObject {
             }
         }
     }
+    
+    public bool IsNoSprite => string.IsNullOrEmpty(_spritePath);
 
     public int CellIndex {
         get => _cellIndex;
