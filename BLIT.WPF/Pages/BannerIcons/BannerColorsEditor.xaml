@@ -1,0 +1,272 @@
+<UserControl x:Class="BLIT.WPF.Pages.BannerIcons.BannerColorsEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
+             xmlns:vm="clr-namespace:BLIT.WPF.Pages.BannerIcons.Models"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="800"
+             x:Name="bannerColorsEditor"
+              ui:Design.Background="{ui:ThemeResource ApplicationBackgroundBrush}"
+              ui:Design.Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
+              Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}">
+    <UserControl.Resources>
+
+        <Style x:Key="FlagPillBaseStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Background" Value="{ui:ThemeResource ControlFillColorDefaultBrush}" />
+            <Setter Property="Padding" Value="10,2" />
+            <Setter Property="Margin" Value="2" />
+        </Style>
+
+        <Style x:Key="FlagPillSigilStyle" TargetType="Border" BasedOn="{StaticResource FlagPillBaseStyle}">
+            <Setter Property="Background" Value="#00a8fc" />
+        </Style>
+
+        <Style x:Key="FlagPillBackgroundStyle" TargetType="Border" BasedOn="{StaticResource FlagPillBaseStyle}">
+            <Setter Property="Background" Value="#ce2285" />
+        </Style>
+
+        <!-- Color Item Template -->
+        <DataTemplate x:Key="ColorItemTemplate" DataType="{x:Type vm:BannerColorEntry}">
+            <Grid Height="50" Margin="0,3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Color Rectangle -->
+                <Rectangle Grid.Column="0">
+                    <Rectangle.Fill>
+                        <SolidColorBrush Color="{Binding Color, Mode=OneWay}" />
+                    </Rectangle.Fill>
+                </Rectangle>
+
+                <!-- Color Info -->
+                <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,5">
+                        <TextBlock Text="ID: " Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" FontSize="10" />
+                        <TextBlock Text="{Binding ID, Mode=OneWay}" FontWeight="Bold" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Border Style="{StaticResource FlagPillSigilStyle}"
+                                Visibility="{Binding IsForSigil, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Text="{helpers:I18n TextColorForSigil.Text}"
+                                       Foreground="White"
+                                       FontSize="12" />
+                        </Border>
+                        <Border Style="{StaticResource FlagPillBackgroundStyle}"
+                                Visibility="{Binding IsForBackground, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Text="{helpers:I18n TextColorForBackground.Text}"
+                                       Foreground="White"
+                                       FontSize="12" />
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Panel: Color List -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Toolbar -->
+            <Menu Grid.Row="0" Background="{ui:ThemeResource CardBackgroundFillColorDefaultBrush}">
+                <MenuItem x:Name="btnAdd"
+                          Command="{Binding AddColorCommand}"
+                          Header="{helpers:I18n AppButtonAddColor.Label}"
+                          Icon="{ui:SymbolIcon Add20}"
+                          Margin="4" />
+
+                <MenuItem x:Name="btnDelete"
+                          Command="{Binding DeleteColorsCommand}"
+                          Header="{helpers:I18n AppButtonDeleteColors.Label}"
+                          Icon="{ui:SymbolIcon Delete20}"
+                          Margin="4" />
+
+                <MenuItem x:Name="btnSort"
+                          Command="{Binding SortColorsCommand}"
+                          Header="{helpers:I18n AppButtonSort.Label}"
+                          Icon="{ui:SymbolIcon ArrowSort20}"
+                          Margin="4" />
+            </Menu>
+
+            <!-- Color List -->
+            <ListBox x:Name="listViewColors"
+                     Grid.Row="1"
+                     ItemsSource="{Binding Colors}"
+                     ItemTemplate="{StaticResource ColorItemTemplate}"
+                     SelectionMode="Extended"
+                     SelectionChanged="listViewColors_SelectionChanged"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+        </Grid>
+
+        <GridSplitter Grid.Column="1" Width="5"
+                      Background="{ui:ThemeResource ControlFillColorDefaultBrush}" />
+
+        <!-- Right Panel: Color Editor -->
+        <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+            <Grid Margin="32,16"
+                  HorizontalAlignment="Left"
+                  Visibility="{Binding HasSelectedColor, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="200" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Single Selection: ID Editor -->
+                <StackPanel Grid.Row="0" Grid.ColumnSpan="2"
+                            Orientation="Horizontal"
+                            Margin="0,0,0,20"
+                            Visibility="{Binding IsSingleSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock Text="ID"
+                               VerticalAlignment="Center"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Margin="0,0,16,0" />
+                    <TextBox x:Name="txtColorID"
+                             Width="120"
+                             VerticalAlignment="Center"
+                             FontSize="18"
+                             Text="{Binding FirstSelectedColor.ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+
+                <!-- Multiple Selection: Title -->
+                <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0"
+                            Orientation="Horizontal"
+                            Margin="0,0,0,20"
+                            Visibility="{Binding IsMultipleSelection, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock Text="{Binding SelectedColorIDs}"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center" />
+                     <TextBlock Text="{Binding MoreColorsText}"
+                                FontSize="12"
+                                FontWeight="Light"
+                                Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                                VerticalAlignment="Center"
+                                Margin="5,0,0,0" />
+                </StackPanel>
+
+                <!-- Flags Row -->
+                <StackPanel Grid.Row="1" Grid.Column="0"
+                            Orientation="Horizontal"
+                            Margin="0,0,0,20">
+                    <CheckBox Content="{helpers:I18n TextColorForSigil.Text}"
+                              IsChecked="{Binding IsForSigil, Mode=TwoWay}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="1"
+                            Orientation="Horizontal"
+                            Margin="0,0,0,20">
+                    <CheckBox Content="{helpers:I18n TextColorForBackground.Text}"
+                              IsChecked="{Binding IsForBackground, Mode=TwoWay}" />
+                </StackPanel>
+
+                <!-- Color Picker (Single Selection Only) -->
+                <Border Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0"
+                        Padding="10"
+                        Visibility="{Binding IsSingleSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel>
+                        <TextBlock Text="Color" FontWeight="Bold" Margin="0,0,0,10" />
+
+                        <!-- Color Preview -->
+                        <Rectangle Height="150"
+                                   Margin="0,0,0,10"
+                                   Stroke="{ui:ThemeResource SurfaceStrokeColorDefaultBrush}"
+                                   StrokeThickness="1">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="{Binding FirstSelectedColor.Color, Mode=OneWay}" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+
+                        <!-- RGB Sliders -->
+                        <StackPanel Margin="0,10,0,0">
+                            <Grid Margin="0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="50" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="R:" Grid.Column="0" VerticalAlignment="Center" />
+                                <Slider Grid.Column="1"
+                                        x:Name="sliderR"
+                                        Minimum="0" Maximum="255"
+                                        Value="{Binding FirstSelectedColor.R, Mode=TwoWay}" />
+                                <TextBox Grid.Column="2"
+                                         Text="{Binding ElementName=sliderR, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Width="40"
+                                         HorizontalAlignment="Right" />
+                            </Grid>
+
+                            <Grid Margin="0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="50" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="G:" Grid.Column="0" VerticalAlignment="Center" />
+                                <Slider Grid.Column="1"
+                                        x:Name="sliderG"
+                                        Minimum="0" Maximum="255"
+                                        Value="{Binding FirstSelectedColor.G, Mode=TwoWay}" />
+                                <TextBox Grid.Column="2"
+                                         Text="{Binding ElementName=sliderG, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Width="40"
+                                         HorizontalAlignment="Right" />
+                            </Grid>
+
+                            <Grid Margin="0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="50" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="B:" Grid.Column="0" VerticalAlignment="Center" />
+                                <Slider Grid.Column="1"
+                                        x:Name="sliderB"
+                                        Minimum="0" Maximum="255"
+                                        Value="{Binding FirstSelectedColor.B, Mode=TwoWay}" />
+                                <TextBox Grid.Column="2"
+                                         Text="{Binding ElementName=sliderB, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Width="40"
+                                         HorizontalAlignment="Right" />
+                            </Grid>
+
+                            <!-- Hex Color -->
+                            <Grid Margin="0,10,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Hex:" Grid.Column="0" VerticalAlignment="Center" />
+                                <TextBox Grid.Column="1"
+                                         x:Name="txtHexColor"
+                                         Text="{Binding FirstSelectedColor.HexColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

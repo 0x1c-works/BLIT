@@ -1,0 +1,229 @@
+<Page
+    x:Class="BLIT.WPF.Pages.BannerIcons.BannerIconsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dd="urn:gong-wpf-dragdrop"
+    xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
+    xmlns:local="clr-namespace:BLIT.WPF.Pages.BannerIcons"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:BLIT.WPF.Pages.BannerIcons.Models"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="BannerIconsPage"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Stretch"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
+    ui:Design.Background="{ui:ThemeResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
+    Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <!--  分组列表项模板  -->
+        <DataTemplate x:Key="GroupItemTemplate" DataType="{x:Type model:BannerGroupEntry}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center" Text="{Binding GroupID}" />
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="8,0,0,0"
+                    Orientation="Horizontal">
+                    <TextBlock Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="(" />
+                    <TextBlock Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Icons.Count}" />
+                    <TextBlock Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text=")" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--  Header - 固定高度  -->
+        <Border
+            Grid.Row="0"
+            Padding="24,16"
+            BorderBrush="{ui:ThemeResource DividerStrokeColorDefaultBrush}"
+            BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    FontSize="28"
+                    FontWeight="SemiBold"
+                    Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
+                    Text="{helpers:I18n AppNavMenuBanner.Content}" />
+                <TextBlock VerticalAlignment="Bottom" Text="{Binding ProjectName}"
+                           Margin="16,0,0,0" FontSize="24" Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}" />
+            </StackPanel>
+        </Border>
+
+        <!--  菜单工具栏  -->
+        <Border Grid.Row="1" Padding="12,0">
+            <Menu VerticalAlignment="Center">
+                <!--  文件菜单  -->
+                <MenuItem
+                    Command="{Binding NewProjectCommand}"
+                    Header="{helpers:I18n AppButtonNewProject.Label}"
+                    Icon="{ui:SymbolIcon Symbol=Document20}"
+                    ToolTip="{helpers:I18n AppButtonNewProject.Label}" />
+
+                <!--  保存项目  -->
+                <MenuItem
+                    Command="{Binding SaveProjectCommand}"
+                    Header="{helpers:I18n AppButtonSaveProject.Label}"
+                    Icon="{ui:SymbolIcon Symbol=Save20}"
+                    ToolTip="{helpers:I18n AppButtonSaveProject.Label}" />
+
+                <!--  另存为  -->
+                <MenuItem
+                    Command="{Binding SaveProjectAsCommand}"
+                    Header="{helpers:I18n AppButtonSaveProjectAs.Label}"
+                    Icon="{ui:SymbolIcon Symbol=SaveArrowRight20}"
+                    ToolTip="{helpers:I18n AppButtonSaveProjectAs.Label}" />
+
+                <!--  打开项目  -->
+                <MenuItem
+                    Command="{Binding OpenProjectCommand}"
+                    Header="{helpers:I18n AppButtonOpenProject.Label}"
+                    Icon="{ui:SymbolIcon Symbol=Folder20}"
+                    ToolTip="{helpers:I18n AppButtonOpenProject.Label}" />
+
+                <!--  分隔符  -->
+                <Separator />
+
+
+                <!--  纹理分辨率  -->
+                <MenuItem
+                    VerticalAlignment="Stretch"
+                    IsSubmenuOpen="False">
+                    <MenuItem.Header>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                            <TextBlock
+                                Margin="0,9,6,0"
+                                FontSize="14"
+                                Text="⚙️" />
+                            <TextBlock
+                                Margin="0,9,6,0"
+                                Text="{helpers:I18n LabelTextureResolution.Text}" />
+                            <ComboBox
+                                x:Name="comboOutputResolution"
+                                MinWidth="100"
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                SelectedValuePath="Tag"
+                                SelectionChanged="comboOutputResolution_SelectionChanged">
+                                <ComboBoxItem Content="2K" Tag="Res2K" />
+                                <ComboBoxItem Content="4K" Tag="Res4K" />
+                            </ComboBox>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <!--  分隔符  -->
+                <Separator />
+                <!--  导出菜单  -->
+                <MenuItem
+                    Command="{Binding ExportAllCommand}"
+                    Header="{helpers:I18n AppButtonExportAll.Label}"
+                    Icon="{ui:SymbolIcon ArrowExportUp20}"
+                    ToolTip="{helpers:I18n AppButtonExportAll.Label}" />
+                <MenuItem
+                    Command="{Binding ExportXMLCommand}"
+                    Header="{helpers:I18n AppButtonExportXML.Label}"
+                    Icon="{ui:SymbolIcon CodeBlock20}"
+                    ToolTip="{helpers:I18n AppButtonExportXML.Label}" />
+
+                <!--  分隔符  -->
+                <Separator />
+            </Menu>
+        </Border>
+
+        <!--  主内容区域  -->
+        <TabControl Grid.Row="2">
+            <!--  分组编辑器标签页  -->
+            <TabItem Header="{helpers:I18n PivotBannerGroupsEditor.Header}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  左侧分组列表  -->
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Border
+                            Grid.Row="0"
+                            Padding="16"
+                            Background="{ui:ThemeResource CardBackgroundFillColorDefaultBrush}">
+                            <TextBlock
+                                FontWeight="Bold"
+                                Text="{helpers:I18n TextBannerGroupListTitle.Text}"
+                                TextAlignment="Center" />
+                        </Border>
+
+                        <Menu Grid.Row="1" FontSize="14">
+                            <ui:MenuItem
+                                Command="{Binding AddGroupCommand}"
+                                Header="{helpers:I18n ButtonAdd.Content}"
+                                Icon="{ui:SymbolIcon Symbol=Add20}" />
+                            <ui:MenuItem
+                                Command="{Binding DeleteGroupCommand}"
+                                Header="{helpers:I18n ButtonDelete.Content}"
+                                Icon="{ui:SymbolIcon Symbol=Delete20}" />
+                        </Menu>
+
+                        <ListBox
+                            x:Name="listViewGroups"
+                            Grid.Row="2"
+                            ItemTemplate="{StaticResource GroupItemTemplate}"
+                            ItemsSource="{Binding ViewModel.Groups}"
+                            SelectedItem="{Binding SelectedGroup, Mode=TwoWay}"
+                            SelectionChanged="listViewGroups_SelectionChanged"
+                            dd:DragDrop.IsDragSource="True"
+                            dd:DragDrop.IsDropTarget="True"
+                            dd:DragDrop.UseDefaultDragAdorner="True"
+                            dd:DragDrop.UseDefaultEffectDataTemplate="True" />
+                    </Grid>
+
+                    <!-- GridSplitter -->
+                    <GridSplitter Grid.Column="1"
+                                  Width="5"
+                                  HorizontalAlignment="Stretch"
+                                  Background="{ui:ThemeResource ControlFillColorDefaultBrush}" />
+                    <!--  右侧编辑区域  -->
+                    <Border
+                        Grid.Column="2"
+                        BorderBrush="{ui:ThemeResource DividerStrokeColorDefaultBrush}"
+                        BorderThickness="1,0,0,0">
+                        <Grid>
+                            <TextBlock
+                                Padding="16"
+                                Text="{helpers:I18n TextNoSelectedBannerGroup.Text}"
+                                Visibility="{Binding ShowEmptyHint, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                            <local:BannerIconGroupEditor
+                                x:Name="bannerIconGroupEditor"
+                                Visibility="{Binding DataContext.HasSelectedGroup, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!--  颜色编辑器标签页  -->
+            <TabItem Header="{helpers:I18n PivotBannerColorsEditor.Header}">
+                <local:BannerColorsEditor />
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Page>

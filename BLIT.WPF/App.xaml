@@ -1,0 +1,36 @@
+<Application x:Class="BLIT.WPF.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- WPF-UI Theme Resources - Dynamically loaded based on theme setting -->
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Dark theme (default) -->
+                <ui:ThemesDictionary Theme="Dark" />
+                <!-- WPF-UI controls dictionary -->
+                <ui:ControlsDictionary />
+                <!-- Theme colors reference for Rider IntelliSense -->
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Built-in converters -->
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+            <!-- Custom brushes -->
+            <SolidColorBrush x:Key="Danger" Color="#AA3232" />
+            <SolidColorBrush x:Key="Warn" Color="#FFBB00" />
+
+            <!-- Custom styles -->
+            <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="Margin" Value="0,32,0,8" />
+            </Style>
+
+            <Style x:Key="ItemLabelStyle" TargetType="TextBlock">
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

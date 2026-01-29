@@ -19,12 +19,12 @@ A tool for processing the modding images of Mount &amp; Blade 2 Bannerlord
 ## Features
 
 - [x] Packing single images into banner texture PSDs
-  - [x] CLI support
-  - [x] GUI support
-  - [x] Generating banner_icons.xml
-  - [x] Organizing banner icon sprites into valid file structure
-  - [x] Custom color management (need MOD support)
+    - [x] CLI support
+    - [x] GUI support
+    - [x] Generating banner_icons.xml
+    - [x] Organizing banner icon sprites into valid file structure
+    - [x] Custom color management (need MOD support)
 - [x] Unpacking separated sprites from a spritesheet
-  - [x] CLI support
-  - [ ] GUI support
+    - [x] CLI support
+    - [ ] GUI support
 - [ ] Adjusting and organizing culture images (thumbnail sprites & parallex images).

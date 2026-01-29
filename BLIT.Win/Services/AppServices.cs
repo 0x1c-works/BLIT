@@ -7,11 +7,10 @@ using System;
 
 namespace BLIT.Win.Services;
 
-public class AppServices
-{
+public class AppServices {
     public static IContainer Container { get; private set; }
-    public static IServiceProvider Configure()
-    {
+
+    public static IServiceProvider Configure() {
         var builder = new ContainerBuilder();
         // Singleton services
         builder.RegisterType<FileDialogService>().AsImplementedInterfaces().SingleInstance();
@@ -21,7 +20,7 @@ public class AppServices
 
         // Singleton components
         builder.RegisterType<GlobalSettings>().SingleInstance();
-        builder.Register((ctx) => BannerSettings.Load()).SingleInstance();
+        builder.Register(ctx => BannerSettings.Load()).SingleInstance();
         RegisterProjectService<BannerIconsProject>(builder);
 
         // Scoped services
@@ -37,16 +36,14 @@ public class AppServices
         return new AutofacServiceProvider(Container);
     }
 
-    public static T Get<T>()
-    {
+    public static T Get<T>() {
         return App.Current.Services.GetService<T>();
     }
 
-    static void RegisterProjectService<T>(ContainerBuilder builder) where T : IProject
-    {
+    private static void RegisterProjectService<T>(ContainerBuilder builder) where T : IProject {
         builder.RegisterType<ProjectService<T>>()
             .As<IProjectService<T>>()
             .SingleInstance()
-            .OnActivated(async (e) => await e.Instance.NewProject());
+            .OnActivated(async e => await e.Instance.NewProject());
     }
 }

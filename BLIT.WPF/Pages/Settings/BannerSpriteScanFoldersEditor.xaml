@@ -1,0 +1,156 @@
+<UserControl
+    x:Class="BLIT.WPF.Pages.Settings.BannerSpriteScanFoldersEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:BLIT.WPF.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DesignHeight="300"
+    d:DesignWidth="600"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    mc:Ignorable="d">
+    <StackPanel>
+        <!--  Header  -->
+        <ui:TextBlock
+            Margin="0,0,0,0"
+            FontTypography="Body"
+            Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
+            Text="{helpers:I18n TextBannerSpriteScanFolders.Text}" />
+        <ui:TextBlock
+            Margin="0,4,0,8"
+            FontTypography="Caption"
+            Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
+            Text="{helpers:I18n TextBannerSpriteScanFoldersExplain.Text}"
+            TextWrapping="Wrap" />
+
+        <!--  List and Buttons  -->
+        <Grid Margin="0,8,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!--  ListView for folders  -->
+            <Border
+                Grid.Column="0"
+                MinHeight="150"
+                MaxHeight="200"
+                Background="{ui:ThemeResource ControlAltFillColorSecondaryBrush}"
+                BorderBrush="{ui:ThemeResource ControlElevationBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="4">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ui:ListView
+                        x:Name="ListViewScanFolders"
+                        Padding="0"
+                        HorizontalContentAlignment="Stretch"
+                        ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                        SelectionChanged="ListViewScanFolders_SelectionChanged"
+                        PreviewMouseDoubleClick="ListViewScanFolders_PreviewMouseDoubleClick"
+                        SelectionMode="Single">
+                        <ui:ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Height="40" Margin="0">
+                                    <!--  Display Mode (Label)  -->
+                                    <TextBlock
+                                        x:Name="LabelPath"
+                                        Margin="12,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding RelativePath, Mode=OneWay}"
+                                        Visibility="{Binding IsViewing, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        Cursor="Hand" />
+
+                                    <!--  Edit Mode (TextBox with Accept/Cancel buttons)  -->
+                                    <Grid Margin="0"
+                                          Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBox
+                                            x:Name="EditPath"
+                                            Grid.Column="0"
+                                            Margin="8,4"
+                                            KeyDown="EditPath_KeyDown"
+                                            Loaded="EditPath_Loaded"
+                                            Text="{Binding RelativePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                        <!--  Accept Button  -->
+                                        <Button
+                                            x:Name="BtnAccept"
+                                            Grid.Column="1"
+                                            Width="32"
+                                            Height="32"
+                                            Margin="2,4"
+                                            Padding="0"
+                                            Click="BtnAccept_Click"
+                                            ToolTip="Accept">
+                                            <ui:SymbolIcon FontSize="16" Symbol="CheckmarkCircle24" />
+                                        </Button>
+
+                                        <!--  Cancel Button  -->
+                                        <Button
+                                            x:Name="BtnCancel"
+                                            Grid.Column="2"
+                                            Width="32"
+                                            Height="32"
+                                            Margin="2,4,8,4"
+                                            Padding="0"
+                                            Click="BtnCancel_Click"
+                                            ToolTip="Cancel">
+                                            <ui:SymbolIcon FontSize="16" Symbol="DismissCircle24" />
+                                        </Button>
+                                    </Grid>
+
+                                    <!--  Error Message  -->
+                                    <TextBlock
+                                        x:Name="ErrorMessage"
+                                        Margin="12,0,0,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="11"
+                                        Foreground="{DynamicResource SystemErrorTextColor}"
+                                        Text="{Binding ErrorMessage, Mode=OneWay}"
+                                        Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ui:ListView.ItemTemplate>
+                    </ui:ListView>
+                </ScrollViewer>
+            </Border>
+
+            <!--  Buttons (Add, Edit, Delete)  -->
+            <StackPanel
+                Grid.Column="1"
+                Margin="8,0,0,0"
+                VerticalAlignment="Top">
+                <Button
+                    x:Name="BtnAdd"
+                    Width="80"
+                    Height="36"
+                    Margin="0,0,0,4"
+                    Click="BtnAdd_Click"
+                    Content="{helpers:I18n ButtonAdd.Content}" />
+                <Button
+                    x:Name="BtnEdit"
+                    Width="80"
+                    Height="36"
+                    Margin="0,0,0,4"
+                    Click="BtnEdit_Click"
+                    Content="{helpers:I18n ButtonEdit.Content}"
+                    IsEnabled="False" />
+                <Button
+                    x:Name="BtnDelete"
+                    Width="80"
+                    Height="36"
+                    Click="BtnDelete_Click"
+                    Content="{helpers:I18n ButtonDelete.Content}"
+                    IsEnabled="False" />
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</UserControl>

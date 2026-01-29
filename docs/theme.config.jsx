@@ -11,7 +11,7 @@ export default {
     </>
   ),
   project: {
-    link: "https://github.com/0x1c-works/BLIT",
+    link: "https://github.com/0x1-works/BLIT",
   },
   i18n: [
     { locale: "en", text: "English" },
@@ -36,7 +36,7 @@ export default {
   useNextSeoProps() {
     return { titleTemplate: "%s - BLIT the Bannerlord Image Tool" };
   },
-  docsRepositoryBase: "https://github.com/0x1c-works/BLIT/tree/main/docs",
+  docsRepositoryBase: "https://github.com/0x1-works/BLIT/tree/main/docs",
   feedback: {
     labels: ["documentation"],
   },

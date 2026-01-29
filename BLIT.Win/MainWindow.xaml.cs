@@ -7,10 +7,11 @@ using BLIT.Win.Pages.BannerIcons.Models;
 using BLIT.Win.Pages.Settings;
 using BLIT.Win.Services;
 using BLIT.Win.Theming;
-using Microsoft.AppCenter.Analytics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,14 +26,14 @@ using Windows.Storage;
 namespace BLIT.Win;
 
 /// <summary>
-/// An empty window that can be used on its own or navigated to within a Frame.
+///     An empty window that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class MainWindow : ThemedWindow
-{
-    ViewModel Model { get; } = new ViewModel();
+public sealed partial class MainWindow : ThemedWindow {
+    private static readonly Dictionary<string, NavPage> TAGGED_PAGES = new() {
+        { "BannerIcons", new NavPage(typeof(BannerIconsPage), OnProjectPageLoad<BannerIconsProject>) }
+    };
 
-    public MainWindow()
-    {
+    public MainWindow() {
         InitializeComponent();
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
@@ -41,33 +42,27 @@ public sealed partial class MainWindow : ThemedWindow
         Activated += MainWindow_Activated;
     }
 
-    void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
-    {
+    private ViewModel Model { get; } = new();
+
+    private void MainWindow_Activated(object sender, WindowActivatedEventArgs args) {
         AppTitleText.Foreground = args.WindowActivationState == WindowActivationState.Deactivated
             ? (SolidColorBrush)App.Current.Resources["WindowCaptionForegroundDisabled"]
-            : (Brush)(SolidColorBrush)App.Current.Resources["WindowCaptionForeground"];
+            : (SolidColorBrush)App.Current.Resources["WindowCaptionForeground"];
     }
 
-    void AppNav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
-    {
-        if (args.SelectedItem is not NavigationViewItem item)
-        {
+    private void AppNav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args) {
+        if (args.SelectedItem is not NavigationViewItem item) {
             return;
         }
 
         AppNav.Header = new NavPageHeaderInfo(item.Content.ToString()) { HasSubTitle = false };
 
-        if (args.IsSettingsSelected)
-        {
+        if (args.IsSettingsSelected) {
             AppContent.Navigate(typeof(SettingsPage));
-        }
-        else
-        {
-            if (item is not null)
-            {
+        } else {
+            if (item is not null) {
                 var tag = item?.Tag as string;
-                if (TAGGED_PAGES.TryGetValue(tag, out NavPage page))
-                {
+                if (TAGGED_PAGES.TryGetValue(tag, out NavPage page)) {
                     AppContent.Navigate(page.Type);
                     page.OnLoad?.Invoke(AppNav, item);
                 }
@@ -75,52 +70,43 @@ public sealed partial class MainWindow : ThemedWindow
         }
     }
 
-    public void NavigateToSettings()
-    {
+    public void NavigateToSettings() {
         AppNav.SelectedItem = AppNav.SettingsItem;
     }
 
-    record NavPage(Type Type, Action<NavigationView, NavigationViewItem> OnLoad);
-    static readonly Dictionary<string, NavPage> TAGGED_PAGES = new() {
-        {"BannerIcons",new(typeof(BannerIconsPage), OnProjectPageLoad<BannerIconsProject>)},
-    };
-    static void OnProjectPageLoad<T>(NavigationView view, NavigationViewItem item) where T : IProject
-    {
-        IProjectService<T> project = AppServices.Get<IProjectService<T>>();
-        void UpdateHeader()
-        {
-            view.Header = new NavPageHeaderInfo(item.Content.ToString(), project?.Name, false);
-        }
+    private static void OnProjectPageLoad<T>(NavigationView view, NavigationViewItem item) where T : IProject {
+        var project = AppServices.Get<IProjectService<T>>();
+        void UpdateHeader() => view.Header = new NavPageHeaderInfo(item.Content.ToString(), project?.Name);
         UpdateHeader();
         project.PropertyChanged += (s, e) => {
-            if (e.PropertyName == nameof(project.Name))
-            {
+            if (e.PropertyName == nameof(project.Name)) {
                 UpdateHeader();
             }
         };
     }
 
-    void navHelp_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
-    {
-        Analytics.TrackEvent("Visit help", new Dictionary<string, string> {
-            {"source", "nav" }
-        });
+    private void navHelp_Tapped(object sender, TappedRoutedEventArgs e) {
+        SentrySdk.AddBreadcrumb("Visit help", "ui.nav");
         Process.Start(new ProcessStartInfo {
-            FileName = I18n.Current.GetString("LinkHelpWebsite"),
-            UseShellExecute = true,
+            FileName = I18n.Current.GetString("LinkHelpWebsite"), UseShellExecute = true
         });
     }
 
-    public class ViewModel : INotifyPropertyChanged
-    {
-        StorageFolder _rootFolder;
-        public StorageFolder RootFolder
-        {
+    #region Nested type: NavPage
+
+    private record NavPage(Type Type, Action<NavigationView, NavigationViewItem> OnLoad);
+
+    #endregion
+
+    #region Nested type: ViewModel
+
+    public class ViewModel : INotifyPropertyChanged {
+        private StorageFolder _rootFolder;
+
+        public StorageFolder RootFolder {
             get => _rootFolder;
-            set
-            {
-                if (_rootFolder?.Path == value?.Path)
-                {
+            set {
+                if (_rootFolder?.Path == value?.Path) {
                     return;
                 }
 
@@ -129,16 +115,24 @@ public sealed partial class MainWindow : ThemedWindow
             }
         }
 
+        #region INotifyPropertyChanged Members
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        void OnPropertyChanged([CallerMemberName] string prop = null)
-        {
-            PropertyChanged?.Invoke(this, new(prop));
+        #endregion
+
+        private void OnPropertyChanged([CallerMemberName] string prop = null) {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
+
+    #endregion
 }
-public record NavPageHeaderInfo(string Title, string SubTitle = null, bool IsModified = false)
-{
+
+public record NavPageHeaderInfo(string Title, string SubTitle = null, bool IsModified = false) {
     public bool HasSubTitle { get; set; } = true;
-    public string SubTitle { get; init; } = string.IsNullOrWhiteSpace(SubTitle) ? I18n.Current.GetString("Placeholder/NewProject") : SubTitle;
+
+    public string SubTitle { get; init; } = string.IsNullOrWhiteSpace(SubTitle)
+        ? I18n.Current.GetString("Placeholder/NewProject")
+        : SubTitle;
 }

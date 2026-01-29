@@ -1,7 +1,7 @@
-﻿// See https://aka.ms/new-console-template for more information
+using BLIT.CLI.Commands;
+using ConsoleAppFramework;
 
-Console.WriteLine("Hello, World!");
-
-var app = ConsoleApp.Create(args);
-app.AddAllCommandType();
-app.Run();
+ConsoleApp.ConsoleAppBuilder app = ConsoleApp.Create();
+app.Add<BannerCommands>();
+app.Add<SpriteCommands>();
+await app.RunAsync(args);

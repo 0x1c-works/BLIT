@@ -7,7 +7,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:BLIT.Win.Pages.BannerIcons"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:BLIT.Win.Pages.BannerIcons.Models"
     mc:Ignorable="d">
@@ -33,12 +32,12 @@
                 </Image>
                 <Grid Grid.ColumnSpan="2" VerticalAlignment="Top">
                     <Grid.Background>
-                        <SolidColorBrush Opacity=".5" Color="Black" />
+                        <SolidColorBrush Opacity=".5" Color="{ThemeResource ControlFillColorSecondary}" />
                     </Grid.Background>
 
                     <TextBlock
                         FontSize="10"
-                        Foreground="White"
+                        Foreground="{ThemeResource TextFillColorPrimaryBrush}"
                         HorizontalTextAlignment="Center"
                         Text="{x:Bind AtlasName, Mode=OneWay}" />
                 </Grid>
@@ -46,7 +45,7 @@
                     Padding="4,1"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
-                    BorderBrush="DarkGray"
+                    BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
                     BorderThickness="1"
                     CornerRadius="4"
                     FlowDirection="RightToLeft"
@@ -55,17 +54,17 @@
                     <StackPanel.Background>
                         <AcrylicBrush
                             Opacity=".6"
-                            TintColor="LightGray"
+                            TintColor="{ThemeResource ControlFillColorDefaultBrush}"
                             TintLuminosityOpacity=".5"
                             TintOpacity=".9" />
                     </StackPanel.Background>
                     <TextBlock
                         FontWeight="Bold"
-                        Foreground="Black"
+                        Foreground="{ThemeResource TextFillColorPrimaryBrush}"
                         LineHeight="8"
                         Text="{x:Bind ID, Mode=OneWay}" />
                     <TextBlock
-                        Foreground="Black"
+                        Foreground="{ThemeResource TextFillColorPrimaryBrush}"
                         LineHeight="8"
                         Text="#" />
                 </StackPanel>

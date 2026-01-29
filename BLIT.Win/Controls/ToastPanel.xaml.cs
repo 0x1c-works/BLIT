@@ -10,25 +10,22 @@ using System.Linq;
 
 namespace BLIT.Win.Controls;
 
-public sealed partial class ToastPanel : UserControl
-{
-    Visibility DebugButtonVisibility { get; } = Visibility.Collapsed;
-    public ToastPanel()
-    {
+public sealed partial class ToastPanel : UserControl {
+    public ToastPanel() {
         InitializeComponent();
         BindDebugAutoTestButtons();
         AppServices.Get<INotificationService>().OnNotify += NotificationService_OnNotify;
     }
 
-    Toast NotificationService_OnNotify(Notification notification)
-    {
+    private Visibility DebugButtonVisibility { get; } = Visibility.Collapsed;
+
+    private Toast NotificationService_OnNotify(Notification notification) {
         return AddToast(notification);
     }
 
-    Toast AddToast(Notification notification)
-    {
+    private Toast AddToast(Notification notification) {
         Toast toast = notification.CreateToast();
-        toast.OnClosed += (t) => {
+        toast.OnClosed += t => {
             container.Children.Remove(t);
         };
         container.Children.Add(toast);
@@ -36,64 +33,58 @@ public sealed partial class ToastPanel : UserControl
     }
 
     #region Tester
-    const string AUTO_TEST_BTN_PREFIX = "btnAutoTest";
-    void BindDebugAutoTestButtons()
-    {
+
+    private const string AUTO_TEST_BTN_PREFIX = "btnAutoTest";
+
+    private void BindDebugAutoTestButtons() {
         debugButtons.Children.Where(c => c is Button && (c as Button).Name.StartsWith(AUTO_TEST_BTN_PREFIX))
             .Cast<Button>()
             .ToList()
             .ForEach(b => b.Click += AutoTestButtonClick);
     }
-    void AutoTestButtonClick(object sender, RoutedEventArgs e)
-    {
+
+    private void AutoTestButtonClick(object sender, RoutedEventArgs e) {
         var variantName = (sender as Button).Name.Replace(AUTO_TEST_BTN_PREFIX, "");
-        if (Enum.TryParse<ToastVariant>(variantName, out ToastVariant variant))
-        {
+        if (Enum.TryParse(variantName, out ToastVariant variant)) {
             AddTestToast(variant);
         }
     }
-    void AddTestToast(ToastVariant variant)
-    {
-        var toast = new Toast() {
+
+    private void AddTestToast(ToastVariant variant) {
+        var toast = new Toast {
             Title = "Test Notification",
             Message = $"Heyhey {Enum.GetName(variant)} > {DateTime.Now.ToLongTimeString()}",
             Variant = variant,
-            IsOpen = true,
+            IsOpen = true
         };
         container.Children.Add(toast);
     }
 
-    void btnTestTimeout_Click(object sender, RoutedEventArgs e)
-    {
-        var btn = new Button() { Content = "Refresh", };
+    private void btnTestTimeout_Click(object sender, RoutedEventArgs e) {
+        var btn = new Button { Content = "Refresh" };
         btn.Click += (s, e) => {
-            Toast toast = (s as Button).FindAscendant<Toast>();
-            if (toast != null)
-            {
+            var toast = (s as Button).FindAscendant<Toast>();
+            if (toast != null) {
                 toast.TimeoutSeconds = 2;
             }
         };
-        var toast = new Toast() {
+        var toast = new Toast {
             Title = "Timeout Test",
             Message = "I'm gonna close in 2 seconds.",
             IsOpen = true,
             TimeoutSeconds = 2,
-            ActionButton = btn,
+            ActionButton = btn
         };
 
         container.Children.Add(toast);
     }
 
-    void btnTestNoTimeout_Click(object sender, RoutedEventArgs e)
-    {
-        var toast = new Toast() {
-            Title = "Timeout 0s Test",
-            Message = "I'm not gonna close automatically.",
-            IsOpen = true,
-            TimeoutSeconds = 0,
+    private void btnTestNoTimeout_Click(object sender, RoutedEventArgs e) {
+        var toast = new Toast {
+            Title = "Timeout 0s Test", Message = "I'm not gonna close automatically.", IsOpen = true, TimeoutSeconds = 0
         };
         container.Children.Add(toast);
     }
+
     #endregion
 }
-
