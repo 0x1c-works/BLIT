@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace BLIT.WPF.Pages.Settings;
 
@@ -113,6 +114,9 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
 
         _previousPathBackup = new ScanFolderItem(item.RelativePath);
         item.IsEditing = true;
+        
+        // Auto-focus to TextBox after edit mode is enabled
+        Dispatcher.BeginInvoke(() => FocusEditTextBox());
     }
 
     private void BtnDelete_Click(object sender, RoutedEventArgs e) {
@@ -186,7 +190,162 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
         }
     }
 
+    /// <summary>
+    ///     Auto-focus TextBox when it's loaded (when entering edit mode)
+    /// </summary>
+    private void EditPath_Loaded(object sender, RoutedEventArgs e) {
+        if (sender is TextBox textBox) {
+            textBox.Focus();
+            textBox.SelectAll();
+        }
+    }
+
+    /// <summary>
+    ///     Handle double-click on list item to enter edit mode
+    /// </summary>
+    private void ListViewScanFolders_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e) {
+        if (ListViewScanFolders.SelectedItem is not ScanFolderItem item) {
+            return;
+        }
+
+        // Only allow double-click on the display mode (TextBlock area)
+        // Check if the click is not on the edit grid buttons
+        var originalSource = e.OriginalSource as DependencyObject;
+        if (e.OriginalSource is Button || (originalSource != null && FindAncestor<Button>(originalSource) != null)) {
+            return;
+        }
+
+        // Enable edit mode
+        _previousPathBackup = new ScanFolderItem(item.RelativePath);
+        item.IsEditing = true;
+
+        // Auto-focus to TextBox after edit mode is enabled
+        Dispatcher.BeginInvoke(() => FocusEditTextBox());
+
+        e.Handled = true;
+    }
+
+    /// <summary>
+    ///     Helper method to find an ancestor element of a specific type
+    /// </summary>
+    private T? FindAncestor<T>(DependencyObject child) where T : DependencyObject {
+        var parent = VisualTreeHelper.GetParent(child);
+
+        if (parent == null) {
+            return null;
+        }
+
+        if (parent is T ancestor) {
+            return ancestor;
+        }
+
+        return FindAncestor<T>(parent);
+    }
+
+    /// <summary>
+    ///     Exit edit mode for a specific item with validation
+    ///     If the item has invalid input, cancel the edit; otherwise accept it
+    /// </summary>
+    private void ExitEditModeForItem(ScanFolderItem item) {
+        if (!item.IsEditing) {
+            return;
+        }
+
+        // Validate the path
+        if (!IsValidRelativePath(item.RelativePath)) {
+            // Invalid input, perform cancel operation
+            if (string.IsNullOrEmpty(_previousPathBackup?.RelativePath)) {
+                // New item, remove it
+                if (_folders != null) {
+                    _folders.Remove(item);
+                }
+            } else {
+                // Existing item, restore previous value
+                item.RelativePath = _previousPathBackup?.RelativePath ?? "";
+            }
+        } else {
+            // Check for duplicates (case-insensitive)
+            var normalizedPath = item.RelativePath.Replace('\\', '/').ToLower();
+            var isDuplicate = _folders?.Any(f =>
+                f != item && f.RelativePath.Replace('\\', '/').ToLower() == normalizedPath
+            ) ?? false;
+
+            if (isDuplicate) {
+                // Duplicate found, restore previous value
+                if (string.IsNullOrEmpty(_previousPathBackup?.RelativePath)) {
+                    // New item with duplicate, remove it
+                    if (_folders != null) {
+                        _folders.Remove(item);
+                    }
+                } else {
+                    // Existing item with duplicate, restore previous value
+                    item.RelativePath = _previousPathBackup?.RelativePath ?? "";
+                }
+            }
+            // Valid input, accept it
+        }
+
+        // Clear error and exit edit mode
+        item.ErrorMessage = "";
+        item.IsEditing = false;
+        SaveFolders();
+    }
+
+    /// <summary>
+    ///     Focus the TextBox in the currently selected item's edit mode
+    /// </summary>
+    private void FocusEditTextBox() {
+        if (ListViewScanFolders.SelectedItem is not ScanFolderItem item || !item.IsEditing) {
+            return;
+        }
+
+        // Get the container for the selected item
+        var container = ListViewScanFolders.ItemContainerGenerator.ContainerFromItem(item) as FrameworkElement;
+        if (container == null) {
+            return;
+        }
+
+        // Find the TextBox named "EditPath" in the container
+        var textBox = FindVisualChild<TextBox>(container, "EditPath");
+        if (textBox != null) {
+            textBox.Focus();
+            textBox.SelectAll();
+        }
+    }
+
+    /// <summary>
+    ///     Helper method to find a child element by name in the visual tree
+    /// </summary>
+    private T? FindVisualChild<T>(DependencyObject parent, string name) where T : FrameworkElement {
+        if (parent == null) {
+            return null;
+        }
+
+        var childCount = VisualTreeHelper.GetChildrenCount(parent);
+        for (int i = 0; i < childCount; i++) {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is T typedChild && typedChild.Name == name) {
+                return typedChild;
+            }
+
+            var result = FindVisualChild<T>(child, name);
+            if (result != null) {
+                return result;
+            }
+        }
+
+        return null;
+    }
+
     private void ListViewScanFolders_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        // Handle exiting edit mode for deselected items
+        foreach (var deselectedItem in e.RemovedItems.OfType<ScanFolderItem>()) {
+            if (deselectedItem.IsEditing) {
+                ExitEditModeForItem(deselectedItem);
+            }
+        }
+
+        // Update button states for newly selected item
         var hasSelection = ListViewScanFolders.SelectedItem != null;
         BtnEdit.IsEnabled = hasSelection;
         BtnDelete.IsEnabled = hasSelection;
