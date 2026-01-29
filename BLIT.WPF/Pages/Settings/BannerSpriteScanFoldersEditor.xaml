@@ -17,7 +17,7 @@
         <ui:TextBlock
             Margin="0,0,0,0"
             FontTypography="Body"
-            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+            Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
             Text="{helpers:I18n TextBannerSpriteScanFolders.Text}" />
         <ui:TextBlock
             Margin="0,4,0,8"
@@ -38,8 +38,8 @@
                 Grid.Column="0"
                 MinHeight="150"
                 MaxHeight="200"
-                Background="{DynamicResource ControlAltFillColorSecondaryBrush}"
-                BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                Background="{ui:ThemeResource ControlAltFillColorSecondaryBrush}"
+                BorderBrush="{ui:ThemeResource ControlElevationBorderBrush}"
                 BorderThickness="1"
                 CornerRadius="4">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -58,7 +58,6 @@
                                         x:Name="LabelPath"
                                         Margin="12,0,0,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                         Text="{Binding RelativePath, Mode=OneWay}"
                                         Visibility="{Binding IsViewing, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
@@ -75,8 +74,6 @@
                                             x:Name="EditPath"
                                             Grid.Column="0"
                                             Margin="8,4"
-                                            Background="{DynamicResource ControlFillColorDefaultBrush}"
-                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                             KeyDown="EditPath_KeyDown"
                                             Text="{Binding RelativePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
@@ -119,14 +116,6 @@
                                 </Grid>
                             </DataTemplate>
                         </ui:ListView.ItemTemplate>
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="Padding" Value="0" />
-                                <Setter Property="Margin" Value="0" />
-                                <Setter Property="BorderThickness" Value="0,0,0,1" />
-                                <Setter Property="BorderBrush" Value="{DynamicResource ControlElevationBorderBrush}" />
-                            </Style>
-                        </ListView.ItemContainerStyle>
                     </ui:ListView>
                 </ScrollViewer>
             </Border>
