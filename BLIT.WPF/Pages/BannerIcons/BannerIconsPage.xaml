@@ -31,9 +31,9 @@
                     Grid.Column="1"
                     Margin="8,0,0,0"
                     Orientation="Horizontal">
-                    <TextBlock Foreground="Gray" Text="(" />
-                    <TextBlock Foreground="Gray" Text="{Binding Icons.Count}" />
-                    <TextBlock Foreground="Gray" Text=")" />
+                    <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="(" />
+                    <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding Icons.Count}" />
+                    <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text=")" />
                 </StackPanel>
             </Grid>
         </DataTemplate>

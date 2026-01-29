@@ -55,11 +55,11 @@
                     Stretch="Uniform" />
 
                 <!--  Atlas Name Overlay (Top)  -->
-                <Grid VerticalAlignment="Top" Background="#80000000">
+                <Grid VerticalAlignment="Top" Background="{DynamicResource SurfaceStrokeColorDefaultBrush}" Opacity="0.5">
                     <TextBlock
                         Margin="2"
                         FontSize="10"
-                        Foreground="White"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                         Text="{Binding AtlasName}"
                         TextAlignment="Center" />
                 </Grid>
@@ -70,20 +70,20 @@
                     Padding="4,1"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
-                    Background="#99CCCCCC"
-                    BorderBrush="DarkGray"
+                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="4">
                     <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal">
                         <TextBlock
                             FontSize="10"
                             FontWeight="Bold"
-                            Foreground="Black"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                             Text="{Binding ID}" />
                         <TextBlock
                             Margin="0,0,2,0"
                             FontSize="10"
-                            Foreground="Black"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                             Text="#" />
                     </StackPanel>
                 </Border>
@@ -94,7 +94,7 @@
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="TextAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Foreground" Value="Gray" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
         </Style>
 
         <!--  High-Performance Drag Adorner Template for Icon List  -->
@@ -231,7 +231,7 @@
                         Text="{helpers:I18n TextIconDetails.Text}" />
                     <TextBlock
                         VerticalAlignment="Center"
-                        Foreground="Gray"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         Visibility="{Binding DataContext.HasSelectedIcons, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <Run
                             Text="{Binding DataContext.SelectedGroup.GroupName, RelativeSource={RelativeSource AncestorType=Page}, Mode=OneWay}" />
@@ -299,7 +299,7 @@
                         Margin="8,0,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        BorderBrush="Gray"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                         BorderThickness="2">
                         <Grid>
                             <Rectangle Fill="{StaticResource CheckerboardBrush}" />
@@ -360,7 +360,7 @@
                         Margin="8,0,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        BorderBrush="Gray"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                         BorderThickness="2">
                         <Grid>
                             <Rectangle Fill="{StaticResource CheckerboardBrush}" />

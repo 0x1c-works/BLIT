@@ -37,7 +37,7 @@
         </Storyboard>
     </UserControl.Resources>
     <Grid x:Name="RootGrid" Visibility="Collapsed" Opacity="0">
-        <Border Background="#B3000000">
+        <Border Background="{DynamicResource SurfaceStrokeColorDefaultBrush}" Opacity="0.5">
             <Border
                 Padding="24"
                 HorizontalAlignment="Center"
@@ -56,7 +56,7 @@
                             x:Name="MessageText"
                             VerticalAlignment="Center"
                             FontSize="14"
-                            Foreground="White"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                             Text="{Binding Message, RelativeSource={RelativeSource AncestorType=UserControl}}" />
                     </StackPanel>
 
@@ -68,14 +68,14 @@
                         <TextBlock
                             x:Name="ProgressText"
                             FontSize="12"
-                            Foreground="White"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="{Binding ProgressDisplayText, RelativeSource={RelativeSource AncestorType=UserControl}, StringFormat='({0})'}"
                             TextAlignment="Center" />
                         <TextBlock
                             x:Name="PercentageText"
                             Margin="0,4,0,0"
                             FontSize="11"
-                            Foreground="White"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="{Binding ProgressPercentageString, RelativeSource={RelativeSource AncestorType=UserControl}}"
                             TextAlignment="Center" />
                     </StackPanel>
