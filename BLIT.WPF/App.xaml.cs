@@ -1,5 +1,6 @@
 using BLIT.WPF.Helpers;
 using BLIT.WPF.Services;
+using Sentry;
 using Sentry.Protocol;
 using Serilog;
 using System.Windows;

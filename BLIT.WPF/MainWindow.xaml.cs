@@ -2,6 +2,7 @@ using BLIT.WPF.Helpers;
 using BLIT.WPF.Pages.BannerIcons;
 using BLIT.WPF.Services;
 using CommunityToolkit.Mvvm.Input;
+using Sentry;
 using Serilog;
 using System.ComponentModel;
 using System.Diagnostics;
