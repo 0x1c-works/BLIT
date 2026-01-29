@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": "24.x"
+  },
   "dependencies": {
     "next": "^13.4.10",
     "nextra": "^2.10.0",
