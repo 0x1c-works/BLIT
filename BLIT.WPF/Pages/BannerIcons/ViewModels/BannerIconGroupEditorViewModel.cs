@@ -125,13 +125,16 @@ public partial class BannerIconGroupEditorViewModel : ObservableObject {
 
     // ============ 事件处理 ============
 
-    partial void OnGroupDataChanged(BannerGroupEntry? oldValue, BannerGroupEntry? newValue) {
-        // 当分组数据改变时，清空已选中的图标
-        if (oldValue != newValue) {
-            SelectedIcons = [];
-            _currentSelectedIcon = null;
-        }
-    }
+     partial void OnGroupDataChanged(BannerGroupEntry? oldValue, BannerGroupEntry? newValue) {
+         // 当分组数据改变时，清空已选中的图标
+         if (oldValue != newValue) {
+             SelectedIcons = [];
+             _currentSelectedIcon = null;
+             
+             // 更新删除命令状态（因为选中的图标已清空）
+             UpdateDeleteCommandState();
+         }
+     }
 
     private void OnSelectedIconPropertyChanged(object? sender, PropertyChangedEventArgs e) {
         if (e.PropertyName == nameof(BannerIconEntry.SpritePath) ||
@@ -140,32 +143,40 @@ public partial class BannerIconGroupEditorViewModel : ObservableObject {
         }
     }
 
-    private void UpdateCanReimportAssets() {
-        // 显式通知 RelayCommand 重新评估 CanExecute
-        ChangeSpriteCommand.NotifyCanExecuteChanged();
-        ReimportSpriteCommand.NotifyCanExecuteChanged();
-        ChangeTextureCommand.NotifyCanExecuteChanged();
-        ReimportTextureCommand.NotifyCanExecuteChanged();
-    }
+     private void UpdateCanReimportAssets() {
+         // 显式通知 RelayCommand 重新评估 CanExecute
+         ChangeSpriteCommand.NotifyCanExecuteChanged();
+         ReimportSpriteCommand.NotifyCanExecuteChanged();
+         ChangeTextureCommand.NotifyCanExecuteChanged();
+         ReimportTextureCommand.NotifyCanExecuteChanged();
+     }
 
-    public void OnSelectionChanged(IEnumerable<BannerIconEntry> icons) {
-        // 取消旧图标的订阅
-        if (_currentSelectedIcon != null) {
-            _currentSelectedIcon.PropertyChanged -= OnSelectedIconPropertyChanged;
-        }
+     private void UpdateDeleteCommandState() {
+         // 通知 DeleteTexturesCommand 重新评估 CanExecute
+         DeleteTexturesCommand.NotifyCanExecuteChanged();
+     }
 
-        // 更新选中的图标集合
-        SelectedIcons = icons;
+     public void OnSelectionChanged(IEnumerable<BannerIconEntry> icons) {
+         // 取消旧图标的订阅
+         if (_currentSelectedIcon != null) {
+             _currentSelectedIcon.PropertyChanged -= OnSelectedIconPropertyChanged;
+         }
 
-        // 更新当前选中图标引用
-        _currentSelectedIcon = FirstSelectedIcon;
+         // 更新选中的图标集合
+         SelectedIcons = icons;
 
-        // 订阅新图标的属性变化
-        if (_currentSelectedIcon != null) {
-            _currentSelectedIcon.PropertyChanged += OnSelectedIconPropertyChanged;
-        }
+         // 更新当前选中图标引用
+         _currentSelectedIcon = FirstSelectedIcon;
 
-        // 更新 CanReimport 属性值
-        UpdateCanReimportAssets();
-    }
+         // 订阅新图标的属性变化
+         if (_currentSelectedIcon != null) {
+             _currentSelectedIcon.PropertyChanged += OnSelectedIconPropertyChanged;
+         }
+
+         // 更新 CanReimport 属性值
+         UpdateCanReimportAssets();
+         
+         // 更新 Delete 命令的可用状态
+         UpdateDeleteCommandState();
+     }
 }
