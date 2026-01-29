@@ -2,4 +2,19 @@
   <PropertyGroup>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
+  
+  <!-- 安全漏洞修复：管理易受攻击的传递依赖 -->
+  <ItemGroup>
+    <!-- 
+      System.Drawing.Common: 从 4.7.0 (critical) 升级到 10.0.2
+      通过 Magick.NET 和其他包作为传递依赖引入
+    -->
+    <PackageReference Include="System.Drawing.Common" Version="10.0.2" />
+    
+    <!-- 
+      Newtonsoft.Json: 从 12.0.3 (high) 升级到 13.0.4
+      通过多个包作为传递依赖引入
+    -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
 </Project>
