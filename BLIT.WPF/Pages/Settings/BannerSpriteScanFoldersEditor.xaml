@@ -19,10 +19,10 @@
             FontTypography="Body"
             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
             Text="{helpers:I18n TextBannerSpriteScanFolders.Text}" />
-        <TextBlock
+        <ui:TextBlock
             Margin="0,4,0,8"
-            FontSize="12"
-            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+            FontTypography="Caption"
+            Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
             Text="{helpers:I18n TextBannerSpriteScanFoldersExplain.Text}"
             TextWrapping="Wrap" />
 

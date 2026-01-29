@@ -9,11 +9,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <!-- Dark theme (default) -->
                 <ui:ThemesDictionary Theme="Dark" />
-                <ui:ThemesDictionary Theme="Light" />
                 <!-- WPF-UI controls dictionary -->
                 <ui:ControlsDictionary />
                 <!-- Theme colors reference for Rider IntelliSense -->
-                <ResourceDictionary Source="Resources/ThemeColors.reference.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Built-in converters -->
@@ -32,24 +30,6 @@
 
             <Style x:Key="ItemLabelStyle" TargetType="TextBlock">
                 <Setter Property="FontWeight" Value="SemiBold" />
-            </Style>
-
-            <Style x:Key="CaptionStyle" TargetType="TextBlock">
-                <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorTertiaryBrush}" />
-                <Setter Property="FontSize" Value="12" />
-            </Style>
-
-            <!-- Menu and MenuItem Styles for Dynamic Theming -->
-            <Style TargetType="{x:Type Menu}">
-                <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorPrimaryBrush}" />
-            </Style>
-
-            <Style TargetType="{x:Type MenuItem}">
-                <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorPrimaryBrush}" />
-            </Style>
-
-            <Style TargetType="{x:Type Separator}">
-                <Setter Property="Background" Value="{ui:ThemeResource DividerStrokeColorDefaultBrush}" />
             </Style>
         </ResourceDictionary>
     </Application.Resources>

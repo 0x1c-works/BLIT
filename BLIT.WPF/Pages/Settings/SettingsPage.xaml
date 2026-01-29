@@ -19,7 +19,7 @@
         <StackPanel Margin="32">
 
             <!--  Banner Settings  -->
-            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{helpers:I18n TextBannerSettingsTitle.Text}" />
+            <ui:TextBlock FontTypography="Subtitle" Text="{helpers:I18n TextBannerSettingsTitle.Text}" />
 
             <ui:Card Margin="0,8,0,12">
 
@@ -48,9 +48,9 @@
                                 FontTypography="Body"
                                 Text="{helpers:I18n TextCustomBannerGroupStartID.Text}"
                                 TextWrapping="Wrap" />
-                            <TextBlock
-                                FontSize="12"
-                                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            <ui:TextBlock
+                                FontTypography="Caption"
+                                Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
                                 Text="{helpers:I18n TextCustomBannerGroupStartIDExplain.Text}"
                                 TextWrapping="Wrap" />
                         </StackPanel>
@@ -75,9 +75,9 @@
                                 FontTypography="Body"
                                 Text="{helpers:I18n TextCustomBannerColorStartID.Text}"
                                 TextWrapping="Wrap" />
-                            <TextBlock
-                                FontSize="12"
-                                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            <ui:TextBlock
+                                FontTypography="Caption"
+                                Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
                                 Text="{helpers:I18n TextCustomBannerColorStartIDExplain.Text}"
                                 TextWrapping="Wrap" />
                         </StackPanel>
@@ -94,7 +94,7 @@
                 </StackPanel>
             </ui:Card>
             <!--  Appearance  -->
-            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{helpers:I18n TextAppearanceTitle.Text}" />
+            <ui:TextBlock FontTypography="Subtitle" Text="{helpers:I18n TextAppearanceTitle.Text}" />
 
             <!--  Theme Selection  -->
             <ui:CardControl Margin="0,8,0,12" Icon="{ui:SymbolIcon Color24}">
@@ -156,7 +156,7 @@
             </ui:CardControl>
 
             <!--  About  -->
-            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{helpers:I18n TextAboutTitle.Text}" />
+            <ui:TextBlock FontTypography="Subtitle" Text="{helpers:I18n TextAboutTitle.Text}" />
 
             <ui:CardExpander ContentPadding="0"
                              Icon="{ui:ImageIcon 'pack://application:,,,/Assets/StoreLogo.png', Width=50, Height=50}">
