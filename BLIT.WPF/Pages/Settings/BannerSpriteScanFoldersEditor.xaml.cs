@@ -47,7 +47,7 @@ public partial class ScanFolderItem : ObservableObject {
 /// <summary>
 ///     Editor control for managing banner sprite scan folders
 /// </summary>
-public partial class BannerSpriteScanFoldersEditor : UserControl {
+public partial class BannerSpriteScanFoldersEditor {
     private readonly ISettingsService? _settings = AppServices.Get<ISettingsService>();
     private ObservableCollection<ScanFolderItem>? _folders;
     private ScanFolderItem? _previousPathBackup;
@@ -115,8 +115,8 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
         _previousPathBackup = new ScanFolderItem(item.RelativePath);
         item.IsEditing = true;
         
-        // Auto-focus to TextBox after edit mode is enabled
-        Dispatcher.BeginInvoke(() => FocusEditTextBox());
+        // Autofocus to TextBox after edit mode is enabled
+        Dispatcher.BeginInvoke(FocusEditTextBox);
     }
 
     private void BtnDelete_Click(object sender, RoutedEventArgs e) {
@@ -191,7 +191,7 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
     }
 
     /// <summary>
-    ///     Auto-focus TextBox when it's loaded (when entering edit mode)
+    ///     Autofocus TextBox when it's loaded (when entering edit mode)
     /// </summary>
     private void EditPath_Loaded(object sender, RoutedEventArgs e) {
         if (sender is TextBox textBox) {
@@ -219,8 +219,8 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
         _previousPathBackup = new ScanFolderItem(item.RelativePath);
         item.IsEditing = true;
 
-        // Auto-focus to TextBox after edit mode is enabled
-        Dispatcher.BeginInvoke(() => FocusEditTextBox());
+        // Autofocus to TextBox after edit mode is enabled
+        Dispatcher.BeginInvoke(FocusEditTextBox);
 
         e.Handled = true;
     }
@@ -317,10 +317,6 @@ public partial class BannerSpriteScanFoldersEditor : UserControl {
     ///     Helper method to find a child element by name in the visual tree
     /// </summary>
     private T? FindVisualChild<T>(DependencyObject parent, string name) where T : FrameworkElement {
-        if (parent == null) {
-            return null;
-        }
-
         var childCount = VisualTreeHelper.GetChildrenCount(parent);
         for (int i = 0; i < childCount; i++) {
             var child = VisualTreeHelper.GetChild(parent, i);
