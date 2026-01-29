@@ -8,7 +8,8 @@
             <!-- WPF-UI Theme Resources - Dynamically loaded based on theme setting -->
             <ResourceDictionary.MergedDictionaries>
                 <!-- Dark theme (default) -->
-                <ui:ThemesDictionary Theme="Dark" x:Name="ThemeDict" />
+                <ui:ThemesDictionary Theme="Dark" />
+                <ui:ThemesDictionary Theme="Light" />
                 <!-- WPF-UI controls dictionary -->
                 <ui:ControlsDictionary />
                 <!-- Theme colors reference for Rider IntelliSense -->
@@ -34,8 +35,21 @@
             </Style>
 
             <Style x:Key="CaptionStyle" TargetType="TextBlock">
-                <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorTertiaryBrush}" />
                 <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <!-- Menu and MenuItem Styles for Dynamic Theming -->
+            <Style TargetType="{x:Type Menu}">
+                <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorPrimaryBrush}" />
+            </Style>
+
+            <Style TargetType="{x:Type MenuItem}">
+                <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorPrimaryBrush}" />
+            </Style>
+
+            <Style TargetType="{x:Type Separator}">
+                <Setter Property="Background" Value="{ui:ThemeResource DividerStrokeColorDefaultBrush}" />
             </Style>
         </ResourceDictionary>
     </Application.Resources>

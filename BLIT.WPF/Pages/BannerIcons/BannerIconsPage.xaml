@@ -14,9 +14,9 @@
     VerticalAlignment="Stretch"
     d:DesignHeight="600"
     d:DesignWidth="1000"
-    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
-    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    ui:Design.Background="{ui:ThemeResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
+    Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <!--  分组列表项模板  -->
@@ -31,9 +31,9 @@
                     Grid.Column="1"
                     Margin="8,0,0,0"
                     Orientation="Horizontal">
-                    <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="(" />
-                    <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding Icons.Count}" />
-                    <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text=")" />
+                    <TextBlock Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="(" />
+                    <TextBlock Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Icons.Count}" />
+                    <TextBlock Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text=")" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -50,16 +50,16 @@
         <Border
             Grid.Row="0"
             Padding="24,16"
-            BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+            BorderBrush="{ui:ThemeResource DividerStrokeColorDefaultBrush}"
             BorderThickness="0,0,0,1">
             <StackPanel Orientation="Horizontal">
                 <TextBlock
                     FontSize="28"
                     FontWeight="SemiBold"
-                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
                     Text="{helpers:I18n AppNavMenuBanner.Content}" />
                 <TextBlock VerticalAlignment="Bottom" Text="{Binding ProjectName}"
-                           Margin="16,0,0,0" FontSize="24" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                           Margin="16,0,0,0" FontSize="24" Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}" />
             </StackPanel>
         </Border>
 
@@ -165,7 +165,7 @@
                         <Border
                             Grid.Row="0"
                             Padding="16"
-                            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
+                            Background="{ui:ThemeResource CardBackgroundFillColorDefaultBrush}">
                             <TextBlock
                                 FontWeight="Bold"
                                 Text="{helpers:I18n TextBannerGroupListTitle.Text}"
@@ -200,11 +200,11 @@
                     <GridSplitter Grid.Column="1"
                                   Width="5"
                                   HorizontalAlignment="Stretch"
-                                  Background="{DynamicResource ControlFillColorDefaultBrush}" />
+                                  Background="{ui:ThemeResource ControlFillColorDefaultBrush}" />
                     <!--  右侧编辑区域  -->
                     <Border
                         Grid.Column="2"
-                        BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+                        BorderBrush="{ui:ThemeResource DividerStrokeColorDefaultBrush}"
                         BorderThickness="1,0,0,0">
                         <Grid>
                             <TextBlock
