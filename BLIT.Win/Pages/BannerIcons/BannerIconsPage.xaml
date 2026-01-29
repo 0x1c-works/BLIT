@@ -147,7 +147,7 @@
                     <SplitView.PaneBackground>
                         <AcrylicBrush
                             Opacity=".1"
-                            TintColor="DarkCyan"
+                            TintColor="{ThemeResource AccentAAFillColorDefaultBrush}"
                             TintLuminosityOpacity=".5"
                             TintOpacity=".2" />
                     </SplitView.PaneBackground>

@@ -12,8 +12,8 @@
     <UserControl.Resources>
         <AcrylicBrush
             x:Key="LoadingBackgroundStyle"
-            FallbackColor="#FF000000"
-            TintColor="#FF000000"
+            FallbackColor="{ThemeResource SurfaceFillColorDefaultBrush}"
+            TintColor="{ThemeResource SurfaceFillColorDefaultBrush}"
             TintOpacity=".7" />
     </UserControl.Resources>
 
@@ -22,11 +22,11 @@
             <StackPanel Padding="12" Orientation="Horizontal">
                 <ProgressRing
                     Margin="0,0,12,0"
-                    Foreground="CadetBlue"
+                    Foreground="{ThemeResource AccentAAFillColorDefaultBrush}"
                     IsActive="True" />
                 <TextBlock
                     VerticalAlignment="Center"
-                    Foreground="White"
+                    Foreground="{ThemeResource TextFillColorPrimaryBrush}"
                     Text="{x:Bind Message, Mode=OneWay}" />
             </StackPanel>
         </controls:Loading>
