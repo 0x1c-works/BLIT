@@ -3,6 +3,7 @@ using BLIT.WPF.Pages.BannerIcons.Models;
 using BLIT.WPF.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Wpf.Ui.Controls;
 
 namespace BLIT.WPF.Pages.BannerIcons.ViewModels;
 
@@ -78,11 +79,12 @@ public partial class BannerColorsEditorViewModel : ObservableObject {
             return;
         }
 
-        ContentDialogResult result = await confirmDialog.ShowDanger(
+        var result = await confirmDialog.Show(
             I18n.Current.GetString("DialogDeleteColor/Title"),
-            string.Format(I18n.Current.GetString("DialogDeleteColor/Content"), SelectedColors.Count()));
+            string.Format(I18n.Current.GetString("DialogDeleteColor/Content"), SelectedColors.Count()),
+            IConfirmDialogService.Level.Danger);
 
-        if (result != ContentDialogResult.Primary) {
+        if (result != IConfirmDialogService.Result.Yes) {
             return;
         }
 

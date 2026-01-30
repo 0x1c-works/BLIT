@@ -36,10 +36,14 @@ public static class FileHelpers {
     }
 
     public static void OpenFolderInExplorer(string path) {
-        Process.Start("explorer.exe", GetDirectory(path));
+        Process.Start(new ProcessStartInfo { FileName = GetDirectory(path), UseShellExecute = true });
     }
 
     public static void EnsureDirectory(ref string path) {
         path = Directory.CreateDirectory(path).FullName;
+    }
+
+    public static void OpenUrl(string url) {
+        Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
     }
 }

@@ -1,63 +1,61 @@
-using System.Windows;
+using BLIT.WPF.Helpers;
+using Wpf.Ui.Controls;
 
 namespace BLIT.WPF.Services;
 
-public enum ContentDialogResult {
-    None,
-    Primary,
-    Secondary
-}
-
 public interface IConfirmDialogService {
-    Task<ContentDialogResult> Show(string title, string content, string primaryButton, string secondaryButton);
-    Task<ContentDialogResult> ShowWarn(string title, string content);
-    Task<ContentDialogResult> ShowDanger(string title, string content);
+    Task<Result> Show(string title, string content, Level level);
+
+    enum Level {
+        Question,
+        Warning,
+        Danger,
+    }
+
+    enum Result {
+        Yes, No, Cancel,
+    }
 }
 
 public class ConfirmDialogService : IConfirmDialogService {
     #region IConfirmDialogService Members
 
-    public Task<ContentDialogResult> Show(string title, string content, string primaryButton, string secondaryButton) {
-        MessageBoxResult result = MessageBox.Show(
-            content,
-            title,
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question,
-            MessageBoxResult.No
-        );
-
-        return Task.FromResult(result == MessageBoxResult.Yes
-            ? ContentDialogResult.Primary
-            : ContentDialogResult.Secondary);
-    }
-
-    public Task<ContentDialogResult> ShowWarn(string title, string content) {
-        MessageBoxResult result = MessageBox.Show(
-            content,
-            title,
-            MessageBoxButton.OKCancel,
-            MessageBoxImage.Warning,
-            MessageBoxResult.Cancel
-        );
-
-        return Task.FromResult(result == MessageBoxResult.OK
-            ? ContentDialogResult.Primary
-            : ContentDialogResult.Secondary);
-    }
-
-    public Task<ContentDialogResult> ShowDanger(string title, string content) {
-        MessageBoxResult result = MessageBox.Show(
-            content,
-            title,
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Exclamation,
-            MessageBoxResult.No
-        );
-
-        return Task.FromResult(result == MessageBoxResult.Yes
-            ? ContentDialogResult.Primary
-            : ContentDialogResult.Secondary);
+    public async Task<IConfirmDialogService.Result> Show(string title, string content,
+        IConfirmDialogService.Level level) {
+        var mb = new MessageBox() {
+            Title = title,
+            Content = content,
+            PrimaryButtonText = I18n.Current.GetString("Yes"),
+            PrimaryButtonAppearance =  GetLevelAppearance(level),
+            PrimaryButtonIcon = GetLevelIcon(level),
+            SecondaryButtonText = I18n.Current.GetString("No"),
+            IsCloseButtonEnabled = false,
+        };
+        return ToResult(await mb.ShowDialogAsync());
     }
 
     #endregion
+
+    private IConfirmDialogService.Result ToResult(MessageBoxResult boxResult) {
+        return boxResult switch {
+            MessageBoxResult.Primary => IConfirmDialogService.Result.Yes,
+            MessageBoxResult.Secondary => IConfirmDialogService.Result.No,
+            _ => IConfirmDialogService.Result.Cancel
+        };
+    }
+
+    private ControlAppearance GetLevelAppearance(IConfirmDialogService.Level level) {
+        return level switch {
+            IConfirmDialogService.Level.Warning => ControlAppearance.Caution,
+            IConfirmDialogService.Level.Danger => ControlAppearance.Danger,
+            _ => ControlAppearance.Primary,
+        };
+    }
+    private IconElement? GetLevelIcon(IConfirmDialogService.Level level) {
+        return level switch {
+            IConfirmDialogService.Level.Warning => new SymbolIcon(SymbolRegular.Warning20),
+            IConfirmDialogService.Level.Danger => new SymbolIcon(SymbolRegular.ErrorCircle20),
+            _ => null,
+        };
+    }
 }

@@ -4,6 +4,7 @@ using BLIT.WPF.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
+using Wpf.Ui.Controls;
 
 namespace BLIT.WPF.Pages.BannerIcons.ViewModels;
 
@@ -64,11 +65,12 @@ public partial class BannerIconGroupEditorViewModel : ObservableObject {
             return;
         }
 
-        ContentDialogResult result = await confirmDialog.ShowDanger(
+        var result = await confirmDialog.Show(
             I18n.Current.GetString("DialogDeleteBannerIcon.Title"),
-            string.Format(I18n.Current.GetString("DialogDeleteBannerIcon.Content"), SelectedIcons.Count()));
+            string.Format(I18n.Current.GetString("DialogDeleteBannerIcon.Content"), SelectedIcons.Count()),
+            IConfirmDialogService.Level.Danger);
 
-        if (result == ContentDialogResult.Primary) {
+        if (result == IConfirmDialogService.Result.Yes) {
             GroupData.DeleteIcons(SelectedIcons);
         }
     }
@@ -125,16 +127,16 @@ public partial class BannerIconGroupEditorViewModel : ObservableObject {
 
     // ============ 事件处理 ============
 
-     partial void OnGroupDataChanged(BannerGroupEntry? oldValue, BannerGroupEntry? newValue) {
-         // 当分组数据改变时，清空已选中的图标
-         if (oldValue != newValue) {
-             SelectedIcons = [];
-             _currentSelectedIcon = null;
-             
-             // 更新删除命令状态（因为选中的图标已清空）
-             UpdateDeleteCommandState();
-         }
-     }
+    partial void OnGroupDataChanged(BannerGroupEntry? oldValue, BannerGroupEntry? newValue) {
+        // 当分组数据改变时，清空已选中的图标
+        if (oldValue != newValue) {
+            SelectedIcons = [];
+            _currentSelectedIcon = null;
+
+            // 更新删除命令状态（因为选中的图标已清空）
+            UpdateDeleteCommandState();
+        }
+    }
 
     private void OnSelectedIconPropertyChanged(object? sender, PropertyChangedEventArgs e) {
         if (e.PropertyName == nameof(BannerIconEntry.SpritePath) ||
@@ -143,40 +145,40 @@ public partial class BannerIconGroupEditorViewModel : ObservableObject {
         }
     }
 
-     private void UpdateCanReimportAssets() {
-         // 显式通知 RelayCommand 重新评估 CanExecute
-         ChangeSpriteCommand.NotifyCanExecuteChanged();
-         ReimportSpriteCommand.NotifyCanExecuteChanged();
-         ChangeTextureCommand.NotifyCanExecuteChanged();
-         ReimportTextureCommand.NotifyCanExecuteChanged();
-     }
+    private void UpdateCanReimportAssets() {
+        // 显式通知 RelayCommand 重新评估 CanExecute
+        ChangeSpriteCommand.NotifyCanExecuteChanged();
+        ReimportSpriteCommand.NotifyCanExecuteChanged();
+        ChangeTextureCommand.NotifyCanExecuteChanged();
+        ReimportTextureCommand.NotifyCanExecuteChanged();
+    }
 
-     private void UpdateDeleteCommandState() {
-         // 通知 DeleteTexturesCommand 重新评估 CanExecute
-         DeleteTexturesCommand.NotifyCanExecuteChanged();
-     }
+    private void UpdateDeleteCommandState() {
+        // 通知 DeleteTexturesCommand 重新评估 CanExecute
+        DeleteTexturesCommand.NotifyCanExecuteChanged();
+    }
 
-     public void OnSelectionChanged(IEnumerable<BannerIconEntry> icons) {
-         // 取消旧图标的订阅
-         if (_currentSelectedIcon != null) {
-             _currentSelectedIcon.PropertyChanged -= OnSelectedIconPropertyChanged;
-         }
+    public void OnSelectionChanged(IEnumerable<BannerIconEntry> icons) {
+        // 取消旧图标的订阅
+        if (_currentSelectedIcon != null) {
+            _currentSelectedIcon.PropertyChanged -= OnSelectedIconPropertyChanged;
+        }
 
-         // 更新选中的图标集合
-         SelectedIcons = icons;
+        // 更新选中的图标集合
+        SelectedIcons = icons;
 
-         // 更新当前选中图标引用
-         _currentSelectedIcon = FirstSelectedIcon;
+        // 更新当前选中图标引用
+        _currentSelectedIcon = FirstSelectedIcon;
 
-         // 订阅新图标的属性变化
-         if (_currentSelectedIcon != null) {
-             _currentSelectedIcon.PropertyChanged += OnSelectedIconPropertyChanged;
-         }
+        // 订阅新图标的属性变化
+        if (_currentSelectedIcon != null) {
+            _currentSelectedIcon.PropertyChanged += OnSelectedIconPropertyChanged;
+        }
 
-         // 更新 CanReimport 属性值
-         UpdateCanReimportAssets();
-         
-         // 更新 Delete 命令的可用状态
-         UpdateDeleteCommandState();
-     }
+        // 更新 CanReimport 属性值
+        UpdateCanReimportAssets();
+
+        // 更新 Delete 命令的可用状态
+        UpdateDeleteCommandState();
+    }
 }

@@ -192,11 +192,7 @@ public partial class MainWindow {
                 SentrySdk.AddBreadcrumb("Visit help", "ui.nav");
 
                 var helpUrl = I18n.Current.GetString("LinkHelpWebsite");
-                Log.Information($"Help URL: {helpUrl}");
-
                 Process.Start(new ProcessStartInfo { FileName = helpUrl, UseShellExecute = true });
-
-                Log.Information("Help URL opened successfully");
             } catch (Exception ex) {
                 Log.Error($"Failed to open help URL: {ex.Message}");
             }

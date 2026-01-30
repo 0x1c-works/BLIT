@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using Wpf.Ui.Controls;
 
 namespace BLIT.WPF.Pages.BannerIcons.ViewModels;
 
@@ -229,11 +230,12 @@ public partial class BannerIconsPageViewModel : ObservableObject {
             return;
         }
 
-        ContentDialogResult result = await confirmDialog.ShowDanger(
+        var result = await confirmDialog.Show(
             I18n.Current.GetString("DialogDeleteBannerGroup.Title"),
-            string.Format(I18n.Current.GetString("DialogDeleteBannerGroup.Content"), SelectedGroup!.GroupID));
+            string.Format(I18n.Current.GetString("DialogDeleteBannerGroup.Content"), SelectedGroup!.GroupID),
+            IConfirmDialogService.Level.Danger);
 
-        if (result != ContentDialogResult.Primary) {
+        if (result != IConfirmDialogService.Result.Yes) {
             return;
         }
 
@@ -256,7 +258,7 @@ public partial class BannerIconsPageViewModel : ObservableObject {
                     I18n.Current.GetString("WarningNoSpriteScanFolders.Action"),
                     (_, _) => {
                         var helpUrl = I18n.Current.GetString("WarningNoSpriteScanFolders.Url");
-                        Process.Start(new ProcessStartInfo { FileName = helpUrl, UseShellExecute = true });
+                        FileHelpers.OpenUrl(helpUrl);
                     }), true));
         }
     }
