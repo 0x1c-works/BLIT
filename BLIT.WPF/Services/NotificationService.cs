@@ -21,16 +21,13 @@ public record struct Notification(
     string? Title = null,
     NotificationAction? Action = null,
     bool KeepOpen = false,
-    double TimeoutSeconds = 10.0,
-    bool IsClosable = true
+    double TimeoutSeconds = 10.0
 );
 
 /// <summary>
 ///     Service that bridges the NotificationService with WPF-UI SnackbarService.
 /// </summary>
 public interface INotificationService {
-    TimeSpan DefaultTimeOut { get; set; }
-
     /// <summary>
     ///     Shows a notification using the SnackBar.
     /// </summary>
@@ -47,7 +44,7 @@ public class NotificationService : INotificationService {
 
     #region INotificationService Members
 
-    public TimeSpan DefaultTimeOut { get; set; } = TimeSpan.FromSeconds(10);
+    public TimeSpan InfiniteTimeout { get; set; } = TimeSpan.MaxValue;
 
     public void SetSnackbarPresenter(SnackbarPresenter contentPresenter) {
         _presenter = contentPresenter;
@@ -63,7 +60,6 @@ public class NotificationService : INotificationService {
             ToastVariant.Success => ControlAppearance.Success,
             ToastVariant.Warning => ControlAppearance.Caution,
             ToastVariant.Error => ControlAppearance.Danger,
-            ToastVariant.Info => ControlAppearance.Secondary,
             _ => ControlAppearance.Secondary
         };
 
@@ -78,7 +74,7 @@ public class NotificationService : INotificationService {
 
         // Convert timeout to TimeSpan
         TimeSpan timeout = notification.KeepOpen
-            ? TimeSpan.Zero
+            ? InfiniteTimeout
             : TimeSpan.FromSeconds(notification.TimeoutSeconds);
 
         // Show snackbar
@@ -107,7 +103,7 @@ public class NotificationService : INotificationService {
         _snackbar.SetCurrentValue(Snackbar.IconProperty, icon);
         _snackbar.SetCurrentValue(
             Snackbar.TimeoutProperty,
-            timeout.TotalSeconds <= 0 ? DefaultTimeOut : timeout
+            timeout.TotalSeconds <= 0 ? InfiniteTimeout : timeout
         );
 
         _snackbar.Show(true);

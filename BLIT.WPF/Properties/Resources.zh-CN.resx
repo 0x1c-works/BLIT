@@ -424,8 +424,14 @@
   <data name="ThemeHighContrast" xml:space="preserve">
     <value>高对比度</value>
   </data>
+  <data name="WarningNoSpriteScanFolders.Title" xml:space="preserve">
+    <value>缺少配置信息</value>
+  </data>
   <data name="WarningNoSpriteScanFolders.Message" xml:space="preserve">
     <value>尚未设置图标扫描目录，添加贴图时将不会自动匹配UI图标。</value>
+  </data>
+  <data name="WarningNoSpriteScanFolders.Action" xml:space="preserve">
+    <value>查看说明</value>
   </data>
   <data name="WarningNoSpriteScanFolders.Url" xml:space="preserve">
     <value>https://blit.0x1.best/zh/banner-icon-editor/first-run#relative-scan-path</value>

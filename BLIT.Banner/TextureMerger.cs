@@ -53,7 +53,7 @@ public class TextureMerger {
             if (tex.Count > 0) {
                 // output tex
                 var outputFile = $"{outBasePath}_{texIndex + 1:d2}.psd";
-                IMagickImage<ushort> output = tex.AppendVertically();
+                IMagickImage<byte> output = tex.AppendVertically();
                 output.BackgroundColor = new MagickColor(0, 0, 0, 0);
                 output.Extent(GetTextureGeometry(), Gravity.Northwest);
                 output.Write(outputFile);
@@ -79,12 +79,12 @@ public class TextureMerger {
         using var row = new MagickImageCollection();
         var count = 0;
         foreach (var file in enumerable) {
-            row.Add(ResizeCell(new MagickImage(file)));
+            row.Add((IMagickImage<byte>)ResizeCell(new MagickImage(file)));
             count++;
         }
 
         if (row.Count > 0) {
-            IMagickImage<ushort> rowTex = row.AppendHorizontally();
+            IMagickImage<byte> rowTex = row.AppendHorizontally();
             rowTex.BackgroundColor = MagickColor.FromRgba(0, 0, 0, 0);
             tex.Add(rowTex);
         }
@@ -104,7 +104,7 @@ public class TextureMerger {
             : new MagickGeometry(size);
     }
 
-    private IMagickImage<ushort> ResizeCell(IMagickImage<ushort> image) {
+    private IMagickImage ResizeCell(IMagickImage image) {
         MagickGeometry geo = GetCellGeometry();
         image.Resize(geo);
         image.Crop(geo, Gravity.Center);

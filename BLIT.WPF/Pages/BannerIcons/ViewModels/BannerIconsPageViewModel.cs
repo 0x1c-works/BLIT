@@ -6,13 +6,17 @@ using BLIT.WPF.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using Wpf.Ui.Controls;
 
 namespace BLIT.WPF.Pages.BannerIcons.ViewModels;
 
 public partial class BannerIconsPageViewModel : ObservableObject {
     private static readonly Guid GUID_EXPORT_DIALOG = new("0c5f39f0-1a31-4d85-a9ee-7ad0cfd690b6");
     private static readonly Guid GUID_PROJECT_DIALOG = new("f86d402a-33de-4f62-8c2b-c5e75428c018");
+
+    #region Injected services
 
     private readonly IFileDialogService? _fileDialog =
         AppServices.Get<IFileDialogService>();
@@ -23,12 +27,13 @@ public partial class BannerIconsPageViewModel : ObservableObject {
     private readonly INotificationService? _notification =
         AppServices.Get<INotificationService>();
 
-    // 注入的服务
     private readonly IProjectService<BannerIconsProject>? _project =
         AppServices.Get<IProjectService<BannerIconsProject>>();
 
-    // 数据模型引用
-    private BannerIconsProject? _viewModel;
+    private readonly ISettingsService? _settings =
+        AppServices.Get<ISettingsService>();
+
+    #endregion
 
     // UI 状态属性
     [ObservableProperty]
@@ -42,15 +47,15 @@ public partial class BannerIconsPageViewModel : ObservableObject {
     }
 
     public BannerIconsProject? ViewModel {
-        get => _viewModel;
+        get;
         private set {
-            if (_viewModel != null) {
-                _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            if (field != null) {
+                field.PropertyChanged -= OnViewModelPropertyChanged;
             }
 
-            _viewModel = value;
-            if (_viewModel != null) {
-                _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+            field = value;
+            if (field != null) {
+                field.PropertyChanged += OnViewModelPropertyChanged;
                 // 立即更新所有命令状态，因为可能在订阅前属性已经改变
                 SaveProjectCommand.NotifyCanExecuteChanged();
                 SaveProjectAsCommand.NotifyCanExecuteChanged();
@@ -81,10 +86,10 @@ public partial class BannerIconsPageViewModel : ObservableObject {
 
     private bool CanSaveProject => ViewModel != null && !ViewModel.IsSavingOrLoading;
     private bool CanAddGroup => ViewModel != null && !ViewModel.IsSavingOrLoading;
-    private bool CanDeleteGroup => HasSelectedGroup && ViewModel != null && !ViewModel.IsSavingOrLoading;
+    private bool CanDeleteGroup => HasSelectedGroup && ViewModel is { IsSavingOrLoading: false };
     private bool CanExport => ViewModel?.CanExport ?? false;
 
-    partial void OnSelectedGroupChanged(BannerGroupEntry? value) {
+    partial void OnSelectedGroupChanged(BannerGroupEntry? _) {
         DeleteGroupCommand.NotifyCanExecuteChanged();
         OnPropertyChanged(nameof(CanDeleteGroup));
     }
@@ -178,7 +183,7 @@ public partial class BannerIconsPageViewModel : ObservableObject {
                 string.Format(I18n.Current.GetString("ExportSuccess"), outDir),
                 Action: new NotificationAction(
                     I18n.Current.GetString("ButtonOpenFolder.Content"),
-                    (s, e) => FileHelpers.OpenFolderInExplorer(outDir))));
+                    (_, _) => FileHelpers.OpenFolderInExplorer(outDir))));
         });
     }
 
@@ -199,7 +204,7 @@ public partial class BannerIconsPageViewModel : ObservableObject {
                 string.Format(I18n.Current.GetString("SaveXMLSuccess"), Path.Join(outDir, "banner_icons.xml")),
                 Action: new NotificationAction(
                     I18n.Current.GetString("ButtonOpenFolder.Content"),
-                    (s, e) => FileHelpers.OpenFolderInExplorer(outDir ?? ""))));
+                    (_, _) => FileHelpers.OpenFolderInExplorer(outDir ?? ""))));
             return Task.CompletedTask;
         });
     }
@@ -225,11 +230,12 @@ public partial class BannerIconsPageViewModel : ObservableObject {
             return;
         }
 
-        ContentDialogResult result = await confirmDialog.ShowDanger(
+        var result = await confirmDialog.Show(
             I18n.Current.GetString("DialogDeleteBannerGroup.Title"),
-            string.Format(I18n.Current.GetString("DialogDeleteBannerGroup.Content"), SelectedGroup!.GroupID));
+            string.Format(I18n.Current.GetString("DialogDeleteBannerGroup.Content"), SelectedGroup!.GroupID),
+            IConfirmDialogService.Level.Danger);
 
-        if (result != ContentDialogResult.Primary) {
+        if (result != IConfirmDialogService.Result.Yes) {
             return;
         }
 
@@ -240,6 +246,20 @@ public partial class BannerIconsPageViewModel : ObservableObject {
             SelectedGroup = ViewModel.Groups[Math.Min(selectedIndex, ViewModel.Groups.Count - 1)];
         } else {
             SelectedGroup = null;
+        }
+    }
+
+    public void CheckScanFolders() {
+        if (_settings?.Banner.SpriteScanFolders.Count == 0) {
+            _notification?.Notify(new Notification(ToastVariant.Warning,
+                I18n.Current.GetString("WarningNoSpriteScanFolders.Message"),
+                I18n.Current.GetString("WarningNoSpriteScanFolders.Title"),
+                new NotificationAction(
+                    I18n.Current.GetString("WarningNoSpriteScanFolders.Action"),
+                    (_, _) => {
+                        var helpUrl = I18n.Current.GetString("WarningNoSpriteScanFolders.Url");
+                        FileHelpers.OpenUrl(helpUrl);
+                    }), true));
         }
     }
 

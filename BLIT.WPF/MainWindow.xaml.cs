@@ -2,6 +2,7 @@ using BLIT.WPF.Helpers;
 using BLIT.WPF.Pages.BannerIcons;
 using BLIT.WPF.Services;
 using CommunityToolkit.Mvvm.Input;
+using Sentry;
 using Serilog;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -191,11 +192,7 @@ public partial class MainWindow {
                 SentrySdk.AddBreadcrumb("Visit help", "ui.nav");
 
                 var helpUrl = I18n.Current.GetString("LinkHelpWebsite");
-                Log.Information($"Help URL: {helpUrl}");
-
                 Process.Start(new ProcessStartInfo { FileName = helpUrl, UseShellExecute = true });
-
-                Log.Information("Help URL opened successfully");
             } catch (Exception ex) {
                 Log.Error($"Failed to open help URL: {ex.Message}");
             }
