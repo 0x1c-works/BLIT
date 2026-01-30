@@ -38,7 +38,7 @@
     </UserControl.Resources>
     <Grid x:Name="RootGrid" Visibility="Collapsed" Opacity="0">
         <Grid>
-            <Rectangle Fill="{ui:ThemeResource SurfaceStrokeColorDefaultBrush}" Opacity="0.5" />
+            <Rectangle Fill="{ui:ThemeResource SurfaceStrokeColorDefaultBrush}" Opacity="0.8" />
             <Border
                 Padding="24"
                 HorizontalAlignment="Center"
