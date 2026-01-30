@@ -1,4 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <!-- Extract version from Package.appxmanifest before importing Version.props -->
+  <Target Name="ExtractVersionFromManifest" BeforeTargets="Build">
+    <Exec Command="powershell.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\ExtractVersionFromManifest.ps1&quot; -ManifestPath &quot;$(MSBuildProjectDirectory)\..\BLIT.Package\Package.appxmanifest&quot; -VersionPropsPath &quot;$(MSBuildProjectDirectory)\Properties\Version.props&quot;" />
+  </Target>
+
   <Import Project="Properties/Version.props" />
 
   <PropertyGroup>
