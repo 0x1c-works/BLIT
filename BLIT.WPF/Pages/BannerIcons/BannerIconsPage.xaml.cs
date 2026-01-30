@@ -38,16 +38,16 @@ public partial class BannerIconsPage : INavigableView<BannerIconsPageViewModel> 
                     DataContext = _viewModel;
                 }
             };
-        }
-
-        // 设置输出分辨率默认值
-        if (_viewModel?.ViewModel != null) {
-            var resolutionName = _viewModel.ViewModel.OutputResolutionName;
-            if (resolutionName == "2K") {
-                comboOutputResolution.SelectedIndex = 0;
-            } else if (resolutionName == "4K") {
-                comboOutputResolution.SelectedIndex = 1;
+            // 设置输出分辨率默认值
+            if (_viewModel.ViewModel != null) {
+                var resolutionName = _viewModel.ViewModel.OutputResolutionName;
+                if (resolutionName == "2K") {
+                    comboOutputResolution.SelectedIndex = 0;
+                } else if (resolutionName == "4K") {
+                    comboOutputResolution.SelectedIndex = 1;
+                }
             }
+            _viewModel.CheckScanFolders();
         }
     }
 

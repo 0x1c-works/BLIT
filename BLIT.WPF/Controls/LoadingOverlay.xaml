@@ -37,13 +37,15 @@
         </Storyboard>
     </UserControl.Resources>
     <Grid x:Name="RootGrid" Visibility="Collapsed" Opacity="0">
-        <Border Background="{ui:ThemeResource SurfaceStrokeColorDefaultBrush}" Opacity="0.5">
+        <Grid>
+            <Rectangle Fill="{ui:ThemeResource SurfaceStrokeColorDefaultBrush}" Opacity="0.5" />
             <Border
                 Padding="24"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Background="{ui:ThemeResource ApplicationBackgroundBrush}"
-                CornerRadius="8">
+                CornerRadius="8"
+                Opacity="1">
                 <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
                     <!--  Progress Ring + Message  -->
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
@@ -81,6 +83,6 @@
                     </StackPanel>
                 </StackPanel>
             </Border>
-        </Border>
+        </Grid>
     </Grid>
 </UserControl>

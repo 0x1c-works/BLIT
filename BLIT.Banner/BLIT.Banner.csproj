@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.10.2"/>
+    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="14.10.2"/>
     <PackageReference Include="OpenCCNET" Version="1.1.0"/>
   </ItemGroup>
 
